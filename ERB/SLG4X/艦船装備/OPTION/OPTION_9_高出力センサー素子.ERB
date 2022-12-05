@@ -13,11 +13,7 @@ STATUS:PRICE = 250000000
 ;-----------------------------------
 ; オプションの説明
 ;-----------------------------------
-@GET_OPTION_DESCRIPTION_9(STATUS)
-#DIM STATUS, STATUS_LENGTH
-CALL GET_OPTION_STATUS_9(STATUS)
-CALL GET_OPTION_NAME_9
-PRINTFORML %RESULTS%
+@GET_OPTION_DESCRIPTION_F_9
 PRINTFORML センサーの出力を2増加させる。
 PRINTL
 ;フレーバーテキスト的な

@@ -18,20 +18,20 @@ STATUS:PRICE = 64000000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_215
-#DIM STATUS, STATUS_LENGTH
+@GET_MAIN_WEAPON_DESCRIPTION_F_215
 
-CALL GET_MAIN_WEAPON_STATUS_215(STATUS)
-CALL GET_MAIN_WEAPON_NAME_215
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML 現在ではロストテクノロジーとされている超大型実体弾砲。
 PRINTFORML ワープ原理を応用した砲身機構により大質量砲弾を加速、驚異的な速度で発射する。
 PRINTFORML 原理自体は半ば解明されているが、必要とされる莫大なエネルギー量から実用化には到ってはいない。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
+
+
+
+
+
 
 ;-----------------------------------
 ; メインウェポンの資材

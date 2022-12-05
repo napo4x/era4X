@@ -19,23 +19,17 @@ STATUS:PRICE = 15000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_87
-#DIM STATUS, STATUS_LENGTH
+@GET_SUB_WEAPON_DESCRIPTION_F_87
 
-CALL GET_SUB_WEAPON_STATUS_87(STATUS)
-CALL GET_SUB_WEAPON_NAME_87
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML EF・コール級作業機の左腕に搭載された建築・解体用トーチ。
 PRINTFORML 補給の手間を省くために推進ガスを燃料としている。
 PRINTFORML 
 PRINTFORML このモデルは、どういう訳か最大出力が異様に高く設計されており、
 PRINTFORML 火炎放射器として転用することが可能である。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 対空攻撃力: {STATUS:ANTI_AIR}
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; サブウェポンの資材

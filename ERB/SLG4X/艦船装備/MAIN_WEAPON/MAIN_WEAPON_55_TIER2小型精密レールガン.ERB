@@ -18,19 +18,19 @@ STATUS:PRICE = 20000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_55
-#DIM STATUS, STATUS_LENGTH
+@GET_MAIN_WEAPON_DESCRIPTION_F_55
 
-CALL GET_MAIN_WEAPON_STATUS_55(STATUS)
-CALL GET_MAIN_WEAPON_NAME_55
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML 質量弾をローレンツ力で撃ち出す実弾兵器。コイルガンと比べて射程に優れるが連射性に劣る。
 PRINTFORML エネルギー伝達系統などの改良により命中精度と威力が向上した。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
+
+
+
+
+
 
 ;-----------------------------------
 ; メインウェポンの資材

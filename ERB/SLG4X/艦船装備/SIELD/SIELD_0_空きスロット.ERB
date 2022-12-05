@@ -15,15 +15,9 @@ STATUS:PRICE = 10000
 ;-----------------------------------
 ; シールドの説明
 ;-----------------------------------
-@GET_SIELD_DESCRIPTION_0
-#DIM STATUS, STATUS_LENGTH
+@GET_SIELD_DESCRIPTION_F_0
 
-CALL GET_SIELD_STATUS_0(STATUS)
-CALL GET_SIELD_NAME_0
-PRINTFORML %RESULTS%
-PRINTFORML シールド    : {STATUS:SIELD}
-PRINTFORML シールド回復: {STATUS:SIELD_RECOVER}/ターン
-PRINTFORML サイズ      : {STATUS:SIZE}
+
 
 ;-----------------------------------
 ; シールドの資材

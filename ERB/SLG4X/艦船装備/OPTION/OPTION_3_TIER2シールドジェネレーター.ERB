@@ -12,14 +12,9 @@ STATUS:PRICE = 20000
 ;-----------------------------------
 ; オプションの説明
 ;-----------------------------------
-@GET_OPTION_DESCRIPTION_3(STATUS)
-#DIM STATUS, STATUS_LENGTH
-CALL GET_OPTION_STATUS_3(STATUS)
-CALL GET_OPTION_NAME_3
-PRINTFORML %RESULTS%
+@GET_OPTION_DESCRIPTION_F_3
 PRINTFORML 二基のシールド用追加ジェネレーター。
 PRINTFORML シールド出力には直接影響しないものの、シールドの再生速度を増強する。
-PRINTFORML シールド回復: {STATUS:SIELD_RECOVER}/ターン
 
 ;-----------------------------------
 ; オプションの資材

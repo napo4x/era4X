@@ -13,13 +13,7 @@ STATUS:PRICE = 10000
 ;-----------------------------------
 ; センサーの説明
 ;-----------------------------------
-@GET_SENSOR_DESCRIPTION_0(STATUS)
-#DIM STATUS, STATUS_LENGTH
-CALL GET_SENSOR_STATUS_0(STATUS)
-CALL GET_SENSOR_NAME_0
-PRINTFORML %RESULTS%
-PRINTFORML センサー範囲: {STATUS:SENSOR}
-
+@GET_SENSOR_DESCRIPTION_F_0
 ;-----------------------------------
 ; センサーの資材
 ;-----------------------------------

@@ -19,20 +19,14 @@ STATUS:PRICE = 320000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_48
-#DIM STATUS, STATUS_LENGTH
+@GET_SUB_WEAPON_DESCRIPTION_F_48
 
-CALL GET_SUB_WEAPON_STATUS_48(STATUS)
-CALL GET_SUB_WEAPON_NAME_48
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML 速射砲と同じ砲弾を用いた連装機関砲。
 ;PRINTFORML はっきりいってあたまおかしい
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 対空攻撃力: {STATUS:ANTI_AIR}
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; サブウェポンの資材

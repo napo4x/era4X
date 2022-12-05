@@ -32,11 +32,7 @@ STATUS:SHIP_CAPACITY += 200
 ;-----------------------------------
 ; オプションの説明
 ;-----------------------------------
-@GET_OPTION_DESCRIPTION_8(STATUS)
-#DIM STATUS, STATUS_LENGTH
-CALL GET_OPTION_STATUS_8(STATUS)
-CALL GET_OPTION_NAME_8
-PRINTFORML %RESULTS%
+@GET_OPTION_DESCRIPTION_F_8
 PRINTFORML 装備した艦の積載量を200増加させる。
 PRINTL
 ;フレーバーテキスト的な

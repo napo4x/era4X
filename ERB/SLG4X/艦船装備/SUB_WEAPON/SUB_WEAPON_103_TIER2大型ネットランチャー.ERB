@@ -19,21 +19,15 @@ STATUS:PRICE = 80000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_103
-#DIM STATUS, STATUS_LENGTH
+@GET_SUB_WEAPON_DESCRIPTION_F_103
 
-CALL GET_SUB_WEAPON_STATUS_103(STATUS)
-CALL GET_SUB_WEAPON_NAME_103
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML 大型の投網を射出する漁具。
 PRINTFORML 宇宙かにでも容易くは切断できない強度を誇り
 PRINTFORML 破壊力はないが、飛翔体を捕らえる能力は十分。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 対空攻撃力: {STATUS:ANTI_AIR}
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; サブウェポンの資材

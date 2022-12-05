@@ -19,19 +19,7 @@ STATUS:PRICE = 800000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_204
-#DIM STATUS, STATUS_LENGTH
-
-CALL GET_MAIN_WEAPON_STATUS_204(STATUS)
-CALL GET_MAIN_WEAPON_NAME_204
-PRINTFORML %RESULTS%
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 対空攻撃力: {STATUS:ANTI_AIR}
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
-
+@GET_MAIN_WEAPON_DESCRIPTION_F_204
 ;-----------------------------------
 ; メインウェポンの資材
 ;-----------------------------------

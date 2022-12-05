@@ -19,20 +19,9 @@ STATUS:PRICE = 10000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_1
-#DIM STATUS, STATUS_LENGTH
-
-CALL GET_SUB_WEAPON_STATUS_1(STATUS)
-CALL GET_SUB_WEAPON_NAME_1
-PRINTFORML %RESULTS%
+@GET_SUB_WEAPON_DESCRIPTION_F_1
 PRINTFORML 砲身加熱を抑えるため、銃身に回転機構を備えた実体弾発射機構。
 PRINTFORML 対艦攻撃兵器としては力不足ながら、その弾幕から飛翔体の撃墜能力が高い。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 対空攻撃力: {STATUS:ANTI_AIR}
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; サブウェポンの資材

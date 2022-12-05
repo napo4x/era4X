@@ -13,14 +13,7 @@ STATUS:PRICE = 10000
 ;-----------------------------------
 ; コンピューターの説明
 ;-----------------------------------
-@GET_COMPUTER_DESCRIPTION_0(STATUS)
-#DIM STATUS, STATUS_LENGTH
-
-CALL GET_COMPUTER_STATUS_0(STATUS)
-CALL GET_COMPUTER_NAME_0
-PRINTFORML %RESULTS%
-PRINTFORML 回避    : {STATUS:AVOID}
-
+@GET_COMPUTER_DESCRIPTION_F_0
 ;-----------------------------------
 ; AIの資材
 ;-----------------------------------

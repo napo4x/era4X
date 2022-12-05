@@ -15,17 +15,10 @@ STATUS:PRICE = 480000
 ;-----------------------------------
 ; アーマーの説明
 ;-----------------------------------
-@GET_ARMOR_DESCRIPTION_40
-#DIM STATUS, STATUS_LENGTH
+@GET_ARMOR_DESCRIPTION_F_40
 
-CALL GET_ARMOR_STATUS_40(STATUS)
-CALL GET_ARMOR_NAME_40
-PRINTFORML %RESULTS%
 PRINTFORML ダメージ緩和のための高度な電子制御網が組み込まれた、軽量特殊素材の装甲。
 PRINTFORML 高密度センサー素子によって常に監視された電磁装甲は、ダメージに対する瞬間的強度を増大させる。
-PRINTFORML 装甲      : {STATUS:ARMOR}
-PRINTFORML 回避      : {STATUS:AVOID}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; 装甲の資材

@@ -15,11 +15,7 @@ STATUS:PRICE = 10000
 ;-----------------------------------
 ; オプションの説明
 ;-----------------------------------
-@GET_OPTION_DESCRIPTION_1(STATUS)
-#DIM STATUS, STATUS_LENGTH
-CALL GET_OPTION_STATUS_1(STATUS)
-CALL GET_OPTION_NAME_1
-PRINTFORML %RESULTS%
+@GET_OPTION_DESCRIPTION_F_1
 PRINTFORML 一人乗りの移乗コンテナ。施設や艦船への移乗時に使用する。
 PRINTFORML 戦闘勝利時に低確率で敵艦への移乗攻撃の実行が可能となる。
 PRINTFORML ※移乗コンテナを装備した艦に、クルーが同乗している必要がある。

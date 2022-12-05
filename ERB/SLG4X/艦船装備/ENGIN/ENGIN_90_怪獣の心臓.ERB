@@ -15,15 +15,7 @@ STATUS:PRICE = 9999999
 ;-----------------------------------
 ; エンジンの説明
 ;-----------------------------------
-@GET_ENGIN_DESCRIPTION_90(STATUS)
-#DIM STATUS, STATUS_LENGTH
-
-CALL GET_ENGIN_STATUS_90(STATUS)
-CALL GET_ENGIN_NAME_90
-PRINTFORML %RESULTS%
-PRINTFORML スピード  : {STATUS:SPEED}
-PRINTFORML 回避      : {STATUS:AVOID}
-PRINTFORML サイズ    : {STATUS:SIZE}
+@GET_ENGIN_DESCRIPTION_F_90
 
 ;-----------------------------------
 ; エンジンの資材

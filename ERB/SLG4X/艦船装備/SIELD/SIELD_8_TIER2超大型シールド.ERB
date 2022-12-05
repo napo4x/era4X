@@ -15,16 +15,10 @@ STATUS:PRICE = 160000
 ;-----------------------------------
 ; シールドの説明
 ;-----------------------------------
-@GET_SIELD_DESCRIPTION_8
-#DIM STATUS, STATUS_LENGTH
+@GET_SIELD_DESCRIPTION_F_8
 
-CALL GET_SIELD_STATUS_8(STATUS)
-CALL GET_SIELD_NAME_8
-PRINTFORML %RESULTS%
+
 PRINTFORML 戦闘を視野に入れ改良されたエネルギーシールド。シールドの安定化に見直しが行なわれている。
-PRINTFORML シールド    : {STATUS:SIELD}
-PRINTFORML シールド回復: {STATUS:SIELD_RECOVER}/ターン
-PRINTFORML サイズ      : {STATUS:SIZE}
 
 ;-----------------------------------
 ; シールドの資材

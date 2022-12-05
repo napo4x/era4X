@@ -19,19 +19,13 @@ STATUS:PRICE = 40000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_29
-#DIM STATUS, STATUS_LENGTH
+@GET_SUB_WEAPON_DESCRIPTION_F_29
 
-CALL GET_SUB_WEAPON_STATUS_29(STATUS)
-CALL GET_SUB_WEAPON_NAME_29
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML 機銃と小型主砲との中間的な口径を有する、独立式の小型実弾兵器。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 対空攻撃力: {STATUS:ANTI_AIR}
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; サブウェポンの資材

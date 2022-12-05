@@ -19,21 +19,15 @@ STATUS:PRICE = 40000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_39
-#DIM STATUS, STATUS_LENGTH
+@GET_SUB_WEAPON_DESCRIPTION_F_39
 
-CALL GET_SUB_WEAPON_STATUS_39(STATUS)
-CALL GET_SUB_WEAPON_NAME_39
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML 大型機動歩兵用の射出機構付きスピア。
 PRINTFORML 射出機構を電磁投射式とし、貫通力を大幅に高めたモデル。
 PRINTFORML 基部に重機関砲を搭載することで若干の対空迎撃能力が付与されている。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 対空攻撃力: {STATUS:ANTI_AIR}
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; サブウェポンの資材

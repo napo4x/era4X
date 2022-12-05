@@ -15,16 +15,9 @@ STATUS:PRICE = 60000
 ;-----------------------------------
 ; アーマーの説明
 ;-----------------------------------
-@GET_ARMOR_DESCRIPTION_20
-#DIM STATUS, STATUS_LENGTH
+@GET_ARMOR_DESCRIPTION_F_20
 
-CALL GET_ARMOR_STATUS_20(STATUS)
-CALL GET_ARMOR_NAME_20
-PRINTFORML %RESULTS%
 PRINTFORML 超硬素材が用いられた装甲。高い強度を誇るが、推力比を悪化させる。
-PRINTFORML 装甲      : {STATUS:ARMOR}
-PRINTFORML 回避      : {STATUS:AVOID}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; 装甲の資材

@@ -19,20 +19,14 @@ STATUS:PRICE = 40000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_32
-#DIM STATUS, STATUS_LENGTH
+@GET_SUB_WEAPON_DESCRIPTION_F_32
 
-CALL GET_SUB_WEAPON_STATUS_32(STATUS)
-CALL GET_SUB_WEAPON_NAME_32
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML 交換式バッテリーカートリッジを用いた独立式の小型レールガン。
 PRINTFORML 本体ジェネレーターに影響されず戦闘使用が可能だが、小型化により命中精度に難がある。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 対空攻撃力: {STATUS:ANTI_AIR}
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; サブウェポンの資材

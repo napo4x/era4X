@@ -14,15 +14,9 @@ STATUS:PRICE = 40000
 ;-----------------------------------
 ; アーマーの説明
 ;-----------------------------------
-@GET_ARMOR_DESCRIPTION_6
-#DIM STATUS, STATUS_LENGTH
+@GET_ARMOR_DESCRIPTION_F_6
 
-CALL GET_ARMOR_STATUS_6(STATUS)
-CALL GET_ARMOR_NAME_6
-PRINTFORML %RESULTS%
 PRINTFORML 戦闘用に改良された強化装甲。構造的な見直しが行なわれ、基幹部位保護に重点が置かれている。
-PRINTFORML 装甲      : {STATUS:ARMOR}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; 装甲の資材

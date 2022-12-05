@@ -15,16 +15,10 @@ STATUS:PRICE = 10000
 ;-----------------------------------
 ; シールドの説明
 ;-----------------------------------
-@GET_SIELD_DESCRIPTION_1
-#DIM STATUS, STATUS_LENGTH
+@GET_SIELD_DESCRIPTION_F_1
 
-CALL GET_SIELD_STATUS_1(STATUS)
-CALL GET_SIELD_NAME_1
-PRINTFORML %RESULTS%
+
 PRINTFORML スペースデブリからの保護を目的に搭載される標準エネルギーシールド。
-PRINTFORML シールド    : {STATUS:SIELD}
-PRINTFORML シールド回復: {STATUS:SIELD_RECOVER}/ターン
-PRINTFORML サイズ      : {STATUS:SIZE}
 
 ;-----------------------------------
 ; シールドの資材

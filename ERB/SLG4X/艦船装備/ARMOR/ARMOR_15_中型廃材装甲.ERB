@@ -14,15 +14,9 @@ STATUS:PRICE = 2000
 ;-----------------------------------
 ; アーマーの説明
 ;-----------------------------------
-@GET_ARMOR_DESCRIPTION_15
-#DIM STATUS, STATUS_LENGTH
+@GET_ARMOR_DESCRIPTION_F_15
 
-CALL GET_ARMOR_STATUS_15(STATUS)
-CALL GET_ARMOR_NAME_15
-PRINTFORML %RESULTS%
 PRINTFORML 廃材ででっち上げた即席の心もとない装甲。
-PRINTFORML 装甲      : {STATUS:ARMOR}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; 装甲の資材

@@ -12,14 +12,9 @@ STATUS:PRICE = 10000
 ;-----------------------------------
 ; オプションの説明
 ;-----------------------------------
-@GET_OPTION_DESCRIPTION_5(STATUS)
-#DIM STATUS, STATUS_LENGTH
-CALL GET_OPTION_STATUS_5(STATUS)
-CALL GET_OPTION_NAME_5
-PRINTFORML %RESULTS%
+@GET_OPTION_DESCRIPTION_F_5
 PRINTFORML 運動性を向上させる追加スラスター。
 PRINTFORML 機体の姿勢制御を補助、改善し、宇宙空間における運動性能を向上させる。
-PRINTFORML 回避      : {STATUS:AVOID}
 
 ;-----------------------------------
 ; オプションの資材

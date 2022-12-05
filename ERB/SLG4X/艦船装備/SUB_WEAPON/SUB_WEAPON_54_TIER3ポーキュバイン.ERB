@@ -19,20 +19,14 @@ STATUS:PRICE = 160000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_54
-#DIM STATUS, STATUS_LENGTH
+@GET_SUB_WEAPON_DESCRIPTION_F_54
 
-CALL GET_SUB_WEAPON_STATUS_54(STATUS)
-CALL GET_SUB_WEAPON_NAME_54
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML 多数の金属片を撒き散らして飛翔体を撃墜する近接迎撃兵装。
 PRINTFORML 金属片の材質を変更し威力を増大させたが、相変わらず有効射程と命中率に難を抱える。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 対空攻撃力: {STATUS:ANTI_AIR}
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; サブウェポンの資材

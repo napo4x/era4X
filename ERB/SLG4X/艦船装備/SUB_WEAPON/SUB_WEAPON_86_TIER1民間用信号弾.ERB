@@ -19,21 +19,15 @@ STATUS:PRICE = 5000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_86
-#DIM STATUS, STATUS_LENGTH
+@GET_SUB_WEAPON_DESCRIPTION_F_86
 
-CALL GET_SUB_WEAPON_STATUS_86(STATUS)
-CALL GET_SUB_WEAPON_NAME_86
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML 民間船において一般的に使用されている廉価な信号弾。
 PRINTFORML 
 PRINTFORML コストを抑えるために燃焼式が採用されており、辛うじてフレアの代用品として使用可能。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 対空攻撃力: {STATUS:ANTI_AIR}
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; サブウェポンの資材

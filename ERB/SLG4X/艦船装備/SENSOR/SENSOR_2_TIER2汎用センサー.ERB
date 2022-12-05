@@ -13,14 +13,8 @@ STATUS:PRICE = 20000
 ;-----------------------------------
 ; センサーの説明
 ;-----------------------------------
-@GET_SENSOR_DESCRIPTION_2(STATUS)
-#DIM STATUS, STATUS_LENGTH
-CALL GET_SENSOR_STATUS_2(STATUS)
-CALL GET_SENSOR_NAME_2
-PRINTFORML %RESULTS%
+@GET_SENSOR_DESCRIPTION_F_2
 PRINTFORML 宙間航行用の中型センサー。航行中の他船舶を自動的に照合しながら、管理ＡＩに情報を送信する。
-PRINTFORML センサー範囲: {STATUS:SENSOR}
-
 ;-----------------------------------
 ; センサーの資材
 ;-----------------------------------

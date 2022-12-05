@@ -19,19 +19,13 @@ STATUS:PRICE = 30000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_20
-#DIM STATUS, STATUS_LENGTH
+@GET_SUB_WEAPON_DESCRIPTION_F_20
 
-CALL GET_SUB_WEAPON_STATUS_20(STATUS)
-CALL GET_SUB_WEAPON_NAME_20
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML 六門同時発射可能な、小型の迎撃ミサイルユニット。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 対空攻撃力: {STATUS:ANTI_AIR}
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; サブウェポンの資材

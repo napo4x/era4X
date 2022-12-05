@@ -15,16 +15,10 @@ STATUS:PRICE = 80000
 ;-----------------------------------
 ; シールドの説明
 ;-----------------------------------
-@GET_SIELD_DESCRIPTION_27
-#DIM STATUS, STATUS_LENGTH
+@GET_SIELD_DESCRIPTION_F_27
 
-CALL GET_SIELD_STATUS_27(STATUS)
-CALL GET_SIELD_NAME_27
-PRINTFORML %RESULTS%
+
 PRINTFORML 最大出力の強化を図ったシールド。その代わりに回復性能が低下している。
-PRINTFORML シールド    : {STATUS:SIELD}
-PRINTFORML シールド回復: {STATUS:SIELD_RECOVER}/ターン
-PRINTFORML サイズ      : {STATUS:SIZE}
 
 ;-----------------------------------
 ; シールドの資材

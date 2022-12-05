@@ -18,12 +18,12 @@ STATUS:PRICE = 10000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_63
-#DIM STATUS, STATUS_LENGTH
+@GET_MAIN_WEAPON_DESCRIPTION_F_63
 
-CALL GET_MAIN_WEAPON_STATUS_63(STATUS)
-CALL GET_MAIN_WEAPON_NAME_63
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML 企業連合のある中堅メーカーの傘下企業が生産している、大型の有線爆弾。
 PRINTFORML 
 PRINTFORML 主に老朽化した大型艦や宇宙港・大型のデブリ、
@@ -35,11 +35,11 @@ PRINTFORML 戦闘用の武器として使用する事を想定しておらず、
 PRINTFORML 「快速の小型艇の外装に取り付け、急接近して切り離してから爆破」
 PRINTFORML …等といった無理矢理な運用を強いられており、動体目標に命中させることは困難を極める。
 PRINTFORML 
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
+
+
+
+
+
 
 ;-----------------------------------
 ; メインウェポンの資材

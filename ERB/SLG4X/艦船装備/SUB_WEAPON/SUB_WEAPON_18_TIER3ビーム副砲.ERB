@@ -19,19 +19,13 @@ STATUS:PRICE = 80000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_18
-#DIM STATUS, STATUS_LENGTH
+@GET_SUB_WEAPON_DESCRIPTION_F_18
 
-CALL GET_SUB_WEAPON_STATUS_18(STATUS)
-CALL GET_SUB_WEAPON_NAME_18
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML 副兵装として設計された、独立式の小型粒子加速砲。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 対空攻撃力: {STATUS:ANTI_AIR}
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; サブウェポンの資材

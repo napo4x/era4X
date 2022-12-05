@@ -18,20 +18,14 @@ STATUS:PRICE = 200000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_95
-#DIM STATUS, STATUS_LENGTH
+@GET_SUB_WEAPON_DESCRIPTION_F_95
 
-CALL GET_SUB_WEAPON_STATUS_95(STATUS)
-CALL GET_SUB_WEAPON_NAME_95
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML 他の宇宙怪獣と共生関係にある小型砲サイズの宇宙怪獣。
 PRINTFORML 危機に対しては共生相手と共に立ち向かう。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 対空攻撃力: {STATUS:ANTI_AIR}
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
 
 ;-----------------------------------
 ; サブウェポンの資材

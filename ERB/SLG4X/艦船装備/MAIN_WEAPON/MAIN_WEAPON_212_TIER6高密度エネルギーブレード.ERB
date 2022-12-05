@@ -18,12 +18,12 @@ STATUS:PRICE = 12000000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_212
-#DIM STATUS, STATUS_LENGTH
+@GET_MAIN_WEAPON_DESCRIPTION_F_212
 
-CALL GET_MAIN_WEAPON_STATUS_212(STATUS)
-CALL GET_MAIN_WEAPON_NAME_212
-PRINTFORML %RESULTS%
+
+
+
+
 PRINTFORML シールド形成機能を応用した、非常に強力なエネルギーブレードの展開機構。
 PRINTFORML ブレード状に展開する高密度エネルギーフィールドは干渉時の切断能力に優れ、大型艦に対しても致命的な損傷を与える。
 PRINTFORML 旧大国時代に設計されたオーバーテクノロジーのサイオニック兵装であり、未知のエネルギー技術が利用されている。
@@ -33,11 +33,11 @@ PRINTFORML
 PRINTFORML 機体修復に伴い、その威力は健在ながらもジャンプドライブ距離と安定性低下による悪影響を大きく受けた。
 PRINTFORML ジャンプドライブによる一撃離脱攻撃を成功させるには多大な操縦技術が要求される。
 ;最終的にプレイヤーに与えられるヤタガラス専用兵装。威力の代償に搭乗者必須。
-PRINTFORML ダメージ  : {STATUS:DAMAGE}
-PRINTFORML 射撃レート: {STATUS:FIRE_RATE}発/ターン
-PRINTFORML 命中率    : {STATUS:HIT_RATE}
-PRINTFORML 有効距離  : {STATUS:FIRE_RANGE}
-PRINTFORML サイズ    : {STATUS:SIZE}
+
+
+
+
+
 
 ;-----------------------------------
 ; メインウェポンの資材
