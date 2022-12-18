@@ -1033,11 +1033,12 @@ IF 報酬合計 > 0
 ENDIF
 
 ;鹵獲イベント処理
-LOCAL = RAND:1000
+;LOCAL = RAND:1000
 IF LIST_COUNT(鹵獲候補艦リスト) != 0
 	対象艦 = TOINT(LIST_GET(鹵獲候補艦リスト, RAND(0, LIST_COUNT(鹵獲候補艦リスト))))
-	SIF 鹵獲イベント発生率:(SHIP_CATEGORY:対象艦) > LOCAL
-		CALL COMBAT_SHIP_CAPTURE_EVENT(対象艦)
+	;	SIF 鹵獲イベント発生率:(SHIP_CATEGORY:対象艦) > LOCAL
+	;鹵獲イベントが起きるかはCOMBAT_SHIP_CAPTURE_EVENT側で判定する様に
+	CALL COMBAT_SHIP_CAPTURE_EVENT(対象艦)
 ENDIF
 ;生け捕りイベント処理
 LOCAL = RAND:1000

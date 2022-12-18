@@ -8,6 +8,9 @@
 #DIM DYNAMIC CHARA_ID
 #DIMS DYNAMIC 移乗攻撃参加候補ID
 #DIMS DYNAMIC 参加メンバーリスト, CC_MAX_MEMBER_NUM / 2
+#DIM CONST 鹵獲イベント発生率 = 300, 200, 130, 100, 50, 0, 0, 300, 300
+#DIM DYNAMIC 鹵獲手段補正
+
 
 ;移乗攻撃に参加可能な条件を満たしているメンバーを候補としてリストに追加
 FOR SHIP_ID, 0, MAX_SHIP
@@ -16,6 +19,18 @@ FOR SHIP_ID, 0, MAX_SHIP
 			VARSET RESULTS
 			TRYCALLFORM GET_OPTION_TYPE_{SHIP_EQUIP:オプション:LOCAL:SHIP_ID}
 			IF RESULTS == "BOARDING_POD"
+				SIF 鹵獲手段補正 < 1
+					鹵獲手段補正 = 1
+				FOR CHARA_ID, 0, CHARANUM
+					SIF RIDING_WITH:CHARA_ID == SHIP_ID
+						移乗攻撃参加候補ID = %LIST_ADD(移乗攻撃参加候補ID, TOSTR(CHARA_ID))%
+				NEXT
+				BREAK
+			ENDIF
+			TRYCALLFORM GET_MAIN_WEAPON_SPECIAL_FUNCTION_{SHIP_EQUIP:主砲:LOCAL:SHIP_ID}
+			IF RESULTS == "LANDING_CRAFT"
+				SIF 鹵獲手段補正 < 2
+					鹵獲手段補正 = 2
 				FOR CHARA_ID, 0, CHARANUM
 					SIF RIDING_WITH:CHARA_ID == SHIP_ID
 						移乗攻撃参加候補ID = %LIST_ADD(移乗攻撃参加候補ID, TOSTR(CHARA_ID))%
@@ -29,6 +44,11 @@ NEXT
 SIF LIST_COUNT(移乗攻撃参加候補ID) == 0
 	RETURN
 ;移乗攻撃に参加可能なメンバーがいる
+
+LOCAL = RAND:1000
+SIF 鹵獲イベント発生率:(SHIP_CATEGORY:TARGET_SHIP_ID) * 鹵獲手段補正 < LOCAL
+	RETURN
+
 PRINTL
 CALLF FuncTagSetText_Print(@"戦闘により機関を損傷した%GET_TYPE_NAME(SHIP_CATEGORY:(TARGET_SHIP_ID))%、@C:{カラー_オレンジ}@%SHIP_NAME:TARGET_SHIP_ID%@/C@が戦闘宙域を漂流している", 1)
 PRINTFORML 戦闘部隊を送り込んで艦内を制圧することができれば、艦を鹵獲するすることができるかもしれない

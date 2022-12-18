@@ -1,0 +1,41 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_MAIN_WEAPON_NAME_119
+RESULTS = 移乗用小型航宙機
+
+@GET_MAIN_WEAPON_STATUS_119(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 0
+STATUS:FIRE_RATE = 0
+STATUS:HIT_RATE = 0
+STATUS:FIRE_RANGE = 4
+STATUS:SIZE = 3
+STATUS:AIR_SHIP_HP = 1
+STATUS:ANTI_AIR = 0
+STATUS:AIR_SHIP_COUNT = 1
+STATUS:WEAPON_TYPE = 艦載機
+STATUS:PRICE = 50000
+
+@GET_MAIN_WEAPON_SPECIAL_FUNCTION_119
+RESULTS '= "LANDING_CRAFT"
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_MAIN_WEAPON_DESCRIPTION_F_119
+PRINTFORML 艦載機として運用される移乗攻撃用航宙機
+PRINTFORML 戦闘勝利時に確率で敵艦への移乗攻撃の実行が可能となる。
+PRINTFORML メインウェポンとして艦隊戦に直接寄与するものではない。
+PRINTFORML ※移乗用小型航宙機を装備した艦に、クルーが同乗している必要がある。
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_MAIN_WEAPON_RESOURCE_119(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 1
+USE_RESOURCE:耐熱合金 = 1
+USE_RESOURCE:武装制御機器 = 1
+USE_RESOURCE:ジェットガス = 1
