@@ -105,7 +105,7 @@ SELECTCASE STAR_OWNER:STAR_ID
         PRINTFORMW 怪しい行動をする人物を見かけた場合はお近くの人民警察まで
     ENDSELECT
   CASE 国家ID_企業連合
-    SELECTCASE RAND:3
+    SELECTCASE RAND:4
       CASE 0
         CALL PRINT_NEWSPAPER_HEADER("夢を掴んだ男")
         PRINTFORML エイツー・ペルシウス氏は企業連合で夢を掴んだ一人だ
@@ -122,6 +122,11 @@ SELECTCASE STAR_OWNER:STAR_ID
         PRINTFORML 我が国の最大意思決定機関である企業連は、引き続き高税率を維持していくことを表明した
         PRINTFORML これは各所で発生する貧民層に対する対応のための資金だというが、市民からの反発は必死である
         PRINTFORMW そもそも高税率こそが貧民発生の原因だと指摘する専門家も少なくなく、また決済の透明性がないことからも市民は企業連への不信感を募らせている
+      CASE 3
+        CALL PRINT_NEWSPAPER_HEADER("セクター76の宙族の掃討作戦参加者募集")
+        PRINTFORML 宙族が跋扈する危険な宙域であるセクター76の掃討作戦を行う艦隊を募集!
+        PRINTFORML 宇宙の安全を守る志のある勇敢な艦隊は、軍部に連絡を
+        PRINTFORML 連絡先:XX-XXXX-XXXX-XXXX   企業連首脳部/企業連軍部
     ENDSELECT
   CASE 国家ID_民主主義
     SELECTCASE RAND:3
@@ -187,7 +192,7 @@ SELECTCASE STAR_OWNER:STAR_ID
         PRINTFORMW この超完全食の味を知りたくなければ悪いことをしてはいけないというのが、開発局局長の言葉だ
     ENDSELECT
   CASE 国家ID_豊秋津皇国
-    SELECTCASE RAND:4
+    SELECTCASE RAND:5
       CASE 0
         CALL PRINT_NEWSPAPER_HEADER("電脳怪人・村雨 逆賊か義賊か")
         PRINTFORML 政府高官の口座から違法にキャッシュを引き出し貧困層に施すハッカー、通称電脳怪人村雨の犯罪が頻発している
@@ -208,9 +213,14 @@ SELECTCASE STAR_OWNER:STAR_ID
         PRINTFORML かねてより領土紛争を起こしていたグンマーとネオ・サイタマの県境紛争が激化している
         PRINTFORML 現在はグンマーが押しておりネオ・サイタマ軍が押されているが、ネオ・サイタマ軍は飛空挺とニンジャを組み合わせた後方連絡線への攻撃を慣行
         PRINTFORMW グンマーは戦線を伸ばしたくても背後の脅威に対応するため、思うように前進できないでいる
+      CASE 4
+        CALL PRINT_NEWSPAPER_HEADER("古代遺跡の探索者向け注意")
+        PRINTFORML セクター58周辺の古代遺跡群のアノマリー調査を行う民間人に向け、政府は注意喚起を行っている
+        PRINTFORML 当該古代遺跡群の保全を求めてアレス宗教国家が我が国に圧力をかけており、研究目的以外の探索は二国間の摩擦を増しかねないと、注意喚起を行った形だ
+        PRINTFORML だが諸外国よりも宇宙科学の進展が遅れている我が国にとってアノマリー調査は最重要ファクターであり、政府は外交と科学発展の板挟みになっており、調整に苦しんでいる
     ENDSELECT
   CASE 国家ID_ハールバルズ
-    SELECTCASE RAND:3
+    SELECTCASE RAND:4
       CASE 0
         CALL PRINT_NEWSPAPER_HEADER("農奴の反乱激化")
         PRINTFORML 農奴の反乱が激化している
@@ -222,10 +232,16 @@ SELECTCASE STAR_OWNER:STAR_ID
         PRINTFORML 宇宙防衛軍のドクトリンは防御偏重だが、その実は攻撃に転じられるだけの並走を持った艦を開発できる余力がないのが問題である
         PRINTFORMW 第二惑星の開発が完了し次第防衛部隊の強化に当たると国防軍は発表しているが、その前に豊秋津皇国が攻めてくるに違いないと専門家は警告している
       CASE 2
-        CALL PRINT_NEWSPAPER_HEADER("農奴の扱いにUSFが講義")
-        PRINTFORML 我国で伝統的に扱われている農奴に対し、USFが公式に抗議の声明を発表している
+        CALL PRINT_NEWSPAPER_HEADER("農奴の扱いに民主主義国家が講義")
+        PRINTFORML 我国で伝統的に扱われている農奴に対し、民主主義国家が公式に抗議の声明を発表している
         PRINTFORML 中身のないポピュリズムに染まった軽い意見で真に受けるだけ無駄な声明だが、国力の差を考えると無視することもできない
-        PRINTFORMW USFとの関係が悪化すれば貿易による利益が減少する可能性も考えられ、政府は慎重な対応を求められることとなる
+        PRINTFORMW 民主主義国家との関係が悪化すれば貿易による利益が減少する可能性も考えられ、政府は慎重な対応を求められることとなる
+      CASE 3
+        CALL PRINT_NEWSPAPER_HEADER("同盟国の領土問題、解決の気配なし")
+        PRINTFORML 我が国と同盟関係の民主主義国家と、敵対する銀河人民統一連邦の領土問題は一向に解決の気配を見せない
+        PRINTFORML 重要な資源である貴金属鉱石をはじめ、多数の資源が産出するセクター23と、隣接するセクター22が紛争の現場である
+        PRINTFORML セクター22が銀河人民統一連邦の手に落ちた場合、かつてセクター21の領有権を民主主義国に譲り大批判を受けた先達の名誉が挽回されることだろう
+        PRINTFORML 銀河統一連邦との前線になり得るセクターが1セクター減ることになるからである
     ENDSELECT
 ENDSELECT
 
