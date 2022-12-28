@@ -80,24 +80,9 @@ ENDIF
 ;キャラARG:0を削除する関数
 ;-------------------------------------------------
 @DELETE_CHARA(ARG:0)
-;東方キャラの場合
-IF IS_TOHO_CHARA(ARG:0)
-	;削除は禁止。エラーメッセージを出力
-	THROW 東方キャラを削除することはできません(キャラ番号={ARG:0})
-
-;ランダムキャラ(汎用)の場合
-ELSEIF IS_RANDOM_CHARA(ARG:0)
-	;キャラARG:0より後ろのNOを持つキャラのNOを詰める
-	FOR LOCAL:0, 0, CHARANUM
-		IF NO:(LOCAL:0) > NO:(ARG:0) && IS_RANDOM_CHARA(LOCAL:0)
-			NO:(LOCAL:0) --
-		ENDIF
-	NEXT
-	;ランダムキャラのNO割り振り用変数を一つ戻す
-	FLAG:汎用武将カウント --
-
 ;ランダムキャラ(子供)の場合
-ELSEIF IS_CHILD(ARG:0)
+EXISTCSV ARG:0
+IF IS_CHILD(ARG:0)
 	;キャラARG:0より後ろのNOを持つキャラのNOを詰める
 	FOR LOCAL:0, 0, CHARANUM
 		IF NO:(LOCAL:0) > NO:(ARG:0) && IS_CHILD(LOCAL:0)
@@ -108,6 +93,18 @@ ELSEIF IS_CHILD(ARG:0)
 	FLAG:子供カウント --
 
 ;イベントキャラの場合
+
+;ランダムキャラ(汎用)の場合
+ELSEIF RESULT == -1
+	;キャラARG:0より後ろのNOを持つキャラのNOを詰める
+	FOR LOCAL:0, 0, CHARANUM
+		IF NO:(LOCAL:0) > NO:(ARG:0)
+			NO:(LOCAL:0) --
+		ENDIF
+	NEXT
+	;ランダムキャラのNO割り振り用変数を一つ戻す
+	FLAG:汎用武将カウント --
+
 ELSE
 	;固有の処理は不要
 ENDIF
@@ -174,7 +171,7 @@ COOLTIME:(ARG:0):0 = 0
 ;CSVが存在しない場合
 IF !EXISTCSV(NO:(ARG:0))
 	;初期化しない(できない)
-	RETURN
+	RETURN 0
 ENDIF
 
 
@@ -374,6 +371,7 @@ NEXT
 CALL SET_BODYSIZE(ARG:0)
 CALL SKILL_INIT(ARG:0)
 CALL CLOTH_INIT(ARG:0)
+RETURN 1
 ;-------------------------------------------------
 ;TALENTの初期値を現在の値に設定する関数
 ;-------------------------------------------------

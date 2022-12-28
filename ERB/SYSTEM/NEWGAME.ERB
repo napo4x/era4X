@@ -265,9 +265,6 @@ FOR LOCAL:0, 0, MAX_FIXED_CHARA
 		CALL ADD_CHARA_FROM_CSV(LOCAL:0)
 NEXT
 
-;CSVでは設定できないキャラデータの初期設定
-CALL ADDITIONAL_CHARA_SETTING
-
 ;ロード時とニューゲーム時の共通初期化処理
 CALL INIT_COMMON
 
@@ -283,8 +280,3 @@ CALL DAILY_SET_DISABLE("YOU_WANDERING", 1)
 
 ;周回を0に設定
 FLAG:周回数 = 0
-
-;-------------------------------------------------
-;CSVでは設定できないキャラデータの初期設定
-;-------------------------------------------------
-@ADDITIONAL_CHARA_SETTING

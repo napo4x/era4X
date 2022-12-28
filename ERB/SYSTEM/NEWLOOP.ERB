@@ -14,24 +14,12 @@ CALL NEWLOOP_ADDITIONAL_RESET_VARS
 
 RETURN 1
 
-
-;-------------------------------------
-;シナリオ側で特殊キャラを生成しており、かつ一週目、「戻る」したときのため、特殊キャラを全て削除する
-;-------------------------------------
-@NEWLOOP_DELETE_ALL_SP_CHARA(ARG:0)
-LOCAL:2 = CHARANUM
-FOR LOCAL:0, 0, LOCAL:2
-	LOCAL:1 = LOCAL:2 - LOCAL:0 - 1
-	IF (IS_SP_CHARA(LOCAL:1) && MASTER != LOCAL:1) || TALENT:(LOCAL:1):カスタムキャラ == 2
-		CALL DELETE_CHARA(LOCAL:1)
-	ENDIF
-NEXT
-
-
 ;-------------------------------------
 ;新しく周回する時用、変数のリセット処理
 ;-------------------------------------
 @NEWLOOP_RESET_VARS
+#DIM ITER
+#DIM DEL_COUNT
 ;日付を1日目に戻す
 DAY = 1
 
@@ -161,12 +149,29 @@ VARSET TMP_SUM_ECONOMY_LIMIT
 VARSET TMP_SUM_SOLDIER
 
 ;ランダム系シナリオ等でPLACEMENT呼び出し後に「戻る」したときのため、キャラの所属を消去
-FOR LOCAL, 0, CHARANUM
-	CFLAG:LOCAL:所属 = 0
-	CFLAG:LOCAL:特殊状態 = 0
-	CFLAG:LOCAL:捕虜先 = 0
-NEXT
-
+ITER = 0
+DEL_COUNT = 0
+WHILE 1
+	SIF CHARANUM <= ITER
+		BREAK
+	IF IS_NEWGAME
+		IF !SELECT_LIST:(ITER + DEL_COUNT) || ITER != 0
+			CALL INIT_CHARA(ITER)
+			IF RESULT == 0
+				CALL DELETE_CHARA(ITER)
+				ITER --
+				DEL_COUNT ++
+			ELSE
+				CFLAG:ITER:所属 = 0
+			ENDIF
+		ENDIF
+	ELSE
+		CFLAG:ITER:所属 = 0
+	ENDIF
+	CFLAG:ITER:特殊状態 = 0
+	CFLAG:ITER:捕虜先 = 0
+	ITER ++
+WEND
 ;シナリオ12「悪の栄えたためしなし」でPLACEMENT呼び出し後に「戻る」したときのため、出現フラグをリセット
 VARSET SP_COUNTRY_APPEARED, 0
 
