@@ -1,0 +1,287 @@
+﻿;--------------------------
+;メスガキ海賊艦隊自動生成
+;--------------------------
+@MESUGAKI_PIRATES_FLEET_GENERATE(MESUGAKI_FLEET_POSITION, MESUGAKI_FLEET_SIZE, MESUGAKI_FLEET_TYPE)
+#DIM MESUGAKI_FLEET_POSITION
+#DIM MESUGAKI_FLEET_SIZE
+#DIM MESUGAKI_FLEET_TYPE
+
+#DIM MESUGAKI_SHIP_MODEL
+
+#DIM CONST QUEST_ID = 69
+
+#DIM CONST メスガキ砲艇 = 0
+#DIM CONST メスガキ魚雷艇 = 1
+#DIM CONST メスガキコルベット = 2
+#DIM CONST メスガキボンバーガール = 3
+#DIM CONST メスガキシャコタン = 4
+#DIM CONST ドリルフリゲート = 5
+#DIM CONST メスガキスライム = 6
+#DIM CONST ツインドリル駆逐艦 = 7
+#DIM CONST メスガキ半凍結まぐろ = 8
+
+#DIM CONST ～コルベット混成艦隊 = 1
+#DIM CONST 混成戦闘艇団 = 2
+#DIM CONST 水雷戦隊 = 3
+#DIM CONST 砲艇団 = 4
+#DIM CONST ～フリゲート混成艦隊 = 5
+#DIM CONST 混成コルベット艦隊 = 6
+#DIM CONST 少女と怪獣 = 7
+#DIM CONST ～駆逐艦混成艦隊 = 8
+#DIM CONST 混成フリゲート艦隊 = 9
+#DIM CONST ドリル艦隊 = 10
+#DIM CONST 混成駆逐隊 = 11
+#DIM CONST 怪獣隊 = 12
+
+;傾向が決まってないなら艦隊の規模を見つつ傾向を決める
+IF MESUGAKI_FLEET_TYPE == 0
+	SELECTCASE MESUGAKI_FLEET_SIZE
+
+	CASE 1 TO 18
+		;極小規模艦隊
+		SELECTCASE RAND:6
+			CASE 0 TO 2
+			MESUGAKI_FLEET_TYPE = ～コルベット混成艦隊
+			CASE 3
+			MESUGAKI_FLEET_TYPE = 混成戦闘艇団
+			CASE 4
+			MESUGAKI_FLEET_TYPE = 水雷戦隊
+			CASE 5
+			MESUGAKI_FLEET_TYPE = 砲艇団
+		ENDSELECT
+	CASE 19 TO 36
+		;小規模艦隊
+		SELECTCASE RAND:6
+			CASE 0 TO 2
+			MESUGAKI_FLEET_TYPE = ～フリゲート混成艦隊
+			CASE 3
+			MESUGAKI_FLEET_TYPE = ～コルベット混成艦隊
+			CASE 4
+			MESUGAKI_FLEET_TYPE = 混成コルベット艦隊
+			CASE 5
+			MESUGAKI_FLEET_TYPE = 少女と怪獣
+		ENDSELECT
+	CASE　37 TO 72
+		;中規模艦隊
+		SELECTCASE RAND:6
+			CASE 0 TO 2
+			MESUGAKI_FLEET_TYPE = ～駆逐艦混成艦隊
+			CASE 3
+			MESUGAKI_FLEET_TYPE = ～フリゲート混成艦隊
+			CASE 4
+			MESUGAKI_FLEET_TYPE = 混成フリゲート艦隊
+			CASE 5
+			MESUGAKI_FLEET_TYPE = ドリル艦隊
+		ENDSELECT
+	CASE 73 TO 100
+		;大規模艦隊
+		SELECTCASE RAND:6
+			CASE 0 TO 2
+			MESUGAKI_FLEET_TYPE = ～駆逐艦混成艦隊
+			CASE 3
+			MESUGAKI_FLEET_TYPE = 混成駆逐隊
+			CASE 4
+			MESUGAKI_FLEET_TYPE = 怪獣隊
+			CASE 5
+			MESUGAKI_FLEET_TYPE = ～コルベット混成艦隊
+		ENDSELECT
+ENDSELECT
+ENDIF
+;旗艦が決まってないなら旗艦を作る
+IF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:QUEST_ID) != 国家ID_一般海賊
+
+	SELECTCASE MESUGAKI_FLEET_TYPE
+		CASE ～コルベット混成艦隊
+			MESUGAKI_SHIP_MODEL =  RAND:3 + メスガキコルベット
+		CASE 混成戦闘艇団
+			MESUGAKI_SHIP_MODEL =  RAND:2
+		CASE 水雷戦隊
+			MESUGAKI_SHIP_MODEL =  メスガキボンバーガール
+		CASE 砲艇団
+			MESUGAKI_SHIP_MODEL =  メスガキ砲艇
+		CASE ～フリゲート混成艦隊
+			MESUGAKI_SHIP_MODEL =  RAND:2 + ドリルフリゲート
+		CASE 混成コルベット艦隊
+			MESUGAKI_SHIP_MODEL =  RAND:3 + メスガキコルベット
+		CASE 少女と怪獣
+			MESUGAKI_SHIP_MODEL =  RAND:2 + メスガキボンバーガール
+		CASE ～駆逐艦混成艦隊
+			MESUGAKI_SHIP_MODEL =  RAND:2 + ツインドリル駆逐艦
+		CASE 混成フリゲート艦隊
+			MESUGAKI_SHIP_MODEL =  RAND:2 + ドリルフリゲート
+		CASE ドリル艦隊
+			MESUGAKI_SHIP_MODEL =  ツインドリル駆逐艦
+		CASE 混成駆逐隊
+			MESUGAKI_SHIP_MODEL = RAND:2 + ツインドリル駆逐艦
+		CASE 怪獣隊
+			MESUGAKI_SHIP_MODEL = メスガキ半凍結まぐろ
+	ENDSELECT
+	CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(MESUGAKI_FLEET_POSITION, MESUGAKI_SHIP_MODEL)
+	QUEST_FLAG_SHIP_ID:QUEST_ID = RESULT
+	CALL MESUGAKI_PIRATES_FLEET_COST(MESUGAKI_SHIP_MODEL)
+	MESUGAKI_FLEET_SIZE -= RESULT
+ENDIF
+
+;艦隊の規模が0以下になるまで・傾向に沿って船を作る
+WHILE MESUGAKI_FLEET_SIZE >= 0
+	SELECTCASE MESUGAKI_FLEET_TYPE
+		CASE ～コルベット混成艦隊
+			SELECTCASE RAND:3
+				CASE 0 TO 1
+					MESUGAKI_SHIP_MODEL = RAND:2
+				CASE 2
+					MESUGAKI_SHIP_MODEL = RAND:3 + メスガキコルベット
+			ENDSELECT
+		CASE 混成戦闘艇団
+			MESUGAKI_SHIP_MODEL = RAND:1
+		CASE 水雷戦隊
+			SELECTCASE RAND:3
+				CASE 0 TO 1
+					MESUGAKI_SHIP_MODEL = メスガキ魚雷艇
+				CASE 2
+					MESUGAKI_SHIP_MODEL = メスガキボンバーガール
+			ENDSELECT
+		CASE 砲艇団
+			MESUGAKI_SHIP_MODEL = メスガキ砲艇
+		CASE ～フリゲート混成艦隊
+			SELECTCASE RAND:7
+				CASE 0 TO 3
+					MESUGAKI_SHIP_MODEL = RAND:2
+				CASE 4 TO 5
+					MESUGAKI_SHIP_MODEL = RAND:3 + メスガキコルベット
+				CASE 6
+					MESUGAKI_SHIP_MODEL = RAND:2 + ドリルフリゲート
+			ENDSELECT
+		CASE 混成コルベット艦隊
+			MESUGAKI_SHIP_MODEL = RAND:3 + メスガキコルベット
+		CASE 少女と怪獣
+			MESUGAKI_SHIP_MODEL = RAND:2 + メスガキボンバーガール
+		CASE ～駆逐艦混成艦隊
+			SELECTCASE RAND:14
+				CASE 0 TO 7
+					MESUGAKI_SHIP_MODEL = RAND:2
+				CASE 8 TO 11
+					MESUGAKI_SHIP_MODEL = RAND:3 + メスガキコルベット
+				CASE 11 TO 12
+					MESUGAKI_SHIP_MODEL = RAND:2 + ドリルフリゲート
+				CASE 13
+					MESUGAKI_SHIP_MODEL = RAND:2 + ツインドリル駆逐艦
+			ENDSELECT
+		CASE 混成フリゲート艦隊
+			MESUGAKI_SHIP_MODEL = RAND:2 + ドリルフリゲート
+		CASE ドリル艦隊
+			SELECTCASE RAND:3
+				CASE 0 TO 1
+					MESUGAKI_SHIP_MODEL = ドリルフリゲート
+				CASE 2
+					MESUGAKI_SHIP_MODEL = ツインドリル駆逐艦
+			ENDSELECT
+		CASE 混成駆逐隊
+			MESUGAKI_SHIP_MODEL = RAND:2 + ツインドリル駆逐艦
+		CASE 怪獣隊
+			SELECTCASE RAND:7
+				CASE 0 TO 3
+					MESUGAKI_SHIP_MODEL = メスガキシャコタン
+				CASE 4 TO 5
+					MESUGAKI_SHIP_MODEL = メスガキスライム
+				CASE 6
+					MESUGAKI_SHIP_MODEL = メスガキ半凍結まぐろ
+			ENDSELECT
+	ENDSELECT
+	CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(MESUGAKI_FLEET_POSITION, MESUGAKI_SHIP_MODEL)
+	CALL MESUGAKI_PIRATES_FLEET_COST(MESUGAKI_SHIP_MODEL)
+	MESUGAKI_FLEET_SIZE -= RESULT
+WEND
+
+
+;--------------------------
+;メスガキ海賊船のテンプレ生成
+;--------------------------
+@MESUGAKI_PIRATES_SHIP_TEMPLATE(MESUGAKI_FLEET_POSITION, MESUGAKI_SHIP_MODEL)
+#DIM MESUGAKI_FLEET_POSITION
+#DIM MESUGAKI_SHIP_MODEL
+#DIM CONST メスガキ砲艇 = 0
+#DIM CONST メスガキ魚雷艇 = 1
+#DIM CONST メスガキコルベット = 2
+#DIM CONST メスガキボンバーガール = 3
+#DIM CONST メスガキシャコタン = 4
+#DIM CONST ドリルフリゲート = 5
+#DIM CONST メスガキスライム = 6
+#DIM CONST ツインドリル駆逐艦 = 7
+#DIM CONST メスガキ半凍結まぐろ = 8
+
+SELECTCASE MESUGAKI_SHIP_MODEL
+
+CASE メスガキ砲艇
+	CALL INIT_PRESET_SHIP(国家ID_一般海賊, CHARACTER_POSITION, 普及型戦闘艇, "メスガキ砲艇", 普及型戦闘艇)
+CASE メスガキ魚雷艇
+	CALL INIT_PRESET_SHIP(国家ID_一般海賊, CHARACTER_POSITION, 普及型戦闘艇, "メスガキ魚雷艇", 普及型戦闘艇)
+	SHIP_EQUIP:主砲:0:RESULT = 30
+
+CASE メスガキコルベット
+	CALL INIT_PRESET_SHIP(国家ID_一般海賊, CHARACTER_POSITION, 汎用コルベット, "メスガキコルベット", 汎用コルベット)
+CASE メスガキボンバーガール
+	CALL INIT_PRESET_SHIP(国家ID_一般海賊, CHARACTER_POSITION, 標準型機動漁師, "メスガキボンバーガール", 標準型機動漁師)
+	SHIP_EQUIP:主砲:0:RESULT = 66
+	SHIP_EQUIP:副砲:0:RESULT = 55
+CASE メスガキシャコタン
+	CALL INIT_PRESET_SHIP(国家ID_一般海賊, CHARACTER_POSITION, 宇宙しゃこ, "メスガキシャコタン", 宇宙しゃこ)
+	SHIP_EQUIP:装甲:0:RESULT = 1
+	SHIP_EQUIP:シールド:0:RESULT = 13
+	SHIP_EQUIP:エンジン:0:RESULT = 91
+
+CASE ドリルフリゲート
+	CALL INIT_PRESET_SHIP(国家ID_一般海賊, CHARACTER_POSITION, 汎用フリゲート, "ドリルフリゲート", 汎用フリゲート)
+	SHIP_EQUIP:主砲:0:RESULT = 154
+CASE メスガキスライム
+	CALL INIT_PRESET_SHIP(国家ID_一般海賊, CHARACTER_POSITION, 宇宙巨大スライム, "メスガキスライム", 宇宙巨大スライム)
+	SHIP_EQUIP:シールド:0:RESULT = 201
+
+CASE ツインドリル駆逐艦
+	CALL INIT_PRESET_SHIP(国家ID_一般海賊, CHARACTER_POSITION, 汎用駆逐艦, "ツインドリル駆逐艦", 汎用駆逐艦)
+	SHIP_EQUIP:主砲:0:RESULT = 154
+	SHIP_EQUIP:主砲:1:RESULT = 154
+CASE メスガキ半凍結まぐろ
+	CALL INIT_PRESET_SHIP(国家ID_一般海賊, CHARACTER_POSITION, 宇宙まぐろ, "メスガキ半凍結まぐろ", 宇宙まぐろ)
+	SHIP_EQUIP:主砲:1:RESULT = 12
+	SHIP_EQUIP:副砲:0:RESULT = 28
+	SHIP_EQUIP:装甲:0:RESULT = 15
+	SHIP_EQUIP:装甲:1:RESULT = 15
+	SHIP_EQUIP:シールド:0:RESULT = 14
+ENDSELECT
+
+RETURN RESULT
+
+;--------------------------
+;メスガキ海賊船のコストを返す
+;--------------------------
+@MESUGAKI_PIRATES_FLEET_COST(MESUGAKI_SHIP_MODEL)
+#DIM MESUGAKI_SHIP_MODEL
+
+#DIM CONST メスガキ砲艇 = 0
+#DIM CONST メスガキ魚雷艇 = 1
+#DIM CONST メスガキコルベット = 2
+#DIM CONST メスガキボンバーガール = 3
+#DIM CONST メスガキシャコタン = 4
+#DIM CONST ドリルフリゲート = 5
+#DIM CONST メスガキスライム = 6
+#DIM CONST ツインドリル駆逐艦 = 7
+#DIM CONST メスガキ半凍結まぐろ = 8
+
+SELECTCASE MESUGAKI_SHIP_MODEL
+;コスト1:戦闘艇
+CASE メスガキ砲艇 TO メスガキ魚雷艇
+	RETURN 1
+
+;コスト2:コルベット
+CASE メスガキコルベット TO メスガキシャコタン
+	RETURN 2
+
+;コスト4:フリゲート
+CASE ドリルフリゲート TO メスガキスライム
+	RETURN 4
+
+;コスト8:駆逐艦
+CASE ツインドリル駆逐艦 TO メスガキ半凍結まぐろ
+	RETURN 8
+ENDSELECT

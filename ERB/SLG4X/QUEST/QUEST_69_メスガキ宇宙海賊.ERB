@@ -1,0 +1,438 @@
+﻿;--------------------------
+; !! メスガキ宇宙海賊と 69を好きな番号に変える！!
+; メスガキ宇宙海賊
+;Q.メスガキを見た大人がする事は何でしょうか A.分からせの時間だ！
+;--------------------------
+
+
+;--------------------------
+; クエスト受注可能か
+;--------------------------
+@QUEST_ACCEPTABLE_69
+;SIF QUEST_COMPLETE_DATE:69 == 0 || DAY >= QUEST_COMPLETE_DATE:69
+;SIF QUEST_PROGRESS:69 == 0 || -DAY <= QUEST_PROGRESS:69
+SIF QUEST_PROGRESS:69 == 0 || DAY >= QUEST_COMPLETE_DATE:69
+	RETURN 1
+RETURN 0
+;--------------------------
+; クエストの名前を返却
+;--------------------------
+@QUEST_NAME_69
+;0:初回受注前
+;1:初回メスガキ宇宙海賊討伐受注後
+;(正の整数):次にプレイできる様になる時期(討伐受注で3・プラント探しで5に移行)
+;3:2回目以降メスガキ宇宙海賊討伐受注後
+
+IF QUEST_PROGRESS:69 == 1 || QUEST_PROGRESS:69 == 3
+	RESULTS =  メスガキ宇宙海賊を探せ
+ELSE
+	RESULTS =  メスガキ宇宙海賊
+
+ENDIF
+RETURN
+
+;--------------------------
+; マップでの表示を設定する
+; @QUEST_SET_TILE_  : マップ上対象地点にマークを出す。
+; @QUEST_MAP_INFO_  : 右下小窓にメッセージを出す
+; 引数１： ARG:0 SSXXYY　座標データ　マップ上でクリックされた座標。表示条件分岐に。
+;--------------------------
+;;;マップ画面上での表示。 隠したかったら関数コメントアウトか RETURN 0
+;;;色を替えたかったらSETCOLORしておけば後の処理で色反映します
+@QUEST_SET_TILE_69 (ARG:0 )
+	RESULTS '= "？"
+	SETCOLOR 0xFFFF00
+RETURN 1
+
+;;;右下小窓に出す。隠したければ関数コメントアウトか RETURN 0
+@QUEST_MAP_INFO_69 (ARG:0 )
+		RESULTS:0 '= "メスガキ宇宙海賊"
+;		RESULTS:1 '= "クエスト対象エリア"
+;		RESULTS:2 '= ""
+;		RESULTS:3 '= ""
+;		RESULTS:4 '= ""
+RETURN 1
+
+;-----------------------
+; マップ上からQUEST_BODYを実行する処理
+; @QUEST_SHOW_COMMAND_x : ここで指定した文字列のコマンドを現地で表示する
+; 　　　　　　　　　　 ：(調査する||捜索する||採集する||待ち伏せする||挑戦する)といったフレーバー
+; @QUEST_PLACE_CHECK_x ： 設定マスを踏んだら呼び出される。不要ならば消すか無処理で返す
+;--------------------------
+@QUEST_SHOW_COMMAND_69 ()
+
+SELECTCASE QUEST_PROGRESS:69
+	CASE 5
+	;プラント探し
+		RESULTS '= "ガサ入れの時間だ！"
+	CASE 6
+	;プラント襲撃
+		RESULTS '= "真・分からせの時間だ！"
+	CASEELSE
+	;討伐中
+		RESULTS '= "分からせの時間だ！"
+ENDSELECT
+RETURN 1
+
+@QUEST_REACH_PLACE_69 ()
+; CALL QUEST_BODY_69
+RETURN
+
+;--------------------------
+; クエスト本体
+;--------------------------
+@QUEST_BODY_69
+#DIM CONST QUEST_ID = 69
+#DIM SECTOR_ID
+#DIM X_POS
+#DIM Y_POS
+#DIM IS_COMPLETE
+#DIM SHIP_ID
+#DIM COUNTRY_ID
+;#DIM POSID
+#DIM MESUGAKI_LEADER
+#DIM MESUGAKI_CREW
+#DIM MESUGAKI_LEADER_ID
+#DIM MESUGAKI_CREW_ID
+
+;MESUGAKI_LEADER/MESUGAKI_CREW それぞれのキャラ類型を入れる変数
+;MESUGAKI_LEADER_ID/MESUGAKI_CREW_ID それぞれの生成したランダムキャラのIDを入れる変数
+
+#DIM POSITION_ID
+
+#DIM CONST MESUGAKI_LEADER_MAX = 4
+#DIM CONST MESUGAKI_CREW_MAX = 6
+
+;MESUGAKI_(立場名)_MAX メスガキの種類数用の定数。
+
+;クエスト進行度
+;0:初回受注前
+;1:初回メスガキ宇宙海賊討伐受注後
+;2:2回目以降受注前(討伐受注で3・プラント探しで5?に移行)
+;3:2回目以降メスガキ宇宙海賊討伐受注後
+
+;5?:プラント探し中
+;6?:プラント出現
+
+POSITION_ID = CHARACTER_POSITION
+
+SELECTCASE QUEST_PROGRESS:69
+CASE 0
+;メスガキ宇宙海賊初回導入
+	PRINTL 宇宙海賊。それは時に宇宙の海を行く屈強な荒くれ者達が。あるいは食い詰めた宇宙船乗りが。境遇も動機も多様なれどもその多くは大人である。
+	PRINTL 身体的に弱い子供がやっていける職業でもなければ、物語のそれに憧れる子供が居ても実際に海賊になるのとは大違いだ。
+	PRINTL それでも本気で海賊になろうとするにしても、自分の船でもない限りは海賊の仲間にならなければならない。
+	PRINTL 子供の頃に下っ端から始めた新人海賊が居たとしても、その名が知られる頃にはいい大人になっているだろう。
+	PRINTL 子供の内から自分の船を持てるのなら、そもそも海賊になんてならなくても好きに生きていけるだろう。
+	PRINTW 『メスガキの宇宙海賊、そんなのは居る訳が無い。そんなのが居たとしても外に知られる事のない海賊サーの姫だ』
+	PRINTL 
+	PRINTW そう。そんな「常識的に考えて居る訳が無い」メスガキの宇宙海賊が暴れているという噂が流れて来た……
+	CALL MESUGAKI_PIRATES_INTRIDUCTION
+
+CASE 1
+;初回メスガキ宇宙海賊討伐受注後
+	CALL ID2POS(CHARACTER_POSITION)
+	SECTOR_ID = RESULT:0
+	X_POS = RESULT:1
+	Y_POS = RESULT:2
+
+	IF QUESTMAP:SECTOR_ID:X_POS:Y_POS == QUEST_ID
+		;メスガキ宇宙海賊との戦闘
+		;初回リーダーは無知ガキは出さない
+		MESUGAKI_LEADER = RAND:3
+		MESUGAKI_CREW = RAND:(MESUGAKI_CREW_MAX + 1)
+		DRAWLINE
+		PRINTFORMW メスガキかはともかく、海賊が出て来る事を警戒しながら待っていた%CALLNAME:MASTER%の前に不審な船が現れた！
+		PRINTL 
+		TRYCALLFORM MESUGAKI_PIRATES_BEFORE_BATTLE_LEADER_{MESUGAKI_LEADER}
+		PRINTL 
+		TRYCALLFORM MESUGAKI_PIRATES_BEFORE_BATTLE_CREW_{MESUGAKI_CREW}
+		PRINTL 
+		PRINTW 通信で船、積み荷、その他一切合切を差し出す様に言い放ったのは、噂通りのメスガキだ。
+		PRINTFORMW 当然、そんな要求を受け入れる%CALLNAME:MASTER%ではない……なぜなら、%CALLNAME:MASTER%はメスガキに社会と大人というものを分からせに来たのだから！
+		;CALL INIT_PRESET_SHIP(国家ID_一般海賊, POSID, 汎用コルベット, "メスガキコルベット", 汎用コルベット)
+		;CALL INIT_PRESET_SHIP(国家ID_一般海賊, CHARACTER_POSITION, 汎用コルベット, "メスガキコルベット", 汎用コルベット)
+		CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(CHARACTER_POSITION, 2)
+		QUEST_FLAG_SHIP_ID:QUEST_ID = RESULT
+;債権回収からコピペ・改造
+		CALL COMBAT(CHARACTER_POSITION)
+		CALL RETIRE_BROKEN_SHIP
+		IF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:QUEST_ID) != 国家ID_一般海賊
+			;; 敵の旗艦を撃破し、自分が撃破されていない
+			IF CHARACTER_POSITION == POSITION_ID
+				PRINTL メスガキ宇宙海賊の乗ったコルベットは沈黙した。
+				IF CAN_ADD_RANDOM_CHARA()
+				;キャラが追加できるなら白兵戦確認へ
+					PRINTFORML しかし%CALLNAME:MASTER%はメスガキが脱出艇で逃げ出そうとしているのを見逃さなかった！
+					PRINTW 鈍足の脱出艇へと船を寄せるのは簡単だ。メスガキをとっ捕まえてこの手で直接分からせるいい機会ではなかろうか？
+					CALL MESUGAKI_WAKARASE_FIGHT_OR_FLIGHT
+					IF RESULT == 0
+						;白兵戦へ
+
+						;リーダーをキャラとして作る 初回なので罠ガキは無し
+						CALL MESUGAKI_PIRATES_CHARA_GENERATE(MESUGAKI_LEADER, 0)
+						MESUGAKI_LEADER_ID = RESULT
+						;非戦闘要員じゃないならクルーも作る
+						IF MESUGAKI_CREW != 5
+							CALL MESUGAKI_PIRATES_CHARA_GENERATE(MESUGAKI_CREW, 0)
+							MESUGAKI_CREW_ID = RESULT
+						ELSE
+							MESUGAKI_CREW_ID = -1
+						ENDIF
+						CALL MESUGAKI_WAKARASE_CLOSE_COMBAT(MESUGAKI_LEADER_ID, MESUGAKI_CREW_ID, 3)
+							IF RESULT == 1
+								PRINTFORML %CALLNAME:MASTER%は白兵戦でメスガキ達を取り押さえた！
+
+								;メスガキ確保用処理
+								CALL MESUGAKI_CHOICE_BODY(MESUGAKI_LEADER, MESUGAKI_LEADER_ID, MESUGAKI_CREW, MESUGAKI_CREW_ID)
+
+							ELSEIF RESULT == 0
+								PRINTFORMW %CALLNAME:MASTER%はメスガキ達を取り逃した……。
+							ENDIF
+					ELSEIF RESULT == 1
+						PRINTL メスガキ宇宙海賊は海賊を行う能力を失った。
+						PRINTL そして当事者の口から語られる敗北こそがより多くのメスガキを分からせる術だろう。
+						PRINTW メスガキ達の惨めな敗走を記録し、言い逃れの余地が無くなる様に星間ネットへアップロードした。
+					ENDIF
+				ELSE
+					PRINTL 既に脱出しているのか、あるいはスペースデブリの一部になったのか。
+					PRINTL あの生意気な通信を行ったメスガキを見出す事はできなかった。
+				ENDIF
+				PRINTFORML 
+				PRINTL かくして、この宇宙からメスガキ宇宙海賊は消え去った。
+				PRINTW しかしメスガキ宇宙海賊が実在したというのなら、いつの日にか別のメスガキ宇宙海賊が現れないとも限らない。
+				PRINTFORMW 戦え！ %CALLNAME:MASTER%！ 負けるな！ %CALLNAME:MASTER%！
+				PRINTFORMW 『メスガキを分からせる』その精神でメスガキ宇宙海賊に立ち向かえるのはきっと%CALLNAME:MASTER%だけなのだから…………
+				QUEST_COMPLETE_DATE:QUEST_ID = DAY + (RAND:4 + 3) * 10
+				QUEST_PROGRESS:QUEST_ID = 2
+				FOR SHIP_ID, 0, MAX_SHIP
+					IF SHIP_COUNTRY:SHIP_ID == 国家ID_一般海賊 && SHIP_POSITION:SHIP_ID == CHARACTER_POSITION
+						CALL GET_SHIP_TOTAL_HP(SHIP_ID)
+						SHIP_DAMAGE:SHIP_ID = RESULT
+					ENDIF
+				NEXT
+				CALL RETIRE_BROKEN_SHIP
+			ELSE
+				QUEST_PROGRESS:QUEST_ID = 0
+			ENDIF
+			;; 引き分け。互いに旗艦が生存している状態
+		ELSEIF CHARACTER_POSITION == POSITION_ID
+			PRINTFORML メスガキを分からせる事に失敗してしまった。
+			PRINTFORMW メスガキ宇宙海賊はこの宙域から去っていったようだ……。
+			QUEST_PROGRESS:QUEST_ID = 0
+			FOR SHIP_ID, 0, MAX_SHIP
+				IF SHIP_COUNTRY:SHIP_ID == 国家ID_一般海賊 && SHIP_POSITION:SHIP_ID == CHARACTER_POSITION
+					CALL GET_SHIP_TOTAL_HP(SHIP_ID)
+					SHIP_DAMAGE:SHIP_ID = RESULT
+				ENDIF
+			NEXT
+			CALL RETIRE_BROKEN_SHIP
+		ENDIF
+		CALL QUEST_RELEASE_POINT(QUEST_ID, CHARACTER_POSITION:MASTER)
+
+
+	ELSE
+		PRINTW メスガキ宇宙海賊が居そうな座標に行ってその正体を確認しよう
+	ENDIF
+CASE 2
+;二回目以降の導入
+
+	PRINTL かつて討ち滅ぼしたはずのメスガキ宇宙海賊。
+	PRINTL しかしその噂は再び聞こえて来た。
+	PRINTFORMW 邪智暴虐のメスガキが再び現れたというのなら、それを分からせる事ができるのはきっと%CALLNAME:MASTER%だけだろう。
+	CALL MESUGAKI_PIRATES_INTRIDUCTION
+
+
+CASE 3
+;2回目以降メスガキ宇宙海賊討伐受注後
+	CALL ID2POS(CHARACTER_POSITION)
+	SECTOR_ID = RESULT:0
+	X_POS = RESULT:1
+	Y_POS = RESULT:2
+
+	IF QUESTMAP:SECTOR_ID:X_POS:Y_POS == QUEST_ID
+		;メスガキ宇宙海賊との戦闘
+		MESUGAKI_LEADER = RAND:(MESUGAKI_LEADER_MAX)
+		MESUGAKI_CREW = RAND:(MESUGAKI_CREW_MAX)
+		PRINTFORMW メスガキ宇宙海賊を待ち伏せていた%CALLNAME:MASTER%の前に不審な船が現れた！
+		PRINTL 
+		TRYCALLFORM MESUGAKI_PIRATES_BEFORE_BATTLE_LEADER_{MESUGAKI_LEADER}
+		PRINTL 
+		TRYCALLFORM MESUGAKI_PIRATES_BEFORE_BATTLE_CREW_{MESUGAKI_CREW}
+		PRINTL 
+		PRINTW 通信で船、積み荷、その他一切合切を差し出す様に言い放ったのは、やはりメスガキだ。
+		PRINTFORMW 当然、そんな要求を受け入れる%CALLNAME:MASTER%ではない……なぜなら、%CALLNAME:MASTER%はメスガキに社会と大人というものを分からせに来たのだから！
+
+		CALL MESUGAKI_PIRATES_FLEET_GENERATE(CHARACTER_POSITION, RAND:100 + 1, 0)
+		QUEST_FLAG_SHIP_ID:QUEST_ID = RESULT
+
+;債権回収からコピペ・改造
+		CALL COMBAT(CHARACTER_POSITION)
+		CALL RETIRE_BROKEN_SHIP
+		IF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:QUEST_ID) != 国家ID_一般海賊
+			;; 敵の旗艦を撃破し、自分が撃破されていない
+			IF CHARACTER_POSITION == POSITION_ID
+				PRINTL メスガキ宇宙海賊の艦隊は沈黙した。
+				IF CAN_ADD_RANDOM_CHARA()
+				;キャラが追加できるなら白兵戦確認へ
+					PRINTFORML しかし%CALLNAME:MASTER%はメスガキが脱出艇で逃げ出そうとしているのを見逃さなかった！
+					PRINTW 鈍足の脱出艇へと船を寄せるのは簡単だ。メスガキをとっ捕まえてこの手で直接分からせるいい機会ではなかろうか？
+					CALL MESUGAKI_WAKARASE_FIGHT_OR_FLIGHT
+					IF RESULT == 0
+						;白兵戦へ
+
+						;リーダーをキャラとして作る
+						;罠ガキ判定
+						CALL MESUGAKI_TRAP_DECISION(MESUGAKI_LEADER)
+
+						CALL MESUGAKI_PIRATES_CHARA_GENERATE(MESUGAKI_LEADER, RESULT)
+						MESUGAKI_LEADER_ID = RESULT
+						;非戦闘要員じゃないならクルーも作る
+						IF MESUGAKI_CREW != 5
+							CALL MESUGAKI_TRAP_DECISION(MESUGAKI_CREW)
+							CALL MESUGAKI_PIRATES_CHARA_GENERATE(MESUGAKI_CREW, RESULT)
+							MESUGAKI_CREW_ID = RESULT
+						ELSE
+							MESUGAKI_CREW_ID = -1
+						ENDIF
+						CALL MESUGAKI_WAKARASE_CLOSE_COMBAT(MESUGAKI_LEADER_ID, MESUGAKI_CREW_ID, RAND:4 + 3)
+							IF RESULT == 1
+								PRINTFORML %CALLNAME:MASTER%は白兵戦でメスガキ達を取り押さえた！
+
+								;メスガキ確保用処理
+								CALL MESUGAKI_CHOICE_BODY(MESUGAKI_LEADER, MESUGAKI_LEADER_ID, MESUGAKI_CREW, MESUGAKI_CREW_ID)
+
+							ELSEIF RESULT == 0
+								PRINTFORMW %CALLNAME:MASTER%はメスガキ達を取り逃した……。
+							ENDIF
+					ELSEIF RESULT == 1
+						PRINTL メスガキ宇宙海賊は海賊を行う能力を失った。
+						PRINTW そして当事者の口から語られる敗北こそがより多くのメスガキを分からせる術だろう。
+						PRINTW メスガキ達の惨めな敗走を記録し、言い逃れの余地が無くなる様に星間ネットへアップロードした。
+					ENDIF
+				ELSE
+					PRINTL 既に脱出しているのか、あるいはスペースデブリの一部になったのか。
+					PRINTL あの生意気な通信を行ったメスガキを見出す事はできなかった。
+				ENDIF
+				PRINTL 
+				PRINTL またしても、この宇宙からメスガキ宇宙海賊は消え去った。
+				PRINTW しかしいつの日にか別のメスガキ宇宙海賊が現れるという懸念は事実となったのだから、ただ安穏と過ごす訳には行かない。
+				PRINTFORMW 戦え！ %CALLNAME:MASTER%！ 負けるな！ %CALLNAME:MASTER%！
+				PRINTFORMW 『メスガキを分からせる』その精神でメスガキ宇宙海賊に立ち向かえるのはきっと%CALLNAME:MASTER%だけなのだから…………
+				QUEST_COMPLETE_DATE:QUEST_ID = DAY + (RAND:4 + 3) * 10
+				QUEST_PROGRESS:QUEST_ID = 2
+				FOR SHIP_ID, 0, MAX_SHIP
+					IF SHIP_COUNTRY:SHIP_ID == 国家ID_一般海賊 && SHIP_POSITION:SHIP_ID == CHARACTER_POSITION
+						CALL GET_SHIP_TOTAL_HP(SHIP_ID)
+						SHIP_DAMAGE:SHIP_ID = RESULT
+					ENDIF
+				NEXT
+				CALL RETIRE_BROKEN_SHIP
+			ELSE
+
+			ENDIF
+			;; 引き分け。互いに旗艦が生存している状態
+		ELSEIF CHARACTER_POSITION == POSITION_ID
+			PRINTFORML メスガキを分からせる事に失敗してしまった。
+			PRINTFORMW メスガキ宇宙海賊はこの宙域から去っていったようだ……。
+			QUEST_PROGRESS:QUEST_ID = 0
+			FOR SHIP_ID, 0, MAX_SHIP
+				IF SHIP_COUNTRY:SHIP_ID == 国家ID_一般海賊 && SHIP_POSITION:SHIP_ID == CHARACTER_POSITION
+					CALL GET_SHIP_TOTAL_HP(SHIP_ID)
+					SHIP_DAMAGE:SHIP_ID = RESULT
+				ENDIF
+			NEXT
+			CALL RETIRE_BROKEN_SHIP
+		ENDIF
+		CALL QUEST_RELEASE_POINT(QUEST_ID, CHARACTER_POSITION:MASTER)
+
+
+	ELSE
+		PRINTW メスガキ宇宙海賊が居そうな座標に行ってその正体を確認しよう
+	ENDIF
+;CASE 4
+;2回目以降メスガキ宇宙海賊討伐後
+;	PRINTL またしても、この宇宙からメスガキ宇宙海賊は消え去った。
+;	PRINTL しかしいつの日にか別のメスガキ宇宙海賊が現れるという懸念は事実となったのだから、ただ安穏と過ごす訳には行かない。
+;	PRINTFORML 戦え！ %CALLNAME:MASTER%！ 負けるな！ %CALLNAME:MASTER%！
+;	PRINTFORML 『メスガキを分からせる』その精神でメスガキ宇宙海賊に立ち向かえるのはきっと%CALLNAME:MASTER%だけなのだから…………
+;	QUEST_PROGRESS:QUEST_ID = DAY + (RAND:4 + 3) * 10
+CASE 5
+;プラント探し中
+CASE 6
+;プラント出現
+
+
+ENDSELECT
+;RETURN
+
+
+;--------------------------
+;メスガキ宇宙海賊・クエスト導入選択肢
+;--------------------------
+@MESUGAKI_PIRATES_INTRIDUCTION
+#DIM CONST QUEST_ID = 69
+#DIM SECTOR_ID
+#DIM X_POS
+#DIM Y_POS
+$INPUT_LOOP
+PRINTBUTTON "[0] メスガキだと！？ 分からせだ！", 0
+PRINTL 
+PRINTBUTTON "[1] 刹那で忘れちゃった。まあいいかこんな噂", 1
+
+;IF QUEST_COMPLETE_DATE:QUEST_ID > 0
+;	PRINTL 
+;	PRINTBUTTON "[2] 待て、メスガキ宇宙海賊の二匹目なんて裏があるに違いない！", 2
+;ENDIF
+
+INPUT
+IF RESULT == 0
+	CALL ID2POS(CHARACTER_POSITION)
+	SECTOR_ID = RESULT:0
+	X_POS = RESULT:1
+	Y_POS = RESULT:2
+	PRINTFORML %CALLNAME:MASTER%は噂からメスガキ宇宙海賊が居そうな座標にあたりを付けた
+	PRINTL
+	LOCAL = 1
+	WHILE LOCAL
+		;故障船修理からほぼコピペ
+		CALL QUEST_SET_RANDPOINT(QUEST_ID, SECTOR_ID, 5 )
+		IF RESULT >= 0
+			X_POS = (RESULT / 100) %100
+			Y_POS = RESULT %100
+			CLEARMAP:SECTOR_ID:X_POS:Y_POS = 1		;;明瞭化おまけ
+			LOCAL --
+		ENDIF
+	WEND
+	IF  QUEST_COMPLETE_DATE:QUEST_ID > 0
+		QUEST_PROGRESS:QUEST_ID = 3
+	ELSE
+		QUEST_PROGRESS:QUEST_ID = 1
+	ENDIF
+
+ELSEIF RESULT == 1
+	PRINTL メスガキ宇宙海賊の噂はじきに消えた。
+	PRINTL しかし次にメスガキ宇宙海賊の噂が聞こえて来た時には本当にメスガキの宇宙海賊が居るのかもしれない……。
+;ELSEIF RESULT == 2 && QUEST_COMPLETE_DATE:69 > 0
+	;メスガキプラント探し編へ
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+;--------------------------
+;罠ガキ判定
+;--------------------------
+@MESUGAKI_TRAP_DECISION(CHARA_ROLE)
+#DIM CHARA_ROLE
+#DIM CONST メスガキパイレーツ = 0
+#DIM CONST 意思よわ友釣られ = 4
+
+SELECTCASE CHARA_ROLE
+	CASE メスガキパイレーツ
+		SIF RAND:11 == 0
+			RETURN 1
+	CASE 意思よわ友釣られ
+		SIF RAND:9 == 0
+			RETURN 1
+ENDSELECT
+RETURN 0

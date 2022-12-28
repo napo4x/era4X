@@ -1,0 +1,155 @@
+﻿;キャラ作成
+
+@MESUGAKI_PIRATES_CHARA_GENERATE(CHARA_ROLE, TRAP)
+
+#DIM CHARA_ROLE
+#DIM TRAP
+#DIM CHARA_ID
+#DIM CONST メスガキパイレーツ = 0
+#DIM CONST メスガキクソビッチ = 1
+#DIM CONST レズガキミサンドリ = 2
+#DIM CONST 無知ガキパイレーツ = 3
+#DIM CONST 意思よわ友釣られ = 4
+#DIM CONST ほぼメス慰安夫 = 5
+
+IF CHARA_ROLE == ほぼメス慰安夫 || TRAP == 1
+;慰安夫か罠ガキなら男の娘・それ以外は女
+	CALL CREATE_RANDOM_CHARA(10, , 4)
+ELSE
+	CALL CREATE_RANDOM_CHARA(10, , 1)
+ENDIF
+SIF RESULT == -1
+;キャラ生成に失敗してたら終了
+	RETURN -1
+
+CHARA_ID = RESULT
+
+;共通処理
+SELECTCASE RAND:100
+;体形の上書き
+;(身体的に大人なのが残りうるのは身体だけ大人なガキが出る様に。それと「大きくても巨人のガキはガキでしょ」理論で巨人の可能性を残したい)
+	CASE 0 TO 60
+		TALENT:CHARA_ID:体格 = 体格_子供
+	CASE 61 TO 85
+		TALENT:CHARA_ID:体格 = 体格_小柄
+	CASE 86 TO 90
+		TALENT:CHARA_ID:体格 = 体格_普通
+ENDSELECT
+
+SELECTCASE RAND:100
+;体毛の上書き
+;(「下の毛も生えてないメスガキぃっ！」(と「そいつらと大差ないほぼメスぅっ！」)が大半になる様に。体形を見ないのは上記巨人のメスガキの可能性を含めたいから)
+	CASE 0 TO 80
+		TALENT:CHARA_ID:陰毛目標値 = 陰毛_パイパン
+		TALENT:CHARA_ID:陰毛現在値 = 陰毛_パイパン
+	CASE 81 TO 90
+		TALENT:CHARA_ID:陰毛目標値 = 陰毛_うっすら
+		TALENT:CHARA_ID:陰毛現在値 = 陰毛_うっすら
+	CASE 91 TO 95
+		TALENT:CHARA_ID:陰毛目標値 = 陰毛_柔毛
+		TALENT:CHARA_ID:陰毛現在値 = 陰毛_柔毛
+ENDSELECT
+
+SELECTCASE RAND:100
+	CASE 0 TO 80
+		TALENT:CHARA_ID:腋毛目標値 = 腋毛_つるつる
+		TALENT:CHARA_ID:腋毛現在値 = 腋毛_つるつる
+	CASE 81 TO 90
+		TALENT:CHARA_ID:腋毛目標値 = 腋毛_うっすら
+		TALENT:CHARA_ID:腋毛現在値 = 腋毛_うっすら
+	CASE 91 TO 95
+		TALENT:CHARA_ID:腋毛目標値 = 腋毛_ふんわり
+		TALENT:CHARA_ID:腋毛現在値 = 腋毛_ふんわり
+ENDSELECT
+
+;個別処理
+SELECTCASE CHARA_ROLE
+	CASE メスガキパイレーツ
+		;プレーンなメスガキ。
+		TALENT:CHARA_ID:生意気 = 1
+		SIF RAND:3 != 0
+			TALENT:CHARA_ID:おもらし癖 = 1
+	CASE メスガキクソビッチ
+		;処女ビッチの可能性は否定しないけど貞操観念付きの偽ビッチはコレジャナイ感があるので貞操観念は消す(ビッチのふりをしているだけのおぼこを出すならセリフとか含めて別枠にしたい)
+		;女嫌いが無いのは環境(メスガキ集団の中)的に女嫌いのままクソビッチとして生き抜くのは辛そう+「性別程度で股を開けなくなるとかビッチとして気合が足りない」という作者の趣味
+		TALENT:CHARA_ID:生意気 = 1
+		TALENT:CHARA_ID:貞操観念 = 0
+		TALENT:CHARA_ID:男嫌い = 0
+		TALENT:CHARA_ID:女嫌い = 0
+	CASE レズガキミサンドリ
+		TALENT:CHARA_ID:生意気 = 1
+		TALENT:CHARA_ID:男嫌い = 1
+		TALENT:CHARA_ID:女嫌い = 0
+		ABL:CHARA_ID:レズ = RAND:4 + 1
+		ABL:CHARA_ID:精愛 = 0
+		EXP:CHARA_ID:レズ経験値 += RAND:51
+	CASE 無知ガキパイレーツ
+		TALENT:CHARA_ID:生意気 = 1
+		SIF RAND:3 != 0
+			TALENT:CHARA_ID:おもらし癖 = 1
+		ABL:CHARA_ID:性知識 = 0
+		;高確率で未経験・経験があっても無自覚に
+		IF RAND:3 != 0
+			VARSET EXP:CHARA_ID:0, 0, 0, 70
+			VARSET EXP:CHARA_ID:0, 0, 90, 98
+			TALENT:CHARA_ID:処女 = 1
+			TALENT:CHARA_ID:Ｖ締まり = GET_DEFAULT_TIGHTNESS("ぎちぎち")
+			TALENT:CHARA_ID:キス未経験 = 1
+			TALENT:CHARA_ID:アナル処女 = 1
+			TALENT:CHARA_ID:尿道処女 = 1
+			SEXUAL_EXPERIENCE:CHARA_ID:初体験_キス = ----
+			SEXUAL_LAST_EXPERIENCE:CHARA_ID:初体験_キス = ----
+			SEXUAL_EXPERIENCE:CHARA_ID:初体験_処女 = ----
+			SEXUAL_LAST_EXPERIENCE:CHARA_ID:初体験_処女 = ----
+			SEXUAL_EXPERIENCE:CHARA_ID:初体験_アナル処女 = ----
+			SEXUAL_LAST_EXPERIENCE:CHARA_ID:初体験_アナル処女 = ----
+			SEXUAL_EXPERIENCE:CHARA_ID:初体験_尿道処女 = ----
+			SEXUAL_LAST_EXPERIENCE:CHARA_ID:初体験_尿道処女 = ----
+			SEXUAL_EXPERIENCE_SITUATION:CHARA_ID:初体験_キス =
+			SEXUAL_EXPERIENCE_SITUATION:CHARA_ID:初体験_処女 =
+			SEXUAL_EXPERIENCE_SITUATION:CHARA_ID:初体験_アナル処女 =
+			SEXUAL_EXPERIENCE_SITUATION:CHARA_ID:初体験_尿道処女 =
+		ELSE
+			SIF TALENT:CHARA_ID:処女 == 0
+				TALENT:CHARA_ID:処女 = 2
+			SIF TALENT:CHARA_ID:アナル処女 == 0
+				TALENT:CHARA_ID:アナル処女 = 2
+			SIF TALENT:CHARA_ID:尿道処女 == 0
+				TALENT:CHARA_ID:尿道処女 = 2
+		ENDIF
+	CASE 意思よわ友釣られ
+		TALENT:CHARA_ID:反抗的 = 0
+		TALENT:CHARA_ID:プライド高い = 0
+		TALENT:CHARA_ID:生意気 = 0
+		SIF RAND:3 != 0
+			TALENT:CHARA_ID:おもらし癖 = 1
+	CASE ほぼメス慰安夫
+		;使用済み感が欲しい
+		TALENT:CHARA_ID:反抗的 = 0
+		TALENT:CHARA_ID:プライド高い = 0
+		TALENT:CHARA_ID:生意気 == 0
+		SKIPDISP 1
+		CALL FUCK(CHARA_ID, "欲望, 性技, 性交, Ｃ, Ａ, Ｍ, 性交, 自慰, 露出, 排泄, 射精, 苦痛快楽, 緊縛, マゾ, キス, 口淫, Ａ拡張", "童貞喪失, キス喪失, Ａ処女喪失, Ｖ挿入, Ａ性交", 0, "メスガキの唇", "メスガキのペニスバンド", "メスガキ", "陵辱")
+		SKIPDISP 0
+		TALENT:CHARA_ID:Ａ締まり = GET_DEFAULT_TIGHTNESS("ぽっかり")
+		ABL:CHARA_ID:奉仕 = RAND:3 + 1
+		ABL:CHARA_ID:射精 = RAND:3 + 1
+		ABL:CHARA_ID:Ａ感 = RAND:3 + 1
+		ABL:CHARA_ID:主導度Ｕ = -1 * (RAND:901 + 100)
+		EXP:CHARA_ID:奉仕経験値 += RAND:51
+		EXP:CHARA_ID:トラウマ経験 += RAND:51
+		EXP:CHARA_ID:異常経験 += RAND:11
+		EXP:CHARA_ID:輪姦経験 += RAND:51
+		EXP:CHARA_ID:射精経験値 = (RAND:50 + 1) * (RAND:4 + 1)
+ENDSELECT
+;体形とかを変えた影響を計算させ直す
+CALL SET_BODYSIZE_HEIGHT(CHARA_ID)
+CALL SET_BODYSIZE_BUST(CHARA_ID)
+CALL SET_BODYSIZE_WEIST(CHARA_ID)
+CALL SET_BODYSIZE_HIP(CHARA_ID)
+CALL SET_BODYSIZE_WEIGHT(CHARA_ID)
+CALL SET_BODYSIZE_PENIS(CHARA_ID)
+CALL CUT_WOMB_SPERM_AMOUNT(CHARA_ID)
+
+
+RETURN CHARA_ID
