@@ -26,12 +26,12 @@ CALL CHOICE_CLONE_CHARACTER
 SIF !RESULT
 	RETURN
 CALL CLONE_PLAYER_SHIP
+CALL INIT_COUNTRY_DATA
 
 IS_NEWGAME = 1
 CALL NEWLOOP(IS_NEWGAME)
 CALL GAME_INIT
 CALL SLG_INIT(RESULT)
-
 
 ;-------------------------------------------------
 ; 引き継ぎキャラクターの選択
@@ -179,6 +179,24 @@ VARSET RESOURCE_RESEARCH_DATE_FROM_STAR, 0
 VARSET RESOURCE_RESEARCH_DATE_FROM_PORT, 0
 VARSET BUILDUP_TARGET_STAR_ID, 0
 
+
+;-------------------------------------------------
+; 国のデータ初期化
+;-------------------------------------------------
+@INIT_COUNTRY_DATA
+#DIM COUNTRY_ID
+#DIM PORT_ID
+
+;嫌われている場合は初期値まで戻す。それ以外は好感度引継ぎ
+FOR COUNTRY_ID, 0, MAX_COUNTRY
+	SIF REL_LIKE_COUNTRY:COUNTRY_ID:国家ID_プレイヤー < 0
+		REL_LIKE_COUNTRY:COUNTRY_ID:国家ID_プレイヤー = 0
+NEXT
+
+FOR PORT_ID, 0, MAX_PORT
+	PORT_POSITION_ID:PORT_ID = 0
+	PORT_OWNER = 0
+NEXT
 
 ;-------------------------------------------------
 ;「宙域画面」の右カラムオフ判定
