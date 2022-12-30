@@ -67,7 +67,7 @@ SELECTCASE JOB_NAME:(TALENT:職業)
 			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_靴, "ローファー")
 		ENDIF
 	;一般系
-	CASE "会社員","教師","受付嬢","政治犯","役人","秘書","アナウンサー","記者","貿易商","企業家","労働党員","プログラマー",
+	CASE "会社員","教師","政治犯","役人","秘書","アナウンサー","記者","貿易商","企業家","労働党員","プログラマー",
 		CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_上服, "ワイシャツ")
 		CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_上着, "スーツ")
 		IF IS_MALE(TARGET)
@@ -537,5 +537,26 @@ SELECTCASE JOB_NAME:(TALENT:職業)
 				CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_靴, "ブーツ")
 			ENDIF
 		ENDIF
+	;傭兵
+	CASE "傭兵"
+		CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_上服, "軍服")
+		SIF RAND:100 < 31
+			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_上着, "コート")
+		IF RAND:100 < 31
+			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_アクセサリ, "眼鏡")
+		ELSE
+			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_アクセサリ, "リュックサック")
+		ENDIF
+		IF IS_MALE(TARGET)
+			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_下着下, "トランクス")
+			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_靴下, "靴下")
+			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_下服, "ズボン")
+			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_靴, "サバイバルブーツ")
+		ELSE
+			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_下着上, "ブラ")
+			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_下着下, "パンティ")
+		ENDIF
+		CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_下服, "ズボン")
+		CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_靴, "サバイバルブーツ")
 ENDSELECT
 
