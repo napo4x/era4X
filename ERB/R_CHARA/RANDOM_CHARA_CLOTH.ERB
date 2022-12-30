@@ -549,13 +549,11 @@ SELECTCASE JOB_NAME:(TALENT:職業)
 		ENDIF
 		IF IS_MALE(TARGET)
 			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_下着下, "トランクス")
-			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_靴下, "靴下")
-			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_下服, "ズボン")
-			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_靴, "サバイバルブーツ")
 		ELSE
 			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_下着上, "ブラ")
 			CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_下着下, "パンティ")
 		ENDIF
+		CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_靴下, "靴下")
 		CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_下服, "ズボン")
 		CALL SET_CLOTH_BY_NAME(TARGET, 衣装部位_靴, "サバイバルブーツ")
 ENDSELECT
