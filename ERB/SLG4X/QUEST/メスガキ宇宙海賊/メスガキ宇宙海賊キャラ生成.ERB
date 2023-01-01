@@ -17,6 +17,18 @@ IF CHARA_ROLE == ほぼメス慰安夫 || TRAP == 1
 	CALL CREATE_RANDOM_CHARA(10, , 4)
 ELSE
 	CALL CREATE_RANDOM_CHARA(10, , 1)
+	;女の場合、バストサイズの上書きも同時に行う
+	SELECTCASE RAND:100
+		CASE 0 TO 60
+			;絶壁
+			CALL SET_BUSTSIZE(CHARA_ID, -2)
+		CASE 61 TO 75
+			;貧乳
+			CALL SET_BUSTSIZE(CHARA_ID, -1)
+		CASE 76 TO 80
+			;並乳
+			CALL SET_BUSTSIZE(CHARA_ID, 0)
+	ENDSELECT
 ENDIF
 SIF RESULT == -1
 ;キャラ生成に失敗してたら終了
@@ -26,7 +38,7 @@ CHARA_ID = RESULT
 
 ;共通処理
 SELECTCASE RAND:100
-;体形の上書き
+;体格の上書き
 ;(身体的に大人なのが残りうるのは身体だけ大人なガキが出る様に。それと「大きくても巨人のガキはガキでしょ」理論で巨人の可能性を残したい)
 	CASE 0 TO 60
 		TALENT:CHARA_ID:体格 = 体格_子供
@@ -127,7 +139,7 @@ SELECTCASE CHARA_ROLE
 		;使用済み感が欲しい
 		TALENT:CHARA_ID:反抗的 = 0
 		TALENT:CHARA_ID:プライド高い = 0
-		TALENT:CHARA_ID:生意気 == 0
+		TALENT:CHARA_ID:生意気 = 0
 		SKIPDISP 1
 		CALL FUCK(CHARA_ID, "欲望, 性技, 性交, Ｃ, Ａ, Ｍ, 性交, 自慰, 露出, 排泄, 射精, 苦痛快楽, 緊縛, マゾ, キス, 口淫, Ａ拡張", "童貞喪失, キス喪失, Ａ処女喪失, Ｖ挿入, Ａ性交", 0, "メスガキの唇", "メスガキのペニスバンド", "メスガキ", "陵辱")
 		SKIPDISP 0

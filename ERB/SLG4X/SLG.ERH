@@ -68,6 +68,13 @@
 #DIM CONST 艦船識別子_なし = 0 
 #DIM CONST 艦船識別子_自然生成海賊 = 1
 
+;IS_VARIANTの設定値
+#DIM CONST 特殊分類_通常艦艇 = 0
+#DIM CONST 特殊分類_メック = 1
+#DIM CONST 特殊分類_生体艦 = 2
+#DIM CONST 特殊分類_宇宙生物 = 3
+
+#DIMS CONST SHIP_VARIANT_NAME = "通常艦艇", "メック", "生体艦", "宇宙生物"
 
 ; 船のミッション系
 #DIM SAVEDATA SHIP_MISSION, MAX_SHIP

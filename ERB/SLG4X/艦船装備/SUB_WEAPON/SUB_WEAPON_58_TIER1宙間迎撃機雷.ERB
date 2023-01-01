@@ -1,0 +1,34 @@
+﻿;-----------------------------------
+; サブウェポン
+;-----------------------------------
+@GET_SUB_WEAPON_NAME_58
+RESULTS = TIER1宙間迎撃機雷
+
+@GET_SUB_WEAPON_STATUS_58(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 12
+STATUS:FIRE_RATE = 2
+STATUS:ANTI_AIR = 200
+STATUS:HIT_RATE = 50
+STATUS:FIRE_RANGE = 1
+STATUS:SIZE = 1
+STATUS:WEAPON_TYPE = 魚雷
+STATUS:PRICE = 40000
+
+;-----------------------------------
+; サブウェポンの説明
+;-----------------------------------
+@GET_SUB_WEAPON_DESCRIPTION_58
+PRINTFORML 飛翔体に対する迎撃能力を持つ、宙間機雷投射ユニット。
+PRINTFORML 命中精度は悪いが大型飛翔体に対する迎撃能力は高い。
+
+;-----------------------------------
+; サブウェポンの資材
+;-----------------------------------
+@GET_SUB_WEAPON_RESOURCE_58(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 1
+USE_RESOURCE:耐熱合金 = 1
+USE_RESOURCE:武装制御機器 = 2

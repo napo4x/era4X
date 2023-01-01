@@ -23,9 +23,13 @@ RETURN 650000
 ;------------------------------------------
 @GET_WEAPON_LIMITED_6(ARG)
 
-SIF TALENT:ARG:体格 || TALENT:ARG:戦闘機械
+SIF TALENT:ARG:戦闘機械 == 機械_球
+	RETURN 0
+SIF TALENT:ARG:戦闘機械
 	RETURN 1
-RETURN 0
+SIF TALENT:ARG:体格 < 1 && ABL:ARG:白兵 < 100
+	RETURN 0
+RETURN 1
 
 ;------------------------------------------
 ;●規制ルールの取得(仮)

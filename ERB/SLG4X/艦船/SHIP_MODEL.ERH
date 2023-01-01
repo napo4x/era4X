@@ -66,6 +66,10 @@
 #DIM CONST バアル・ゼブル級空母 = 69
 #DIM CONST ヴェレス級強襲揚陸艇 = 70
 #DIM CONST 機兵『セラハン・ジート』 = 71
+
+#DIM CONST トーン級航空巡洋艦 = 75
+#DIM CONST 天津級重航空巡洋艦 = 76
+
 #DIM CONST 河童級機動漁師 = 85
 #DIM CONST 標準型機動漁師 = 86
 #DIM CONST 青龍級機動漁師 = 87
@@ -100,6 +104,10 @@
 #DIM CONST マルチパーパス2級作業船 = 124
 #DIM CONST ヘイロタイ型作業機 = 125
 #DIM CONST EF・コール級作業機 = 126
+
+#DIM CONST ポーン級機動甲冑 = 127
+#DIM CONST 機動甲冑『オーヴァス』 = 128
+#DIM CONST マンティスⅣ機動歩兵 = 129
 
 #DIM CONST 建国帝のシールド突撃艇 = 130
 #DIM CONST 建国帝の小型砲撃艦 = 131
