@@ -1,0 +1,36 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_MAIN_WEAPON_NAME_118
+RESULTS = TIER3補用制宙戦闘機
+
+@GET_MAIN_WEAPON_STATUS_118(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 4
+STATUS:FIRE_RATE = 8
+STATUS:HIT_RATE = 85
+STATUS:FIRE_RANGE = 4
+STATUS:SIZE = 3
+STATUS:AIR_SHIP_HP = 200
+STATUS:ANTI_AIR = 128
+STATUS:AIR_SHIP_COUNT = 20
+STATUS:WEAPON_TYPE = 艦載機
+STATUS:PRICE = 120000
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_MAIN_WEAPON_DESCRIPTION_F_118
+PRINTFORML 性能と引き換えにより簡便な設備でも運用できる様にされた制宙戦闘機。
+PRINTFORML 高度なＡＩとフレーム強化により、戦闘機動と連携力を飛躍的に向上させている。
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_MAIN_WEAPON_RESOURCE_118(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 4
+USE_RESOURCE:耐熱合金 = 4
+USE_RESOURCE:武装制御機器 = 4
+USE_RESOURCE:ジェットガス = 4

@@ -1,0 +1,44 @@
+﻿;-----------------------------------
+; サブウェポン
+;-----------------------------------
+@GET_SUB_WEAPON_NAME_94
+RESULTS = 宇宙こばんざめ
+
+@GET_SUB_WEAPON_STATUS_94(STATUS)
+#DIM REF STATUS
+STATUS:DAMAGE = 70
+STATUS:FIRE_RATE = 3
+STATUS:HIT_RATE = 100
+STATUS:FIRE_RANGE = 2
+STATUS:SIZE = 1
+STATUS:AIR_SHIP_HP = 700
+STATUS:ANTI_AIR = 70
+STATUS:AIR_SHIP_COUNT = 3
+STATUS:WEAPON_TYPE = 艦載機
+STATUS:PRICE = 500000
+; 艦載機として機能してないかもしれません
+;-----------------------------------
+; サブウェポンの説明
+;-----------------------------------
+@GET_SUB_WEAPON_DESCRIPTION_F_94
+
+
+
+
+
+PRINTFORML 他の宇宙怪獣と共生関係にある艦載機サイズの宇宙怪獣。
+PRINTFORML 危機に対しては共生相手と共に立ち向かう。
+
+;-----------------------------------
+; サブウェポンの資材
+;-----------------------------------
+@GET_SUB_WEAPON_RESOURCE_94(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 10
+USE_RESOURCE:耐熱合金 = 10
+USE_RESOURCE:武装制御機器 = 10
+USE_RESOURCE:ジェットガス = 10
+
+@IS_SALE_SUB_WEAPON_94
+RETURN 0
