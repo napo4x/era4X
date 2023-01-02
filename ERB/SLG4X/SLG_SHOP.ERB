@@ -1642,3 +1642,18 @@ NEXT
 
 SIF TARGET != -1 && CHARACTER_POSITION:0 != CHARACTER_POSITION:TARGET
 	TARGET = -1
+
+;-------------------------------------------------
+; 指定座標のポートの所持者返却
+;-------------------------------------------------
+@GET_PORT_OWNER(POSID)
+#FUNCTION
+#DIM POSID
+
+LOCAL = FINDELEMENT(星系座標ID, POSID)
+SIF LOCAL != -1
+	RETURNF STAR_OWNER:LOCAL
+LOCAL = FINDELEMENT(PORT_POSITION_ID, POSID)
+SIF LOCAL != -1
+	RETURNF PORT_OWNER:LOCAL
+RETURNF -1
