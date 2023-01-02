@@ -11,13 +11,6 @@
 @QUEST_ACCEPTABLE_32
 SIF QUEST_PROGRESS:32 >= 5
 	RETURN 0
-IF QUEST_PROGRESS:32 == 4
-	FOR LOCAL, 0, MAX_PORT
-		SIF PORT_OWNER:LOCAL == 国家ID_プレイヤー
-			RETURN 1
-	NEXT
-	RETURN 0
-ENDIF
 RETURN 1
 
 ;--------------------------
@@ -241,18 +234,37 @@ SELECTCASE QUEST_PROGRESS:QUEST_ID
 			RETURN
 		ENDIF
 	CASE 4
-		PRINTFORML 「こんにちは あなたもついに 宇宙港を手に入れたそうですね」
-		PRINTFORML %CALLNAME:MASTER%が宇宙港を歩いていると、例の思考戦車が話しかけてきた。フロッピーディスクを大量に抱えているが、何に使うつもりなのか
-		PRINTFORMW 「素晴らしい提案があります 宇宙港で 売店を運営しましょう」
-		PRINTL
-		PRINTFORML 「売店は素材や資源を販売することで お金を手に入れる施設です 販売員の知力で売値は変わります」
-		PRINTFORML 「おいしいのは 買ってくれた国の好感度が上がることです」
-		PRINTFORMW 「しかも 売る国を制限することもできるので　特定の国と仲良くすることもできます」
-		PRINTL
-		PRINTFORML 「お勧めする商品は 貴金属鉱石です どこの国でも枯渇していますから これを販売することでその国の装備更新を助けることができます」
-		PRINTFORML 「戦争を仕掛けるつもりの国には売らないよう 気をつけてください」
-		PRINTFORMW 「それではまた」
-		QUEST_PROGRESS:QUEST_ID = 5
+		IF FINDELEMENT(PORT_OWNER, 国家ID_プレイヤー) == -1
+			PRINTFORML 「こんにちは あなたは宇宙港をご存知でしょうか？」
+			PRINTFORMW %CALLNAME:MASTER%が宇宙高を歩いていると、例の思考戦車が話しかけてきた
+			PRINTL
+			PRINTFORML 宇宙港といえば、今%CALLNAME:MASTER%自身がいる場所でもある
+			PRINTFORMW 知らないわけがないだろう
+			PRINTL
+			PRINTFORML 「はい、私たちが今いる場所も宇宙港の一種です 惑星に付帯した宇宙高ですね」
+			PRINTFORML 「それに加えて、惑星に付帯しない宇宙港も存在するのです」
+			PRINTFORMW 「独立宇宙港 惑星に付帯せず、宇宙空間に浮遊する宇宙港です」
+			PRINTL
+			PRINTFORML 「この宇宙港、作業船と素材があれば建築可能です」
+			PRINTFORMW 「必要な素材は、建設時に作業船が教えてくれます」
+			PRINTL
+			PRINTFORMW 「宇宙港でできることは『交流画面』の『設定』->『ヘルプ』->『攻略情報』の 3 ページ目『[14] 独立宇宙港について』を参照してください」
+			PRINTL
+			PRINTFORMW 「興味がおありでしたら、是非宇宙港を建造してみてください。やれることが、ぐっとふえますよ」
+		ELSE
+			PRINTFORML 「こんにちは あなたもついに 宇宙港を手に入れたそうですね」
+			PRINTFORML %CALLNAME:MASTER%が宇宙港を歩いていると、例の思考戦車が話しかけてきた。フロッピーディスクを大量に抱えているが、何に使うつもりなのか
+			PRINTFORMW 「素晴らしい提案があります 宇宙港で 売店を運営しましょう」
+			PRINTL
+			PRINTFORML 「売店は素材や資源を販売することで お金を手に入れる施設です 販売員の知力で売値は変わります」
+			PRINTFORML 「おいしいのは 買ってくれた国の好感度が上がることです」
+			PRINTFORMW 「しかも 売る国を制限することもできるので　特定の国と仲良くすることもできます」
+			PRINTL
+			PRINTFORML 「お勧めする商品は 貴金属鉱石です どこの国でも枯渇していますから これを販売することでその国の装備更新を助けることができます」
+			PRINTFORML 「戦争を仕掛けるつもりの国には売らないよう 気をつけてください」
+			PRINTFORMW 「それではまた」
+			QUEST_PROGRESS:QUEST_ID = 5
+		ENDIF
 ENDSELECT
 
 
