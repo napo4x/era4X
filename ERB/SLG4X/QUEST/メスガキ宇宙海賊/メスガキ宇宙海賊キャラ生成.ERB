@@ -12,12 +12,24 @@
 #DIM CONST 意思よわ友釣られ = 4
 #DIM CONST ほぼメス慰安夫 = 5
 
+;--------------------------
+;ここから一定行まで余計な処理を挟まない
 IF CHARA_ROLE == ほぼメス慰安夫 || TRAP == 1
 ;慰安夫か罠ガキなら男の娘・それ以外は女
 	CALL CREATE_RANDOM_CHARA(10, , 4)
 ELSE
 	CALL CREATE_RANDOM_CHARA(10, , 1)
-	;女の場合、バストサイズの上書きも同時に行う
+ENDIF
+SIF RESULT == -1
+	;キャラ生成に失敗してたら終了
+	RETURN -1
+;！重要！ 余計な処理を挟む前にキャラIDを上書きされがちなRESULTから関数側の変数CHARA_IDに逃がす ！重要！
+CHARA_ID = RESULT
+;ここまで余計な処理を挟まない
+;--------------------------
+
+IF IS_FEMALE(CHARA_ID)
+	;女の場合、バストサイズの上書きは"別途"行う(RESULTが上書きされてしまう)
 	SELECTCASE RAND:100
 		CASE 0 TO 60
 			;絶壁
@@ -30,11 +42,6 @@ ELSE
 			CALL SET_BUSTSIZE(CHARA_ID, 0)
 	ENDSELECT
 ENDIF
-SIF RESULT == -1
-;キャラ生成に失敗してたら終了
-	RETURN -1
-
-CHARA_ID = RESULT
 
 ;共通処理
 SELECTCASE RAND:100
