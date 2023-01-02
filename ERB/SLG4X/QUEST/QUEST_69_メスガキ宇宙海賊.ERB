@@ -20,13 +20,17 @@ RETURN 0
 @QUEST_NAME_69
 ;0:初回受注前
 ;1:初回メスガキ宇宙海賊討伐受注後
-;(正の整数):次にプレイできる様になる時期(討伐受注で3・プラント探しで5に移行)
+;2:2回目以降受注前(討伐受注で3・プラント探しで5?に移行)
 ;3:2回目以降メスガキ宇宙海賊討伐受注後
 
-IF QUEST_PROGRESS:69 == 1 || QUEST_PROGRESS:69 == 3
-	RESULTS =  メスガキ宇宙海賊を探せ
+IF QUEST_PROGRESS:69 == 1
+	RESULTS = メスガキ宇宙海賊を探せ
+ELSEIF QUEST_PROGRESS:69 == 2
+	RESULTS = 続・メスガキ宇宙海賊
+ELSEIF QUEST_PROGRESS:69 == 3
+	RESULTS = 続・メスガキ宇宙海賊を探せ
 ELSE
-	RESULTS =  メスガキ宇宙海賊
+	RESULTS = メスガキ宇宙海賊
 
 ENDIF
 RETURN
@@ -150,10 +154,7 @@ CASE 1
 		PRINTL 
 		PRINTW 通信で船、積み荷、その他一切合切を差し出す様に言い放ったのは、噂通りのメスガキだ。
 		PRINTFORMW 当然、そんな要求を受け入れる%CALLNAME:MASTER%ではない……なぜなら、%CALLNAME:MASTER%はメスガキに社会と大人というものを分からせに来たのだから！
-		;CALL INIT_PRESET_SHIP(国家ID_一般海賊, POSID, 汎用コルベット, "メスガキコルベット", 汎用コルベット)
-		;CALL INIT_PRESET_SHIP(国家ID_一般海賊, CHARACTER_POSITION, 汎用コルベット, "メスガキコルベット", 汎用コルベット)
 		CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(CHARACTER_POSITION, 2)
-		QUEST_FLAG_SHIP_ID:QUEST_ID = RESULT
 ;債権回収からコピペ・改造
 		CALL COMBAT(CHARACTER_POSITION)
 		CALL RETIRE_BROKEN_SHIP
@@ -264,7 +265,6 @@ CASE 3
 		PRINTFORMW 当然、そんな要求を受け入れる%CALLNAME:MASTER%ではない……なぜなら、%CALLNAME:MASTER%はメスガキに社会と大人というものを分からせに来たのだから！
 
 		CALL MESUGAKI_PIRATES_FLEET_GENERATE(CHARACTER_POSITION, RAND:100 + 1, 0)
-		QUEST_FLAG_SHIP_ID:QUEST_ID = RESULT
 
 ;債権回収からコピペ・改造
 		CALL COMBAT(CHARACTER_POSITION)
