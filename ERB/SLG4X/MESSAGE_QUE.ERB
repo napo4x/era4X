@@ -3,6 +3,7 @@
 ;------------------------------
 ;------------------------------
 ; メッセージの挿入
+; 戻り値: 数値 - ユニークID
 ;------------------------------
 @MESSAGE_PUSH(TITLE, BODY)
 #DIMS TITLE
@@ -11,6 +12,9 @@
 ARRAYSHIFT MQ_STATUS, 1, MQ_UNREAD
 ARRAYSHIFT MQ_TITLE, 1, TITLE
 ARRAYSHIFT MQ_BODY, 1, BODY
+ARRAYSHIFT MQ_UID, 1, MQ_NEXT_UID
+MQ_NEXT_UID ++
+RETURN MQ_UID:0
 
 ;------------------------------
 ; メッセージキューの表示
