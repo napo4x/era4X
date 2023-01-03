@@ -221,11 +221,15 @@ CALL SINGLE_DRAWLINE
 		CALL SHOP_LIFE_CHECKCHARA42(LOCAL)
 		IF RESULT == 0
 			CFLAG:LOCAL:労働内容 = 0
-			CALL COLOR_PRINTW(@"%ANAME(LOCAL)%が労働できない状態のため、労働設定を解除しました", カラー_注意)
+			LOCALS = %ANAME(LOCAL) - 労役設定解除%
+			LOCALS:1 = %ANAME(LOCAL)が労働できない状態のため、労働設定を解除しました%
+			CALL MESSAGE_PUSH(LOCALS, LOCALS:1)
 			CONTINUE
 		ELSEIF !IS_FEMALE(LOCAL) && GROUPMATCH(CFLAG:LOCAL:労働内容, 労働_娼館, 労働_ＡＶ, 労働_搾乳)
 			CFLAG:LOCAL:労働内容 = 0
-			CALL COLOR_PRINTW(@"%ANAME(LOCAL)%が労働できない状態のため、労働設定を解除しました", カラー_注意)
+			LOCALS = %ANAME(LOCAL) - 労役設定解除%
+			LOCALS:1 = %ANAME(LOCAL)が労働できない状態のため、労働設定を解除しました%
+			CALL MESSAGE_PUSH(LOCALS, LOCALS:1)
 			CONTINUE
 		ENDIF
 		報酬 = 1000

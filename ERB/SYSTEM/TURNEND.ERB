@@ -303,15 +303,6 @@ CALL TURNEND_STORY_0
 
 VARSET 湯治場カウント
 
-FOR LOCAL, 0, MAX_COUNTRY
-	SIF !IS_COUNTRY(LOCAL)
-		CONTINUE
-	湯治場カウント:LOCAL = GET_DEVELOPMENT_COUNT(建造物_湯治場, LOCAL)
-	;そこのお前！　大宴会場に含まれる関係改善効果は湯治場6個分だぜ！
-	湯治場カウント:LOCAL += GET_DEVELOPMENT_COUNT(建造物_大宴会場, LOCAL) * 6
-NEXT
-
-
 FOR LOCAL:0, 0, CHARANUM
 
 	SIF !IS_APPEAR(LOCAL:0)
@@ -346,15 +337,20 @@ FOR LOCAL:0, 0, CHARANUM
 	IF CFLAG:(LOCAL:0):避妊薬残ターン
 		CFLAG:(LOCAL:0):避妊薬残ターン = MAX(CFLAG:(LOCAL:0):避妊薬残ターン - 1, 0)
 		IF CFLAG:(LOCAL:0):避妊薬残ターン == 0
-			CALL COLOR_PRINTL(@"%ANAME(LOCAL)%の避妊薬の効果が切れました", カラー_注意)
+			LOCALS = %ANAME(LOCAL)% - 避妊薬の効果が切れました
+			LOCALS:1 = %ANAME(LOCAL)%の避妊薬の効果が切れました
+			CALL MESSAGE_PUSH(LOCALS, LOCALS:1)
 			CALL CLEAR_CREAMPIE_HISTORY(LOCAL)
 		ENDIF
 	ENDIF
 
 	IF CFLAG:(LOCAL:0):排卵誘発剤
 		CFLAG:(LOCAL:0):排卵誘発剤 = MAX(CFLAG:(LOCAL:0):排卵誘発剤 - 1, 0)
-		SIF CFLAG:(LOCAL:0):排卵誘発剤 == 0
-			CALL COLOR_PRINTL(@"%ANAME(LOCAL)%の排卵誘発剤の効果が切れました", カラー_注意)
+		IF CFLAG:(LOCAL:0):排卵誘発剤 == 0
+			LOCALS = %ANAME(LOCAL)% - 排卵誘発剤の効果が切れました
+			LOCALS:1 = %ANAME(LOCALS)%の排卵誘発剤の効果が切れました
+			CALL MESSAGE_PUSH(LOCALS, LOCALS:1)
+		ENDIF
 	ENDIF
 
 	;薬物依存値を減らす 薬物中毒あると300以下にならない
@@ -365,24 +361,8 @@ FOR LOCAL:0, 0, CHARANUM
 
 	ENDIF
 
-	;特定勢力に所属していて捕虜でない
-	IF IS_COUNTRY(CFLAG:(LOCAL:0):所属) && !IS_SP_COUNTRY(CFLAG:(LOCAL:0):所属) && CFLAG:(LOCAL:0):捕虜先 == 0
-		FOR LOCAL:1, 0, CHARANUM
-			;同一勢力に所属するキャラの間で好感度を上昇させ、敵対度を減少させる
-			IF LOCAL:1 != LOCAL:0 && CFLAG:(LOCAL:1):所属 == CFLAG:(LOCAL:0):所属 && CFLAG:(LOCAL:1):捕虜先 == 0
-
-				LOCAL:2 = (1500 - REL_LIKE:(LOCAL:0):(LOCAL:1)) / 50 + TALENT:(LOCAL:1):謎の魅力 * 5 + 湯治場カウント:(CFLAG:(LOCAL:0):所属) * 5
-				LOCAL:3 = REL_HATE:(LOCAL:0):(LOCAL:1) / 50 + TALENT:(LOCAL:1):謎の魅力 * 5 + 湯治場カウント:(CFLAG:(LOCAL:0):所属) * 5
-
-				;自然に上がる好感度は1000まで
-				IF REL_LIKE:(LOCAL:0):(LOCAL:1) < 1000 + 10 * 湯治場カウント:(CFLAG:(LOCAL:0):所属)
-					REL_LIKE:(LOCAL:0):(LOCAL:1) = MIN(REL_LIKE:(LOCAL:0):(LOCAL:1) + LOCAL:2, 1000)
-				ENDIF
-				REL_HATE:(LOCAL:0):(LOCAL:1) = MAX(REL_HATE:(LOCAL:0):(LOCAL:1) - LOCAL:3, 0)
-			ENDIF
-		NEXT
 	;捕虜である
-	ELSEIF CFLAG:(LOCAL:0):捕虜先
+	IF CFLAG:(LOCAL:0):捕虜先
 		CALL CHANGE_RELATION_O_TO_C(LOCAL:0, CFLAG:(LOCAL:0):捕虜先, 湯治場カウント * 5, 湯治場カウント * -5)
 	;放浪中
 	ELSEIF CFLAG:LOCAL:特殊状態 == 特殊状態_放浪
