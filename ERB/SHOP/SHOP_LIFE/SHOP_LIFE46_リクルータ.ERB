@@ -93,12 +93,14 @@ CALL COLUMN_RIGHT_CLEAR
 ;-------------------------------------------------
 @SHOP_LIFE_EVENTBUY_SUB46(ARG:0)
 #DIM INPUT_RESULT
+#DIM PRE_汎用武将カウント
 ;この条件で募集以外の数字なら戻る
 SIF ARG:0 != 0
 	RETURN 0
 
 MENUVAR:11 = -1
 MENUVAR:12 = 0
+PRE_汎用武将カウント = FLAG:汎用武将カウント
 
 LOCAL:0 = GET_COMMANDER_NUM(CFLAG:MASTER:所属)
 
@@ -124,6 +126,7 @@ IF LOCAL:2 < 0
 ELSE
 	CALL SINGLE_DRAWLINE
 	PRINTFORML 「こちらの方などいかがでしょう？」
+	PRINTFORML 汎用武将カウント: {FLAG:汎用武将カウント}
 
 	$INPUT_LOOP_SELECT
 
@@ -169,6 +172,7 @@ ELSE
 		ENDIF
 		;このターンにおける登用済みフラグをON
 		APPOINT_DONE = 1
+		FLAG:汎用武将カウント = PRE_汎用武将カウント + 1
 		MONEY -= (1000 + GET_FILTER_COST())
 		SHOP_TIME ++
 		BEGIN TURNEND
@@ -206,6 +210,7 @@ ELSE
 		IF MENUVAR:11 != -1
 			CALL DELETE_CHARA(CHARANUM - 1)
 		ENDIF
+		FLAG:汎用武将カウント = PRE_汎用武将カウント
 	ELSE
 		GOTO INPUT_LOOP_TREAT
 	ENDIF

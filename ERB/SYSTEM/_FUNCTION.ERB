@@ -80,8 +80,10 @@ ENDIF
 ;キャラARG:0を削除する関数
 ;-------------------------------------------------
 @DELETE_CHARA(ARG:0)
+#DIM IS_ORIGIN
 ;ランダムキャラ(子供)の場合
 EXISTCSV ARG:0
+IS_ORIGIN = RESULT
 IF IS_CHILD(ARG:0)
 	;キャラARG:0より後ろのNOを持つキャラのNOを詰める
 	FOR LOCAL:0, 0, CHARANUM
@@ -95,7 +97,7 @@ IF IS_CHILD(ARG:0)
 ;イベントキャラの場合
 
 ;ランダムキャラ(汎用)の場合
-ELSEIF RESULT == -1
+ELSEIF IS_ORIGIN == -1
 	;キャラARG:0より後ろのNOを持つキャラのNOを詰める
 	FOR LOCAL:0, 0, CHARANUM
 		IF NO:(LOCAL:0) > NO:(ARG:0)
