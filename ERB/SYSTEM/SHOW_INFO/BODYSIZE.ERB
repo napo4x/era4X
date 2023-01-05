@@ -301,6 +301,11 @@ ELSE
 	MAXBASE:対象:体重 = BASE:対象:体重
 ENDIF
 
+; 体重に異常値が入力されたときは、平均体重にする
+IF MAXBASE:対象:身長 && MAXBASE:対象:体重 && MAXBASE:対象:身長 < MAXBASE:対象:体重
+	BASE:対象:体重 = POWER(MAXBASE:対象:身長, 2) * 22 / 100000
+	MAXBASE:対象:体重 = BASE:対象:体重
+ENDIF
 
 @CALC_BODYSIZE_WEIGHT(対象)
 #FUNCTION
