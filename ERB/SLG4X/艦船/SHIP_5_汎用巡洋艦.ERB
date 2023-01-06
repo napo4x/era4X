@@ -70,5 +70,15 @@ IF RESULT == -1
 ENDIF
 RETURN REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー >= 650
 
+; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
+@TERM_OF_SALE_5
+CALL IS_SALE_SHIP_5
+IF RESULT == 0
+  RESULTS = 発注する国家からの好感度が650以上、自国生産の場合は技術研究が必要
+  RETURN 1
+ELSE
+  RETURN 0
+ENDIF
+
 @IS_VARIANT_5
 RETURN 特殊分類_通常艦艇

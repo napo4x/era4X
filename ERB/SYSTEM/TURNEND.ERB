@@ -348,7 +348,7 @@ FOR LOCAL:0, 0, CHARANUM
 		CFLAG:(LOCAL:0):排卵誘発剤 = MAX(CFLAG:(LOCAL:0):排卵誘発剤 - 1, 0)
 		IF CFLAG:(LOCAL:0):排卵誘発剤 == 0
 			LOCALS = %ANAME(LOCAL)% - 排卵誘発剤の効果が切れました
-			LOCALS:1 = %ANAME(LOCALS)%の排卵誘発剤の効果が切れました
+			LOCALS:1 = %ANAME(LOCAL)%の排卵誘発剤の効果が切れました
 			CALL MESSAGE_PUSH(LOCALS, LOCALS:1)
 		ENDIF
 	ENDIF

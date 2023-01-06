@@ -28,6 +28,7 @@ STATUS:SHIP_OPTION_SLOT = 1
 
 @GET_SHIP_DESCRIPTION_F_30
 PRINTFORML 回避性能と引き換えに防御性能を高めたフリゲート
+PRINTFORML ドクトリンのためにフリゲートのメリットが失われており高い轟沈率を誇るため、王国軍の乗組員からは貧相なタイタニック号などとも呼ばれている
 
 @GET_SHIP_RESOURCE_30(USE_RESOURCE)
 #DIM REF USE_RESOURCE
@@ -63,6 +64,18 @@ SIF STAR_OWNER:RESULT != 国家ID_ハールバルズ
 SIF REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー < 450
   RETURN 0
 RETURN 1
+
+; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
+@TERM_OF_SALE_30
+CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
+SIF RESULT == -1
+  RETURN 0
+SIF STAR_OWNER:RESULT != 国家ID_ハールバルズ
+  RETURN 0
+SIF REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー < 450
+  RESULTS = ハールバルズ王国からの好感度が450以上必要
+  RETURN 1
+RETURN 0
 
 @IS_VARIANT_30
 RETURN 特殊分類_通常艦艇

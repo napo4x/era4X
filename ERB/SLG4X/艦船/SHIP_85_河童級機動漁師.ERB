@@ -79,5 +79,15 @@ IF RESULT == -1
 ENDIF
 RETURN REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー >= 300
 
+; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
+@TERM_OF_SALE_85
+CALL IS_SALE_SHIP_85
+IF RESULT == 0
+  RESULTS = 発注する国家からの好感度が300以上、自国生産の場合は技術研究が必要
+  RETURN 1
+ELSE
+  RETURN 0
+ENDIF
+
 @IS_VARIANT_85
 RETURN 特殊分類_メック
