@@ -6,7 +6,7 @@
 IF 自然生成海賊合流POSID:0 == 0
 	VARSET 自然生成海賊合流POSID, -1
 ENDIF
-IF DAY % 30 == 0
+IF DAY % 120 == 0
 	RETURN 1
 ELSE
 	RETURN 0
@@ -22,8 +22,8 @@ ENDIF
 #DIM DYNAMIC FLG_SKIP
 #DIM DYNAMIC 海賊生成数
 #DIM CONST セクター内出現上限 = 40
-#DIM CONST 海賊生成上限 = 600
-#DIM CONST 生成確率 = 70 ;千分率
+#DIM CONST 海賊生成上限 = 300
+#DIM CONST 生成確率 = 50 ;千分率
 
 FOR LOCAL, 0 ,MAX_SHIP
 	IF SHIP_COUNTRY:LOCAL == 国家ID_プレイヤー
