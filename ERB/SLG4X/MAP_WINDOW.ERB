@@ -222,8 +222,10 @@ NEXT
 #DIMS タイル
 #DIM 色
 #DIM KEY
+#DIM PLAYER_PORT_SECTION_ID
 
 	CALL WndMgr_WindowTitle( windowID, @" セクターマップ " ) ;枠タイトル
+
 
 FOR Y_SEC, 0, MAX_SECTOR_Y
 	FOR X_SEC, 0, MAX_SECTOR_X
@@ -265,6 +267,11 @@ FOR Y_SEC, 0, MAX_SECTOR_Y
 		ELSEIF HAS_PORT_SECTORMAP(Y_SEC * 10 + X_SEC) == 宇宙港 && !(CLEARMAP: (Y_SEC * 10 + X_SEC) : 7: 7 ) != 0
 			SETCOLOR 0xCCCCFF
 			タイル '= "●"
+		
+		;自分の宇宙港があるエリア
+		ELSEIF GET_PLAYER_PORT_SECTION() == Y_SEC * 10 + X_SEC
+			SETCOLOR 0X99FF99
+			タイル '= "港"
 
 ;		ELSEIF MAP:(Y_SEC*10 + X_SEC): 7: 7 == 星
 ;			SETCOLOR 0x33CCCC
@@ -703,10 +710,10 @@ GOTO INPUT_LOOP
 #DIM Y_POS
 FOR Y_POS, 1, MAP_HEIGHT
 	FOR X_POS, 1, MAP_WIDTH
-		SIF MAP:SECTOR_ID:X_POS:Y_POS == 2
-			RETURNF 2
-		SIF MAP:SECTOR_ID:X_POS:Y_POS == 3
-			RETURNF 3
+		SIF MAP:SECTOR_ID:X_POS:Y_POS == 星
+			RETURNF 星
+		SIF MAP:SECTOR_ID:X_POS:Y_POS == 宇宙港
+			RETURNF 宇宙港
 	NEXT
 NEXT
 RETURNF 0
@@ -720,3 +727,16 @@ RETURNF 0
 CALL WndMgr_WindowTitle( windowID , "宇宙軍許容量" )
 
 CALL WndMgr_TextSet( windowID , 0, @"      {GET_CURRENT_OCCUPANCY_POINT()}/{GET_MAX_OCCUPANCY_POINT()}" )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;@GET_PLAYER_PORT_SECTION
+;RETURN INT;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+@GET_PLAYER_PORT_SECTION
+#FUNCTION
+FINDELEMENT PORT_OWNER, 国家ID_プレイヤー
+IF RESULT != -1
+	RETURNF PORT_POSITION_ID:RESULT / 10000
+ELSE
+	RETURNF -1
+ENDIF
