@@ -1,0 +1,19 @@
+﻿@SPACE_DAILY
+#DIMS SD_TITLE
+#DIM PATTERN
+
+; イベントが少なすぎるので今は発生させない
+RETURN
+
+; 5日に1回,30%の確率で発生
+SIF DAY % 5 != 0 && RAND:100 > 30
+  RETURN
+
+
+;負荷軽減のために発生条件判定などは行わない
+;そのためイベントは常に発生しうる汎用的なものとする、あるいは関数内で判定させる
+PATTERN = RAND:1
+TRYCALLFORM SD_EVENT_TITLE_{PATTERN}
+SD_TITLE = RESULTS
+TRYCALLFORM SD_EVENT_MESSAGE_{PATTERN}
+CALL MESSAGE_PUSH(SD_TITLE, RESULTS, 1, PATTERN)

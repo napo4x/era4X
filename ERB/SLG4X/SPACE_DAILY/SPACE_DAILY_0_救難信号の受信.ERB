@@ -1,0 +1,49 @@
+﻿;救難信号の受信
+@SD_EVENT_TITLE_0
+RESULTS = 救難信号の受信
+@SD_EVENT_MESSAGE_0
+RESULTS = 航行中に救難信号を受信した。どうする?
+@SD_EVENT_0
+PRINTFORML 航行中に救難信号を受信した%CALLNAME:MASTER%
+PRINTFORML センサーで発信源を調査すると、破損し停止した輸送船を発見した
+PRINTFORML どうする?
+PRINTL
+PRINT   
+PRINTBUTTON "[0] 助ける", 0
+PRINTL
+PRINT   
+PRINTBUTTON "[1] 見なかったことにする", 1
+PRINTL
+$INPUT_LOOP
+INPUT
+IF RESULT == 1
+  PRINTFORML トラブルに巻き込まれるのはごめんだ
+  PRINTFORMW %CALLNAME:MASTER%は見なかったことにしてその場を後にした
+  RETURN
+ELSEIF RESULT == 0
+  CALL SD_EVENT_BODY_0
+  RETURN
+ELSE
+  GOTO INPUT_LOOP
+  CLEARLINE 1
+ENDIF
+
+@SD_EVENT_BODY_0
+PRINTFORML 助けることにした
+SELECTCASE RAND:1
+  CASE 0
+    PRINTFORML 対象の輸送船との通信チャンネルを開くと、銀河人民統一連邦の貿易会社を名乗る男が出てきた
+    PRINTFORML 話を聞くと、海賊に襲われほうほうの体で逃げてきたが、輸送船が損傷し移動も長距離通信もできなくなってしまったそうだ
+    PRINTFORMW そこで%CALLNAME:MASTER%の艦の通信機能を介して本社に通信をとらせて欲しいのだという
+    PRINTL
+    PRINTFORMW 乗り掛かった船ということで%CALLNAME:MASTER%が通信機の中継機能を男の船に許可してやると、男は早速本社と通信を始めた
+    PRINTW ………………
+    PRINTW …………
+    PRINTW ……
+    PRINTFORML どうやら話はまとまったようで、後々救助がやってくるそうだ
+    PRINTFORMW 男は%CALLNAME:MASTER%にお礼を言うと、後日礼をしたいので連絡先を教えてくれと言ってきた
+    PRINTL
+    PRINTFORML そして後日、実際に%CALLNAME:MASTER%の元に男の所属する貿易会社からお礼の連絡が来た
+    PRINTFORML 加えて謝礼金として、$10,000を手に入れた
+    MONEY += 10000
+ENDSELECT
