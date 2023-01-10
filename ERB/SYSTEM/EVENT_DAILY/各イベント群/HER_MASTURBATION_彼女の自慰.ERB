@@ -1,0 +1,149 @@
+﻿;---------------------
+;基本的な発生確率(1000分率 100で10%)
+;これにコンフィグ項目の発生頻度がかけられるので、必ずしもこの通りにはならない
+;---------------------
+@EVENT_DAILY_HER_MASTURBATION_RATE()
+RETURN 50
+
+
+;---------------------
+;確率以外の発生判定
+;〇期以降になると発生するとか、デイリー側で利用している変数が-1だったら起こさない　みたいなはじき方をするときに使う
+;---------------------
+@EVENT_DAILY_HER_MASTURBATION_DECISION()
+SIF !HAS_PENIS(MASTER)
+	RETURN 0
+RETURN DAY >= 5
+
+;---------------------
+;ジャンル
+;コンフィグ設定で使用
+;---------------------
+@EVENT_DAILY_HER_MASTURBATION_GENRE()
+RETURN デイリー_ジャンル_エロ
+
+;---------------------
+;特定の条件を満たすキャラをランダムに選択する場合に利用
+;他の関数は必須だが、これだけはなくてもよい　というかパフォーマンスへ影響するので不要なら作ってはならない
+;対象が存在せずデイリーを開始できない場合は0を返すことでデイリーの発生をキャンセルする
+;---------------------
+@EVENT_DAILY_HER_MASTURBATION_SETTARGET()
+
+FOR LOCAL, 0, CHARANUM
+	SIF !IS_FEMALE(LOCAL)
+		CONTINUE
+	;自国所属かつ捕虜でない、かつ「恋慕か親愛か服従・隷属・烙印」で、2/3
+	IF CFLAG:LOCAL:所属 == CFLAG:MASTER:所属 && IS_LOVER(LOCAL)
+		DAILY_TARGET:DAILY_TARGET_NUM = LOCAL
+		DAILY_TARGET_NUM ++
+	ENDIF
+NEXT
+
+SIF DAILY_TARGET_NUM < 1
+	RETURN 0
+RETURN 1
+
+;---------------------
+;本体
+;イベントが発生した場合は1、発生しなかった場合は0を返す
+;発生しなかったというのは例えば、特定条件を満たすキャラからランダムに一人選ぶデイリーで、そもそもその条件を満たすキャラが一人もいないみたいなとき
+;旧仕様で作ったことある人向けにいうと「旧仕様のデイリー本体冒頭で-1を返すような状況」
+;---------------------
+@EVENT_DAILY_HER_MASTURBATION()
+#DIM 対象
+
+対象 = DAILY_TARGET:(RAND:DAILY_TARGET_NUM)
+
+PRINTFORML 夜、%CALLNAME:対象%の部屋から悩ましい声が聞こえてきた
+;突入パターン
+IF RAND:2
+	PRINTFORML 何事かとドアを開けると、そこには全裸で寝転びながら自慰に耽る%CALLNAME:対象%の姿があった。
+	SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML 思わず見入っていると彼女は恥ずかしそうにこちらに手招きをした
+			PRINTFORML %CALLNAME:対象%に誘われるまま近づくと、手を掴まれ、彼女が先ほどまで愛撫していた場所へ導いた
+			PRINTFORML そこはもうすっかり濡れそぼっており、指を入れるとすんなり飲み込んでしまった
+			PRINTL
+			PRINTFORML 熱く火照った蜜壺にゆっくりと指を出し入れしていると%CALLNAME:対象%はもどかしそうな声で「もっと……」と言ってきた
+			PRINTFORML %CALLNAME:MASTER%は言われるままに指を増やし、膣内を押し広げていく
+			PRINTFORML やがて彼女の呼吸が激しくなってきた頃、%CALLNAME:MASTER%の下半身にも異変が起きていた。それはズボン越しでもはっきりと分かるほどに膨張しており、今すぐにでも彼女を犯したいと主張している
+			PRINTFORML それを見た%CALLNAME:対象%は起き上がって手を伸ばし、ズボン越しにそれを撫で回すと、そのままベッドに押し倒され、彼女に服を脱がされてしまう
+			PRINTFORML そしてお互い一糸纏わぬ姿になると%CALLNAME:対象%は仰向けになり、「来て」と言った
+			PRINTL
+			PRINTFORML %CALLNAME:MASTER%は%CALLNAME:対象%の上に覆い被さり、腰を沈める
+			PRINTFORML ずぶずぶと肉棒が沈み込むと同時に%CALLNAME:対象%は大きく喘ぎ声を上げた
+			PRINTFORML その反応を見て%CALLNAME:MASTER%は更に興奮し、ピストン運動を開始した
+			PRINTL
+			PRINTFORML ぱんっ！ ぱちゅんっ！！ ばちんっ！！！ 肌同士がぶつかり合う音が部屋中に響き渡る
+			PRINTFORML %CALLNAME:MASTER%は本能のままに激しく動き続け、ついに限界を迎えた
+			PRINTFORML どぴゅるるるるるるるっ！！ 大量の精液が子宮の奥深くまで注ぎ込まれ、それと同時に%CALLNAME:対象%も絶頂したようだった
+			PRINTFORMW その後も汗だくになりながら時間を忘れて交わり続け、気がつけば朝になっていた
+		CASE 1
+			PRINTFORML 思わず見入っていると彼女は恥ずかしそうにこちらに手招きをした
+			PRINTFORML 。誘われるがままに近寄ると、彼女は%CALLNAME:MASTER%のズボンをずり下ろして勃起したペニスを口淫してきた
+			PRINTL
+			PRINTFORML 「んっ……はぁ……」
+			PRINTL
+			PRINTFORML やがて絶頂に達した%CALLNAME:MASTER%は彼女の顔に射精してしまった。しかし%CALLNAME:対象%は嫌な顔をせず精液を舐め取ると、今度は自分の股間を見せつけてきた
+			PRINTFORML その瞬間、理性が崩壊してしまった%CALLNAME:MASTER%は彼女をベッドに押し倒すと激しく犯し始めた
+			PRINTL
+			PRINTFORML 「あっ♡あぁん♡」
+			PRINTL
+			PRINTFORML 猛然と腰を振る%CALLNAME:MASTER%にしがみ付いた%CALLNAME:対象%は、甘い悲鳴を上げながら子種を迎え入れる準備を整える
+			PRINTFORML %CALLNAME:MASTER%はその期待に応えるべく膣内へ大量の精を放った
+			PRINTFORML %CALLNAME:MASTER%の欲望を受け止めた%CALLNAME:対象%はビクビクと痙攣し、結合部から白濁した二人の混合液を垂れ流す
+			PRINTFORMW そしてそのまま二人は抱き合い、互いの体温を感じ合ったまま眠りについた……
+	ENDSELECT
+;覗き見パターン
+ELSE
+	PRINTFORML 何事かと思い%CALLNAME:MASTER%が部屋の中をこっそり伺うと、%CALLNAME:対象%がベッドに寝転がって自慰に耽っていた
+	SELECTCASE RAND:2
+		CASE 0
+			PRINTFORML %CALLNAME:対象%は自分の指で陰唇を広げて、ピンク色の粘膜を見せつけるようにしながら、淫らに喘いでいる
+			PRINTFORML %CALLNAME:MASTER%の視線に気がついたのか、%CALLNAME:対象%は一瞬だけ動きを止めたが、すぐにまた行為を再開した
+			PRINTFORML そしてその痴態は、こちらに向けられていた
+			PRINTL
+			PRINTFORML %CALLNAME:対象%は%CALLNAME:MASTER%に気づいている。その上で、見られながらしているのだ
+			PRINTFORML 彼女の淫らな姿に興奮し、股間が痛いほど勃起する。しかし%CALLNAME:対象%はそれに気づかないフリをして、指の動きを速めていく
+			PRINTFORML やがて絶頂に達したのか、%CALLNAME:対象%の身体が大きく跳ねた
+			PRINTFORML 絶頂の余韻に浸りながらも、%CALLNAME:対象%はこちらを見つめている
+			PRINTL
+			PRINTFORML 視線を感じる。%CALLNAME:MASTER%を見つめるその目は快楽にじっとりと潤み、物欲しそうに%CALLNAME:MASTER%をまっすぐ見据えている
+			PRINTFORML %CALLNAME:MASTER%は部屋の中に入ると、その様子を見て嬉しそうに微笑んだ%CALLNAME:対象%に覆いかぶさり、唇を奪った
+			PRINTFORML 舌を差し入れると、%CALLNAME:対象%もそれに応えてくれる。互いの唾液を交換し合いながら、二人はしばらくキスを続けた
+			PRINTL
+			PRINTFORML ようやく口を離すと、二人の間に銀色の糸ができた。それが切れる前にもう一度口づけを交わす。今度は先程よりも激しく、お互いを求め合うように舌を動かしていく
+			PRINTFORML たっぷり一分以上かけて濃厚な接吻を終えると、二人とも息絶えだえになっていた
+			PRINTFORML 呼吸を整えてから、%CALLNAME:MASTER%は再び%CALLNAME:対象%の上に跨った
+			PRINTFORML それからしばらくの間、部屋には二人の荒々しい吐息だけが響いていた
+			PRINTL
+			PRINTFORML しばらくして、%CALLNAME:MASTER%のモノを受け入れたまま%CALLNAME:対象%がゆっくりと上体を起こした。対面座位になり、お互いに抱き合った状態で腰を動かす
+			PRINTFORML 密着しているため、相手の体温や鼓動がよくわかる。耳元にかかる熱い吐息も心地よい
+			PRINTL
+			PRINTFORML %CALLNAME:対象%がぎゅっと%CALLNAME:MASTER%を抱きしめた。それに応えるために、%CALLNAME:MASTER%も強く彼女を抱きしめ返した
+			PRINTFORML そのまま二人で果てると、力尽きたかのようにどちらともなくベッドへ倒れ込んだ
+		CASE 1
+			PRINTFORML しかも、しきりに%CALLNAME:MASTER%の名前を呼んでいる。どうやら夢の中で%CALLNAME:MASTER%のことを想っているらしい
+			PRINTFORML そこで%CALLNAME:MASTER%は、思い切って扉を開けてみることにした
+			PRINTL
+			PRINTFORML 途端に%CALLNAME:対象%はびくんっと身体を震わせて飛び起きた。パンツとブラはぬげかかったままで、指先もテラテラと濡れているが拭いている余裕も無いだろう
+			PRINTFORML %CALLNAME:MASTER%はあわあわと声にならない声を上げる%CALLNAME:対象%を強引に押し倒すと、そのままの勢いで挿入した
+			PRINTL
+			PRINTFORML たっぷり準備していた割れ目は%CALLNAME:MASTER%の逸物をすんなり受け入れると、咀嚼するようにきゅうきゅうと逸物を締め付ける
+			PRINTFORML いきなり犯された%CALLNAME:対象%は涙目になっているがやがて快楽に流され、%CALLNAME:MASTER%にぎゅっと抱きつきながらひいひいと情けない喘ぎ声を上げ始める
+			PRINTL
+			PRINTFORML パンッ！ パンッ！ という肉同士がぶつかり合う音と、グチュッグチャッという水音が部屋に響き渡る
+			PRINTFORML やがて%CALLNAME:対象%が絶頂を迎え、それと同時に膣内が激しく収縮する。その刺激を受けて%CALLNAME:MASTER%も射精した
+			PRINTFORML ビュルルルッ！！ ドクッドクッ……と大量の精液が子宮口に叩きつけられる感触に、%CALLNAME:対象%は再びビクビクと痙攣して達してしまう
+			PRINTL
+			PRINTFORML しばらくそのままの姿勢で余韻に浸っていたが、%CALLNAME:対象%が落ち着いたところで%CALLNAME:MASTER%はゆっくりと逸物を引き抜いた
+			PRINTFORMW どろぉっ……と白濁とした粘液が糸を引いてシーツの上に垂れ落ち、%CALLNAME:対象%が一人で作っていたシミをさらに濃くした
+	ENDSELECT
+ENDIF
+PRINTW
+CALL FUCK_MAKELOVE(対象, GET_ID(MASTER), @"%ANAME(MASTER)%の唇", ANAME(MASTER))
+CALL FUCK(MASTER, "Ｃ, 射精, Ｖ挿入", "童貞喪失", 0, "", "", @"%ANAME(対象)%の膣")
+CFLAG:対象:好感度 += 600
+
+RETURN 1
+
