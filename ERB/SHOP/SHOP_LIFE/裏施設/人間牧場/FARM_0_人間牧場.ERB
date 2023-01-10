@@ -1,0 +1,211 @@
+﻿;---------------------------
+; 説明
+;---------------------------
+@FARM_0_DESCRIPTION
+PRINTFORML 
+PRINTFORML [人間牧場]
+PRINTFORML
+PRINTFORML 牧歌的なイメージの牧場とは名ばかりのアンダーグラウンドな性労働施設
+PRINTFORML
+PRINTFORML 表向きは一次産業サポートの職員派遣や勉強会を開いているNPO組織
+PRINTFORML それにしては黒い噂のある製薬会社との関係性や、大物資本家の出入りが多いようだが……?
+PRINTL 
+
+;--------------------------
+; 本体
+;--------------------------
+@FARM_0_BODY(対象)
+#DIM 対象
+#DIM ITER
+
+PRINTFORML
+PRINTFORML 「ようこそいらっしゃいました。お客様は会員証をお持ちの方ですね」
+PRINTFORML 「こちらのコースからお好きなものをお選びください」
+PRINTFORML
+PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRINTFORML ┃
+PRINTFORML ┃　1）勉強会コース
+PRINTFORML ┃　　当NPO保有の研修機関にて、"牧場"の経営について見学していただけます
+PRINTFORML ┃　　また、お連れ様やご本人様が"牧場体験"していただくことも可能です
+PRINTFORML ┃
+PRINTFORML ┃　2）職員派遣コース
+PRINTFORML ┃　　等NPO所属の"職員"を派遣し、肉体労働に従事させていただくコースです
+PRINTFORML ┃　　また、気に入った"職員"がおりましたらご相談もお受けいたします
+PRINTFORML ┃
+PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRINTFORML
+PRINTBUTTON "[1]勉強会コース", 1
+PRINTL
+PRINTBUTTON "[2]職員派遣コース",2
+PRINTL
+$INPUT_LOOP
+INPUT
+IF RESULT == 1
+    CALL FARM_EVENT_1
+ELSEIF RESULT == 2
+    CALL FARM_EVENT_2
+ELSE
+    CLEARLINE 1
+    GOTO INPUT_LOOP
+ENDIF
+
+;-------------------------------------------------
+;勉強会コース
+;-------------------------------------------------
+@FARM_EVENT_1
+#DIM STAGE
+
+STAGE = 0
+
+PRINTL
+PRINTL
+PRINTFORML 人間牧場所有の研修機関は、寂れた山際に位置する工場群だった
+PRINTFORML そんな寂れた工場群に迎えに来た高級なエアタクシーごと乗り込むと、中には別世界が広がっていた
+PRINTFORML あたり一面から聞こえてくる女の喘ぎ声
+PRINTFORML むんと香りたつ生臭い臭気と女の臭い
+PRINTFORMW そして青臭い精液の臭い
+PRINTL
+PRINTFORML 「お帰りの際は入り口そばにございますインターフォンから係りの者をお呼びください」
+PRINTFORML 迎えに来た送迎手はそう言うと、その場を後にしてしまった
+PRINTFORMW さて、どうするか
+PRINTL
+$MAIN_LOOP
+SELECTCASE STAGE
+    CASE 0
+        PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        PRINTFORML ┃
+        PRINTFORML ┃　エリア1 - 放牧場
+        PRINTFORML ┃
+        PRINTFORML ┃　　動物たちが日々暮らすエリアです
+        PRINTFORML ┃　　連れ出しOK
+        PRINTFORML ┃　　連れ出した後は、可能な限り元の場所に戻してください
+        PRINTFORML ┃
+        PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ENDSELECT
+PRINTL
+PRINTBUTTON "　[0]辺りを見回す", 0
+PRINTBUTTON "　[1]次へ進む", 1
+PRINTBUTTON "　[9]帰る",9
+INPUT
+IF RESULT == 0
+    CALL FARM_SHOW(STAGE)
+ELSEIF RESULT == 1
+    STAGE ++
+ELSEIF RESULT == 9
+    RETURN
+ENDIF
+
+;-------------------------------------------------
+;勉強会コースの各ステージ詳細
+;-------------------------------------------------
+@FARM_SHOW(STAGE)
+#DIM STAGE
+
+; 肘枷、膝枷をつけて四つん這い歩行をする女たち
+IF STAGE == 0
+    SELECTCASE RAND:20
+        CASE 0
+            PRINTFORML 柵に近づくと何人かの女たちが寄ってきて、尻を突き出してきた
+            PRINTFORML その尻は皆一様に愛液で濡れており、ぷんぷんと女の臭いを漂わせている
+            PRINTFORML %CALLNAME:MASTER%はその中の一人を選んで連れ出すと、柵に手を付けさせ後ろから挿入し、腰を振り始めた。
+            PRINTFORMW 嬉しそうな声を上げる彼女の女穴は%CALLNAME:MASTER%のモノをすっぽりとくわえ込み、潤滑油を溢れさせながらきゅうきゅうと締め付けてくる
+            PRINTL
+            PRINTFORML %CALLNAME:MASTER%が果てると、彼女はもっとして欲しいと媚びた声で懇願し近くの休憩スペースに%CALLNAME:MASTER%を引っ張った
+            PRINTFORML そして%CALLNAME:MASTER%を席につかせると、まだ硬いままのペニスを精液の垂れるヴァギナでくわえ込み、対面座位で繋がった
+            PRINTFORML 軽く抱き合いながら、女は腰を上下に動かす。あまりの腰使いに思わず声が出てしまう
+            PRINTFORML 女の動きが激しくなるにつれ、結合部から白く泡立った愛液とザーメンが掻き出され辺りに飛び散る
+            PRINTFORML それを恥ずかしげも無くまき散らしながら一心不乱に快楽を求めるその様は正に痴態と言うに相応しい淫らさだった
+            PRINTFORML 何分立っただろうか。膣内の締まりも増してきた頃に彼女が達したようで、ビクビクと震えたのち動きを止め、身体から力を抜いた
+            PRINTFORMW %CALLNAME:MASTER%もそれに合わせて射精すると、熱くなった子宮で二度目の精液を受け止めた女は「あぁ❤」と嬉しそうな声を上げギュッと抱きしめてきた
+        CASE 1
+            PRINTFORML 一人の少女が、その体に不釣り合いな巨大な乳を揉みながら挑発的な眼差しをあなたに向けてきた。
+            PRINTFORML 言葉を喋ることは禁じられているらしく、無言のまま近寄ってくる
+            PRINTFORML 程なく柵越しに触れられる距離までくると、揉んでいた胸を柵に押しつけ、その柔らかさと色艶を見せつけてきた
+            PRINTL
+            PRINTFORML %CALLNAME:MASTER%が彼女を柵から連れ出すと、彼女は満面の笑みを浮かべて%CALLNAME:MASTER%を近くの椅子に引っ張った
+            PRINTFORML 強引に%CALLNAME:MASTER%を着席させると、彼女は%CALLNAME:MASTER%のズボンを脱がし、自慢であろう巨乳でパイズリを始めた
+            PRINTFORML リップサービスなのだろうか。それとも奉仕するのが好きなのだろうか
+            PRINTFORML そんなことを考えているうちに、彼女自慢のパイズリテクで%CALLNAME:MASTER%は果ててしまった
+            PRINTFORML 白い白濁液が胸の谷間に溢れ、少女の白い指がそれをすくって舐めとる
+            PRINTFORML その様はベテランの娼婦のようにこなれているように見え、彼女がこの行為を何度も行っていることを物語っていた
+            PRINTL
+            PRINTFORML 一通り指についた精液を舐め終えると、少女は再び%CALLNAME:MASTER%の上に跨り、自分の膣内へ%CALLNAME:MASTER%を受け入れた
+            PRINTFORML 先ほどとは打って変わって激しく腰を振り、肉同士のぶつかり合う音が部屋中に響き渡る
+            PRINTFORML 彼女の動きに合わせて揺れる胸を見ていると、自然と手が吸い寄せられるように伸びていく
+            PRINTFORML しかし、その手が届く前に、彼女は動きを止めて自ら腰を動かし始めた
+            PRINTFORML 先ほどまでの激しさとは違い、優しく包み込むようなストローク
+            PRINTFORML それはまるで、こちらを気遣うかのような動きで、激しさ一辺倒ではない手練手管を感じさせる
+            PRINTL
+            PRINTFORML やがて限界を迎えたのか、少女の動きが止まり、膣壁が痙攣するのを感じた直後、彼女の体が崩れ落ちた
+            PRINTFORML 荒い息を吐きながら、少女はこちらを見上げてニヤリと笑い、自らの唇を指差した
+            PRINTFORML キスを要求しているのだろうと思い、唇を重ねると、舌をねじ込んできた
+            PRINTFORML それに答えて舌を絡めあい 互いの唾液を交換し合い、吐息を絡まるほど濃密に交換する
+            PRINTFORMW やがて息も整ってくるとようやく満足したのか、唇を離して立ち上がり満面の笑みを浮かべて%CALLNAME:MASTER%の頬にキスをした
+        CASE 2
+            PRINTFORML 柵の中を見回すと、一人の女と目があった
+            PRINTFORML 三十路くらいの、胸の大きい気弱そうな女だ
+            PRINTFORML 目があってすぐに目を逸らされたが、やがておずおずとこちらに向かってやってくると、柵越しに尻を高く突き出して見せた
+            PRINTFORML どうやら彼女なりに%CALLNAME:MASTER%を誘っているらしい
+            PRINTFORML 彼女の下手くそな誘いに乗ることにした%CALLNAME:MASTER%は、彼女を柵から連れ出すと近くのソファに連れて行った
+            PRINTL
+            PRINTFORML 彼女はソファに寝転がると自分で股を開いてみせた。どうやらもう準備万端らしい %CALLNAME:MASTER%はズボンを脱ぐと、彼女に覆いかぶさった
+            PRINTFORML 彼女の中は狭く、そしてとても熱く狭かった。しかも彼女は喘ぎ声まで控えめで、何もかもが初々しいその様はまるで処女を相手にしている気分だった
+            PRINTFORMW 一体どうしてこのような女が牧場で飼われているのだろうか……？
+        CASE 3
+            PRINTFORML 一人の女が尻を突き出してきた
+            PRINTFORML 股が濡れているのは他の女たち同様だが、尻の穴がヒクヒクと蠢き妖しく誘ってきている
+            PRINTFORML 気の強そうな顔でアナルを求める彼女を気に入った%CALLNAME:MASTER%は、彼女を連れ出すことにした。
+            PRINTFORML %CALLNAME:MASTER%に尻穴を穿られながら彼女は喘ぎ声を上げていた。
+            PRINTFORML 尻穴は柔らかくなっているが、それでもまだキツいようで、その痛みさえも快感として感じているようだ。
+            PRINTFORML %CALLNAME:MASTER%は彼女の腰を掴み、自分の方へと引き寄せると同時に、思い切り腰を突き上げた。
+            PRINTFORML 彼女は悲鳴にも似た声を上げると身体を仰け反らせた。
+            PRINTFORML そして、そのまま崩れ落ちそうになるのを抱き止めて、後ろから再び突き上げる。
+            PRINTFORML 何度も繰り返した後に、ようやく果てることができた。
+            PRINTL
+            PRINTFORML %CALLNAME:MASTER%の精液をたっぷり注がれた彼女は、満足げな表情を浮かべていたが、しばらくすると、また欲しくなったのか、自ら尻を差し出してきた。
+            PRINTFORML それを見た%CALLNAME:MASTER%が笑うと、彼女は恥ずかしそうにしながらも、もう一度抱いて貰うためにアソコを開いて見せた。
+            PRINTFORML そんな彼女を見て、今度は別の方法で楽しむことにする。
+            PRINTFORML %CALLNAME:MASTER%は、まず彼女を四つん這いにして、犬のように這わせた。
+            PRINTFORML そして、後ろから一気に貫いた。
+            PRINTFORML それから、犬のような姿勢のまま、バックで責め立てた。
+            PRINTFORML 彼女が絶頂を迎えるたびに、お仕置きだとばかりに、尻を思い切り叩く。
+            PRINTFORML 真っ赤になった尻を見ながら、%CALLNAME:MASTER%は更に興奮を高めていった。
+            PRINTFORML それからも、ずっと彼女の尻を犯し続けた。
+            PRINTFORMW もう何度射精したか分からないくらいに、彼女の尻の中に注ぎ込んだ。
+        CASE 4
+            PRINTFORML 柵越しに女たちを眺めていると、その中の一人が%CALLNAME:MASTER%に気がついて近寄ってきた
+            PRINTFORML どこか疲れた顔をしているが、股からはトロトロと彼女が元気である証の汁が垂れている
+            PRINTFORML 「……」
+            PRINTFORML 何か言おうとして、口を閉じる。そしてじぃっと%CALLNAME:MASTER%を見つめてきた
+            PRINTFORML その瞳は熱っぽく潤み、頬は上気して赤い
+            PRINTFORML 女は自分の股間を指さし、%CALLNAME:MASTER%を手招きする
+            PRINTFORML %CALLNAME:MASTER%は彼女を連れ出すと、近くのソファに押し倒した
+            PRINTL
+            PRINTFORML 彼女は抵抗しない。ただうっとりとした顔で見上げてくるだけだ ズボンを脱ぐと、彼女の腰を持ち上げて、逸物を押し当てる
+            PRINTFORML すると彼女は自分で足を持ち上げて挿入しやすいようにした
+            PRINTFORML ゆっくりと押し込んでいく
+            PRINTFORML 根元まで入ったところで一度動きを止め、それから少しずつ動かし始める
+            PRINTFORML 最初はゆっくりだったストロークも次第に激しくなり、ぱんっ！ぱんっ！！という音が響くほどになる
+            PRINTFORML 女の表情は蕩けきっており、口から漏れるのは喘ぎ声だけ
+            PRINTFORML やがて絶頂を迎えたのかビクビクと震えて潮を吹き出した
+            PRINTFORML それに合わせて膣内が収縮し、精液を求めるかのように締め付けてくる
+            PRINTFORML 「……くぅ」
+            PRINTFORML 搾り取られるような感覚に耐え切れず射精してしまった しかしそれだけでは満足できないらしく、再び抽送を始める
+            PRINTFORML 今度は自分から足を持ち上げ、結合部をさらしながら求めてきた
+            PRINTFORMW %CALLNAME:MASTER%はそれに答えるべく、さらに激しいピストン運動を繰り返すのであった
+        CASE 5
+            PRINTFORML 女たちの中には、横になって眠っている者もいた
+            PRINTFORML 柔らかな素材の床とはいえ、床で素っ裸のまま眠れるとは随分とここの生活に慣れ親しんでいるようだ
+        CASE 6
+            PRINTFORML フタナリの少女が、女たちに代わる代わる逆レイプされている
+            PRINTFORML ちんぐり返しの格好で上からプレスされ、苦しさと気持ち良さで悲鳴を上げる少女
+            PRINTFORML それを見て興奮した女はさらに激しく腰を振り、周りの女たちも自分の股をいじる手を早める
+            PRINTFORML そしてついに限界が来たのか、少女はビクンと痙攣して動かなくなった。
+            PRINTFORML 女はそれを気にせずそのまま動き続け、やがて絶頂を迎える。
+            PRINTFORML 絶頂に達した瞬間に大量の潮が少女にふりかかった
+            PRINTFORMW だが気絶していようが汚れていようが、フタナリ少女が解放されることはなく、その後も延々と女たちに犯されるのであった
+        CASE 7
+            
+    ENDSELECT
+    WAIT
+ENDIF
