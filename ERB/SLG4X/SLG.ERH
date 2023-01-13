@@ -305,6 +305,19 @@
 #DIM SAVEDATA ITEM_NUM_BORDER, ITEM_LENGTH, 120
 #DIM SAVEDATA SHOP_IN_CHARGE, 120
 
+;艦船購入メニュー用
+#DIM CONST MAX_SALE_TERMS = 5
+#DIM CONST 強制可不可判定 = 0
+#DIM CONST 特殊条件 = 1
+#DIM CONST 必要技術ID = 2
+#DIM CONST 建造可能国家 = 3
+#DIM CONST 必要好感度 = 4
+
+#DIM CONST 自国建造不可 = -1
+#DIM CONST 技術不要 = -2
+
+#DIM CONST 国家ID_ビット演算ヘッダー調整 = -1
+
 ;-------------------------
 ; 宇宙港関連
 ;-------------------------

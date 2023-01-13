@@ -1,0 +1,150 @@
+﻿;------------------------
+; 養殖宇宙かつお
+;------------------------
+@GET_SHIP_NAME_101
+RESULTS = 養殖宇宙かつお
+
+@GET_SHIP_STATUS_101(STATUS)
+#DIM REF STATUS
+
+STATUS:CATEGORY = 駆逐艦
+STATUS:SHIP_HP = 3000
+STATUS:SHIP_AVOID = 25
+STATUS:SHIP_MAIN_WEAPON_SIZE = 2
+STATUS:SHIP_SUB_WEAPON_SIZE = 2
+STATUS:SHIP_SIELD_SIZE = 2
+STATUS:SHIP_ARMOR_SIZE = 2
+STATUS:SHIP_ENGIN_SIZE = 2
+STATUS:SHIP_PRICE = 80000000
+STATUS:SHIP_CREW = 3
+
+STATUS:SHIP_MAIN_WEAPON_SLOT = 2
+STATUS:SHIP_SUB_WEAPON_SLOT = 2
+STATUS:SHIP_SIELD_SLOT = 1
+STATUS:SHIP_ARMOR_SLOT = 1
+STATUS:SHIP_OPTION_SLOT = 1
+
+
+
+@GET_SHIP_DESCRIPTION_F_101
+PRINTFORML 宇宙まぐろの近縁に当たる小型駆逐艦サイズの宇宙怪獣。その養殖種。
+PRINTFORML 宇宙まぐろと比べると需要は劣るが食用も可。
+PRINTFORML 
+PRINTFORML この快速宇宙怪獣は宇宙遊牧民が時折売りに来るものであり、買うには伝手とタイミングが重要となる。
+
+@GET_SHIP_RESOURCE_101(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 100
+USE_RESOURCE:装甲合金 = 60
+USE_RESOURCE:シールド発生装置 = 60
+USE_RESOURCE:武装制御機器 = 50
+USE_RESOURCE:合金加工剤 = 160
+USE_RESOURCE:耐熱合金 = 60
+USE_RESOURCE:超電導回路 = 60
+USE_RESOURCE:タイラーセンサー = 20
+
+;遊牧民側が素材と引き換えに港に売る→プレイヤーがお金と引き換えに港から買う、みたいな感じの流れを想定。宇宙怪獣を0から建造している訳ではない。
+
+@SET_SHIP_PRESET_101(SHIP_ID)
+#DIM SHIP_ID
+
+SHIP_EQUIP:主砲:0:SHIP_ID = 198
+SHIP_EQUIP:主砲:1:SHIP_ID = 0
+SHIP_EQUIP:副砲:0:SHIP_ID = 94
+SHIP_EQUIP:副砲:1:SHIP_ID = 0
+SHIP_EQUIP:シールド:0:SHIP_ID = 0
+SHIP_EQUIP:装甲:0:SHIP_ID = 200
+SHIP_EQUIP:エンジン:0:SHIP_ID = 91
+SHIP_EQUIP:AI:0:SHIP_ID = 0
+SHIP_EQUIP:センサー:0:SHIP_ID = 0
+
+
+@IS_SALE_SHIP_101(CAN_SALE_SHIP)
+#DIM REF CAN_SALE_SHIP
+
+
+CAN_SALE_SHIP:特殊条件 = 1
+CAN_SALE_SHIP:必要好感度 = 375
+
+;販売タイミングは下記惑星間をスピード2で移動しているものとして想定(同一国の他の星で買っても即座に手に入るのはご都合主義)(ちゃんと確認した訳ではないので速過ぎるとしたら「宇宙遊牧民の力ってすげー」で)
+;フロンティア
+SIF (DAY+231)%231 < 3
+	SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_民主主義 + 国家ID_ビット演算ヘッダー調整
+;女王の食卓
+SIF (DAY+216)%231 < 3
+	SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_ハールバルズ + 国家ID_ビット演算ヘッダー調整
+;グレートマザー
+SIF (DAY+180)%231 < 3
+	SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_機械文明 + 国家ID_ビット演算ヘッダー調整
+;神の右手
+SIF (DAY+165)%231 < 3
+	SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_アレス宗教 + 国家ID_ビット演算ヘッダー調整
+;豊穣の地
+SIF (DAY+122)%231 < 3
+	SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_豊秋津皇国 + 国家ID_ビット演算ヘッダー調整
+;S03
+SIF (DAY+93)%231 < 3
+	SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_社会主義 + 国家ID_ビット演算ヘッダー調整
+;ビリアン
+SIF (DAY+36)%231 < 3
+	SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_企業連合 + 国家ID_ビット演算ヘッダー調整
+
+
+; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
+@TERM_OF_SALE_101
+CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
+SIF RESULT == -1
+	RETURN 0
+
+SELECTCASE STAR_OWNER:RESULT
+	CASE 国家ID_民主主義
+		RESULTS = 民主主義国家からの好感度が375以上、{DAY - (DAY%231) + 231}期頃
+		RETURN 1
+	CASE 国家ID_ハールバルズ
+		IF (DAY+231)/231 == (DAY+216)/231
+		RESULTS = ハールバルズからの好感度が375以上、{DAY - (DAY%231) + 15 + 231}期頃
+		ELSE
+		RESULTS = ハールバルズからの好感度が375以上、{DAY - (DAY%231) + 15}期頃
+		ENDIF
+		RETURN 1
+	CASE 国家ID_機械文明
+		IF (DAY+231)/231 == (DAY+180)/231
+			RESULTS = 機械文明からの好感度が375以上、{DAY - (DAY%231) + 51 +231}期頃
+		ELSE
+			RESULTS = 機械文明からの好感度が375以上、{DAY - (DAY%231) + 51}期頃
+		ENDIF
+		RETURN 1
+	CASE 国家ID_アレス宗教
+		IF (DAY+231)/231 == (DAY+165)/231
+			RESULTS = アレス宗教国家からの好感度が375以上、{DAY - (DAY%231) + 66 + 231}期頃
+		ELSE
+			RESULTS = アレス宗教国家からの好感度が375以上、{DAY - (DAY%231) + 66}期頃
+		ENDIF
+		RETURN 1
+	CASE 国家ID_豊秋津皇国
+		IF (DAY+231)/231 == (DAY+122)/231
+			RESULTS = 豊秋津皇国からの好感度が375以上、{DAY - (DAY%231) + 109 + 231}期頃
+		ELSE
+			RESULTS = 豊秋津皇国からの好感度が375以上、{DAY - (DAY%231) + 109}期頃
+		ENDIF
+		RETURN 1
+	CASE 国家ID_社会主義
+		IF (DAY+231)/231 == (DAY+93)/231
+			RESULTS = 銀河人民統一連邦からの好感度が375以上、{DAY - (DAY%231) + 138 + 231}期頃
+		ELSE
+			RESULTS = 銀河人民統一連邦からの好感度が375以上、{DAY - (DAY%231) + 138}期頃
+		ENDIF
+		RETURN 1
+	CASE 国家ID_企業連合
+		IF (DAY+231)/231 == (DAY+36)/231
+		RESULTS = 企業連合からの好感度が375以上、{DAY - (DAY%231) + 195 +231}期頃
+		ELSE
+		RESULTS = 企業連合からの好感度が375以上、{DAY - (DAY%231) + 195}期頃
+		ENDIF
+		RETURN 1
+ENDSELECT
+RETURN 0
+
+@IS_VARIANT_101
+RETURN 特殊分類_宇宙生物

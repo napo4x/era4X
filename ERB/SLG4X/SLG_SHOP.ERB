@@ -1228,6 +1228,9 @@ ENDIF
 #DIM SHIP_MODEL_ID
 #DIM 入力値
 
+#DIM CAN_SALE_SHIP, MAX_SALE_TERMS
+#DIMS CONST 勢力名表示 = "プレイヤー国家","銀河人民統一連邦","企業連合","民主主義国家","アレス宗教国家","機械文明","レジスタンス","慈悲の宙族団","赤の傭兵集団","一般海賊","豊秋津皇国","ハールバルズ",
+
 $INPUT_LOOP
 PRINTL
 CUSTOMDRAWLINE =
@@ -1239,20 +1242,71 @@ ENDIF
 DRAWLINE
 FOR SHIP_MODEL_ID, 0, SHIP_CLASS_TOTAL_COUNT
 	TRYCCALLFORM GET_SHIP_STATUS_{SHIP_MODEL_ID}(SHIP_STATUS)
-		RESULT = 1
-		TRYCALLFORM IS_SALE_SHIP_{SHIP_MODEL_ID}
+		VARSET CAN_SALE_SHIP, -1
+		CAN_SALE_SHIP:建造可能国家 = 0
+		TRYCALLFORM IS_SALE_SHIP_{SHIP_MODEL_ID}(CAN_SALE_SHIP)
+		IF OWNER == 国家ID_プレイヤー
+		; 自国生産だったら必要技術を見て処理する(自国生産時の定型処理)
+			IF CAN_SALE_SHIP:必要技術ID == 自国建造不可
+				RESULT = 0
+			ELSEIF CAN_SALE_SHIP:必要技術ID == 技術不要
+				RESULT = 1
+			ELSEIF IS_COMPLETE_TECH:(CAN_SALE_SHIP:必要技術ID)
+				RESULT = 1
+			ENDIF
+		; 自国生産時の定型処理ここまで
+		ELSE
+		; 他国で購入するなら国家と好感度の制限に引っかからないか見る(他国購入時の定型処理)
+			GETBIT CAN_SALE_SHIP:建造可能国家, OWNER + 国家ID_ビット演算ヘッダー調整
+			SIF REL_LIKE_COUNTRY:OWNER:国家ID_プレイヤー < CAN_SALE_SHIP:必要好感度
+				RESULT = 0
+		; 他国購入時の定型処理ここまで
+		ENDIF
+		; 強制可不可判定が-1以上なら強制可不可判定でRESULTを上書き
+		SIF CAN_SALE_SHIP:強制可不可判定 >= 0
+			RESULT = CAN_SALE_SHIP:強制可不可判定
 		IF RESULT != 1
+		; 買えない場合
 			TRYCALLFORM GET_SHIP_NAME_{SHIP_MODEL_ID}
 			LOCALS = %RESULTS%
-			TRYCALLFORM TERM_OF_SALE_{SHIP_MODEL_ID}
-			SIF RESULT == 0
+			GETBIT CAN_SALE_SHIP:建造可能国家, OWNER + 国家ID_ビット演算ヘッダー調整
+			IF CAN_SALE_SHIP:特殊条件 == 1
+			; 特殊条件フラグが立っているなら販売条件表示と表示するかの判断を貰ってくる
+				TRYCALLFORM TERM_OF_SALE_{SHIP_MODEL_ID}
+				SIF RESULT == 0
+					CONTINUE
+			ELSEIF RESULT == 1
+			; この港で建造しうるのに買えず・特殊条件フラグが無いのなら定型文表示を出力する
+				RESULTS =
+				FOR COUNT, 0, MAX_COUNTRY
+					GETBIT CAN_SALE_SHIP:建造可能国家, COUNT - 国家ID_ビット演算ヘッダー調整
+					IF RESULT == 1
+						IF RESULTS == ""
+						; 建造可能なのが1国だけなら勢力名・複数国ならボカす
+							RESULTS =%勢力名表示:COUNT%
+						ELSE
+							RESULTS =発注する国家
+							BREAK
+							; 国家名を全部羅列したいなら
+							;RESULTS =%RESULTS%・%勢力名表示:COUNT%
+						ENDIF
+					ENDIF
+				NEXT
+				RESULTS = %RESULTS%からの好感度が{CAN_SALE_SHIP:必要好感度}以上
+				SIF CAN_SALE_SHIP:必要技術ID >= 0
+					RESULTS = %RESULTS%、自国生産の場合は技術研究が
+				RESULTS = %RESULTS%必要
+			ELSE
+			; この港で建造しえないのなら表示しない
 				CONTINUE
+			ENDIF
 			LOCALS = %LOCALS, 20, LEFT%[販売条件]: %RESULTS%
 			SETCOLOR 0X666666
 			PRINTFORML 　 %LOCALS%
 			RESETCOLOR
 			CONTINUE
 		ENDIF
+		;買えるなら表示処理
 		IF OWNER == 国家ID_プレイヤー
 			TRYCALLFORM GET_SHIP_NAME_{SHIP_MODEL_ID}
 			PRINTBUTTON @"　%RESULTS, 20, LEFT% $0", SHIP_MODEL_ID

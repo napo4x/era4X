@@ -50,25 +50,20 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 1
 SHIP_EQUIP:AI:0:SHIP_ID = 1
 SHIP_EQUIP:センサー:0:SHIP_ID = 1
 
-@IS_SALE_SHIP_45
-#DIM PORT_ID
+@IS_SALE_SHIP_45(CAN_SALE_SHIP)
+#DIM REF CAN_SALE_SHIP
 
-CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
-IF RESULT == -1
-  CALL GET_PORT_ID_FROM_POS(CHARACTER_POSITION)
-  SIF RESULT == -1
-    RETURN 0
-  IF PORT_OWNER:RESULT == 国家ID_プレイヤー
-    RETURN 0
-  ELSE
-    SIF PORT_OWNER:RESULT == 国家ID_社会主義
-      RETURN 0
-    RETURN REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー >= 0
-  ENDIF
-ENDIF
-SIF STAR_OWNER:RESULT == 国家ID_社会主義
-  RETURN 0
-RETURN REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー >= 0
+
+CAN_SALE_SHIP:必要技術ID = 自国建造不可
+CAN_SALE_SHIP:必要好感度 = -999
+
+SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_企業連合 + 国家ID_ビット演算ヘッダー調整
+SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_民主主義 + 国家ID_ビット演算ヘッダー調整
+SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_アレス宗教 + 国家ID_ビット演算ヘッダー調整
+SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_機械文明 + 国家ID_ビット演算ヘッダー調整
+SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_豊秋津皇国 + 国家ID_ビット演算ヘッダー調整
+SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_ハールバルズ + 国家ID_ビット演算ヘッダー調整
+
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_45

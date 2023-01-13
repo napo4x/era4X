@@ -87,6 +87,8 @@
 #DIM CONST 古代のタイタン = 99
 #DIM CONST 古代のフリゲート = 100
 
+#DIM CONST 養殖宇宙かつお = 101
+
 #DIM CONST アーラ級コルベット = 110
 #DIM CONST シーナ級駆逐艦 = 111
 #DIM CONST マルタ級巡洋戦艦 = 112
