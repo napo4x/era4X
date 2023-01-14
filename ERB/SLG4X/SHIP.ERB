@@ -18,15 +18,12 @@ SHIP_LIST_LENGTH = COUNTER
 ;---------------------------------
 ; 艦船一覧取得(↑の改良版)
 ;---------------------------------
-@GET_SHIP_LIST(LIST, POSID, COUNTRY_ID)
+@GET_SHIP_LIST(LIST, POSID, COUNTRY_ID, COUNTER = 0)
 #DIM REF LIST
 #DIM POSID
 #DIM COUNTRY_ID
 #DIM SHIP_ID
 #DIM COUNTER
-
-VARSET LIST, -1
-COUNTER = 0
 
 FOR SHIP_ID, 0, MAX_SHIP
 	SIF COUNTRY_ID != SHIP_COUNTRY:SHIP_ID
@@ -36,6 +33,7 @@ FOR SHIP_ID, 0, MAX_SHIP
 	LIST:COUNTER = SHIP_ID
 	COUNTER ++
 NEXT
+RETURN COUNTER
 
 ;---------------------------------
 ; 艦船一覧取得(↑の改良版)
