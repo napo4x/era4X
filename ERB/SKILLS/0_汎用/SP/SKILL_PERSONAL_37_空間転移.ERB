@@ -12,57 +12,15 @@ RESULTS = 空間転移
 RETURN 5
 
 @SKILL_0_PERSONAL_37_EXPLANATION
-RESULTS = 確率で自艦の被ダメージ-100\% 『超能力』によって成功確率が変化(最低必要超能力60)
+RESULTS = 確率で自艦の回避率+100\% 『超能力』によって成功確率が変化(最低必要超能力60)
 
-@SKILL_0_PERSONAL_37_EFFECT(VALUE, TYPE, CLASS, CHARA_ID)
-#DIM VALUE
-#DIM TYPE
-#DIM CLASS
-#DIM CHARA_ID
+@SKILL_0_PERSONAL_37_EFFECT(TARGET_ID, CAPTAIN)
+#DIM TARGET_ID
+#DIM CAPTAIN
 
-LOCAL = ABL:CHARA_ID:超能力
-	IF LOCAL >= 150
-	;軽く人間やめてるレベル。存在そのものが災害みたいな奴ら。
-	;旧大国時代の最精鋭やポストヒューマン等でもない限り初期でこれ程の能力を持つことは有り得ない。
-		SIF TYPE == TYPE_被ダメージ && RAND:100 < 20
-			VALUE = 0
-	ELSEIF LOCAL >= 120
-	;規格外の超能力者。
-		SIF TYPE == TYPE_被ダメージ && RAND:100 < 17
-			VALUE = 0
-	ELSEIF LOCAL >= 100
-	;トップクラスの超能力者として一目置かれる領域。
-	;初期でこれ以上の能力を持つキャラはユニークでもそうそう居ない。
-		SIF TYPE == TYPE_被ダメージ && RAND:100 < 14
-			VALUE = 0
-	ELSEIF LOCAL >= 80
-	;超一流。聖騎士でもかなり優秀な部類。
-		SIF TYPE == TYPE_被ダメージ && RAND:100 < 11
-			VALUE = 0
-	ELSEIF LOCAL >= 70
-	;非常に優秀。一流と呼んでも差し支えない領域。
-		SIF TYPE == TYPE_被ダメージ && RAND:100 < 8
-			VALUE = 0
-	ELSEIF LOCAL >= 60
-	;優秀。このスキルを使う際の最低必要能力。
-		SIF TYPE == TYPE_被ダメージ && RAND:100 < 5
-			VALUE = 0
-	ELSE
-	;上げにくい能力値だがスキル効果自体が強力な為、
-	;必要超能力を満たしていない場合は超能力者でも効果無し
-	ENDIF
-RETURN VALUE
-
-
-@SKILL_0_PERSONAL_37_RATE(発動者, 発動番号, 発動側, 発動勢力, 発動部隊, 対象勢力, 対象部隊)
-#DIM 発動者
-#DIM 発動番号
-#DIM スキル
-#DIMS ジャンル
-#DIM 発動側
-#DIM 発動勢力
-#DIM 発動部隊
-#DIM 対象側
-#DIM 対象勢力
-#DIM 対象部隊
-RETURN 1000
+LOCAL = ABL:CAPTAIN:超能力
+SIF LOCAL < 60
+	RETURN
+LOCAL = LOCAL / 30
+SIF RAND:100 < LOCAL
+	SKILL_EFFECT_PERCENTAGE:TYPE_回避率:TARGET_ID += 100

@@ -4213,3 +4213,94 @@ ELSEIF RESULT == 1000
 ELSE
 	GOTO INPUT_LOOP
 ENDIF
+
+;-------------------------------------------------
+; CHARA_IDのキャラが陥落済みだった場合1を、そうでない場合は0を返す
+;-------------------------------------------------
+@IS_FALL(CHARA_ID)
+#FUNCTION
+#DIM CHARA_ID
+SIF TALENT:CHARA_ID:恋慕 == 1 || TALENT:CHARA_ID:親愛 == 1 || TALENT:CHARA_ID:服従 == 1 || TALENT:CHARA_ID:隷属 == 1
+	RETURNF 1
+RETURNF 0
+
+;-------------------------------------------------
+; MESSAGEをプリントし、YES,NOの選択肢を出す。YESが選ばれたら0, NOが選ばれたら1を返す
+;-------------------------------------------------
+@ASK_YESNO(MESSAGE)
+#DIMS MESSAGE
+
+$INPUT_LOOP
+PRINTFORML %MESSAGE%
+PRINTBUTTON "[0] はい", 0
+PRINTL
+PRINTBUTTON "[1] いいえ", 1
+INPUT
+IF RESULT == 0
+	RETURN 1
+ELSEIF RESULT == 1
+	RETURN 0
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+;-------------------------------------------------
+; MESSAGEをプリントし、SELECT1,2の選択肢を出す。SELECT1が選ばれたら1を、2が選ばれたら2を返す
+;-------------------------------------------------
+@ASK_SELECT(MESSAGE, SELECT1, SELECT2)
+#DIMS MESSAGE
+#DIMS SELECT1
+#DIMS SELECT2
+
+$INPUT_LOOP
+PRINTFORML %MESSAGE%
+PRINTBUTTON @"[1] %SELECT1%", 1
+PRINTL
+PRINTBUTTON @"[2] %SELECT2%", 2
+PRINTL
+
+INPUT
+IF RESULT == 1
+	RETURN 1
+ELSEIF RESULT == 2
+	RETURN 2
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
+
+;-------------------------------------------------
+;タイプした風に引数の文字列を一文字ずつ出力する関数
+;-------------------------------------------------
+@TYPE_PRINT(STRING, WAITTIME)
+#DIMS STRING
+#DIM WAITTIME
+#DIM DYNAMIC STR_CNT
+
+VARSET LOCALS 
+FOR LOCAL, 0, STRLENSU(STRING) + 1
+	SIF LOCAL > 1
+		CLEARLINE 1
+	TWAIT WAITTIME, 1
+	LOCALS '= LOCALS + CHARATU(STRING, LOCAL)
+	PRINTFORM %LOCALS%
+NEXT
+CLEARLINE 1
+RETURN
+
+;-------------------------------------------------
+;降順マルチソートを行う関数
+;-------------------------------------------------
+@ARRAYMSORTREV(LIST1, LIST2)
+#DIM REF LIST1
+#DIM REF LIST2
+#DIM COUNTER
+
+COUNTER = VARSIZE("LIST1")
+
+FOR LOCAL, 0, COUNTER
+	LIST1:LOCAL *= -1
+NEXT
+ARRAYMSORT LIST1, LIST2
+FOR LOCAL, 0, COUNTER
+	LIST1:LOCAL *= -1
+NEXT

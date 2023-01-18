@@ -30,12 +30,17 @@
 #DIM CONST SKILL_LEARN_PRICE = 0, 2000, 5000, 8000, 50000, 100000
 #DIM CONST SKILL_FORGET_PRICE = 5000
 
-#DIM CONST TYPE_回避 = 0
-#DIM CONST TYPE_命中 = 1
+
+#DIM CONST TYPE_回避率 = 0
+#DIM CONST TYPE_命中率 = 1
 #DIM CONST TYPE_与ダメージ = 2
-#DIM CONST TYPE_被ダメージ = 3
-#DIM CONST TYPE_シールド増加 = 4
-#DIM CONST TYPE_対空命中 = 5
+#DIM CONST TYPE_シールド増加 = 3
+#DIM CONST TYPE_対空命中 = 4
+#DIM CONST TYPE_対空回避 = 5;対空兵器に対する回避
 #DIM CONST TYPE_対空ダメージ = 6
-#DIM CONST TYPE_敵回避 = 7
-#DIM CONST TYPE_敵命中 = 8
+#DIM CONST TYPE_艦載機命中 = 7
+#DIM CONST MAX_TYPE = 8
+
+#DIMS CONST TYPE_TITLE = "回避率", "命中率", "与ダメージ", "シールド出力", "対空命中", "対対空回避", "対空ダメージ", "艦載機命中率"
+
+#DIM SKILL_EFFECT_PERCENTAGE, MAX_TYPE, MAX_SHIP

@@ -15,49 +15,20 @@ RETURN 2
 RESULTS = 巡洋艦、戦艦の与ダメージ、命中率+10\% 回避率-20\% 駆逐艦以下の与/被ダメージ+20\%(必要知略100)
 
 
-@SKILL_0_TROOP_11_EFFECT(VALUE, TYPE, CLASS, CH_ID)
-#DIM VALUE
-#DIM TYPE
-#DIM CLASS
-#DIM CH_ID
+@SKILL_0_TROOP_11_EFFECT(OWN_COUNTRY, ENEMY_COUNTRY, TARGET_ID)
+#DIM OWN_COUNTRY
+#DIM ENEMY_COUNTRY
+#DIM TARGET_ID
 
-LOCAL = ABL:CH_ID:知略
-	IF LOCAL >= 100
-		IF TYPE == TYPE_命中 && (CLASS == 巡洋艦 || CLASS == 戦艦 || CLASS == 艦種_航空機)
-			TIMES VALUE, 1.10
-		ELSEIF TYPE == TYPE_与ダメージ && (CLASS == 巡洋艦 || CLASS == 戦艦 || CLASS == 艦種_航空機)
-			TIMES VALUE, 1.10
-		ELSEIF TYPE == TYPE_回避 && (CLASS == 巡洋艦 || CLASS == 戦艦 || CLASS == 空母)
-			TIMES VALUE, 0.80
-		ELSEIF TYPE == TYPE_与ダメージ && (CLASS == コルベット || CLASS == フリゲート || CLASS == 駆逐艦)
-			TIMES VALUE, 1.20
-		ELSEIF TYPE == TYPE_被ダメージ && (CLASS == コルベット || CLASS == フリゲート || CLASS == 駆逐艦)
-			TIMES VALUE, 1.20
-		ENDIF
-	ELSE
-		IF TYPE == TYPE_回避 && (CLASS == 巡洋艦 || CLASS == 戦艦 || CLASS == 空母)
-			TIMES VALUE, 0.60
-		ELSEIF TYPE == TYPE_命中 && (CLASS == 巡洋艦 || CLASS == 戦艦 || CLASS == 艦種_航空機)
-			TIMES VALUE, 1.05
-		ELSEIF TYPE == TYPE_与ダメージ && (CLASS == コルベット || CLASS == フリゲート || CLASS == 駆逐艦)
-			TIMES VALUE, 1.05
-		ELSEIF TYPE == TYPE_被ダメージ && (CLASS == コルベット || CLASS == フリゲート || CLASS == 駆逐艦)
-			TIMES VALUE, 1.11
-		ENDIF
-	ENDIF
-RETURN VALUE
+SIF SHIP_COUNTRY:TARGET_ID != OWN_COUNTRY
+	RETURN
 
-
-
-@SKILL_0_TROOP_11_RATE(発動者, 発動番号, 発動側, 発動勢力, 発動部隊, 対象勢力, 対象部隊)
-#DIM 発動者
-#DIM 発動番号
-#DIM スキル
-#DIMS ジャンル
-#DIM 発動側
-#DIM 発動勢力
-#DIM 発動部隊
-#DIM 対象側
-#DIM 対象勢力
-#DIM 対象部隊
-RETURN 1000
+IF GROUPMATCH(SHIP_CATEGORY:TARGET_ID, 巡洋艦, 戦艦)
+	TIMES SKILL_EFFECT_PERCENTAGE:TYPE_回避率:TARGET_ID, 0.80
+	TIMES SKILL_EFFECT_PERCENTAGE:TYPE_命中率:TARGET_ID, 1.10
+	TIMES SKILL_EFFECT_PERCENTAGE:TYPE_与ダメージ:TARGET_ID, 1.10
+ENDIF
+IF GROUPMATCH(SHIP_CATEGORY:TARGET_ID, コルベット, フリゲート, 駆逐艦)
+	TIMES SKILL_EFFECT_PERCENTAGE:TYPE_回避率:TARGET_ID, 0.80
+	TIMES SKILL_EFFECT_PERCENTAGE:TYPE_与ダメージ:TARGET_ID, 1.20
+ENDIF

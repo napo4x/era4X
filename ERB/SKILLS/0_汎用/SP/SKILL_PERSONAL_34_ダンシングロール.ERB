@@ -69,51 +69,22 @@ PRINTFORML 自部隊の攻撃力が上昇！
 TIMES BATTLE_ATK:発動側, 1.01
 
 @SKILL_0_PERSONAL_34_EXPLANATION
-RESULTS = 駆逐艦以下の小型艦搭乗時、自艦の回避、敵艦の命中率が3～9\%の範囲で変動する(必要COOL60～100)
+RESULTS = 駆逐艦以下の小型艦搭乗時、自艦の命中率、回避率が3～9\%の範囲で上昇する(必要COOL60～)
 
-@SKILL_0_PERSONAL_34_EFFECT(VALUE, TYPE, CLASS, CHARA_ID)
-#DIM VALUE
-#DIM TYPE
-#DIM CLASS
-#DIM CHARA_ID
+@SKILL_0_PERSONAL_34_EFFECT(TARGET_ID, CAPTAIN)
+#DIM TARGET_ID
+#DIM CAPTAIN
 
-LOCAL = ABL:CHARA_ID:演技力ＣＯ
+LOCAL = ABL:CAPTAIN:演技力ＣＯ
+IF GROUPMATCH(SHIP_CATEGORY, コルベット, フリゲート, 駆逐艦)
 	IF LOCAL >= 100
-		IF TYPE == TYPE_敵命中 && (CLASS == コルベット || CLASS == フリゲート || CLASS == 駆逐艦)
-			TIMES VALUE, 0.91
-		ELSEIF TYPE == TYPE_回避 && (CLASS == コルベット || CLASS == フリゲート || CLASS == 駆逐艦)
-			TIMES VALUE, 0.88
-		ENDIF
+		TIMES SKILL_EFFECT_PERCENTAGE:TYPE_命中率:TARGET_ID, 1.09
+		TIMES SKILL_EFFECT_PERCENTAGE:TYPE_回避率:TARGET_ID, 1.09
 	ELSEIF LOCAL >= 80
-		IF TYPE == TYPE_敵命中 && (CLASS == コルベット || CLASS == フリゲート || CLASS == 駆逐艦)
-			TIMES VALUE, 0.94
-		ELSEIF TYPE == TYPE_回避 && (CLASS == コルベット || CLASS == フリゲート || CLASS == 駆逐艦)
-			TIMES VALUE, 0.92
-		ENDIF
+		TIMES SKILL_EFFECT_PERCENTAGE:TYPE_命中率:TARGET_ID, 1.06
+		TIMES SKILL_EFFECT_PERCENTAGE:TYPE_回避率:TARGET_ID, 1.06
 	ELSEIF LOCAL >= 60
-		IF TYPE == TYPE_敵命中 && (CLASS == コルベット || CLASS == フリゲート || CLASS == 駆逐艦)
-			TIMES VALUE, 0.97
-		ELSEIF TYPE == TYPE_回避 && (CLASS == コルベット || CLASS == フリゲート || CLASS == 駆逐艦)
-			TIMES VALUE, 0.96
-		ENDIF
-	ELSE
-		IF TYPE == TYPE_敵命中 && (CLASS == コルベット || CLASS == フリゲート || CLASS == 駆逐艦)
-			TIMES VALUE, 0.99
-		ELSEIF TYPE == TYPE_回避 && (CLASS == コルベット || CLASS == フリゲート || CLASS == 駆逐艦)
-			TIMES VALUE, 0.98
-		ENDIF
+		TIMES SKILL_EFFECT_PERCENTAGE:TYPE_命中率:TARGET_ID, 1.03
+		TIMES SKILL_EFFECT_PERCENTAGE:TYPE_回避率:TARGET_ID, 1.03
 	ENDIF
-RETURN VALUE
-
-@SKILL_0_PERSONAL_34_RATE(発動者, 発動番号, 発動側, 発動勢力, 発動部隊, 対象勢力, 対象部隊)
-#DIM 発動者
-#DIM 発動番号
-#DIM スキル
-#DIMS ジャンル
-#DIM 発動側
-#DIM 発動勢力
-#DIM 発動部隊
-#DIM 対象側
-#DIM 対象勢力
-#DIM 対象部隊
-RETURN 1000
+ENDIF
