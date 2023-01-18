@@ -114,6 +114,7 @@
 #DIM CONST オプション = 7
 
 #DIMS CONST EQUIP_CATEGORY_NAME = "主砲", "副砲", "シールド", "装甲", "エンジン", "AI", "センサー", "オプション"
+#DIMS CONST EQUIP_TYPE_NAME_EN = "MAIN_WEAPON", "SUB_WEAPON", "SIELD", "ARMOR", "ENGIN", "COMPUTER", "SENSOR", "OPTION"
 
 #DIM CONST DAMAGE = 0
 #DIM CONST FIRE_RATE = 1
@@ -216,6 +217,7 @@
 #DIM CONST 魚雷 = 4
 #DIM CONST ビーム = 5
 #DIM CONST 攻撃属性 = 6
+#DIMS CONST WEAPON_TYPE_NAME = "実体弾", "レーザー", "ミサイル", "艦載機", "魚雷", "ビーム"
 
 #DIM CONST MISSILE_HP = 50
 #DIM CONST MISSILE_AVOID = 70
