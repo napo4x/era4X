@@ -31,7 +31,7 @@ IF FLAG:10 < 1414
         NEXT
     NEXT
 
-    FOR STAR_ID, 0, 星系数
+    FOR STAR_ID, 0, MAX_STAR
         FOR LOCAL, 0, STAR_PORT_SLOT_NUM
             SIF STAR_PORT_SLOT:STAR_ID:LOCAL != コンテナ
                 CONTINUE           

@@ -271,8 +271,8 @@ ENDIF
 ;--------------------------------------------------
 ; 星系港
 ;--------------------------------------------------
-FOR PORT_ID, 0, 星系数
-	SIF 星系座標ID:PORT_ID != RESULT
+FOR PORT_ID, 0, MAX_STAR
+	SIF STAR_POSITION_ID:PORT_ID != RESULT
 		CONTINUE
 	TARGET_POS = RESULT
 NEXT

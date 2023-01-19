@@ -51,7 +51,7 @@ RETURN
 #DIM Y_POS
 #DIM SHIP_ID
 
-PORTPOSID = 星系座標ID:(RAND:星系数)
+PORTPOSID = STAR_POSITION_ID:(RAND:MAX_STAR)
 CALL ID2POS(PORTPOSID)
 SECTOR_ID = RESULT:0
 X_POS = RESULT:1
@@ -123,14 +123,14 @@ NEXT
 
 ; 資源の配置
 FOR LOCAL, 0, 3
-	CALL INIT_STAR_RESOURCE(星系座標ID:LOCAL, 国家ID_社会主義)
+	CALL INIT_STAR_RESOURCE(STAR_POSITION_ID:LOCAL, 国家ID_社会主義)
 	SELECTCASE LOCAL
 		CASE 0
-			CALL ADD_RESOURCE(星系座標ID:LOCAL, 国家ID_社会主義, 宇宙たばこ, 1000)
+			CALL ADD_RESOURCE(STAR_POSITION_ID:LOCAL, 国家ID_社会主義, 宇宙たばこ, 1000)
 		CASE 1
-			CALL ADD_RESOURCE(星系座標ID:LOCAL, 国家ID_社会主義, オーネスワイン, 1000)
+			CALL ADD_RESOURCE(STAR_POSITION_ID:LOCAL, 国家ID_社会主義, オーネスワイン, 1000)
 		CASE 2
-			CALL ADD_RESOURCE(星系座標ID:LOCAL, 国家ID_社会主義, トルス酒, 1000)
+			CALL ADD_RESOURCE(STAR_POSITION_ID:LOCAL, 国家ID_社会主義, トルス酒, 1000)
 	ENDSELECT
 NEXT
 
@@ -141,15 +141,15 @@ COUNTER = 0
 FOR LOCAL, 0, 3
 	FOR LOCAL:1, 0, 30
 		;LOCALS = ヴォーロス級コルベット
-		CALL INIT_PRESET_SHIP(国家ID_社会主義, 星系座標ID:LOCAL, ヴォーロス級コルベット, , ヴォーロス級コルベット)
+		CALL INIT_PRESET_SHIP(国家ID_社会主義, STAR_POSITION_ID:LOCAL, ヴォーロス級コルベット, , ヴォーロス級コルベット)
 	NEXT
 	FOR LOCAL:1, 0, 20
 		;LOCALS = ペルーン級フリゲート
-		CALL INIT_PRESET_SHIP(国家ID_社会主義, 星系座標ID:LOCAL, ペルーン級フリゲート, , ペルーン級フリゲート)
+		CALL INIT_PRESET_SHIP(国家ID_社会主義, STAR_POSITION_ID:LOCAL, ペルーン級フリゲート, , ペルーン級フリゲート)
 	NEXT
 	FOR LOCAL:1, 0, 10
 		;LOCALS = マーチ級駆逐艦
-		CALL INIT_PRESET_SHIP(国家ID_社会主義, 星系座標ID:LOCAL, マーチ級駆逐艦, , マーチ級駆逐艦)
+		CALL INIT_PRESET_SHIP(国家ID_社会主義, STAR_POSITION_ID:LOCAL, マーチ級駆逐艦, , マーチ級駆逐艦)
 	NEXT
 NEXT
 
@@ -184,12 +184,12 @@ NEXT
 
 ; 資源の配置
 FOR LOCAL, 3, 5
-	CALL INIT_STAR_RESOURCE(星系座標ID:LOCAL, 国家ID_企業連合)
+	CALL INIT_STAR_RESOURCE(STAR_POSITION_ID:LOCAL, 国家ID_企業連合)
 	SELECTCASE LOCAL
 		CASE 3
-			CALL ADD_RESOURCE(星系座標ID:LOCAL, 国家ID_企業連合, サンロットの香木, 1000)
+			CALL ADD_RESOURCE(STAR_POSITION_ID:LOCAL, 国家ID_企業連合, サンロットの香木, 1000)
 		CASE 4
-			CALL ADD_RESOURCE(星系座標ID:LOCAL, 国家ID_企業連合, フォルス酒, 1000)
+			CALL ADD_RESOURCE(STAR_POSITION_ID:LOCAL, 国家ID_企業連合, フォルス酒, 1000)
 	ENDSELECT
 NEXT
 
@@ -206,27 +206,27 @@ REL_LIKE_COUNTRY:国家ID_企業連合:国家ID_赤の傭兵集団 = -200; 味�
 FOR LOCAL, 3, 5
 	FOR LOCAL:1, 0, 10
 		;LOCALS = コニー
-		CALL INIT_PRESET_SHIP(国家ID_企業連合, 星系座標ID:LOCAL, 汎用コルベット, , 汎用コルベット)
+		CALL INIT_PRESET_SHIP(国家ID_企業連合, STAR_POSITION_ID:LOCAL, 汎用コルベット, , 汎用コルベット)
 	NEXT
 	FOR LOCAL:1, 0, 8
 		;LOCALS = フレン
-		CALL INIT_PRESET_SHIP(国家ID_企業連合, 星系座標ID:LOCAL, 汎用フリゲート, , 汎用フリゲート)
+		CALL INIT_PRESET_SHIP(国家ID_企業連合, STAR_POSITION_ID:LOCAL, 汎用フリゲート, , 汎用フリゲート)
 	NEXT
 	FOR LOCAL:1, 0, 6
 		;LOCALS = ドロシー
-		CALL INIT_PRESET_SHIP(国家ID_企業連合, 星系座標ID:LOCAL, 汎用駆逐艦, , 汎用駆逐艦)
+		CALL INIT_PRESET_SHIP(国家ID_企業連合, STAR_POSITION_ID:LOCAL, 汎用駆逐艦, , 汎用駆逐艦)
 	NEXT
 	FOR LOCAL:1, 0, 4
 		;LOCALS = キャサリン
-		CALL INIT_PRESET_SHIP(国家ID_企業連合, 星系座標ID:LOCAL, 汎用巡洋艦, , 汎用巡洋艦)
+		CALL INIT_PRESET_SHIP(国家ID_企業連合, STAR_POSITION_ID:LOCAL, 汎用巡洋艦, , 汎用巡洋艦)
 	NEXT
 	FOR LOCAL:1, 0, 3
 		;LOCALS = バーバラ
-		CALL INIT_PRESET_SHIP(国家ID_企業連合, 星系座標ID:LOCAL, 汎用戦艦, , 汎用戦艦)
+		CALL INIT_PRESET_SHIP(国家ID_企業連合, STAR_POSITION_ID:LOCAL, 汎用戦艦, , 汎用戦艦)
 	NEXT
 	FOR LOCAL:1, 0, 3
 		;LOCALS = アリス
-		CALL INIT_PRESET_SHIP(国家ID_企業連合, 星系座標ID:LOCAL, 汎用空母, , 汎用空母)
+		CALL INIT_PRESET_SHIP(国家ID_企業連合, STAR_POSITION_ID:LOCAL, 汎用空母, , 汎用空母)
 	NEXT
 NEXT
 
@@ -267,14 +267,14 @@ NEXT
 
 ; 資源の配置
 FOR LOCAL, 5, 8
-	CALL INIT_STAR_RESOURCE(星系座標ID:LOCAL, 国家ID_民主主義)
+	CALL INIT_STAR_RESOURCE(STAR_POSITION_ID:LOCAL, 国家ID_民主主義)
 	SELECTCASE LOCAL
 		CASE 5
-			CALL ADD_RESOURCE(星系座標ID:LOCAL, 国家ID_民主主義, ゴルンミスト発生器, 1000)
+			CALL ADD_RESOURCE(STAR_POSITION_ID:LOCAL, 国家ID_民主主義, ゴルンミスト発生器, 1000)
 		CASE 6
-			CALL ADD_RESOURCE(星系座標ID:LOCAL, 国家ID_民主主義, ロック布, 1000)
+			CALL ADD_RESOURCE(STAR_POSITION_ID:LOCAL, 国家ID_民主主義, ロック布, 1000)
 		CASE 7
-			CALL ADD_RESOURCE(星系座標ID:LOCAL, 国家ID_民主主義, ナナーシャ鳥, 1000)
+			CALL ADD_RESOURCE(STAR_POSITION_ID:LOCAL, 国家ID_民主主義, ナナーシャ鳥, 1000)
 	ENDSELECT
 NEXT
 
@@ -290,19 +290,19 @@ REL_LIKE_COUNTRY:国家ID_民主主義:国家ID_赤の傭兵集団 = -500; 敵�
 FOR LOCAL, 5, 8
 	FOR LOCAL:1, 0, 10
 		;LOCALS = フォックスハウンド級フリゲート
-		CALL INIT_PRESET_SHIP(国家ID_民主主義, 星系座標ID:LOCAL, フォックスハウンド級フリゲート, , フォックスハウンド級フリゲート)
+		CALL INIT_PRESET_SHIP(国家ID_民主主義, STAR_POSITION_ID:LOCAL, フォックスハウンド級フリゲート, , フォックスハウンド級フリゲート)
 	NEXT
 	FOR LOCAL:1, 0, 10
 		;LOCALS = ケルベロス級駆逐艦
-		CALL INIT_PRESET_SHIP(国家ID_民主主義, 星系座標ID:LOCAL, ケルベロス級駆逐艦, , ケルベロス級駆逐艦)
+		CALL INIT_PRESET_SHIP(国家ID_民主主義, STAR_POSITION_ID:LOCAL, ケルベロス級駆逐艦, , ケルベロス級駆逐艦)
 	NEXT
 	FOR LOCAL:1, 0, 6
 		;LOCALS = ベヒーモス級巡洋艦
-		CALL INIT_PRESET_SHIP(国家ID_民主主義, 星系座標ID:LOCAL, ベヒーモス級巡洋艦, , ベヒーモス級巡洋艦)
+		CALL INIT_PRESET_SHIP(国家ID_民主主義, STAR_POSITION_ID:LOCAL, ベヒーモス級巡洋艦, , ベヒーモス級巡洋艦)
 	NEXT
 	FOR LOCAL:1, 0, 3
 		;LOCALS = メルカバー級空母
-		CALL INIT_PRESET_SHIP(国家ID_民主主義, 星系座標ID:LOCAL, メルカバー級空母, , メルカバー級空母)
+		CALL INIT_PRESET_SHIP(国家ID_民主主義, STAR_POSITION_ID:LOCAL, メルカバー級空母, , メルカバー級空母)
 	NEXT
 NEXT
 
@@ -331,8 +331,8 @@ FOR LOCAL, 0, STAR_PORT_SLOT_NUM
 NEXT
 
 ; 資源の配置
-CALL INIT_STAR_RESOURCE(星系座標ID:8, 国家ID_アレス宗教)
-CALL ADD_RESOURCE(星系座標ID:8, 国家ID_アレス宗教, エインズの実, 1000)
+CALL INIT_STAR_RESOURCE(STAR_POSITION_ID:8, 国家ID_アレス宗教)
+CALL ADD_RESOURCE(STAR_POSITION_ID:8, 国家ID_アレス宗教, エインズの実, 1000)
 
 ; 関係性
 REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_機械文明 = -800; 戦争一歩手前
@@ -341,23 +341,23 @@ REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_機械文明 = -800; 戦争�
 ; 戦艦以下ピラミッド階層
 FOR LOCAL, 0, 20
 	;LOCALS = ナイト
-	CALL INIT_PRESET_SHIP(国家ID_アレス宗教, 星系座標ID:8, ナイト級フリゲート, , ナイト級フリゲート)
+	CALL INIT_PRESET_SHIP(国家ID_アレス宗教, STAR_POSITION_ID:8, ナイト級フリゲート, , ナイト級フリゲート)
 NEXT
 FOR LOCAL, 0, 10
 	;LOCALS = ビショップ
-	CALL INIT_PRESET_SHIP(国家ID_アレス宗教, 星系座標ID:8, ビショップ級駆逐艦, , ビショップ級駆逐艦)
+	CALL INIT_PRESET_SHIP(国家ID_アレス宗教, STAR_POSITION_ID:8, ビショップ級駆逐艦, , ビショップ級駆逐艦)
 NEXT
 FOR LOCAL, 0, 5
 	;LOCALS = ルーク
-	CALL INIT_PRESET_SHIP(国家ID_アレス宗教, 星系座標ID:8, ルーク級巡洋艦, , ルーク級巡洋艦)
+	CALL INIT_PRESET_SHIP(国家ID_アレス宗教, STAR_POSITION_ID:8, ルーク級巡洋艦, , ルーク級巡洋艦)
 NEXT
 FOR LOCAL, 0, 1
 	;LOCALS = キング
-	CALL INIT_PRESET_SHIP(国家ID_アレス宗教, 星系座標ID:8, キング級戦艦, , キング級戦艦)
+	CALL INIT_PRESET_SHIP(国家ID_アレス宗教, STAR_POSITION_ID:8, キング級戦艦, , キング級戦艦)
 NEXT
 FOR LOCAL, 0, 1
 	;LOCALS = クイーン
-	CALL INIT_PRESET_SHIP(国家ID_アレス宗教, 星系座標ID:8, クイーン級空母, , クイーン級空母)
+	CALL INIT_PRESET_SHIP(国家ID_アレス宗教, STAR_POSITION_ID:8, クイーン級空母, , クイーン級空母)
 NEXT
 
 
@@ -387,18 +387,18 @@ FOR LOCAL, 0, STAR_PORT_SLOT_NUM
 NEXT
 
 ; 資源の配置
-CALL INIT_STAR_RESOURCE(星系座標ID:9, 国家ID_機械文明)
-CALL ADD_RESOURCE(星系座標ID:9, 国家ID_機械文明, ナイ・ゲーム機, 1000)
+CALL INIT_STAR_RESOURCE(STAR_POSITION_ID:9, 国家ID_機械文明)
+CALL ADD_RESOURCE(STAR_POSITION_ID:9, 国家ID_機械文明, ナイ・ゲーム機, 1000)
 
 ; 初期艦
 ; 駆逐と戦艦および空母構成
 FOR LOCAL, 0, 30
 	;LOCALS = イージスシールド駆逐艦
-	CALL INIT_PRESET_SHIP(国家ID_機械文明, 星系座標ID:9, イージスシールド駆逐艦, , イージスシールド駆逐艦)
+	CALL INIT_PRESET_SHIP(国家ID_機械文明, STAR_POSITION_ID:9, イージスシールド駆逐艦, , イージスシールド駆逐艦)
 NEXT
 FOR LOCAL, 0, 10
 	;LOCALS = カラドボルグ級戦艦
-	CALL INIT_PRESET_SHIP(国家ID_機械文明, 星系座標ID:9, カラドボルグ級戦艦, , カラドボルグ級戦艦)
+	CALL INIT_PRESET_SHIP(国家ID_機械文明, STAR_POSITION_ID:9, カラドボルグ級戦艦, , カラドボルグ級戦艦)
 NEXT
 
 ;--------------------------
@@ -429,8 +429,8 @@ COUNTRY_NAME:国家ID_赤の傭兵集団 = 赤の傭兵集団
 @INIT_COUNTRY_10
 #DIM CONST X座標分割数 = MAP_WIDTH / 5
 #DIM CONST Y座標分割数 = MAP_HEIGHT / 5
-#DIM 星系座標X, 星系数
-#DIM 星系座標Y, 星系数
+#DIM 星系座標X, MAX_STAR
+#DIM 星系座標Y, MAX_STAR
 #DIM ITER
 #DIM SECTOR_ID
 #DIM X_POS
@@ -485,8 +485,8 @@ WHILE ITER < 50
 			FOR X_POS, 0, X座標分割数 - 1
 				IF ITER < 50 && RAND(50 - ITER) == 0 && MAP:SECTOR_ID:(X_POS * 5 + 3):(Y_POS * 5 + 3) != 0
 				;星系港と宇宙港のあるセクターでは生成しない
-				FOR PORT_ID, 0, 星系数
-				IF 星系座標ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
+				FOR PORT_ID, 0, MAX_STAR
+				IF STAR_POSITION_ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
 					FLG_SKIP = 1
 					BREAK
 				ENDIF
@@ -511,8 +511,8 @@ WHILE ITER < 70
 			FOR X_POS, 0, X座標分割数 - 1
 				IF ITER < 70 && RAND(70 - ITER) == 0 && MAP:SECTOR_ID:(X_POS * 5 + 3):(Y_POS * 5 + 3) != 0
 				;星系港と宇宙港のあるセクターでは生成しない
-				FOR PORT_ID, 0, 星系数
-				IF 星系座標ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
+				FOR PORT_ID, 0, MAX_STAR
+				IF STAR_POSITION_ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
 					FLG_SKIP = 1
 					BREAK
 				ENDIF
@@ -537,8 +537,8 @@ WHILE ITER < 30
 			FOR X_POS, 0, X座標分割数 - 1
 				IF ITER < 30 && RAND(30 - ITER) == 0 && MAP:SECTOR_ID:(X_POS * 5 + 3):(Y_POS * 5 + 3) != 0
 				;星系港と宇宙港のあるセクターでは生成しない
-				FOR PORT_ID, 0, 星系数
-				IF 星系座標ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
+				FOR PORT_ID, 0, MAX_STAR
+				IF STAR_POSITION_ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
 					FLG_SKIP = 1
 					BREAK
 				ENDIF
@@ -563,8 +563,8 @@ WHILE ITER < 30
 			FOR X_POS, 0, X座標分割数 - 1
 				IF ITER < 30 && RAND(30 - ITER) == 0 && MAP:SECTOR_ID:(X_POS * 5 + 3):(Y_POS * 5 + 3) != 0
 				;星系港と宇宙港のあるセクターでは生成しない
-				FOR PORT_ID, 0, 星系数
-				IF 星系座標ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
+				FOR PORT_ID, 0, MAX_STAR
+				IF STAR_POSITION_ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
 					FLG_SKIP = 1
 					BREAK
 				ENDIF
@@ -589,8 +589,8 @@ WHILE ITER < 10
 			FOR X_POS, 0, X座標分割数 - 1
 				IF ITER < 10 && RAND(10 - ITER) == 0 && MAP:SECTOR_ID:(X_POS * 5 + 3):(Y_POS * 5 + 3) != 0
 				;星系港と宇宙港のあるセクターでは生成しない
-				FOR PORT_ID, 0, 星系数
-				IF 星系座標ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
+				FOR PORT_ID, 0, MAX_STAR
+				IF STAR_POSITION_ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
 					FLG_SKIP = 1
 					BREAK
 				ENDIF
@@ -615,8 +615,8 @@ WHILE ITER < 10
 			FOR X_POS, 0, X座標分割数 - 1
 				IF ITER < 10 && RAND(10 - ITER) == 0 && MAP:SECTOR_ID:(X_POS * 5 + 3):(Y_POS * 5 + 3) != 0
 				;星系港と宇宙港のあるセクターでは生成しない
-				FOR PORT_ID, 0, 星系数
-				IF 星系座標ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
+				FOR PORT_ID, 0, MAX_STAR
+				IF STAR_POSITION_ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
 					FLG_SKIP = 1
 					BREAK
 				ENDIF
@@ -641,8 +641,8 @@ WHILE ITER < 5
 			FOR X_POS, 0, X座標分割数 - 1
 				IF ITER < 5 && RAND(5 - ITER) == 0 && MAP:SECTOR_ID:(X_POS * 5 + 3):(Y_POS * 5 + 3) != 0
 				;星系港と宇宙港のあるセクターでは生成しない
-				FOR PORT_ID, 0, 星系数
-				IF 星系座標ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
+				FOR PORT_ID, 0, MAX_STAR
+				IF STAR_POSITION_ID:PORT_ID / 10000 == SECTOR_ID || PORT_POSITION_ID:PORT_ID / 10000 == SECTOR_ID
 					FLG_SKIP = 1
 					BREAK
 				ENDIF
@@ -686,31 +686,31 @@ FOR LOCAL, 0, STAR_PORT_SLOT_NUM
 NEXT
 
 ; 資源の配置
-CALL INIT_STAR_RESOURCE(星系座標ID:10, 国家ID_豊秋津皇国)
-CALL ADD_RESOURCE(星系座標ID:10, 国家ID_豊秋津皇国, 日本酒, 1000)
+CALL INIT_STAR_RESOURCE(STAR_POSITION_ID:10, 国家ID_豊秋津皇国)
+CALL ADD_RESOURCE(STAR_POSITION_ID:10, 国家ID_豊秋津皇国, 日本酒, 1000)
 
 ; 初期艦
 FOR LOCAL, 0, 12
 	LOCALS = 朱雀級機動武者A-{LOCAL}
-	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, 星系座標ID:10, 朱雀級機動武者, LOCALS, 朱雀級機動武者)
+	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, STAR_POSITION_ID:10, 朱雀級機動武者, LOCALS, 朱雀級機動武者)
 NEXT
 FOR LOCAL, 0, 12
-	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, 星系座標ID:10, 秋月級コルベット, , 秋月級コルベット)
+	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, STAR_POSITION_ID:10, 秋月級コルベット, , 秋月級コルベット)
 NEXT
 FOR LOCAL, 0, 16
-	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, 星系座標ID:10, 津軽級フリゲート, , 津軽級フリゲート)
+	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, STAR_POSITION_ID:10, 津軽級フリゲート, , 津軽級フリゲート)
 NEXT
 FOR LOCAL, 0, 12
-	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, 星系座標ID:10, 豊後級駆逐艦, , 豊後級駆逐艦)
+	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, STAR_POSITION_ID:10, 豊後級駆逐艦, , 豊後級駆逐艦)
 NEXT
 FOR LOCAL, 0, 8
-	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, 星系座標ID:10, 大江戸級巡洋艦, , 大江戸級巡洋艦)
+	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, STAR_POSITION_ID:10, 大江戸級巡洋艦, , 大江戸級巡洋艦)
 NEXT
 FOR LOCAL, 0, 4
-	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, 星系座標ID:10, 大和級戦艦, , 大和級戦艦)
+	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, STAR_POSITION_ID:10, 大和級戦艦, , 大和級戦艦)
 NEXT
 FOR LOCAL, 0, 2
-	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, 星系座標ID:10, 舞鶴級護衛空母, , 舞鶴級護衛空母)
+	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, STAR_POSITION_ID:10, 舞鶴級護衛空母, , 舞鶴級護衛空母)
 NEXT
 
 
@@ -744,31 +744,31 @@ FOR LOCAL, 0, STAR_PORT_SLOT_NUM
 NEXT
 
 ; 資源の配置
-CALL INIT_STAR_RESOURCE(星系座標ID:11, 国家ID_ハールバルズ)
-CALL INIT_STAR_RESOURCE(星系座標ID:12, 国家ID_ハールバルズ)
-CALL ADD_RESOURCE(星系座標ID:11, 国家ID_ハールバルズ, MR観光セット, 1000)
-CALL ADD_RESOURCE(星系座標ID:12, 国家ID_ハールバルズ, ペルマティーセット, 1000)
+CALL INIT_STAR_RESOURCE(STAR_POSITION_ID:11, 国家ID_ハールバルズ)
+CALL INIT_STAR_RESOURCE(STAR_POSITION_ID:12, 国家ID_ハールバルズ)
+CALL ADD_RESOURCE(STAR_POSITION_ID:11, 国家ID_ハールバルズ, MR観光セット, 1000)
+CALL ADD_RESOURCE(STAR_POSITION_ID:12, 国家ID_ハールバルズ, ペルマティーセット, 1000)
 
 ; 初期艦
 ; 駆逐と戦艦および空母構成
 FOR LOCAL, 0, 16
-	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, 星系座標ID:11, ネヴァン級フリゲート, , ネヴァン級フリゲート)
-	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, 星系座標ID:12, ネヴァン級フリゲート, , ネヴァン級フリゲート)
+	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, STAR_POSITION_ID:11, ネヴァン級フリゲート, , ネヴァン級フリゲート)
+	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, STAR_POSITION_ID:12, ネヴァン級フリゲート, , ネヴァン級フリゲート)
 NEXT
 FOR LOCAL, 0, 8
-	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, 星系座標ID:11, スカアハ級駆逐艦, , スカアハ級駆逐艦)
-	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, 星系座標ID:12, スカアハ級駆逐艦, , スカアハ級駆逐艦)
+	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, STAR_POSITION_ID:11, スカアハ級駆逐艦, , スカアハ級駆逐艦)
+	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, STAR_POSITION_ID:12, スカアハ級駆逐艦, , スカアハ級駆逐艦)
 NEXT
 FOR LOCAL, 0, 4
-	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, 星系座標ID:11, ミアハ級巡洋艦, , ミアハ級巡洋艦)
-	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, 星系座標ID:12, ミアハ級巡洋艦, , ミアハ級巡洋艦)
+	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, STAR_POSITION_ID:11, ミアハ級巡洋艦, , ミアハ級巡洋艦)
+	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, STAR_POSITION_ID:12, ミアハ級巡洋艦, , ミアハ級巡洋艦)
 NEXT
 FOR LOCAL, 0, 2
-	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, 星系座標ID:11, ブリギッド級戦艦, , ブリギッド級戦艦)
-	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, 星系座標ID:12, ブリギッド級戦艦, , ブリギッド級戦艦)
+	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, STAR_POSITION_ID:11, ブリギッド級戦艦, , ブリギッド級戦艦)
+	CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, STAR_POSITION_ID:12, ブリギッド級戦艦, , ブリギッド級戦艦)
 NEXT
-CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, 星系座標ID:11, ルー級空母, , ルー級空母)
-CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, 星系座標ID:12, ルー級空母, , ルー級空母)
+CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, STAR_POSITION_ID:11, ルー級空母, , ルー級空母)
+CALL INIT_PRESET_SHIP(国家ID_ハールバルズ, STAR_POSITION_ID:12, ルー級空母, , ルー級空母)
 
 
 ; 各星の初期化
