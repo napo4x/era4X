@@ -387,6 +387,8 @@ FOR ジャンル, 0, SKILL_GENRE_NUM
 		ENDIF
 		;存在判定
 		TRYCCALLFORM SKILL_{SKILL_NO_SLOT:対象:ジャンル:スキル}_%SKILL_GENRE_ENG:ジャンル%_{SKILL_ID_SLOT:対象:ジャンル:スキル}_EXIST
+			SIF RESULT == 0
+				CONTINUE
 		CATCH
 			CONTINUE
 		ENDCATCH
@@ -457,6 +459,8 @@ FOR キャラ, 0, CHARANUM
 	FOR ジャンル, 0, SKILL_GENRE_NUM
 		FOR スキルID, 0, MAX_SKILLS
 			TRYCCALLFORM SKILL_{NO:キャラ}_%SKILL_GENRE_ENG:ジャンル%_{スキルID}_EXIST
+				SIF RESULT == 0
+					CONTINUE
 				;教えられない
 				TRYCCALLFORM SKILL_{NO:キャラ}_%SKILL_GENRE_ENG:ジャンル%_{スキルID}_CANT_TELL
 					SIF (NO:キャラ != NO:対象 && !編集モード) || NO:キャラ == 0
