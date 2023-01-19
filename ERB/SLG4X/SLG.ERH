@@ -152,6 +152,7 @@
 #DIM CONST 攻撃 = 3
 #DIM CONST 後退 = 4
 #DIM CONST 大破 = 5
+#DIM CONST 攻撃不能 = 6
 
 ; SHIP_CATEGORY
 #DIM CONST 調査船 = 0
