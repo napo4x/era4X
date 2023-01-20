@@ -1,0 +1,23 @@
+﻿;---------------------------------
+; ドクトリン
+;---------------------------------
+@DOCTRINE
+#DIM DOCTRINE_POINT
+
+DOCTRINE_POINT = GET_TOTAL_DOCTRINE_POINT()
+
+
+
+;---------------------------------
+; ドクトリンポイント返却
+;---------------------------------
+@GET_TOTAL_DOCTRINE_POINT
+#FUNCTION
+#DIM DOCTRINE_POINT
+
+DOCTRINE_POINT = 2
+SIF IS_COMPLETE_TECH:5
+	DOCTRINE_POINT += 2
+
+RETURNF DOCTRINE_POINT
+
