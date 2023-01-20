@@ -75,7 +75,7 @@ RESULTS = 自艦の艦載機命中、対空回避率が+3～9\%の範囲で上�
 #DIM TARGET_ID
 #DIM CAPTAIN
 
-LOCAL = ABL:CAPTAIN:演技力ＣＵ
+LOCAL = ABL:CAPTAIN:演技力ＰＡ
 IF GROUPMATCH(SHIP_CATEGORY, 巡洋艦, 戦艦, 空母)
 	IF LOCAL >= 100
 		TIMES SKILL_EFFECT_PERCENTAGE:TYPE_艦載機命中:TARGET_ID, 1.09
