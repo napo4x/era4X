@@ -22,10 +22,6 @@ IF FLAG:ランダムキャラ使用
 	CALL RECRUIT_AI(勢力)
 ENDIF
 
-;外交の処理
-SIF DAY >= SLG_PP:0 && !IS_SP_COUNTRY(勢力)
-	CALL SLG_AI_DIPLOMACY(勢力)
-
 ;建造物の建築
 CALL SLG_AI_DEVELOPMENT_SLOT(勢力)
 
@@ -36,8 +32,6 @@ SIF TMP_OWN_CITY:勢力 < 1
 ;こっから先軍事なので軍事開始してなければスキップ
 SIF DAY < SLG_PP:1
 	GOTO NORMAL_AI_THINK_ENDED
-
-CALL AI_DEPLOY_ARMY(勢力)
 
 ;操艦を全て解除
 FOR 都市, 1, GET_CITY_NUM() + 1
@@ -111,9 +105,6 @@ FOR 部隊, 0, MAX_UNIT
 		ENDIF
 		攻撃兵数 = RESULT
 	ENDIF
-	;最終的に部隊ができてたら攻撃先の決定
-	SIF UNIT_SOLDIER:勢力:部隊 > 0
-		CALL SLG_AI_INVASION_SETTARGET(勢力, 部隊)
 NEXT
 
 ;;#;FOR 部隊, 0, MAX_UNIT
@@ -358,46 +349,6 @@ WEND
 RETURN 攻撃兵数
 
 ;-------------------------------------------------
-;国庫を消費して徴兵を行うかの判定
-;-------------------------------------------------
-@AI_DEPLOY_ARMY(勢力)
-#DIM 勢力
-#DIM 雇用レート
-#DIM 雇用兵数限界
-#DIM 雇用兵数
-#DIM 兵数限界
-#DIM 留保額
-雇用レート = MAX(SLG_EXTRA_DRAFT_CALC_RATE(勢力) - 1, 1)
-;雇用兵数は最大でも(国庫-残しとくぶん) / 雇用レート
-;勢力が劣っている場合、留保額は小さくなる（徴兵に力を注ぐ）
-留保額 = MONEY:勢力 * AI_DEPLOY:(COUNTRY_AI_TYPE:勢力):(TMP_COUNTRY_STARS:勢力 > 2 ? 1 # 2) / 100
-雇用兵数限界 = (MONEY:勢力 - 留保額) / 雇用レート
-;兵数限界は徴兵による限界に、勢力ごとの特色を足したもの
-
-兵数限界 = GET_RECRUIT_LIMIT(勢力) * AI_DEPLOY:(COUNTRY_AI_TYPE:勢力):0 / 100
-
-;（雇用できる数＋現在の兵力）が経済力ベースの兵数限界を越えていて、かつ★３以上の勢力なら、兵数限界を超えないよう徴兵
-IF 雇用兵数限界 + TMP_SUM_SOLDIER:勢力 > 兵数限界 && TMP_COUNTRY_STARS:勢力 > 2
-	雇用兵数 = 兵数限界 - TMP_SUM_SOLDIER:勢力 
-;上記条件を満たさないなら、雇用できるだけ雇用する
-ELSE
-	雇用兵数 = 雇用兵数限界
-ENDIF
-
-SIF 雇用兵数 <= 0
-	RETURN
-
-MONEY:勢力 -= 雇用レート * 雇用兵数
-COUNTRY_SOLDIER:勢力 += 雇用兵数
-TMP_SUM_SOLDIER:勢力 += 雇用兵数
-
-
-;DEBUGPRINTFORML {DAY, 3}【緊急動員（\@ARG:1 ? 防 # 攻 \@）】%ANAME(GET_COUNTRY_BOSS(ARG:0))%:支払{SELECTOR:5}/{ECONOMY / 100}→徴兵{SELECTOR:4}/{MILITARY_LIMIT}
-SIF 勢力 == CFLAG:MASTER:所属 || FLAG:観戦モード
-	PRINTFORML %ANAME(GET_COUNTRY_BOSS(勢力))%は{雇用レート * 雇用兵数}の資金を払い兵を{雇用兵数}動員しました
-
-
-;-------------------------------------------------
 ;部隊を生成する
 ;-------------------------------------------------
 @SLG_AI_CREATE_UNIT(勢力, 部隊, 攻撃兵数)
@@ -549,260 +500,6 @@ FOR LOCAL, 0, VARSIZE("BEST_COMMANDER")
 	TMP_IS_FREE:(BEST_COMMANDER:LOCAL):0 = 1
 NEXT
 
-;-------------------------------------------------
-;部隊の攻撃先を決定する
-;-------------------------------------------------
-@SLG_AI_INVASION_SETTARGET(勢力, 部隊)
-#DIM 勢力
-#DIM 部隊, 2
-#DIM 都市
-#DIM 攻撃候補スコア, MAX_CITY
-#DIM 次のスコア
-#DIM 関係性
-#DIM 君主
-#DIM 都市保有勢力
-#DIM 都市保有君主
-#DIM 攻撃候補
-#DIM 攻撃候補勢力
-#DIM 攻撃候補部隊
-#DIM 現在スコア
-#DIM 自部隊能力, 3
-#DIM 敵部隊能力, 3
-#DIM 攻撃評価スコア
-#DIM 候補
-#DIM 攻撃実行
-#DIM 最小都市数
-
-VARSET 攻撃実行
-VARSET 攻撃候補スコア, __INT_MIN__
-君主 = GET_COUNTRY_BOSS(勢力)
-
-CALL GET_UNIT_COMMANDER_ALL(勢力, 部隊)
-CALL SET_BATTLE_MIRROR_VAL(0, RESULT:0, RESULT:1, RESULT:2)
-CALL BATTLE_PREPARE_VARS_EACH(0, 0)
-自部隊能力:0 = BATTLE_ATK:0
-自部隊能力:1 = BATTLE_DEF:0
-自部隊能力:2 = BATTLE_INT:0
-
-最小都市数 = __INT_MAX__
-FOR LOCAL, 0, MAX_COUNTRY
-	SIF !IS_COUNTRY(LOCAL)
-		CONTINUE
-	SIF TMP_OWN_CITY:LOCAL < 最小都市数
-		最小都市数 = TMP_OWN_CITY:LOCAL
-NEXT
-
-;スコアを計算
-FOR 都市, 1, GET_CITY_NUM() + 1
-	SIF !TMP_IS_INVADABLE:勢力:都市
-		CONTINUE
-
-	都市保有勢力 = CITY_OWNER:都市
-	都市保有君主 = GET_COUNTRY_BOSS(都市保有勢力)
-
-	攻撃候補スコア:都市 = TMP_OFFENSIVE_IMPORTANCE:勢力:都市 * RAND(80, 120)
-
-	;関係が悪いほど狙われやすい
-	関係性 = IS_COUNTRY(都市保有勢力) ? 1500 + REL_HATE:君主:都市保有君主 + DIPLOMACY_HATE:都市保有勢力 * 50 - REL_LIKE:君主:都市保有君主 # 3000
-	関係性 = MAX(関係性 * 100 / 3000, 1)
-	攻撃候補スコア:都市 = 攻撃候補スコア:都市 * 関係性 / 100
-
-	;直接つながってないなら2/3
-	攻撃候補スコア:都市 = 攻撃候補スコア:都市 * (TMP_CONNECTED_TO_US:勢力:都市 + 2) / 3
-	;最大の飛び地に対する攻撃元の飛び地サイズの比
-	攻撃候補スコア:都市 = 攻撃候補スコア:都市 * MAX(TMP_ENCLAVE_SIZE:勢力:(TMP_IS_INVADABLE:勢力:都市), 1) / TMP_MAX_ENCLAVE_SIZE:勢力
-
-	;自国のほうが大きいなら、都市数の差1につき10%狙いやすくする
-	;自国のほうが小さいなら、都市数の差1につき6%狙いやすくする
-	IF IS_COUNTRY(都市保有勢力)
-		IF TMP_OWN_CITY:勢力 > TMP_OWN_CITY:都市保有勢力
-			攻撃候補スコア:都市 = 攻撃候補スコア:都市 + 攻撃候補スコア:都市 * (TMP_OWN_CITY:勢力 - TMP_OWN_CITY:都市保有勢力) * 10 / 100
-		ELSE
-			攻撃候補スコア:都市 = 攻撃候補スコア:都市 + 攻撃候補スコア:都市 * (TMP_OWN_CITY:都市保有勢力 - TMP_OWN_CITY:勢力) * 6 / 100
-		ENDIF
-
-		SIF 都市保有勢力 == FINDELEMENT(TMP_OWN_CITY, 最小都市数)
-			攻撃候補スコア:都市 = 攻撃候補スコア:都市 * 3 / 2
-
-		;都市勢力が連合の討伐対象なら攻撃候補スコアを5倍に
-		SIF TMP_COUNTRY_UNION_TARGET:勢力 == 都市保有勢力
-			攻撃候補スコア:都市 *= 5
-	;無所属都市は優先的に狙う
-	ELSE
-		攻撃候補スコア:都市 *= 4
-	ENDIF
-
-	;主人公の都市に対しては難易度補正
-	SIF 都市保有勢力 == CFLAG:MASTER:所属
-		攻撃候補スコア:都市 = 攻撃候補スコア:都市 * GET_DIFFICULTY_CORRECTION() / 100
-
-	;同盟か停戦したい相手の都市なら1/3に
-	SIF GROUPMATCH(CHECK_AI_DIPLOMACY_PLAN(勢力, 都市保有勢力), AI_外交計画_停戦, AI_外交計画_同盟)
-		攻撃候補スコア:都市 /= 3
-
-	;特殊勢力同士はバイアスがかかる	
-	SIF IS_SP_COUNTRY(勢力) && IS_SP_COUNTRY(都市保有勢力)
-		攻撃候補スコア:都市 /= 3
-
-	;中継地点を経由する場合は軽視する
-	SIF TMP_IS_BYPASS:勢力:都市
-		攻撃候補スコア:都市 /= 2
-
-	;特に序盤は固定されがちなので揺らがせる
-	攻撃候補スコア:都市 = 攻撃候補スコア:都市 * RAND(80, 120) / 100
-NEXT
-
-;候補上位10個をみる
-FOR 候補, 0, 10
-
-	攻撃候補 = FINDELEMENT(攻撃候補スコア, MAXARRAY(攻撃候補スコア))
-
-	;DEBUGPRINTFORML 攻撃候補 %GET_CITYNAME(攻撃候補)% スコア{攻撃候補スコア:攻撃候補}
-
-	;攻撃候補でないものだったら戻す
-	SIF 攻撃候補スコア:攻撃候補 == __INT_MIN__
-		BREAK
-
-	現在スコア = 攻撃候補スコア:攻撃候補
-	攻撃候補スコア:攻撃候補 = __INT_MIN__
-
-	次のスコア = MAXARRAY(攻撃候補スコア)
-	;すでにそこを狙っている部隊を探す
-	FOR 部隊:1, 0, MAX_UNIT
-		SIF UNIT_SOLDIER:勢力:(部隊:1) <= 0
-			CONTINUE
-		SIF 部隊:1 == 部隊
-			CONTINUE
-		SIF UNIT_TARGET:勢力:(部隊:1) != 攻撃候補 && UNIT_POSITION:勢力:(部隊:1) != 攻撃候補
-			CONTINUE
-		;DEBUGPRINTFORML すでに狙われている
-
-		;攻撃候補が1箇所のみの場合、次のスコアは__INT_MIN__が出てくる。その場合1.5倍するとアンダーフローしてクソデカ値になってしまうはず
-		SIF 次のスコア != __INT_MIN__
-			次のスコア = 次のスコア * 15 / 10
-
-				;DEBUGPRINTFORML 現在スコア{現在スコア} 次のスコア{次のスコア}
-		;すでにそこは狙われているか自部隊がいて、スコアが次のやつの部隊一つにつき1.5倍ないなら戻す
-		SIF 現在スコア < 次のスコア
-			GOTO CANCEL
-	NEXT
-
-	都市保有勢力 = CITY_OWNER:攻撃候補
-	都市保有君主 = GET_COUNTRY_BOSS(都市保有勢力)
-
-	IF IS_COUNTRY(都市保有勢力)
-
-		IF TMP_IS_STAY_ENEMY_UNIT(攻撃候補)
-			FOR LOCAL, 0, VARSIZE("TMP_UNIT_ONCITY_CNT", 1)
-				SIF !IS_COUNTRY(TMP_UNIT_ONCITY_CNT:(攻撃候補):LOCAL)
-					CONTINUE
-				攻撃候補勢力 = TMP_UNIT_ONCITY_CNT:(攻撃候補):LOCAL
-				攻撃候補部隊 = TMP_UNIT_ONCITY_NUM:(攻撃候補):LOCAL
-				SIF TMP_COUNTRY_RELATION:勢力:攻撃候補勢力 != 0
-					CONTINUE
-				BREAK
-			NEXT
-			CALL GET_UNIT_COMMANDER_ALL(攻撃候補勢力, 攻撃候補部隊)
-			CALL SET_BATTLE_MIRROR_VAL(1, RESULT, RESULT:1, RESULT:2)
-			CALL BATTLE_PREPARE_VARS_EACH(1, 攻撃候補)
-			CALL BATTLE_SOLDIER_RATE_CORRECTION(勢力, 部隊, 攻撃候補勢力, 攻撃候補部隊)
-			CALL BATTLE_TIREDNESS_CORRECTION(勢力, 部隊, 攻撃候補勢力, 攻撃候補部隊)
-			CALL BATTLE_COMMANDER_POWER_CORRECTION(勢力, 部隊, 攻撃候補勢力, 攻撃候補部隊)
-			敵部隊能力:0 = BATTLE_ATK:1
-			敵部隊能力:1 = BATTLE_DEF:1
-			敵部隊能力:2 = BATTLE_INT:1
-
-			;勝ってる要素をカウント
-			攻撃評価スコア = ((UNIT_SOLDIER:勢力:部隊 * 100) / MAX(UNIT_SOLDIER:攻撃候補勢力:攻撃候補部隊, 1)) * 3
-
-			FOR LOCAL:1, 0, 3
-				攻撃評価スコア += 自部隊能力:(LOCAL:1) * 100 / MAX(敵部隊能力:(LOCAL:1), 1)
-			NEXT
-			;DEBUGPRINTFORML スコア: {攻撃評価スコア} {勢力}, {部隊}
-			;勝ってる要素が一定ないとキャンセル
-			SELECTCASE TMP_OWN_CITY:勢力
-				CASE IS < 5
-					SIF 攻撃評価スコア < 500
-						GOTO CANCEL
-				CASE 5 TO 9
-					SIF 攻撃評価スコア < 600
-						GOTO CANCEL
-				CASEELSE
-					SIF 攻撃評価スコア < 700
-						GOTO CANCEL
-			ENDSELECT
-		ENDIF
-
-		CALL CHECK_BEST_COMMANDER(都市保有勢力, 1)
-		CALL SET_BATTLE_MIRROR_VAL(1, BEST_COMMANDER:0, BEST_COMMANDER:1, -1)
-		CALL BATTLE_PREPARE_VARS_EACH(1, 攻撃候補)
-		CALL BATTLE_SOLDIER_RATE_CORRECTION(勢力, 部隊, 攻撃候補, -1)
-		CALL BATTLE_TIREDNESS_CORRECTION(勢力, 部隊, 攻撃候補, -1)
-		CALL BATTLE_COMMANDER_POWER_CORRECTION(勢力, 部隊, 攻撃候補, -1)
-
-		敵部隊能力:0 = BATTLE_ATK:1
-		敵部隊能力:1 = BATTLE_DEF:1
-		敵部隊能力:2 = BATTLE_INT:1
-
-		;勝ってる要素をカウント
-		攻撃評価スコア = ((UNIT_SOLDIER:勢力:部隊 * 100) / MAX(CITY_SOLDIER:攻撃候補, 1)) * 3
-
-		FOR LOCAL:1, 0, 3
-			攻撃評価スコア += 自部隊能力:(LOCAL:1) * 100 / MAX(敵部隊能力:(LOCAL:1), 1)
-		NEXT
-		;DEBUGPRINTFORML スコア: {攻撃評価スコア} {勢力}, {部隊}
-		;勝ってる要素が一定ないとキャンセル
-		SELECTCASE TMP_OWN_CITY:勢力
-			CASE IS < 5
-				SIF 攻撃評価スコア < 500
-					GOTO CANCEL
-			CASE 5 TO 9
-				SIF 攻撃評価スコア < 600
-					GOTO CANCEL
-			CASEELSE
-				SIF 攻撃評価スコア < 700
-					GOTO CANCEL
-		ENDSELECT
-	ENDIF
-
-	CALL MOVE_UNIT(勢力, 部隊, TMP_IS_INVADABLE:勢力:攻撃候補, 1)
-	UNIT_TARGET:勢力:部隊 = 攻撃候補
-
-	;DEBUGPRINTFORML 攻撃地点を%GET_CITYNAME(UNIT_TARGET:勢力:部隊)%に確定
-	;DEBUGPRINTFORML 出発地点を%GET_CITYNAME(UNIT_POSITION:勢力:部隊)%に確定
-	攻撃実行 = 1
-	BREAK
-	$CANCEL
-	;DEBUGPRINTFORML キャンセル
-NEXT
-
-IF !攻撃実行
-	;DEBUGPRINTFORML 有効な攻撃対象なし。解散 {勢力}, {部隊}
-	CALL CLEAR_UNIT(勢力, 部隊, 1)
-ELSE
-	;無所属都市ならナメてかかる
-	IF !IS_COUNTRY(CITY_OWNER:攻撃候補)
-		CALL CHECK_UNIT_COMBO(勢力, 部隊)
-		IF !RESULT 
-				;DEBUGPRINTFORML %GET_CITYNAME(UNIT_TARGET:勢力:部隊)%攻め。武将解除。兵数:{UNIT_SOLDIER:勢力:部隊}
-			LOCAL = GET_UNIT_COMMANDER(勢力, 部隊, 2)
-			SIF LOCAL >= 0
-				TMP_IS_FREE:(LOCAL):0 = 0
-			CALL CLEAR_UNIT_COMMANDER(勢力, 部隊, 2)
-			IF UNIT_SOLDIER:勢力:部隊 >= CITY_SOLDIER:攻撃候補
-				LOCAL = GET_UNIT_COMMANDER(勢力, 部隊, 1)
-				SIF LOCAL >= 0
-					TMP_IS_FREE:(LOCAL):0 = 0
-				CALL CLEAR_UNIT_COMMANDER(勢力, 部隊, 1)
-			ENDIF
-		ENDIF
-	ENDIF
-ENDIF
-
-
-
-;DEBUGPRINTFORML 侵攻先:%GET_CITYNAME(UNIT_TARGET:勢力:部隊)% 位置:{UNIT_POSITION:勢力:部隊}
-$DONE
 ;-----------------------------------------------
 ;操艦
 ;-----------------------------------------------
@@ -1027,50 +724,3 @@ CITY_DEVELOPMENT:都市 = 建設予定
 ; DEBUGPRINTFORML %CITY_NAME:都市%に%GET_DEVELOPMENT_NAME(建設予定)%を建設 {MONEY:勢力} → {MONEY:勢力 - コスト}
 MONEY:勢力 -= コスト
 
-
-
-;-----------------------------------------------
-;技術
-;-----------------------------------------------
-@SLG_AI_TECHNOLOGY(勢力)
-#DIM 勢力
-#DIM ジャンル
-#DIM ステージ
-#DIM 候補値, TECHNOLOGY_MAX_GENRE
-
-;DEBUGPRINTFORM %ANAME(GET_COUNTRY_BOSS(勢力))%:
-
-ジャンル = TECHNOLOGY_RESEARCH_TARGET:勢力 / 100
-ステージ = TECHNOLOGY_RESEARCH_TARGET:勢力 % 100
-
-;習得中
-IF INRANGE(TECHNOLOGY_RESEARCH_PROGRESS:勢力, 1, GET_RESEARCH_PERIOD(勢力, ジャンル, ステージ))
-	;DEBUGPRINTFORML 習得中につき新規選択スキップ
-	RETURN
-ENDIF
-
-VARSET 候補値, 100
-
-FOR LOCAL, 0, TECHNOLOGY_MAX_GENRE
-	候補値:LOCAL += AI_TECHNOLOGY_PREFERENCE:(COUNTRY_AI_TYPE:勢力):LOCAL
-	候補値:LOCAL = MAX(候補値:LOCAL - TECHNOLOGY_STATUS:勢力:LOCAL * 5, 1)
-
-	;そのジャンルもう取れないならダメ
-	IF !IS_TECHNOLOGY_EXISTS(LOCAL, TECHNOLOGY_STATUS:勢力:LOCAL + 1)
-		候補値:LOCAL = __INT_MIN__
-	ELSE
-		候補値:LOCAL = RAND:(候補値:LOCAL)
-	ENDIF
-	;DEBUGPRINTFORML 候補値:{LOCAL} {候補値:LOCAL}
-NEXT
-
-IF MAXARRAY(候補値) == __INT_MIN__
-	;DEBUGPRINTFORML もう習得する技術がない
-	RETURN
-ENDIF
-
-ジャンル = FINDELEMENT(候補値, MAXARRAY(候補値))
-
-TECHNOLOGY_RESEARCH_TARGET:勢力 = ジャンル * 100 + TECHNOLOGY_STATUS:勢力:ジャンル + 1
-
-PRINTFORML %ANAME(GET_COUNTRY_BOSS(勢力))%は『%GET_TECHNOLOGY_NAME(ジャンル, TECHNOLOGY_STATUS:勢力:ジャンル + 1)%』の研究を開始しました

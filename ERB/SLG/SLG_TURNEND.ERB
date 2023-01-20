@@ -43,11 +43,7 @@ CALL TMP_CREATE_CITY_RISK_MAP
 CALL TMP_CREATE_IS_FREE_MAP
 CALL TMP_CREATE_POLITICS_POWER_MAP
 CALL TMP_CREATE_COOKING_POWER_MAP
-;都市数と経済を用意
-CALL TMP_CREATE_OWN_CITY_MAP
-CALL TMP_CREATE_SUM_ECONOMY_MAP
 ;兵力を用意
-CALL TMP_CREATE_SUM_SOLDIER_MAP
 CALL TMP_CREATE_UNION_TARGET_MAP
 CUSTOMDRAWLINE =
 PRINTFORML 国家内政・外交フェイズ
@@ -146,7 +142,6 @@ IF DAY >= SLG_PP:1
 	FOR LOCAL, 0, MAX_COUNTRY
 		SIF !IS_COUNTRY(LOCAL) || CFLAG:MASTER:所属 == LOCAL
 			CONTINUE
-		CALL SLG_AI_RECRUITMENT(LOCAL)
 		SIF !IS_SP_COUNTRY(LOCAL)
 			CALL SLG_AI_PERSUASION(LOCAL)
 	NEXT
@@ -155,7 +150,6 @@ IF DAY >= SLG_PP:1
 	CUSTOMDRAWLINE =
 	PRINTFORML 在野武将雇用フェイズ
 	CALL COLOR_LINE
-	CALL SLG_AI_OFFICER_JOBHUNT()
 ELSE
 	CUSTOMDRAWLINE =
 	PRINTFORML 雇用フェイズ
@@ -164,7 +158,6 @@ ELSE
 	FOR LOCAL, 0, MAX_COUNTRY
 		SIF !IS_COUNTRY(LOCAL) || CFLAG:MASTER:所属 == LOCAL
 			CONTINUE
-		CALL SLG_AI_RECRUITMENT(LOCAL)
 	NEXT
 	;#; USETIME = GETMILLISECOND() - USETIME;
 	;#; DEBUGPRINTFORML PERSUASION TOTAL: {USETIME}ms
@@ -226,26 +219,6 @@ FOR LOCAL, 0, MAX_COUNTRY
 	TRYCALLFORM TURNEND_%SP_COUNTRY_NAME_ENG:SP_COUNTRY_TO_CONST(LOCAL)%
 NEXT
 
-;シナリオ固有のイベント
-TRYCALLFORM SCENARIO_EVENT_%SCENARIOID%
-
-;ランダムな謀反処理
-IF !DAILY_GET_DISABLE_CONFIG("RANDOM_RISE") && !FLAG:クリアフラグ
-	IF DVAR:蜂起反乱クールタイム <= 0
-		CALL SLG_RANDOM_INDEPENDENCE
-		IF RESULT
-			DVAR:蜂起反乱クールタイム = RAND(1, 4)
-			GOTO RISE_END
-		ENDIF
-		CALL SLG_RANDOM_RISE
-		IF RESULT
-			DVAR:蜂起反乱クールタイム = RAND(1, 4)
-			GOTO RISE_END
-		ENDIF
-	ELSE
-		DVAR:蜂起反乱クールタイム -= 1
-	ENDIF
-ENDIF
 
 $RISE_END
 
@@ -307,10 +280,6 @@ NEXT
 ;統計情報の記憶
 CALL STATS_SAVE
 
-;自動送金
-SIF !FLAG:クリアフラグ
-	CALL AUTO_SENDMONEY
-
 
 ;外交済みフラグの解除
 VARSET DONE_DIPLOMACY_FRIENDSHIP, 0
@@ -326,16 +295,6 @@ CVARSET CFLAG, 34, 0
 ;強要行為によるヘイトのクールダウン
 ;FLAG:99 = MAX(FLAG:99 - MAX(10 - CONFIG:300 * 2, 0), 0)
 
-;技術研究の進捗
-CUSTOMDRAWLINE =
-PRINTFORML 研究フェイズ
-CALL COLOR_LINE
-FOR LOCAL, 0, MAX_COUNTRY
-	SIF !IS_COUNTRY(LOCAL) || (LOCAL == CFLAG:MASTER:所属 && CONFIG:302 != 1)
-		CONTINUE
-	CALL SLG_AI_TECHNOLOGY(LOCAL)
-NEXT
-CALL PROGRESS_TECHNOLOGY_SEARCH
 
 
 ;-------------------------------------------------
@@ -362,8 +321,6 @@ CALL SINGLE_EMPTY_LINE()
 [ENDIF]
 
 CALL TURNEND_UNIT_MOVE(ARG:0)
-
-CALL TURNEND_UNIT_BATTLE(ARG:0)
 
 CALL KILL_EMPTY_LINE()
 
@@ -414,131 +371,6 @@ FOR 部隊, 0, MAX_UNIT
 	;ありえないはずだが念のため
 	ELSE
 		UNIT_TARGET:勢力:部隊 = 0
-	ENDIF
-NEXT
-
-;-------------------------------------------------
-;部隊の戦闘
-;もともとの処理がゴミだったので関数として切り出してリファクタ。
-;-------------------------------------------------
-@TURNEND_UNIT_BATTLE(勢力)
-#DIM 勢力
-#DIM 部隊
-#DIM 敵部隊
-#DIM 敵勢力
-#DIM ループ
-#DIM 敵勢力リスト, VARSIZE("TMP_UNIT_ONCITY_CNT", 1)
-#DIM 敵部隊リスト, VARSIZE("TMP_UNIT_ONCITY_CNT", 1)
-#DIM 兵力リスト, VARSIZE("TMP_UNIT_ONCITY_CNT", 1)
-#DIM 敵の数
-#DIM 部隊現在地
-#DIM 攻撃対象
-
-VARSET 敵勢力リスト, 0
-VARSET 敵部隊リスト, -1
-VARSET 敵の数
-
-FOR 部隊, 0, MAX_UNIT
-	SIF UNIT_POSITION:勢力:部隊 == 0
-		CONTINUE
-	SIF UNIT_SOLDIER:勢力:部隊 <= 0
-		CONTINUE
-
-	;行動済みなら戦闘しない
-	;別の部隊に攻撃された場合にここに該当する
-	SIF UNIT_FBATTLE:勢力:部隊
-		CONTINUE
-
-	;現在値にいる敵性部隊をリスト化
-	部隊現在地 = UNIT_POSITION:勢力:部隊
-	敵の数 = 0
-	FOR ループ, 0, VARSIZE("TMP_UNIT_ONCITY_CNT", 1)
-		敵勢力 = TMP_UNIT_ONCITY_CNT:部隊現在地:ループ
-		敵部隊 = TMP_UNIT_ONCITY_NUM:部隊現在地:ループ
-
-		SIF !IS_COUNTRY(敵勢力)
-			CONTINUE
-		SIF UNIT_SOLDIER:敵勢力:敵部隊 <= 0
-			CONTINUE
-		SIF TMP_COUNTRY_RELATION:勢力:敵勢力 != 0 
-			CONTINUE
-
-		;自勢力と敵勢力と都市の所有勢力が互いに敵対関係にある場合、
-		;自勢力と敵勢力は相互に不干渉になり、都市を優先して殴る。
-		;なお、この規則は無所属都市には適用されない。
-
-		;他勢力が所有している都市上で、第三者の部隊と出くわした場合
-		IF IS_COUNTRY(CITY_OWNER:部隊現在地) && (CITY_OWNER:部隊現在地) != 勢力
-			;三者が互いに敵対しているなら殴らない（互いに都市への攻撃を優先）
-			IF ALLSAMES(0, TMP_COUNTRY_RELATION:勢力:敵勢力, TMP_COUNTRY_RELATION:敵勢力:(CITY_OWNER:部隊現在地), TMP_COUNTRY_RELATION:勢力:(CITY_OWNER:部隊現在地))
-				CONTINUE
-			;自分<->都市勢力<->第三者という形で停戦以上の関係を結んでいるなら殴らない
-			ELSEIF  TMP_COUNTRY_RELATION:勢力:(CITY_OWNER:部隊現在地) != 0 && TMP_COUNTRY_RELATION:敵勢力:(CITY_OWNER:部隊現在地) != 0
-				CONTINUE
-			ENDIF
-			;自分と敵が同盟中の場合はそもそも上で弾かれる。
-			;都市と敵のみ同盟中の場合はこちらを通る。
-			;自分と都市のみ同盟中の場合はこちらを通る。
-		ENDIF
-		敵勢力リスト:敵の数 = 敵勢力
-		敵部隊リスト:敵の数 = 敵部隊
-		兵力リスト:敵の数 = UNIT_SOLDIER:敵勢力:敵部隊
-		敵の数 ++
-	NEXT
-
-;敵がいなければ、操艦部隊との戦闘に入る判定まで飛ぶ
-	SIF 敵の数 == 0
-		GOTO VS_CASTLE
-
-	IF 敵の数 == 1
-		攻撃対象 = 0
-	ELSE
-		IF 勢力 != CFLAG:MASTER:所属 || CONFIG:302
-			攻撃対象 = FINDELEMENT(兵力リスト, MINARRAY(兵力リスト, 0, 敵の数))
-		ELSE
-			PRINTFORML 我が軍の第{部隊 + 1}部隊の現在地である%GET_RELAYNAME(部隊現在地)%には複数の敵部隊が存在します
-			PRINTL どの部隊を攻撃しますか？
-			PRINTFORM 自軍第{部隊 + 1}部隊 
-			CALL SHOW_UNIT_INFO_SIMPLE(CFLAG:MASTER:所属, 部隊)
-
-			FOR ループ, 0, 敵の数
-				敵勢力 = 敵勢力リスト:ループ
-				敵部隊 = 敵部隊リスト:ループ
-				PRINTFORM [{ループ, 2}] %SNAME(GET_COUNTRY_BOSS(敵勢力)), 6%軍
-				CALL SHOW_UNIT_INFO_SIMPLE(敵勢力, 敵部隊)
-			NEXT
-			PRINTL [99] 攻撃しない
-
-			$INPUT_LOOP_SETTARGET
-			INPUT
-			IF INRANGE(RESULT, 0, 敵の数 - 1)
-				攻撃対象 = RESULT
-			ELSEIF RESULT == 99
-				攻撃対象 = -1
-			ELSE
-				GOTO INPUT_LOOP_SETTARGET
-			ENDIF
-		ENDIF
-	ENDIF
-
-	SIF 攻撃対象 < 0
-		CONTINUE
-	敵勢力 = 敵勢力リスト:攻撃対象
-	敵部隊 = 敵部隊リスト:攻撃対象
-
-	CALL BATTLE_UNIT_TO_UNIT(勢力, 部隊, 敵勢力リスト:攻撃対象, 敵部隊リスト:攻撃対象)
-	CALL SINGLE_EMPTY_LINE()
-
-	;敵性部隊が１部隊だった場合、その部隊を撃破すれば続けて操艦部隊との戦闘に入る
-	SIF 敵の数 != 1 || UNIT_SOLDIER:敵勢力:敵部隊 > 0
-		CONTINUE
-
-	$VS_CASTLE
-
-	敵勢力 = CITY_OWNER:部隊現在地
-	IF 部隊現在地 > 0 && CITY_TYPE:部隊現在地 == 0 && TMP_COUNTRY_RELATION:勢力:敵勢力 == 0
-		CALL BATTLE_UNIT_TO_CITY(勢力, 部隊, 部隊現在地)
-		CALL SINGLE_EMPTY_LINE()
 	ENDIF
 NEXT
 
@@ -1044,67 +876,3 @@ FOR LOCAL:0, 0, CHARANUM
 			CALL CHANGE_RELATION_O_TO_O(LOCAL:2, MASTER, -125)
 	ENDIF
 NEXT
-
-
-
-;-------------------------------------------------
-;ARG:0勢力のARG:1番の部隊に「人気」もちの武将が存在する場合、その部隊の兵数を増加させる処理
-;-------------------------------------------------
-;@IDOL_GATHER_SOLDIER(ARG:0, ARG:1)
-;#DIM LCOUNT
-;#DIM 武将
-;#DIM 増加数
-;FOR LCOUNT, 0, 3
-;	武将 = GET_UNIT_COMMANDER(ARG:0, ARG:1, LCOUNT)
-;	IF 武将 >= 0 && TALENT:武将:人気
-;		増加数 = GET_SUM_ECONOMY(ARG:0) / 100
-;		TIMES 増加数, 0.10
-;		IF ARG:0 == CFLAG:MASTER:所属
-;			PRINTFORML
-;			PRINTFORML %ANAME(武将)%の人気っぷりが、部隊に人を集めているようだ……
-;			PRINTFORM {ARG:1+1}番の部隊に
-;			PRINTFORM {増加数}
-;			PRINTFORML の義勇兵が集まりました
-;			PRINTFORML 兵数:{UNIT_SOLDIER:(ARG:0):(ARG:1)} → {UNIT_SOLDIER:(ARG:0):(ARG:1) + 増加数}
-;		ENDIF
-;		UNIT_SOLDIER:(ARG:0):(ARG:1) += 増加数
-;	ENDIF
-;NEXT
-;
-
-;-------------------------------------------------
-;全勢力の技術研究を進める
-;-------------------------------------------------
-@PROGRESS_TECHNOLOGY_SEARCH
-#DIM ジャンル
-#DIM ステージ
-FOR LOCAL, 0, MAX_COUNTRY
-	SIF !IS_COUNTRY(LOCAL)
-		CONTINUE
-	SIF TECHNOLOGY_RESEARCH_TARGET:LOCAL == -1
-		CONTINUE
-
-	TECHNOLOGY_RESEARCH_PROGRESS:LOCAL ++
-	ジャンル = TECHNOLOGY_RESEARCH_TARGET:LOCAL / 100
-	ステージ = TECHNOLOGY_RESEARCH_TARGET:LOCAL % 100
-	;DEBUGPRINTFORML PROGRESS_TECHNOLOGY_SEARCH  %ANAME(GET_COUNTRY_BOSS(LOCAL))% {TECHNOLOGY_RESEARCH_TARGET:LOCAL} {TECHNOLOGY_RESEARCH_PROGRESS:LOCAL}/{GET_RESEARCH_PERIOD(LOCAL, ジャンル, ステージ)}
-
-	IF TECHNOLOGY_RESEARCH_PROGRESS:LOCAL >= GET_RESEARCH_PERIOD(LOCAL, ジャンル, ステージ)
-		IF LOCAL == CFLAG:MASTER:所属
-			CALL COLOR_PRINTW(@"研究『%GET_TECHNOLOGY_NAME(ジャンル, ステージ)%』を完了しました", カラー_注意)
-		ELSE
-			PRINTFORML %ANAME(GET_COUNTRY_BOSS(LOCAL))%が研究『%GET_TECHNOLOGY_NAME(ジャンル, ステージ)%』を完了しました
-		ENDIF
-		;DEBUGPRINTFORML %ANAME(GET_COUNTRY_BOSS(LOCAL))%: %GET_TECHNOLOGY_NAME(TECHNOLOGY_RESEARCH_TARGET:LOCAL / 100, TECHNOLOGY_RESEARCH_TARGET:LOCAL % 100)% {TECHNOLOGY_RESEARCH_PROGRESS:LOCAL}/{GET_RESEARCH_PERIOD(LOCAL, ジャンル, ステージ)}
-		TECHNOLOGY_STATUS:LOCAL:ジャンル ++
-		TECHNOLOGY_RESEARCH_TARGET:LOCAL = -1
-		TECHNOLOGY_RESEARCH_PROGRESS:LOCAL = 0
-		;自身の知っている技術より進んでいる場合は+1
-		FOR LOCAL:1, 0, CHARANUM
-			SIF CFLAG:(LOCAL:1):所属 == LOCAL && TECHNOLOGY_STATUS_CHARA:(LOCAL:1):ジャンル < TECHNOLOGY_STATUS:LOCAL:ジャンル
-				TECHNOLOGY_STATUS_CHARA:(LOCAL:1):ジャンル ++
-		NEXT
-	ENDIF
-NEXT
-
-
