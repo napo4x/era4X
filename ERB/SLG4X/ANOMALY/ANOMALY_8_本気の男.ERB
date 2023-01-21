@@ -1,0 +1,65 @@
+﻿;--------------------------
+; 本気の男
+;--------------------------
+@INIT_ANOMALY_8
+#DIM SECTOR_ID
+#DIM POS_X
+#DIM POS_Y
+
+SECTOR_ID = 45
+POS_X = 8
+POS_Y = 5
+
+MAP:SECTOR_ID:POS_X:POS_Y = ANOMALY
+ANOMALY_MAP:SECTOR_ID:POS_X:POS_Y = 本気の男
+CALL POS2ID(SECTOR_ID, POS_X, POS_Y)
+ANOMALY_POSITIONID:8 = RESULT
+;--------------------------
+; ANOMALY本体
+;--------------------------
+@ANOMALY_BODY_本気の男
+#DIM DYNAMIC MEMBER_COUNT
+#DIM SECTOR_ID
+#DIM POS_X
+#DIM POS_Y
+
+PRINTFORMW %CALLNAME:MASTER%が宇宙を探査していると、微弱な救難信号を受信した
+PRINTFORMW 現場に行くと、緊急用の小型脱出カプセルが浮いている。どうやらあのカプセルが救難信号を発していたようだ
+PRINTFORMW カプセルを回収すると中から男が出てきた。精悍な顔つきで筋肉質の40歳ほどの男だ。女によくモテるだろう
+PRINTFORMW しかしなぜか彼はパンツ一丁、いや、オムツ一丁である
+PRINTFORMW 可愛い動物たちのプリントが施された、明らかに幼児向けのオムツをパッツンパッツンにしながら無理やり履いている
+PRINTFORMW 「気になるかい？ なぜオムツ一丁の男が宇宙に放り出されていたか」
+PRINTFORMW 男は渋い声で訪ねてきた。気にならない訳がない。%CALLNAME:MASTER%が頷くと、男は真剣な面持ちで語り出す
+PRINTFORMW 「私はね、常に本気なんだ。その甲斐あってとある企業を起こし大企業と呼ばれるまでに育てた。人は私を熱血社長と呼ぶ」
+PRINTFORMW 「あらゆる事業で成功してきた私は、次に宇宙旅行に手を出そうと考えた」
+PRINTFORMW 「私は数年の歳月をかけ宇宙旅行パッケージの開発プロジェクトを進めた。そして数日前、最終段階のテストを自ら行うことにした」
+PRINTFORMW 「それは安全性のテストだった。そしてテストを行いながら私は考えた。もし私が善悪の判断のつかぬ幼子だったらどうするのか」
+PRINTFORMW 「つまり……そういうことだ。私は来ていた作業着を脱ぎ捨て、秘書に命じて用意させたオムツ一丁になったのだ」
+PRINTFORMW 「さらに乳幼児の行動シミュレーターを自分にインストールし、誰にも見張らせず一時間ほど自分の体の自由を放棄した」
+PRINTFORMW 「なぜなら私は常に本気だからだ。本気で乳幼児になりきり、本気で自社商品に危険性がないか向き合わないといけない」
+PRINTFORMW 「幼児と化した私は私は脱出カプセルに乗り込み、宇宙への旅に飛び立つことになったのだ……。思考だけ大人のままだった私は思った」
+PRINTFORMW 「殺されるのが僕でよかった……と。我が社の商品は危うく乳幼児を殺すところだった。そしてさらに幸運なことに、私は助かった。本当に、ありがとう。感謝してもしきれない」
+PRINTFORMW 語り終えた男の顔は、なぜか晴れやかだった
+PRINTFORMW 「さて、申し訳ないのだが長距離通信機を貸してくれないだろうか。脱出カプセルの出力では長距離通信機を装備できなくてね」
+PRINTFORMW 男の勢いと格好に圧倒されつつも%CALLNAME:MASTER%が長距離通信機を貸してやると、男は自分の会社と連絡を始める
+PRINTFORMW 聞こえてきた通信内容によると、今すぐ会社の船が男を迎えに来るが、しばらく時間がかかるらしい
+PRINTFORMW 男の会社が迎えに来るまで、男は経営に関する戦略やノウハウを教えてくれた
+FOR LOCAL, 1, CHARANUM
+	SIF RIDING_WITH:LOCAL != BOARDING_SHIP_ID:MASTER
+		CONTINUE
+	MEMBER_COUNT ++
+	SIF MEMBER_COUNT == 1
+		PRINTFORMW せっかくなのでこの艦に乗っている全員で男の話を聞くことにした
+	ABL:LOCAL:知略 += 3
+NEXT
+PRINTFORMW 見た目の情けなさとは裏腹に、予想以上に為になる話だった……
+PRINTFORMW 話を聞いたメンバーの知略が+3された
+PRINTFORMW そしてオムツを履いた男は、迎えの船に乗って去っていった
+
+CALL ID2POS(ANOMALY_POSITIONID:8)
+SECTOR_ID = RESULT:0
+X_POS = RESULT:1
+Y_POS = RESULT:2
+ANOMALY_MAP:SECTOR_ID:X_POS:Y_POS = %""%
+MAP:SECTOR_ID:X_POS:Y_POS = 明瞭
+
