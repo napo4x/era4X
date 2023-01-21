@@ -1,0 +1,29 @@
+﻿;-----------------------------------
+; コンピューター
+;-----------------------------------
+@GET_COMPUTER_NAME_9
+RESULTS = TIER3主砲飽和攻撃用艦船管理AI
+
+@GET_COMPUTER_STATUS_9(STATUS)
+#DIM REF STATUS
+
+STATUS:FIRE_RATE = 1
+STATUS:HIT_RATE -= 30
+
+STATUS:PRICE = 3000000
+
+;-----------------------------------
+; コンピューターの説明
+;-----------------------------------
+@GET_COMPUTER_DESCRIPTION_F_9
+PRINTFORML 多数の砲艦から強力な遠距離主砲を連発し、接近される前に趨勢を決する主砲飽和攻撃の為に開発されたAI
+PRINTFORML 非常に強力だが艦隊指揮官や艦長の技術による命中補正がなければ使い物にならず、普及は進んでいない
+PRINTFORML 普及率の低さに比例し生産量も少なく非常に高価
+
+;-----------------------------------
+; AIの資材
+;-----------------------------------
+@GET_COMPUTER_RESOURCE_9(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:超電導回路 = 1100

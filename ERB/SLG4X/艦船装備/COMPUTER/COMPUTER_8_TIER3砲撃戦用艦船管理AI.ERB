@@ -1,0 +1,29 @@
+﻿;-----------------------------------
+; コンピューター
+;-----------------------------------
+@GET_COMPUTER_NAME_8
+RESULTS = TIER3砲撃戦用艦船管理AI
+
+@GET_COMPUTER_STATUS_8(STATUS)
+#DIM REF STATUS
+
+STATUS:HIT_RATE = 10
+
+STATUS:PRICE = 1000000
+
+;-----------------------------------
+; コンピューターの説明
+;-----------------------------------
+@GET_COMPUTER_DESCRIPTION_F_8
+PRINTFORML 近年登場した高性能砲撃戦用AI
+PRINTFORML 従来のAIとは設計思想から異なっており、コストをど返しした品だと批判されることもある
+PRINTFORML 搭載艦船に圧倒的な命中精度の向上をもたらし、近年頻発する高速戦闘、遠距離戦闘を強力にサポートする
+
+;-----------------------------------
+; AIの資材
+;-----------------------------------
+@GET_COMPUTER_RESOURCE_8(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:超電導回路 = 1000
+USE_RESOURCE:タイラーセンサー = 100
