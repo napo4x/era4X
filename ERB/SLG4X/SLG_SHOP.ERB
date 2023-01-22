@@ -1256,7 +1256,6 @@ ENDIF
 #DIM 入力値
 
 #DIM CAN_SALE_SHIP, MAX_SALE_TERMS
-#DIMS CONST 勢力名表示 = "プレイヤー国家","銀河人民統一連邦","企業連合","民主主義国家","アレス宗教国家","機械文明","レジスタンス","慈悲の宙族団","赤の傭兵集団","一般海賊","豊秋津皇国","ハールバルズ",
 
 $INPUT_LOOP
 PRINTL
@@ -1305,17 +1304,17 @@ FOR SHIP_MODEL_ID, 0, SHIP_CLASS_TOTAL_COUNT
 			ELSEIF RESULT == 1
 			; この港で建造しうるのに買えず・特殊条件フラグが無いのなら定型文表示を出力する
 				TARGET_SHIP_PURCHASE_CONDITION =
-				FOR COUNT, 0, MAX_COUNTRY
-					GETBIT CAN_SALE_SHIP:建造可能国家, COUNT - 国家ID_ビット演算ヘッダー調整
+				FOR COUNT, 1, MAX_COUNTRY
+					GETBIT CAN_SALE_SHIP:建造可能国家, COUNT + 国家ID_ビット演算ヘッダー調整
 					IF RESULT == 1
 						IF TARGET_SHIP_PURCHASE_CONDITION == ""
 						; 建造可能なのが1国だけなら勢力名・複数国ならボカす
-							TARGET_SHIP_PURCHASE_CONDITION = %勢力名表示:(COUNT - 国家ID_ビット演算ヘッダー調整)%
+							TARGET_SHIP_PURCHASE_CONDITION = %COUNTRY_NAME:COUNT%
 						ELSE
 							TARGET_SHIP_PURCHASE_CONDITION = 発注する国家
 							BREAK
 							; 国家名を全部羅列したいなら
-							;TARGET_SHIP_PURCHASE_CONDITION =%TARGET_SHIP_PURCHASE_CONDITION%・%勢力名表示:COUNT%
+							;TARGET_SHIP_PURCHASE_CONDITION =%TARGET_SHIP_PURCHASE_CONDITION%・%COUNTRY_NAME:COUNT%
 						ENDIF
 					ENDIF
 				NEXT
