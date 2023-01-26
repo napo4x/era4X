@@ -16,7 +16,7 @@ PMC_INITED = 1
 ;命名
 COUNTRY_NAME:0 = ERROR
 FOR LOCAL, 0, MAX_COUNTRY
-	TRYCALLFORM INIT_COUNTRY_{LOCAL}
+	TRYCALLFORM INIT_COUNTRY_{LOCAL}(ゲームモード)
 NEXT
 IF !IS_NEWGAME
 	; プレイヤーの初期艦
@@ -31,6 +31,18 @@ IF !IS_NEWGAME
 		CALL INIT_PRESET_SHIP(国家ID_プレイヤー, CHARACTER_POSITION, 標準型武装漁船,"わんぱく水産丸", 標準型武装漁船)
 		BOARDING_SHIP_ID = RESULT
 	ENDIF
+	IF GROUPMATCH(ゲームモード, 6)
+		CALL INIT_COUNTRY_1_6
+		CALL INIT_PRESET_SHIP(国家ID_プレイヤー, CHARACTER_POSITION, 汎用調査船, , 汎用調査船)
+		CALL INIT_PRESET_SHIP(国家ID_プレイヤー, CHARACTER_POSITION, 汎用コルベット, , 汎用コルベット)
+		CALL INIT_PRESET_SHIP(国家ID_プレイヤー, CHARACTER_POSITION, 汎用フリゲート, , 汎用フリゲート)
+		CALL INIT_PRESET_SHIP(国家ID_プレイヤー, CHARACTER_POSITION, 汎用駆逐艦, , 汎用駆逐艦)
+		CALL INIT_PRESET_SHIP(国家ID_プレイヤー, CHARACTER_POSITION, 汎用巡洋艦, , 汎用巡洋艦)
+		CALL INIT_PRESET_SHIP(国家ID_プレイヤー, CHARACTER_POSITION, 汎用戦艦, , 汎用戦艦)
+		CALL INIT_PRESET_SHIP(国家ID_プレイヤー, CHARACTER_POSITION, 汎用空母, , 汎用空母)
+		CALL INIT_PRESET_SHIP(国家ID_プレイヤー, CHARACTER_POSITION, 汎用輸送船, , 汎用輸送船)
+		CALL INIT_PRESET_SHIP(国家ID_プレイヤー, CHARACTER_POSITION, 汎用作業船, , 汎用作業船)
+	ENDIF
 ENDIF
 
 CALL INIT_ANOMALY
@@ -44,22 +56,25 @@ RETURN
 ;--------------------------
 ; プレイヤー勢力初期化
 ;--------------------------
-@INIT_COUNTRY_1
+@INIT_COUNTRY_1(ゲームモード)
+#DIM ゲームモード
 #DIM PORTPOSID
 #DIM SECTOR_ID
 #DIM X_POS
 #DIM Y_POS
 #DIM SHIP_ID
 
-PORTPOSID = STAR_POSITION_ID:(RAND:MAX_STAR)
-CALL ID2POS(PORTPOSID)
-SECTOR_ID = RESULT:0
-X_POS = RESULT:1
-Y_POS = RESULT:2
-CHARACTER_POSITION = PORTPOSID
+IF ゲームモード != 6
+	PORTPOSID = STAR_POSITION_ID:(RAND:MAX_STAR)
+	CALL ID2POS(PORTPOSID)
+	SECTOR_ID = RESULT:0
+	X_POS = RESULT:1
+	Y_POS = RESULT:2
+	CHARACTER_POSITION = PORTPOSID
 
-; 明瞭地域拡大
-CALL CLEAR_MAP(CHARACTER_POSITION, 3)
+	; 明瞭地域拡大
+	CALL CLEAR_MAP(CHARACTER_POSITION, 3)
+ENDIF
 
 COUNTRY_NAME:国家ID_プレイヤー = プレイヤー文明
 
@@ -76,23 +91,76 @@ FOR SHIP_ID, 0, MAX_SHIP
 	ENDIF
 NEXT
 
+@INIT_COUNTRY_1_6
+#DIM PORTPOSID = 640707
+#DIM SECTOR_ID
+#DIM X_POS
+#DIM Y_POS
+#DIM SHIP_ID
+
+;宇宙港作成
+FINDELEMENT PORT_POSITION_ID, -1
+PORT_POSITION_ID:RESULT = PORTPOSID
+PORT_OWNER:RESULT = 国家ID_プレイヤー
+PORT_SLOT:RESULT:0 = ドック
+PORT_SLOT:RESULT:1 = 工場
+PORT_SLOT:RESULT:2 = 造船所
+PORT_SLOT:RESULT:3 = AVスタジオ
+PORT_SLOT:RESULT:4 = 技術研究所
+RELEASED_LAB = 1
+PORT_SLOT:RESULT:5 = 白兵訓練所
+PORT_SLOT:RESULT:6 = 宇宙軍基地
+SPACE_FORCE_BUILD = 1
+PORT_SLOT:RESULT:7 = 商店
+PORT_SLOT:RESULT:16 = コンテナ
+PORT_SLOT:RESULT:17 = コンテナ
+PORT_SLOT:RESULT:18 = コンテナ
+PORT_SLOT:RESULT:19 = コンテナ
+PORT_COMPLETE:RESULT = 1
+
+;宇宙軍レベル3に
+IS_COMPLETE_TECH:0 = 1	;コルベット開発
+IS_COMPLETE_TECH:8 = 1	;フリゲート開発
+IS_COMPLETE_TECH:14 = 1	;駆逐艦開発
+IS_COMPLETE_TECH:20 = 1	;巡洋艦開発
+IS_COMPLETE_TECH:27 = 1	;戦艦開発
+IS_COMPLETE_TECH:34 = 1	;空母開発
+;IS_COMPLETE_TECH:39 = 1	;サイズ5装備開発
+SPACE_FORCE_TOTAL_DONATE = 1000000000
+
+; 資源の配置
+CALL INIT_STAR_RESOURCE(PORTPOSID, 国家ID_プレイヤー)
+
+CALL ID2POS(PORTPOSID)
+SECTOR_ID = RESULT:0
+X_POS = RESULT:1
+Y_POS = RESULT:2
+MAP:SECTOR_ID:X_POS:Y_POS = 宇宙港
+CHARACTER_POSITION = PORTPOSID
+
+; 明瞭地域拡大
+CALL CLEAR_MAP(CHARACTER_POSITION, 3)
 
 
 ;--------------------------
 ; 銀河人民統一連邦初期化
 ;--------------------------
-@INIT_COUNTRY_2
+@INIT_COUNTRY_2(ゲームモード)
+#DIM ゲームモード
 #DIM COUNTER
 COUNTER = 1
 COUNTRY_NAME:国家ID_社会主義 = 銀河人民統一連邦
 MONEY:国家ID_社会主義 = 1000000000000
 
-; 関係図
+; 関係性
 REL_LIKE_COUNTRY:国家ID_社会主義:国家ID_民主主義 = -1000; 戦争状態
 REL_LIKE_COUNTRY:国家ID_社会主義:国家ID_レジスタンス = -1000; 獅子身中の虫
 REL_LIKE_COUNTRY:国家ID_社会主義:国家ID_慈悲の宙族団 = 500; お得意様
 REL_LIKE_COUNTRY:国家ID_社会主義:国家ID_赤の傭兵集団 = 750; お得意様
-
+IF ゲームモード == 6
+	REL_LIKE_COUNTRY:国家ID_社会主義:国家ID_プレイヤー = -1000
+	REL_LIKE_COUNTRY:国家ID_プレイヤー:国家ID_社会主義 = -500
+ENDIF
 
 ; 星に国の割り振り
 STAR_OWNER:0 = 国家ID_社会主義
@@ -156,7 +224,8 @@ NEXT
 ;--------------------------
 ; 企業連合初期化
 ;--------------------------
-@INIT_COUNTRY_3
+@INIT_COUNTRY_3(ゲームモード)
+#DIM ゲームモード
 COUNTRY_NAME:国家ID_企業連合 = 企業連合
 MONEY:国家ID_企業連合 = 3000000000000
 
@@ -194,11 +263,15 @@ FOR LOCAL, 3, 5
 NEXT
 
 
-; 関係図
+; 関係性
 REL_LIKE_COUNTRY:国家ID_企業連合:国家ID_社会主義 = -500; 味方の敵
 REL_LIKE_COUNTRY:国家ID_企業連合:国家ID_民主主義 = 1000; 味方兼お得意様
 REL_LIKE_COUNTRY:国家ID_企業連合:国家ID_慈悲の宙族団 = -500; 商売敵
 REL_LIKE_COUNTRY:国家ID_企業連合:国家ID_赤の傭兵集団 = -200; 味方の敵だが利用したい
+IF ゲームモード == 6
+	REL_LIKE_COUNTRY:国家ID_企業連合:国家ID_プレイヤー = -1000
+	REL_LIKE_COUNTRY:国家ID_プレイヤー:国家ID_企業連合 = -500
+ENDIF
 
 ; 艦船の配置
 ; 各艦船をバランスよく持っている
@@ -234,7 +307,8 @@ NEXT
 ;--------------------------
 ; 民主主義国家初期化
 ;--------------------------
-@INIT_COUNTRY_4
+@INIT_COUNTRY_4(ゲームモード)
+#DIM ゲームモード
 COUNTRY_NAME:国家ID_民主主義 = 民主主義国家
 MONEY:国家ID_民主主義 = 2000000000000
 
@@ -284,6 +358,10 @@ REL_LIKE_COUNTRY:国家ID_民主主義:国家ID_企業連合 = 800; 胡散臭い
 REL_LIKE_COUNTRY:国家ID_民主主義:国家ID_レジスタンス = 500; 敵の敵
 REL_LIKE_COUNTRY:国家ID_民主主義:国家ID_慈悲の宙族団 = -500; 敵の味方
 REL_LIKE_COUNTRY:国家ID_民主主義:国家ID_赤の傭兵集団 = -500; 敵の味方
+IF ゲームモード == 6
+	REL_LIKE_COUNTRY:国家ID_民主主義:国家ID_プレイヤー = -1000
+	REL_LIKE_COUNTRY:国家ID_プレイヤー:国家ID_民主主義 = -500
+ENDIF
 
 ; 初期艦
 ; 空母打撃軍がメイン
@@ -309,7 +387,8 @@ NEXT
 ;--------------------------
 ; アレス宗教国家
 ;--------------------------
-@INIT_COUNTRY_5
+@INIT_COUNTRY_5(ゲームモード)
+#DIM ゲームモード
 COUNTRY_NAME:国家ID_アレス宗教 = アレス宗教国家
 MONEY:国家ID_アレス宗教 = 500000000000
 
@@ -336,6 +415,10 @@ CALL ADD_RESOURCE(STAR_POSITION_ID:8, 国家ID_アレス宗教, エインズの�
 
 ; 関係性
 REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_機械文明 = -800; 戦争一歩手前
+IF ゲームモード == 6
+	REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー = -1000
+	REL_LIKE_COUNTRY:国家ID_プレイヤー:国家ID_アレス宗教 = -500
+ENDIF
 
 ; 初期艦
 ; 戦艦以下ピラミッド階層
@@ -365,7 +448,8 @@ NEXT
 ;--------------------------
 ; 機械文明
 ;--------------------------
-@INIT_COUNTRY_6
+@INIT_COUNTRY_6(ゲームモード)
+#DIM ゲームモード
 COUNTRY_NAME:国家ID_機械文明 = 機械文明
 MONEY:国家ID_機械文明 = 3000000000000
 
@@ -390,6 +474,12 @@ NEXT
 CALL INIT_STAR_RESOURCE(STAR_POSITION_ID:9, 国家ID_機械文明)
 CALL ADD_RESOURCE(STAR_POSITION_ID:9, 国家ID_機械文明, ナイ・ゲーム機, 1000)
 
+; 関係性
+IF ゲームモード == 6
+	REL_LIKE_COUNTRY:国家ID_機械文明:国家ID_プレイヤー = -800
+	REL_LIKE_COUNTRY:国家ID_プレイヤー:国家ID_機械文明 = -300
+ENDIF
+
 ; 初期艦
 ; 駆逐と戦艦および空母構成
 FOR LOCAL, 0, 30
@@ -404,29 +494,49 @@ NEXT
 ;--------------------------
 ; 反社会主義レジスタンス
 ;--------------------------
-@INIT_COUNTRY_7
+@INIT_COUNTRY_7(ゲームモード)
+#DIM ゲームモード
 COUNTRY_NAME:国家ID_レジスタンス = 反社会主義レジスタンス
 
 ; 関係性
 REL_LIKE_COUNTRY:国家ID_レジスタンス:国家ID_社会主義 = -1000; 転覆を狙っている
+IF ゲームモード == 6
+	REL_LIKE_COUNTRY:国家ID_レジスタンス:国家ID_プレイヤー = -800
+	REL_LIKE_COUNTRY:国家ID_プレイヤー:国家ID_レジスタンス = -300
+ENDIF
 
 
 ;--------------------------
 ; 慈悲の宙族団
 ;--------------------------
-@INIT_COUNTRY_8
+@INIT_COUNTRY_8(ゲームモード)
+#DIM ゲームモード
 COUNTRY_NAME:国家ID_慈悲の宙族団 = 慈悲の宙族団
+
+; 関係性
+IF ゲームモード == 6
+	REL_LIKE_COUNTRY:国家ID_慈悲の宙族団:国家ID_プレイヤー = -800
+	REL_LIKE_COUNTRY:国家ID_プレイヤー:国家ID_慈悲の宙族団 = -300
+ENDIF
 
 ;--------------------------
 ; 赤の傭兵集団
 ;--------------------------
-@INIT_COUNTRY_9
+@INIT_COUNTRY_9(ゲームモード)
+#DIM ゲームモード
 COUNTRY_NAME:国家ID_赤の傭兵集団 = 赤の傭兵集団
+
+; 関係性
+IF ゲームモード == 6
+	REL_LIKE_COUNTRY:国家ID_赤の傭兵集団:国家ID_プレイヤー = -800
+	REL_LIKE_COUNTRY:国家ID_プレイヤー:国家ID_赤の傭兵集団 = -300
+ENDIF
 
 ;--------------------------
 ; 一般海賊
 ;--------------------------
-@INIT_COUNTRY_10
+@INIT_COUNTRY_10(ゲームモード)
+#DIM ゲームモード
 #DIM CONST X座標分割数 = MAP_WIDTH / 5
 #DIM CONST Y座標分割数 = MAP_HEIGHT / 5
 #DIM 星系座標X, MAX_STAR
@@ -441,7 +551,7 @@ COUNTRY_NAME:国家ID_赤の傭兵集団 = 赤の傭兵集団
 ITER = 0
 COUNTRY_NAME:国家ID_一般海賊 = 無所属
 
-;関係性
+; 関係性
 FOR LOCAL, 1, MAX_COUNTRY
 	SIF LOCAL == 国家ID_一般海賊
 		CONTINUE
@@ -664,7 +774,8 @@ ITER = 0
 ;--------------------------
 ; 豊秋津皇国
 ;--------------------------
-@INIT_COUNTRY_11
+@INIT_COUNTRY_11(ゲームモード)
+#DIM ゲームモード
 COUNTRY_NAME:国家ID_豊秋津皇国 = 豊秋津皇国
 MONEY:国家ID_豊秋津皇国 = 3000000000000
 
@@ -688,6 +799,12 @@ NEXT
 ; 資源の配置
 CALL INIT_STAR_RESOURCE(STAR_POSITION_ID:10, 国家ID_豊秋津皇国)
 CALL ADD_RESOURCE(STAR_POSITION_ID:10, 国家ID_豊秋津皇国, 日本酒, 1000)
+
+; 関係性
+IF ゲームモード == 6
+	REL_LIKE_COUNTRY:国家ID_豊秋津皇国:国家ID_プレイヤー = -1000
+	REL_LIKE_COUNTRY:国家ID_プレイヤー:国家ID_豊秋津皇国 = -500
+ENDIF
 
 ; 初期艦
 FOR LOCAL, 0, 12
@@ -717,7 +834,8 @@ NEXT
 ;--------------------------
 ; ハールバルズ王国
 ;--------------------------
-@INIT_COUNTRY_12
+@INIT_COUNTRY_12(ゲームモード)
+#DIM ゲームモード
 COUNTRY_NAME:国家ID_ハールバルズ = ハールバルズ王国
 MONEY:国家ID_ハールバルズ = 5000000000000
 
@@ -748,6 +866,12 @@ CALL INIT_STAR_RESOURCE(STAR_POSITION_ID:11, 国家ID_ハールバルズ)
 CALL INIT_STAR_RESOURCE(STAR_POSITION_ID:12, 国家ID_ハールバルズ)
 CALL ADD_RESOURCE(STAR_POSITION_ID:11, 国家ID_ハールバルズ, MR観光セット, 1000)
 CALL ADD_RESOURCE(STAR_POSITION_ID:12, 国家ID_ハールバルズ, ペルマティーセット, 1000)
+
+; 関係性
+IF ゲームモード == 6
+	REL_LIKE_COUNTRY:国家ID_ハールバルズ:国家ID_プレイヤー = -1000
+	REL_LIKE_COUNTRY:国家ID_プレイヤー:国家ID_ハールバルズ = -500
+ENDIF
 
 ; 初期艦
 ; 駆逐と戦艦および空母構成
