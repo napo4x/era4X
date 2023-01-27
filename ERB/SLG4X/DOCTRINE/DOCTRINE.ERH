@@ -1,8 +1,11 @@
 ﻿#DIM CONST MAX_DOCTRINE_SET = 10
 #DIM CONST MAX_ORDER = 8
-#DIMS SAVEDATA DOCTRINE_NAME,MAX_DOCTRINE_SET, MAX_COUNTRY
+#DIMS SAVEDATA DOCTRINE_NAME, MAX_DOCTRINE_SET, MAX_COUNTRY
 #DIM SAVEDATA DOCTRINE_COMPOSITION, MAX_DOCTRINE_SET, MAX_ORDER, MAX_COUNTRY
-#DIM SAVEDATA RECIEVED_DOCTRINE, MAX_DOCTRINE_SET, MAX_SHIP
+#DIM SAVEDATA RECIEVED_DOCTRINE, MAX_SHIP
+
+#DIM CONST DEFAULT_DOCTRINE = 12, 2, 0, 0, 0, 0, 0, 0
+#DIM CONST NO_ATTACKER_DEFAULT_DOCTRINE = 10, 0, 0, 0, 0, 0, 0, 0
 {
 	#DIMS CONST DOCTRINE_COMMAND = 
 		"未設定", 
@@ -15,7 +18,7 @@
 		"最前線から距離2まで移動", 
 		"最前線から距離3まで移動", 
 		"最前線から距離4まで移動", 
-		"最前線から距離5まで移動", 
+		"常に撤退", 
 		"耐久が1/4を下回ったら撤退", 
 		"耐久が1/3を下回ったら撤退", 
 		"耐久が1/2を下回ったら撤退", 
@@ -55,5 +58,16 @@
 		"最前線から距離3まで移動", 
 		"最前線から距離4まで移動", 
 		"最前線から距離5まで移動"
+}
+{
+	#DIMS CONST ATTACK_COMMAND = 
+		"未設定", 
+		"耐久が一番低い敵から攻撃", 
+		"耐久が一番高い敵から攻撃", 
+		"高DPSの敵から攻撃 - 最も近い距離に複数の敵がいた場合、最もDPSが高い敵を攻撃する", 
+		"高火力の敵から攻撃 - 最も近い距離に複数の敵がいた場合、命中時の火力が高い敵を攻撃する", 
+		"小型艦から攻撃 - 最も近い距離に複数の敵がいた場合、コルベット/フリゲートを優先して攻撃する", 
+		"中型艦から攻撃 - 最も近い距離に複数の敵がいた場合、駆逐艦/巡洋艦を優先して攻撃する", 
+		"大型艦から攻撃 - 最も近い距離に複数の敵がいた場合、戦艦/空母を優先して攻撃する"
 }
 
