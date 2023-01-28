@@ -108,8 +108,8 @@ VARSET SHIP_LIST2, -1
 ; 射程5武器でのみ2マス先に攻撃とかもシステム的には可能に(暫定的な処置です)
 VARSET DISTANCE, ATTACK_RANGE
 
-; とりあえず表示を崩れない様にする為に偽の値で誤魔化す
-VARSET DUMMY_DISTANCE, 3
+; とりあえず通常戦闘以遠なので最大値で返しておく
+VARSET DUMMY_DISTANCE, 6
 
 ; 艦隊リスト取得
 CALL GET_SHIP_LIST(BATTLE_SHIP_LIST, POSID_1, COUNTRY_1)
@@ -164,11 +164,11 @@ ELSEIF  COUNTRY_2 == 国家ID_プレイヤー
 	;CALL COMMANDER_ELECTION(SHIP_LIST2)
 	CALL OLD_COMMANDER_ELECTION(SHIP_LIST2)
 	IF RESULT != -1
-		COMMANDER:0 = RESULT
+		COMMANDER:1 = RESULT
 		DRAWLINE
 		; 厳密には野戦(イベント口上300番)に対する301・302番みたいな別口上50X+1番にした方がよさげ
-		CALLFORM KOJO_EVENT(COMMANDER:0, 501)
-		PRINTFORMW 指揮官に%NAME:(COMMANDER:0)%が選ばれました
+		CALLFORM KOJO_EVENT(COMMANDER:1, 501)
+		PRINTFORMW 指揮官に%NAME:(COMMANDER:1)%が選ばれました
 	ELSE
 		PRINTW AIによる指揮が行われます
 	ENDIF
@@ -273,10 +273,10 @@ IF DISPLAY_UI
 					;攻撃対象艦隊で大破してなくて、何らかの行動中でなければ行動を決める
 					CALL GET_OTHER_GRID_ACTION(SHIP_ID, DISTANCE:SHIP_ID)
 					SELECTCASE RESULT
-						;CASE 攻撃
-							;敵艦隊に遠隔攻撃行動を用意したら"攻撃"の船だけでPOSID_1へ遠隔攻撃させる
-						CASE 攻撃不能, 攻撃
-							;攻撃=遠隔攻撃能力持ちを一緒にしているのは暫定的な処理
+						CASE 攻撃
+							;とりあえず(対象指定はできないけど)遠隔攻撃を試みる様に
+							SHIP_MISSION:SHIP_ID = 遠隔攻撃
+						CASE 攻撃不能
 							;POSID_1に移動させる
 							SHIP_MISSION:SHIP_ID = 移動
 							MOVING_POS:SHIP_ID = POSID_1
@@ -429,17 +429,12 @@ RETURN POS_RANGE + 3
 
 MAX_RANGE = 0
 
-CALL ID2POS(POSID)
-SECTOR_ID = RESULT:0
-X_POS = RESULT:1
-Y_POS = RESULT:2
 
 FOR SHIP_ID, 0, MAX_SHIP
 	; 他勢力にも隣接マス攻撃させたいので勢力部分は変数
 	SIF SHIP_COUNTRY:SHIP_ID != CHECK_COUNTRY
 		CONTINUE
-	CALL POS2ID(SECTOR_ID, X_POS, Y_POS)
-	SIF RESULT != SHIP_POSITION:SHIP_ID
+	SIF POSID != SHIP_POSITION:SHIP_ID
 		CONTINUE
 	CALL GET_MAIN_WEAPON_MAX_RANGE_AND_DAMAGE_CHECK(SHIP_ID)
 	SIF MAX_RANGE < RESULT
