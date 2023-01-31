@@ -126,7 +126,6 @@ IF LOCAL:2 < 0
 ELSE
 	CALL SINGLE_DRAWLINE
 	PRINTFORML 「こちらの方などいかがでしょう？」
-	PRINTFORML 汎用武将カウント: {FLAG:汎用武将カウント}
 
 	$INPUT_LOOP_SELECT
 
@@ -160,6 +159,8 @@ ELSE
 	
 
 	IF INPUT_RESULT == 0 && (1000 + GET_FILTER_COST()) < MONEY
+		FLAG:汎用武将カウント = PRE_汎用武将カウント + 1
+		NO:(LOCAL:2) = FLAG:汎用武将カウント + MIN_NO_RANDOM_CHARA
 		PRINTL 仲間の名前を変更しますか？
 		CALL ASK_YN
 		SIF RESULT == 0
@@ -172,7 +173,6 @@ ELSE
 		ENDIF
 		;このターンにおける登用済みフラグをON
 		APPOINT_DONE = 1
-		FLAG:汎用武将カウント = PRE_汎用武将カウント + 1
 		MONEY -= (1000 + GET_FILTER_COST())
 		SHOP_TIME ++
 		BEGIN TURNEND
