@@ -154,25 +154,31 @@ CASE 1
 		PRINTL 
 		PRINTW 通信で船、積み荷、その他一切合切を差し出す様に言い放ったのは、噂通りのメスガキだ。
 		PRINTFORMW 当然、そんな要求を受け入れる%CALLNAME:MASTER%ではない……なぜなら、%CALLNAME:MASTER%はメスガキに社会と大人というものを分からせに来たのだから！
+		;リーダーをキャラとして作る 初回なので罠ガキは無し
+		CALL MESUGAKI_PIRATES_CHARA_GENERATE(MESUGAKI_LEADER, 0)
+		MESUGAKI_LEADER_ID = RESULT
 		CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(CHARACTER_POSITION, 2)
+		QUEST_FLAG_SHIP_ID:QUEST_ID = RESULT
+		IF MESUGAKI_LEADER_ID != -1
+			BOARDING_SHIP_ID:MESUGAKI_LEADER_ID = (QUEST_FLAG_SHIP_ID:QUEST_ID)
+			CHARACTER_POSITION:MESUGAKI_LEADER_ID = SHIP_POSITION:(QUEST_FLAG_SHIP_ID:QUEST_ID)
+		ENDIF
 ;債権回収からコピペ・改造
 		CALL COMBAT(CHARACTER_POSITION)
 		CALL RETIRE_BROKEN_SHIP
 		IF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:QUEST_ID) != 国家ID_一般海賊
+			SIF MESUGAKI_LEADER_ID != -1
+				BOARDING_SHIP_ID:MESUGAKI_LEADER_ID = -1
 			;; 敵の旗艦を撃破し、自分が撃破されていない
 			IF CHARACTER_POSITION == POSITION_ID
 				PRINTL メスガキ宇宙海賊の乗ったコルベットは沈黙した。
-				IF CAN_ADD_RANDOM_CHARA()
-				;キャラが追加できるなら白兵戦確認へ
+				IF MESUGAKI_LEADER_ID != -1
+				;リーダーが生成されているなら白兵戦確認へ
 					PRINTFORML しかし%CALLNAME:MASTER%はメスガキが脱出艇で逃げ出そうとしているのを見逃さなかった！
 					PRINTW 鈍足の脱出艇へと船を寄せるのは簡単だ。メスガキをとっ捕まえてこの手で直接分からせるいい機会ではなかろうか？
 					CALL MESUGAKI_WAKARASE_FIGHT_OR_FLIGHT
 					IF RESULT == 0
 						;白兵戦へ
-
-						;リーダーをキャラとして作る 初回なので罠ガキは無し
-						CALL MESUGAKI_PIRATES_CHARA_GENERATE(MESUGAKI_LEADER, 0)
-						MESUGAKI_LEADER_ID = RESULT
 						;非戦闘要員じゃないならクルーも作る
 						IF MESUGAKI_CREW != 5
 							CALL MESUGAKI_PIRATES_CHARA_GENERATE(MESUGAKI_CREW, 0)
@@ -189,11 +195,16 @@ CASE 1
 
 							ELSEIF RESULT == 0
 								PRINTFORMW %CALLNAME:MASTER%はメスガキ達を取り逃した……。
+								CALL DELETE_CHARA(MESUGAKI_LEADER_ID)
+								;先にリーダーが消えてるので1つ番号がずれる
+								SIF MESUGAKI_CREW_ID != -1
+									CALL DELETE_CHARA(MESUGAKI_CREW_ID -1)
 							ENDIF
 					ELSEIF RESULT == 1
 						PRINTL メスガキ宇宙海賊は海賊を行う能力を失った。
 						PRINTL そして当事者の口から語られる敗北こそがより多くのメスガキを分からせる術だろう。
 						PRINTW メスガキ達の惨めな敗走を記録し、言い逃れの余地が無くなる様に星間ネットへアップロードした。
+						CALL DELETE_CHARA(MESUGAKI_LEADER_ID)
 					ENDIF
 				ELSE
 					PRINTL 既に脱出しているのか、あるいはスペースデブリの一部になったのか。
@@ -220,6 +231,8 @@ CASE 1
 		ELSEIF CHARACTER_POSITION == POSITION_ID
 			PRINTFORML メスガキを分からせる事に失敗してしまった。
 			PRINTFORMW メスガキ宇宙海賊はこの宙域から去っていったようだ……。
+			SIF MESUGAKI_LEADER_ID != -1
+				CALL DELETE_CHARA(MESUGAKI_LEADER_ID)
 			QUEST_PROGRESS:QUEST_ID = 0
 			FOR SHIP_ID, 0, MAX_SHIP
 				IF SHIP_COUNTRY:SHIP_ID == 国家ID_一般海賊 && SHIP_POSITION:SHIP_ID == CHARACTER_POSITION
@@ -264,29 +277,36 @@ CASE 3
 		PRINTW 通信で船、積み荷、その他一切合切を差し出す様に言い放ったのは、やはりメスガキだ。
 		PRINTFORMW 当然、そんな要求を受け入れる%CALLNAME:MASTER%ではない……なぜなら、%CALLNAME:MASTER%はメスガキに社会と大人というものを分からせに来たのだから！
 
+		;リーダーをキャラとして作る
+		;罠ガキ判定
+		CALL MESUGAKI_TRAP_DECISION(MESUGAKI_LEADER)
+
+		CALL MESUGAKI_PIRATES_CHARA_GENERATE(MESUGAKI_LEADER, RESULT)
+		MESUGAKI_LEADER_ID = RESULT
+
 		CALL MESUGAKI_PIRATES_FLEET_GENERATE(CHARACTER_POSITION, RAND:100 + 1, 0)
 
+		IF MESUGAKI_LEADER_ID != -1
+			BOARDING_SHIP_ID:MESUGAKI_LEADER_ID = (QUEST_FLAG_SHIP_ID:QUEST_ID)
+			CHARACTER_POSITION:MESUGAKI_LEADER_ID = SHIP_POSITION:(QUEST_FLAG_SHIP_ID:QUEST_ID)
+		ENDIF
 ;債権回収からコピペ・改造
 		CALL COMBAT(CHARACTER_POSITION)
 		CALL RETIRE_BROKEN_SHIP
 		IF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:QUEST_ID) != 国家ID_一般海賊
+			SIF MESUGAKI_LEADER_ID != -1
+				BOARDING_SHIP_ID:MESUGAKI_LEADER_ID = -1
 			;; 敵の旗艦を撃破し、自分が撃破されていない
 			IF CHARACTER_POSITION == POSITION_ID
 				PRINTL メスガキ宇宙海賊の艦隊は沈黙した。
-				IF CAN_ADD_RANDOM_CHARA()
-				;キャラが追加できるなら白兵戦確認へ
+				IF MESUGAKI_LEADER_ID != -1
+				;リーダーが生成されているなら白兵戦確認へ
 					PRINTFORML しかし%CALLNAME:MASTER%はメスガキが脱出艇で逃げ出そうとしているのを見逃さなかった！
 					PRINTW 鈍足の脱出艇へと船を寄せるのは簡単だ。メスガキをとっ捕まえてこの手で直接分からせるいい機会ではなかろうか？
 					CALL MESUGAKI_WAKARASE_FIGHT_OR_FLIGHT
 					IF RESULT == 0
 						;白兵戦へ
 
-						;リーダーをキャラとして作る
-						;罠ガキ判定
-						CALL MESUGAKI_TRAP_DECISION(MESUGAKI_LEADER)
-
-						CALL MESUGAKI_PIRATES_CHARA_GENERATE(MESUGAKI_LEADER, RESULT)
-						MESUGAKI_LEADER_ID = RESULT
 						;非戦闘要員じゃないならクルーも作る
 						IF MESUGAKI_CREW != 5
 							CALL MESUGAKI_TRAP_DECISION(MESUGAKI_CREW)
@@ -304,11 +324,16 @@ CASE 3
 
 							ELSEIF RESULT == 0
 								PRINTFORMW %CALLNAME:MASTER%はメスガキ達を取り逃した……。
+								CALL DELETE_CHARA(MESUGAKI_LEADER_ID)
+								;先にリーダーが消えてるので1つ番号がずれる
+								SIF MESUGAKI_CREW_ID != -1
+									CALL DELETE_CHARA(MESUGAKI_CREW_ID -1)
 							ENDIF
 					ELSEIF RESULT == 1
 						PRINTL メスガキ宇宙海賊は海賊を行う能力を失った。
 						PRINTW そして当事者の口から語られる敗北こそがより多くのメスガキを分からせる術だろう。
 						PRINTW メスガキ達の惨めな敗走を記録し、言い逃れの余地が無くなる様に星間ネットへアップロードした。
+						CALL DELETE_CHARA(MESUGAKI_LEADER_ID)
 					ENDIF
 				ELSE
 					PRINTL 既に脱出しているのか、あるいはスペースデブリの一部になったのか。
@@ -335,6 +360,8 @@ CASE 3
 		ELSEIF CHARACTER_POSITION == POSITION_ID
 			PRINTFORML メスガキを分からせる事に失敗してしまった。
 			PRINTFORMW メスガキ宇宙海賊はこの宙域から去っていったようだ……。
+			SIF MESUGAKI_LEADER_ID != -1
+				CALL DELETE_CHARA(MESUGAKI_LEADER_ID)
 			QUEST_PROGRESS:QUEST_ID = 0
 			FOR SHIP_ID, 0, MAX_SHIP
 				IF SHIP_COUNTRY:SHIP_ID == 国家ID_一般海賊 && SHIP_POSITION:SHIP_ID == CHARACTER_POSITION
