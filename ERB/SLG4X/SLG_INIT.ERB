@@ -220,6 +220,9 @@ FOR LOCAL, 0, 3
 		;LOCALS = マーチ級駆逐艦
 		CALL INIT_PRESET_SHIP(国家ID_社会主義, STAR_POSITION_ID:LOCAL, マーチ級駆逐艦, , マーチ級駆逐艦)
 	NEXT
+	FOR LOCAL:1, 0, 2
+		CALL INIT_PRESET_SHIP(国家ID_社会主義, STAR_POSITION_ID:LOCAL, 独立防衛モジュールS1, "独立防衛モジュールS1", 独立防衛モジュールS1)
+	NEXT
 NEXT
 
 ;--------------------------
@@ -302,6 +305,10 @@ FOR LOCAL, 3, 5
 		;LOCALS = アリス
 		CALL INIT_PRESET_SHIP(国家ID_企業連合, STAR_POSITION_ID:LOCAL, 汎用空母, , 汎用空母)
 	NEXT
+	FOR LOCAL:1, 0, 2
+		CALL INIT_PRESET_SHIP(国家ID_企業連合, STAR_POSITION_ID:LOCAL, 独立防衛モジュールM3701A1, "独立防衛モジュールM3701A1", 独立防衛モジュールM3701A1)
+		CALL INIT_PRESET_SHIP(国家ID_企業連合, STAR_POSITION_ID:LOCAL, 独立防衛モジュールM3701A2, "独立防衛モジュールM3701A2", 独立防衛モジュールM3701A2)
+	NEXT
 NEXT
 
 
@@ -382,6 +389,10 @@ FOR LOCAL, 5, 8
 	FOR LOCAL:1, 0, 3
 		;LOCALS = メルカバー級空母
 		CALL INIT_PRESET_SHIP(国家ID_民主主義, STAR_POSITION_ID:LOCAL, メルカバー級空母, , メルカバー級空母)
+	NEXT
+	FOR LOCAL:1, 0, 2
+		CALL INIT_PRESET_SHIP(国家ID_民主主義, STAR_POSITION_ID:LOCAL, 独立防衛モジュールM3701A1, "独立防衛モジュールM3701A1", 独立防衛モジュールM3701A1)
+		CALL INIT_PRESET_SHIP(国家ID_民主主義, STAR_POSITION_ID:LOCAL, 独立防衛モジュールM3701A2, "独立防衛モジュールM3701A2", 独立防衛モジュールM3701A2)
 	NEXT
 NEXT
 
@@ -490,6 +501,9 @@ NEXT
 FOR LOCAL, 0, 10
 	;LOCALS = カラドボルグ級戦艦
 	CALL INIT_PRESET_SHIP(国家ID_機械文明, STAR_POSITION_ID:9, カラドボルグ級戦艦, , カラドボルグ級戦艦)
+NEXT
+FOR LOCAL, 0, 3
+	CALL INIT_PRESET_SHIP(国家ID_機械文明, STAR_POSITION_ID:9, ローレライ級防衛モジュール, "ローレライ級防衛モジュール", ローレライ級防衛モジュール)
 NEXT
 
 ;--------------------------
@@ -829,6 +843,10 @@ FOR LOCAL, 0, 4
 NEXT
 FOR LOCAL, 0, 2
 	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, STAR_POSITION_ID:10, 舞鶴級護衛空母, , 舞鶴級護衛空母)
+NEXT
+CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, STAR_POSITION_ID:10, 四十一式拠点防衛用ユニット, "訓練機十一号", 四十一式拠点防衛用ユニット)
+FOR LOCAL, 0, 7
+	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, STAR_POSITION_ID:10, 四十一式拠点防衛用ユニット, "四十一式拠点防衛用ユニット", 四十一式拠点防衛用ユニット)
 NEXT
 
 

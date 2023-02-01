@@ -76,9 +76,10 @@
 #DIM CONST 特殊分類_メック = 1
 #DIM CONST 特殊分類_生体艦 = 2
 #DIM CONST 特殊分類_宇宙生物 = 3
+#DIM CONST 特殊分類_建造物 = 4
 
-#DIMS CONST SHIP_VARIANT_NAME = "通常艦艇", "メック", "生体艦", "宇宙生物"
-#DIMS CONST SHIP_VARIANT_NAME_EN = "Normal Ship", "Mech", "Living Ship", "Cosmic Creature"
+#DIMS CONST SHIP_VARIANT_NAME = "通常艦艇", "メック", "生体艦", "宇宙生物", "建造物"
+#DIMS CONST SHIP_VARIANT_NAME_EN = "Normal Ship", "Mech", "Living Ship", "Cosmic Creature", "Strcture"
 
 ; 船のミッション系
 #DIM SAVEDATA SHIP_MISSION, MAX_SHIP
@@ -170,20 +171,21 @@
 #DIM CONST 空母 = 6
 #DIM CONST 輸送船 = 7
 #DIM CONST 作業船 = 8
+#DIM CONST 建造物 = 9
 {
   #DIMS CONST SHIP_CATEGORY_NAME = 
-    "調査船", "コルベット", "フリゲート","駆逐艦", "巡洋艦", "戦艦", "空母", "輸送船", "作業船"
+    "調査船", "コルベット", "フリゲート","駆逐艦", "巡洋艦", "戦艦", "空母", "輸送船", "作業船", "建造物"
 }
 {
   #DIMS CONST SHIP_CATEGORY_NAME_EN = 
-    "Research Ship", "Corvette", "Frigate","Destroyer", "Cruiser", "Battleship", "Aircraft Carrier", "Transport Ship", "Working Ship"
+    "Research Ship", "Corvette", "Frigate","Destroyer", "Cruiser", "Battleship", "Aircraft Carrier", "Transport Ship", "Working Ship", "Strcture"
 }
 
 ; スキル判定用
 #DIM CONST 艦種_ミサイル = 9
 #DIM CONST 艦種_航空機 = 10
 
-#DIM CONST SHIP_CATEGORY_COUNT = 9
+#DIM CONST SHIP_CATEGORY_COUNT = 10
 
 #DIM CONST SHIP_HP = 0
 #DIM CONST SHIP_AVOID = 1

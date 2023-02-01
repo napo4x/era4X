@@ -45,6 +45,33 @@ FOR LOCAL:0, 0, MAX_FIXED_CHARA
 		CALL ADD_CHARA_FROM_CSV(LOCAL:0)
 NEXT
 
+IF CHECK_UPDATE("2.0.7")
+	FOR LOCAL, 0, 3
+		FOR LOCAL:1, 0, 2
+			CALL INIT_PRESET_SHIP(国家ID_社会主義, STAR_POSITION_ID:LOCAL, 独立防衛モジュールS1, "独立防衛モジュールS1", 独立防衛モジュールS1)
+		NEXT
+	NEXT
+	FOR LOCAL, 3, 5
+		FOR LOCAL:1, 0, 2
+			CALL INIT_PRESET_SHIP(国家ID_企業連合, STAR_POSITION_ID:LOCAL, 独立防衛モジュールM3701A1, "独立防衛モジュールM3701A1", 独立防衛モジュールM3701A1)
+			CALL INIT_PRESET_SHIP(国家ID_企業連合, STAR_POSITION_ID:LOCAL, 独立防衛モジュールM3701A2, "独立防衛モジュールM3701A2", 独立防衛モジュールM3701A2)
+		NEXT
+	NEXT
+	FOR LOCAL, 5, 8
+		FOR LOCAL:1, 0, 2
+			CALL INIT_PRESET_SHIP(国家ID_民主主義, STAR_POSITION_ID:LOCAL, 独立防衛モジュールM3701A1, "独立防衛モジュールM3701A1", 独立防衛モジュールM3701A1)
+			CALL INIT_PRESET_SHIP(国家ID_民主主義, STAR_POSITION_ID:LOCAL, 独立防衛モジュールM3701A2, "独立防衛モジュールM3701A2", 独立防衛モジュールM3701A2)
+		NEXT
+	NEXT
+	FOR LOCAL, 0, 3
+		CALL INIT_PRESET_SHIP(国家ID_機械文明, STAR_POSITION_ID:9, ローレライ級防衛モジュール, "ローレライ級防衛モジュール", ローレライ級防衛モジュール)
+	NEXT
+	CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, STAR_POSITION_ID:10, 四十一式拠点防衛用ユニット, "訓練機十一号", 四十一式拠点防衛用ユニット)
+	FOR LOCAL, 0, 7
+		CALL INIT_PRESET_SHIP(国家ID_豊秋津皇国, STAR_POSITION_ID:10, 四十一式拠点防衛用ユニット, "四十一式拠点防衛用ユニット", 四十一式拠点防衛用ユニット)
+	NEXT
+ENDIF
+
 IF CHECK_UPDATE("2.0.6")
 	;NOの整理
 	LOCAL:1 = 0
