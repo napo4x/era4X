@@ -1,0 +1,39 @@
+﻿;-----------------------------------
+; オプション
+;-----------------------------------
+@GET_OPTION_NAME_11
+RESULTS = ジャンプドライブ
+
+@GET_OPTION_STATUS_11(STATUS)
+#DIM REF STATUS
+
+STATUS:PRICE = 100000000000
+
+;-----------------------------------
+; オプションの説明
+;-----------------------------------
+@GET_OPTION_DESCRIPTION_F_11
+PRINTFORML %CALLNAME:MASTER%の保有するE√ÂシÓテムを利用し指定座標への艦隊ワープを可能にする装備
+PRINTFORML 既存の技術レベルでは解析不可能
+
+;-----------------------------------
+; オプションの資材
+;-----------------------------------
+@GET_OPTION_RESOURCE_11(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:耐熱合金 = 1000
+USE_RESOURCE:超電導回路 = 2000
+USE_RESOURCE:タイラーセンサー = 2000
+
+@IS_SALE_OPTION_11
+
+CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
+SIF RESULT != -1
+  RETURN 0
+ ;非売品漁船に初期搭載のみ
+SIF PORT_OWNER:RESULT != 国家ID_プレイヤー
+  RETURN 0
+SIF IS_COMPLETE_TECH:44
+  RETURN 1
+RETURN 0
