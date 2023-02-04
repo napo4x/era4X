@@ -77,9 +77,10 @@
 #DIM CONST 特殊分類_生体艦 = 2
 #DIM CONST 特殊分類_宇宙生物 = 3
 #DIM CONST 特殊分類_建造物 = 4
+#DIM CONST 特殊分類_発射物 = 5
 
-#DIMS CONST SHIP_VARIANT_NAME = "通常艦艇", "メック", "生体艦", "宇宙生物", "建造物"
-#DIMS CONST SHIP_VARIANT_NAME_EN = "Normal Ship", "Mech", "Living Ship", "Cosmic Creature", "Strcture"
+#DIMS CONST SHIP_VARIANT_NAME = "通常艦艇", "メック", "生体艦", "宇宙生物", "建造物", "発射物"
+#DIMS CONST SHIP_VARIANT_NAME_EN = "Normal Ship", "Mech", "Living Ship", "Cosmic Creature", "Strcture", "Projectile"
 
 ; 船のミッション系
 #DIM SAVEDATA SHIP_MISSION, MAX_SHIP
@@ -233,9 +234,15 @@
 #DIM CONST 艦載機 = 3
 #DIM CONST 魚雷 = 4
 #DIM CONST ビーム = 5
-#DIM CONST 攻撃属性 = 6
-#DIMS CONST WEAPON_TYPE_NAME = "実体弾", "レーザー", "ミサイル", "艦載機", "魚雷", "ビーム"
-#DIMS CONST WEAPON_TYPE_NAME_EN = "Material Bullet", "Laser", "Missile", "Aircraft", "Torpedo", "Beam"
+#DIM CONST 実体弾_自爆 = 6
+#DIM CONST レーザー_自爆 = 7
+#DIM CONST ミサイル_自爆 = 8
+#DIM CONST 艦載機_自爆 = 9
+#DIM CONST 魚雷_自爆 = 10
+#DIM CONST ビーム_自爆 = 11
+#DIM CONST 攻撃属性 = 12
+#DIMS CONST WEAPON_TYPE_NAME = "実体弾", "レーザー", "ミサイル", "艦載機", "魚雷", "ビーム", "実体弾_自爆", "レーザー_自爆", "ミサイル_自爆", "艦載機_自爆", "魚雷_自爆", "ビーム_自爆"
+#DIMS CONST WEAPON_TYPE_NAME_EN = "Material Bullet", "Laser", "Missile", "Aircraft", "Torpedo", "Beam","Self Destruct Material Bullet", "Self Destruct Laser", "Self Destruct Missile", "Self Destruct Aircraft", "Self Destruct Torpedo", "Self Destruct Beam"
 
 #DIM CONST MISSILE_HP = 50
 #DIM CONST MISSILE_AVOID = 70
@@ -244,8 +251,8 @@
 #DIM CONST MAX_PARAM_HIT_RATE = 100
 #DIM CONST MAX_PARAM_AVOID = 90
 
-#DIM CONST SIELD_DAMAGE_PERCENTAGE = 150, 67, 100, 100, 100, 25
-#DIM CONST ARMOR_DAMAGE_PERCENTAGE = 67, 150, 125, 125, 125, 400
+#DIM CONST SIELD_DAMAGE_PERCENTAGE = 150, 67, 100, 100, 100, 25, 150, 67, 100, 100, 100, 25
+#DIM CONST ARMOR_DAMAGE_PERCENTAGE = 67, 150, 125, 125, 125, 400, 67, 150, 125, 125, 125, 400
 
 ; MAP_TIP
 #DIM CONST 中立機 = 0

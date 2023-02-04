@@ -1,0 +1,31 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_MAIN_WEAPON_NAME_302
+RESULTS = TIER1核弾頭
+
+@GET_MAIN_WEAPON_STATUS_302(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 1800
+STATUS:FIRE_RATE = 1
+STATUS:HIT_RATE = 100
+STATUS:FIRE_RANGE = 1
+STATUS:SIZE = 2
+STATUS:WEAPON_TYPE = レーザー_自爆
+STATUS:PRICE = 2000000
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_MAIN_WEAPON_DESCRIPTION_F_302
+PRINTFORML 核融合反応による強力な熱線を放つ弾頭
+PRINTFORML この武装は使用ユニット自身を破壊する
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_MAIN_WEAPON_RESOURCE_302(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+@IS_SALE_MAIN_WEAPON_302
+RETURN 0

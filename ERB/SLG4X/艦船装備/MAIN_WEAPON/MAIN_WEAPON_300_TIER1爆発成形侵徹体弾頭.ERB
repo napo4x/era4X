@@ -1,0 +1,31 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_MAIN_WEAPON_NAME_300
+RESULTS = TIER1爆発成形侵徹体弾頭
+
+@GET_MAIN_WEAPON_STATUS_300(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 300
+STATUS:FIRE_RATE = 3
+STATUS:HIT_RATE = 90
+STATUS:FIRE_RANGE = 1
+STATUS:SIZE = 1
+STATUS:WEAPON_TYPE = 実体弾_自爆
+STATUS:PRICE = 2000000
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_MAIN_WEAPON_DESCRIPTION_F_300
+PRINTFORML 炸薬によって金属板をその場で弾丸に加工しつつ発射する、使い捨ての実体弾発射機構
+PRINTFORML この武装は使用ユニット自身を破壊する
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_MAIN_WEAPON_RESOURCE_300(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+@IS_SALE_MAIN_WEAPON_300
+RETURN 0

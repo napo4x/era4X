@@ -1,0 +1,34 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_MAIN_WEAPON_NAME_304
+RESULTS = TIER1使い捨て対空ドローンポッド
+
+@GET_MAIN_WEAPON_STATUS_304(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 2
+STATUS:FIRE_RATE = 8
+STATUS:HIT_RATE = 85
+STATUS:FIRE_RANGE = 4
+STATUS:SIZE = 2
+STATUS:AIR_SHIP_HP = 200
+STATUS:ANTI_AIR = 192
+STATUS:AIR_SHIP_COUNT = 10
+STATUS:WEAPON_TYPE = 艦載機_自爆
+STATUS:PRICE = 2000000
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_MAIN_WEAPON_DESCRIPTION_F_304
+PRINTFORML 対空型の使い捨てドローンを射出するポッド。事実上の対空ミサイル
+PRINTFORML この武装は使用ユニット自身を破壊する
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_MAIN_WEAPON_RESOURCE_304(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+@IS_SALE_MAIN_WEAPON_304
+RETURN 0

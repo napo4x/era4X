@@ -1,0 +1,31 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_MAIN_WEAPON_NAME_305
+RESULTS = TIER1超大型宙間魚雷弾頭
+
+@GET_MAIN_WEAPON_STATUS_305(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 450
+STATUS:FIRE_RATE = 10
+STATUS:HIT_RATE = 60
+STATUS:FIRE_RANGE = 1
+STATUS:SIZE = 2
+STATUS:WEAPON_TYPE = 魚雷_自爆
+STATUS:PRICE = 2000000
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_MAIN_WEAPON_DESCRIPTION_F_305
+PRINTFORML 超大型魚雷を格納した弾頭
+PRINTFORML この武装は使用ユニット自身を破壊する
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_MAIN_WEAPON_RESOURCE_305(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+@IS_SALE_MAIN_WEAPON_305
+RETURN 0

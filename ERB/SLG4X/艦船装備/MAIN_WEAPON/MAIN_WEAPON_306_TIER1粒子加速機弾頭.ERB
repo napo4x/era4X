@@ -1,0 +1,31 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_MAIN_WEAPON_NAME_306
+RESULTS = TIER1粒子加速機弾頭
+
+@GET_MAIN_WEAPON_STATUS_306(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 900
+STATUS:FIRE_RATE = 3
+STATUS:HIT_RATE = 70
+STATUS:FIRE_RANGE = 1
+STATUS:SIZE = 2
+STATUS:WEAPON_TYPE = ビーム_自爆
+STATUS:PRICE = 2000000
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_MAIN_WEAPON_DESCRIPTION_F_306
+PRINTFORML 使い捨ての大出力粒子加速器を弾頭とした物
+PRINTFORML この武装は使用ユニット自身を破壊する
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_MAIN_WEAPON_RESOURCE_306(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+@IS_SALE_MAIN_WEAPON_306
+RETURN 0

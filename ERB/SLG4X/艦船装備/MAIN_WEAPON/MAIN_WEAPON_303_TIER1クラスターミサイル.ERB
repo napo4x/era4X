@@ -1,0 +1,31 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_MAIN_WEAPON_NAME_303
+RESULTS = TIER1クラスターミサイル
+
+@GET_MAIN_WEAPON_STATUS_303(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 90
+STATUS:FIRE_RATE = 30
+STATUS:HIT_RATE = 100
+STATUS:FIRE_RANGE = 3
+STATUS:SIZE = 2
+STATUS:WEAPON_TYPE = ミサイル_自爆
+STATUS:PRICE = 2000000
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_MAIN_WEAPON_DESCRIPTION_F_303
+PRINTFORML 大量のミサイルを内蔵した弾頭
+PRINTFORML この武装は使用ユニット自身を破壊する
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_MAIN_WEAPON_RESOURCE_303(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+@IS_SALE_MAIN_WEAPON_303
+RETURN 0
