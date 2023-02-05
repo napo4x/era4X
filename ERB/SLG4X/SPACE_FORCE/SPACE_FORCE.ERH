@@ -1,5 +1,5 @@
 ﻿; 宇宙軍許容量の占有量
-#DIM CONST OCCUPANCY_POINT = 0, 1, 2, 4, 8, 16, 16, 0, 0
+#DIM CONST OCCUPANCY_POINT = 0, 1, 2, 4, 8, 16, 16, 0, 0, 0
 
 ; 宇宙軍基地
 #DIM SAVEDATA SPACE_FORCE_BUILD
