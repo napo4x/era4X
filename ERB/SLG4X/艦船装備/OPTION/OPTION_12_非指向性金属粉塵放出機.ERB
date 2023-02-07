@@ -1,0 +1,30 @@
+﻿;-----------------------------------
+; オプション
+;-----------------------------------
+@GET_OPTION_NAME_12
+RESULTS = 非指向性金属粉塵放出機
+
+@GET_OPTION_STATUS_12(STATUS)
+#DIM REF STATUS
+
+STATUS:PRICE = 100000000
+
+;-----------------------------------
+; オプションの説明
+;-----------------------------------
+@GET_OPTION_DESCRIPTION_F_12
+PRINTFORML 周囲にシールド出力を低下させる原始的な金属製の粉塵を散布する装置
+PRINTFORML この装置が機能している間は敵味方問わずシールドへの損害が格段に増加する
+
+;-----------------------------------
+; オプションの資材
+;-----------------------------------
+@GET_OPTION_RESOURCE_12(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:耐熱合金 = 100
+USE_RESOURCE:超電導回路 = 100
+USE_RESOURCE:タイラーセンサー = 100
+
+@IS_SALE_OPTION_12
+RETURN 0
