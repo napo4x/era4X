@@ -1,0 +1,35 @@
+﻿;-----------------------------------
+; アーマー
+;-----------------------------------
+@GET_ARMOR_NAME_43
+RESULTS = TIER2要塞装甲
+
+@GET_ARMOR_STATUS_43(STATUS)
+#DIM REF STATUS
+
+STATUS:ARMOR = 12000
+
+;-----------------------------------
+; アーマーの説明
+;-----------------------------------
+@GET_ARMOR_DESCRIPTION_F_43
+
+PRINTFORML 発展型要塞装甲
+PRINTFORML ダメージ拡散機能を搭載し瞬間防御力を上げているが、精密なダメージ制御を行っているため戦闘後のメンテナンスコストは格段に悪化した
+
+;-----------------------------------
+; 装甲の資材
+;-----------------------------------
+@GET_ARMOR_RESOURCE_43(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:重装甲合金 = 3500
+USE_RESOURCE:合金加工剤 = 2000
+USE_RESOURCE:超電導回路 = 1100
+USE_RESOURCE:武装制御機器 = 1000
+
+@IS_SALE_ARMOR_43
+RETURN 0
+
+@IS_MODULE_ARMOR_43
+RETURN 1

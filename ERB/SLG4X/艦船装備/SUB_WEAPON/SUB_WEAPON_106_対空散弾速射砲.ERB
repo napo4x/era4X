@@ -1,0 +1,40 @@
+﻿;-----------------------------------
+; サブウェポン
+;-----------------------------------
+@GET_SUB_WEAPON_NAME_106
+RESULTS = 対空散弾速射砲
+
+@GET_SUB_WEAPON_STATUS_106(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 25
+STATUS:FIRE_RATE = 10
+STATUS:ANTI_AIR = 150
+STATUS:HIT_RATE = 95
+STATUS:FIRE_RANGE = 1
+STATUS:SIZE = 4
+STATUS:WEAPON_TYPE = 実体弾
+
+;-----------------------------------
+; サブウェポンの説明
+;-----------------------------------
+@GET_SUB_WEAPON_DESCRIPTION_F_106
+
+
+PRINTFORML 対飛翔物用を撃ち落とすための散弾式対空実体弾
+PRINTFORML 完全に対空性能に振り切っており、ほぼ全ての飛来物を防ぐ
+
+;-----------------------------------
+; サブウェポンの資材
+;-----------------------------------
+@GET_SUB_WEAPON_RESOURCE_106(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 400
+USE_RESOURCE:重武装合金 = 300
+USE_RESOURCE:武装制御機器 = 500
+USE_RESOURCE:超電導回路 = 400
+
+@IS_MODULE_SUB_WEAPON_106
+RETURN 1
+

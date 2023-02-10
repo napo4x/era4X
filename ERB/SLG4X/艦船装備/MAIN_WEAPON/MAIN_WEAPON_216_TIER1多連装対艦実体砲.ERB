@@ -1,0 +1,43 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_MAIN_WEAPON_NAME_216
+RESULTS = TIER1多連装対艦実体砲
+
+@GET_MAIN_WEAPON_STATUS_216(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 250
+STATUS:FIRE_RATE = 50
+STATUS:HIT_RATE = 90
+STATUS:FIRE_RANGE = 2
+STATUS:SIZE = 4
+STATUS:WEAPON_TYPE = 実体弾
+STATUS:PRICE = 64000000
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_MAIN_WEAPON_DESCRIPTION_F_216
+
+
+PRINTFORML 警告距離を超えて接近してくる艦船を撃沈するための自衛武装
+PRINTFORML 装甲値の高い大型艦には弱い
+
+
+
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_MAIN_WEAPON_RESOURCE_216(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+USE_RESOURCE:武装合金 = 10
+;USE_RESOURCE:重武装合金 = 1000
+;USE_RESOURCE:武装制御機器 = 500
+
+
+@IS_SALE_MAIN_WEAPON_216
+RETURN 0
+
+@IS_MODULE_MAIN_WEAPON_216
+RETURN 1
