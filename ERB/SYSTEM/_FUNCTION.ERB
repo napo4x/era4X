@@ -4364,3 +4364,17 @@ SELECTCASE 対象能力値
 ENDSELECT
 
 RETURNF 返却値
+
+;------------------------------
+; 狂った汎用武将カウントの修正
+;------------------------------
+@SORT_NO
+;NOの整理
+LOCAL:1 = 0
+FOR LOCAL, 0, CHARANUM
+	IF NO:LOCAL >= MIN_NO_RANDOM_CHARA && NO:LOCAL < (MIN_NO_RANDOM_CHARA + MAX_RANDOM_CHARA)
+		NO:LOCAL = LOCAL:1 + MIN_NO_RANDOM_CHARA
+		LOCAL:1 ++
+	ENDIF
+NEXT
+FLAG:汎用武将カウント += LOCAL:1

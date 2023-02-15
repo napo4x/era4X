@@ -159,8 +159,6 @@ ELSE
 	
 
 	IF INPUT_RESULT == 0 && (1000 + GET_FILTER_COST()) < MONEY
-		FLAG:汎用武将カウント = PRE_汎用武将カウント + 1
-		NO:(LOCAL:2) = FLAG:汎用武将カウント + MIN_NO_RANDOM_CHARA
 		PRINTL 仲間の名前を変更しますか？
 		CALL ASK_YN
 		SIF RESULT == 0
@@ -175,6 +173,7 @@ ELSE
 		APPOINT_DONE = 1
 		MONEY -= (1000 + GET_FILTER_COST())
 		SHOP_TIME ++
+		CALL SORT_NO
 		BEGIN TURNEND
 		RETURN 1
 	ELSEIF INPUT_RESULT == 0
@@ -210,12 +209,11 @@ ELSE
 		IF MENUVAR:11 != -1
 			CALL DELETE_CHARA(CHARANUM - 1)
 		ENDIF
-		FLAG:汎用武将カウント = PRE_汎用武将カウント
 	ELSE
 		GOTO INPUT_LOOP_TREAT
 	ENDIF
 ENDIF
-
+CALL SORT_NO
 RETURN 1
 
 ;-------------------------------------------------
