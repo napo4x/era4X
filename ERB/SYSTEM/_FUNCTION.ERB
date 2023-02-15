@@ -104,9 +104,6 @@ ELSEIF IS_ORIGIN == -1
 			NO:(LOCAL:0) --
 		ENDIF
 	NEXT
-	;ランダムキャラのNO割り振り用変数を一つ戻す
-	FLAG:汎用武将カウント --
-
 ELSE
 	;固有の処理は不要
 ENDIF
@@ -119,7 +116,21 @@ IF CFLAG:(ARG:0):行動不能状態 == 行動不能_子供
 	NEXT
 ENDIF
 
-;削除されるキャラを初体験とする
+;ランダムキャラのNO割り振りの更新
+LOCAL:1 = 0
+LOCAL:2 = 0
+FOR LOCAL, 0, CHARANUM
+	EXISTCSV LOCAL
+	LOCAL:1 = RESULT
+	SIF LOCAL:1
+		CONTINUE
+	SIF IS_CHILD(LOCAL)
+		CONTINUE
+	SIF LOCAL:1 == -1
+		LOCAL:2 ++
+NEXT
+
+FLAG:汎用武将カウント = LOCAL:2
 
 ;キャラの削除
 DELCHARA ARG:0
