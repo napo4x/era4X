@@ -383,14 +383,19 @@ MAXBASE:対象:ペニス = BASE:対象:ペニス
 #DIM サイズ
 
 サイズ = LIMIT(BASE:対象:身長 / 5, 100, 1000)
+SIF HAS_TAG(対象, タグ_小人)
+	サイズ /= 5
 
 SIF GETBIT(TALENT:対象:淫乱系, 素質_淫乱_蕩唇)
 	TIMES サイズ, 1.5
 
 サイズ += SQRT(STOMACH_TOTAL_CREAMPIED_AMOUNT:対象:0 * 3)
 
-サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 10)
-
+IF HAS_TAG(対象, タグ_小人)
+	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 50)
+ELSE
+	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 10)
+ENDIF
 RETURNF サイズ
 
 
@@ -403,6 +408,8 @@ RETURNF サイズ
 #DIM サイズ
 
 サイズ = LIMIT(BASE:対象:身長 / 15, 10, 200)
+SIF HAS_TAG(対象, タグ_小人)
+	サイズ /= 5
 
 SIF GETBIT(TALENT:対象:淫乱系, 素質_淫乱_淫壷)
 	TIMES サイズ, 1.5
@@ -419,9 +426,11 @@ SIF TALENT:対象:妊娠
 サイズ += SQRT(WOMB_TOTAL_CREAMPIED_AMOUNT:対象:0 * 3)
 サイズ += EXP:対象:出産経験 * 3
 
-サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 10)
-
-
+IF HAS_TAG(対象, タグ_小人)
+	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 50)
+ELSE
+	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 10)
+ENDIF
 RETURNF サイズ
 
 ;-------------------------
@@ -433,14 +442,19 @@ RETURNF サイズ
 #DIM サイズ
 
 サイズ = LIMIT(BASE:対象:身長 / 13, 10, 300)
+SIF HAS_TAG(対象, タグ_小人)
+	サイズ /= 5
 
 SIF GETBIT(TALENT:対象:淫乱系, 素質_淫乱_尻穴狂い)
 	TIMES サイズ, 1.5
 
 サイズ += SQRT(ANUS_TOTAL_CREAMPIED_AMOUNT:対象:0 * 3)
 
-サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 10)
-
+IF HAS_TAG(対象, タグ_小人)
+	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 50)
+ELSE
+	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 10)
+ENDIF
 RETURNF サイズ
 
 ;-------------------------
@@ -455,11 +469,16 @@ RETURNF サイズ
 
 SIF GETBIT(TALENT:対象:淫乱系, 素質_淫乱_尿道狂い)
 	TIMES サイズ, 1.5
+SIF HAS_TAG(対象, タグ_小人)
+	サイズ /= 5
 
 サイズ += SQRT(BLADDER_TOTAL_CREAMPIED_AMOUNT:対象:0 * 3)
 
-サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 10)
-
+IF HAS_TAG(対象, タグ_小人)
+	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 50)
+ELSE
+	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 10)
+ENDIF
 RETURNF サイズ
 
 ;-------------------------
@@ -629,6 +648,8 @@ IF RESULT == 0
 	CALL ASK_YESNO(LOCALS)
 	SIF !RESULT
 		GOTO INPUT_LOOP0
+	SIF HAS_TAG(対象, タグ_小人)
+		VALUE *= 5
 	BASE:対象:身長 = VALUE
 	MAXBASE:対象:身長 = VALUE
 ELSEIF RESULT == 1
@@ -640,6 +661,8 @@ ELSEIF RESULT == 1
 	CALL ASK_YESNO(LOCALS)
 	SIF !RESULT
 		GOTO INPUT_LOOP1
+	SIF HAS_TAG(対象, タグ_小人)
+		VALUE *= 20
 	BASE:対象:体重 = VALUE
 	MAXBASE:対象:体重 = VALUE
 ELSEIF RESULT == 2
@@ -651,6 +674,8 @@ ELSEIF RESULT == 2
 	CALL ASK_YESNO(LOCALS)
 	SIF !RESULT
 		GOTO INPUT_LOOP2
+	SIF HAS_TAG(対象, タグ_小人)
+		VALUE *= 5
 	BASE:対象:バスト = VALUE
 	MAXBASE:対象:バスト = VALUE
 ELSEIF RESULT == 3
@@ -662,6 +687,8 @@ ELSEIF RESULT == 3
 	CALL ASK_YESNO(LOCALS)
 	SIF !RESULT
 		GOTO INPUT_LOOP3
+	SIF HAS_TAG(対象, タグ_小人)
+		VALUE *= 5
 	BASE:対象:ウェスト = VALUE
 	MAXBASE:対象:ウェスト = VALUE
 ELSEIF RESULT == 4
@@ -673,6 +700,8 @@ ELSEIF RESULT == 4
 	CALL ASK_YESNO(LOCALS)
 	SIF !RESULT
 		GOTO INPUT_LOOP4
+	SIF HAS_TAG(対象, タグ_小人)
+		VALUE *= 5
 	BASE:対象:ヒップ = VALUE
 	MAXBASE:対象:ヒップ = VALUE
 ELSEIF RESULT == 5
@@ -684,8 +713,44 @@ ELSEIF RESULT == 5
 	CALL ASK_YESNO(LOCALS)
 	SIF !RESULT
 		GOTO INPUT_LOOP5
+	SIF HAS_TAG(対象, タグ_小人)
+		VALUE *= 5
 	BASE:対象:ペニス = VALUE
 	MAXBASE:対象:ペニス = VALUE
 ELSE
 	GOTO INPUT_LOOP
 ENDIF
+
+;-------------------------------------------------
+;表記上のサイズを取得する関数
+;-------------------------------------------------
+@REAL_BODYSIZE(ARG,ARGS)
+#FUNCTION
+SELECTCASE ARGS
+CASE "身長"
+	SIF HAS_TAG(ARG, タグ_小人)
+		RETURNF BASE:ARG:身長 / 5
+	RETURNF BASE:ARG:身長
+CASE "体重"
+	SIF HAS_TAG(ARG, タグ_小人)
+		RETURNF (BASE:ARG:体重 + 子供重量) / 20
+	RETURNF BASE:ARG:体重
+CASE "バスト"
+	SIF HAS_TAG(ARG, タグ_小人)
+		RETURNF (BASE:ARG:バスト + 子供バスト) / 5
+	RETURNF BASE:ARG:バスト
+CASE "ウェスト"
+	SIF HAS_TAG(ARG, タグ_小人)
+		RETURNF (BASE:ARG:ウェスト + 子供サイズ) / 5
+	RETURNF BASE:ARG:ウェスト
+CASE "ヒップ"
+	SIF HAS_TAG(ARG, タグ_小人)
+		RETURNF BASE:ARG:ヒップ / 5
+	RETURNF BASE:ARG:ヒップ
+CASE "ペニス"
+	SIF HAS_TAG(ARG, タグ_小人)
+		RETURNF BASE:ARG:ペニス / 5
+	RETURNF BASE:ARG:ペニス
+CASEELSE
+	RETURNF 0
+ENDSELECT
