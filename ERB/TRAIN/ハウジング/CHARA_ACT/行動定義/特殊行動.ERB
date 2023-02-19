@@ -1,0 +1,64 @@
+﻿;---------------------------------------
+;; キャラの特殊行動を実行
+;---------------------------------------
+@HO_SPECIAL_CHARAACT(CHARA_IDX)
+#DIM CHARA_IDX
+#DIM DYNAMIC CHARA_ID
+#DIM DYNAMIC 移動先ROOM_IDX
+#DIM DYNAMIC MODULE_IDX
+#DIMS DYNAMIC _LIST_MODULE
+
+CALL HO_GET_CHARADATA(CHARA_IDX, "CHARA_ID")
+CHARA_ID = RESULT
+SIF TALENT:CHARA_ID:恋慕 == 0
+    RETURN 0
+
+; 条件によって行動を制御
+IF TALENT:CHARA_ID:恋慕 && TCVAR:CHARA_ID:遭遇済み == 0
+    PRINTFORMW 今日初めて会った%CALLNAME:CHARA_ID%が挨拶してきた
+    TCVAR:CHARA_ID:遭遇済み = 1
+    RETURN 1
+ENDIF
+
+; 今日射精していないのに欲情が3以上だったら
+IF HO_CHARACTER_EVENT:HO_CA_BRING_MASTER == 0 && EX:MASTER:射精 == 0 && PALAM:MASTER:欲情 >= 3 && PALAM:CHARA_ID:欲情 >= 3 && CFLAG:CHARA_ID:調教参加フラグ == 1
+    CALL HO_FIND_ROOM_BY_TAG("クルー私室", 1)
+    IF RESULT != -1
+        移動先ROOM_IDX = RESULT
+        IF 移動先ROOM_IDX == HO_MASTER現在地 && TFLAG:能動コマンド中 == 1
+            TFLAG:能動コマンド中 = 0
+            CALL HO_GET_MAPDATA(HO_有効マップID, 移動先ROOM_IDX, "MODULE_LIST")
+            _LIST_MODULE = %RESULTS%
+            ;用途に合致しているモジュールの一覧を作成
+            FOR MODULE_IDX, 0, LIST_COUNT(_LIST_MODULE)
+                CALL HO_CHECK_MODULE_OWNER(移動先ROOM_IDX, MODULE_IDX)
+                SIF RESULT != CHARA_ID
+                    CONTINUE
+                CALL HO_MASTER_USE_MODULE(移動先ROOM_IDX, MODULE_IDX)
+                HO_CHARACTER_EVENT:HO_CA_BRING_MASTER = 1
+                BREAK
+            NEXT
+            RETURN 1
+        ELSEIF TFLAG:能動コマンド中 == 1
+            RETURN 1
+        ENDIF
+        PRINTFORML 頬を上記させた%CALLNAME:CHARA_ID%が%CALLNAME:MASTER%を突いてきた
+        PRINTFORML 何かと思っていると、%CALLNAME:MASTER%の股間の膨らみを目で示している
+        PRINTFORML そして%CALLNAME:MASTER%によければ抜いてあげると耳打ちしてきた
+        PRINTFORML さて、どうする?
+        CALL ASK_YN("お願いする", "やめておく")
+        IF RESULT == 0
+            TFLAG:能動コマンド中 = 1
+            CALL HO_MAKE_FREE_MASTER
+            CALL HO_ADD_COMPANION(CHARA_ID)
+            CALL HO_MOVE_MASTER(移動先ROOM_IDX, 1)
+            TCVAR:CHARA_ID:行動待機時間 = 0
+            FLAG:ウフフフラグ = 1
+            FLAG:調教モード = 1
+            RETURN 1
+        ELSE
+            HO_CHARACTER_EVENT:HO_CA_BRING_MASTER = 1
+        ENDIF
+    ENDIF
+ENDIF
+RETURN 0

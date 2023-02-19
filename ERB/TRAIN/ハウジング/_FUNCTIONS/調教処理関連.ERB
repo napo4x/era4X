@@ -545,3 +545,48 @@ ELSE
     ENDIF
     RETURN 0
 ENDIF
+
+;-------------------------------------------------
+;指定されたキャラが同じ部屋にいるか
+;-------------------------------------------------
+@HO_IS_SAME_ROOM(ARG, ARG:1)
+#DIM _ROOM_ID, 2
+
+IF ARG == MASTER
+    _ROOM_ID:0 = HO_MASTER現在地
+ELSE
+    CALL HO_GET_CHARAPLACE(ARG)
+    _ROOM_ID:0 = RESULT
+ENDIF
+
+IF ARG:1 == MASTER
+    _ROOM_ID:1 = HO_MASTER現在地
+ELSE
+    CALL HO_GET_CHARAPLACE(ARG:1)
+    _ROOM_ID:1 = RESULT
+ENDIF
+
+IF _ROOM_ID:0 == _ROOM_ID:1
+    RETURN 1
+ELSE
+    RETURN 0
+ENDIF
+
+
+;-------------------------------------------------
+;マスターをフリーにする
+;-------------------------------------------------
+@HO_MAKE_FREE_MASTER
+#DIM DYNAMIC NUM_COMPANION
+#DIMS DYNAMIC _LIST_COMPANION
+
+CALL HO_GET_MASTER_DATA("MODULE_USAGE")
+SIF RESULT != -1
+    CALL HO_MASTER_STOP_USE_MODULE(HO_MASTER現在地, RESULT)
+CALL HO_GET_COMPANION_LIST
+NUM_COMPANION = RESULT
+_LIST_COMPANION = %RESULTS%
+FOR LOCAL:0, 0, NUM_COMPANION
+    CALL HO_REMOVE_COMPANION(TOINT(LIST_GET(_LIST_COMPANION, LOCAL:0)))
+NEXT
+
