@@ -3,6 +3,7 @@
 ;
 ;-------------------------------------------------
 ;キャラクターがモジュールの使用を試みる
+;戻り値 RESULT:0 成功:1, 失敗:-1, RESULT:1 使用したMODULE_IDX
 ;-------------------------------------------------
 @HO_TRY_USE_MODULE(CHARA_ID, USAGE)
 #DIM CHARA_ID
@@ -54,6 +55,7 @@ FOR LOCAL, 0, LIST_COUNT(_LIST_OPTIONS)
     ENDIF
     ;チェック結果に問題がなければモジュールを使用状態にする
     CALL HO_USE_MODULE(CHARA_ID, ROOM_IDX, MODULE_IDX)
+    RESULT:1 = MODULE_IDX
     RETURN 1
 NEXT
 RETURN -1

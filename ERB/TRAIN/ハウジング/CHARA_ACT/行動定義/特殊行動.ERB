@@ -17,7 +17,35 @@ SIF TALENT:CHARA_ID:恋慕 == 0
 IF TALENT:CHARA_ID:恋慕 && TCVAR:CHARA_ID:遭遇済み == 0
     PRINTFORMW 今日初めて会った%CALLNAME:CHARA_ID%が挨拶してきた
     TCVAR:CHARA_ID:遭遇済み = 1
-    RETURN 1
+ENDIF
+
+; 食事に誘ってくる
+CALL HO_SCH_FREE(CHARA_ID)
+IF "食事" == RESULTS && TCVAR:CHARA_ID:空腹度 >= 300 && HO_CHARACTER_EVENT:HO_CA_WITH_MEAL == 0
+    CALL HO_行動定義_食事(CHARA_ID)
+    CALL HO_CHARAACT_MOVE(CHARA_IDX)
+    IF RESULT != -1
+        CALL HO_SET_CHARADATA(CHARA_IDX, "ROOM_IDX", TOSTR(RESULT))
+        CALL HO_CHARAACT_MOVE_MAIN(CHARA_IDX)
+    ENDIF
+    MODULE_IDX = RESULT:1
+    IF RESULT == -1
+        CALL HO_行動定義_自由(CHARA_ID)
+    ELSE
+        ;行動候補に食事があげられた場合、食事に誘う
+        CALL HO_CHECK_MODULE_CAPACITY(MODULE_IDX)
+        ;モジュールの空きがあったら誘ってくる
+        IF RESULT > 0
+            PRINTFORMW %CALLNAME:CHARA_ID%が一緒に食事でもと誘ってきた
+            CALL ASK_YN
+            IF RESULT == 0
+                CALL HO_MAKE_FREE_MASTER
+                CALL HO_MASTER_USE_MODULE(HO_MASTER現在地, MODULE_IDX)
+                HO_CHARACTER_EVENT:HO_CA_WITH_MEAL = 1
+                RETURN 1
+            ENDIF
+        ENDIF
+    ENDIF
 ENDIF
 
 ; 今日射精していないのに欲情が3以上だったら
