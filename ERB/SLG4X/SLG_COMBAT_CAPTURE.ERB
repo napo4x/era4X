@@ -50,7 +50,7 @@ SIF 鹵獲イベント発生率:(SHIP_CATEGORY:TARGET_SHIP_ID) * 鹵獲手段補
 	RETURN
 
 PRINTL
-CALLF FuncTagSetText_Print(@"戦闘により機関を損傷した%GET_TYPE_NAME(SHIP_CATEGORY:(TARGET_SHIP_ID))%、@C:{カラー_オレンジ}@%SHIP_NAME:TARGET_SHIP_ID%@/C@が戦闘宙域を漂流している", 1)
+CALLF FuncTagSetText_Print(@"戦闘により機関を損傷した%SHIP_CATEGORY_NAME:(SHIP_CATEGORY:(TARGET_SHIP_ID))%、@C:{カラー_オレンジ}@%SHIP_NAME:TARGET_SHIP_ID%@/C@が戦闘宙域を漂流している", 1)
 PRINTFORML 戦闘部隊を送り込んで艦内を制圧することができれば、艦を鹵獲するすることができるかもしれない
 CALL ASK_YN("移乗攻撃を試みる", "放っておく")
 IF RESULT == 1

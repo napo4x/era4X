@@ -109,7 +109,7 @@ CARGO = RESULT
 ;;;STATUS 正常・ドッグ内・ﾊﾟﾄﾛｰﾙ中・採掘中・建造中・DESTROYed・・・？
 LOCALS = %SHIP_NAME:SHIP_ID%
 CALL WndMgr_WindowTitle( windowID , @"%LOCALS%" )
-CALL WndMgr_TextSet( windowID, 0, @" 　%GET_TYPE_NAME(SHIP_CATEGORY:SHIP_ID)%")
+CALL WndMgr_TextSet( windowID, 0, @" 　%SHIP_CATEGORY_NAME:(SHIP_CATEGORY:SHIP_ID)%")
 ;;SHIP ACTION(STATUS) を入れるか
 
 

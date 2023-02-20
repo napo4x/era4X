@@ -30,7 +30,7 @@ SIF LIST_COUNT(直接設置参加候補ID) == 0
 	RETURN
 ;直接設置に参加可能なメンバーがいる
 PRINTL
-CALLF FuncTagSetText_Print(@"戦闘により衰弱した%GET_TYPE_NAME(SHIP_CATEGORY:(TARGET_SHIP_ID))%、@C:{カラー_オレンジ}@%SHIP_NAME:TARGET_SHIP_ID%@/C@が戦闘宙域を離脱しようとしている", 1)
+CALLF FuncTagSetText_Print(@"戦闘により衰弱した%SHIP_CATEGORY_NAME:(SHIP_CATEGORY:(TARGET_SHIP_ID))%、@C:{カラー_オレンジ}@%SHIP_NAME:TARGET_SHIP_ID%@/C@が戦闘宙域を離脱しようとしている", 1)
 PRINTFORML 拘引式漁具を直接設置して、生け捕りするチャンスだ
 CALL ASK_YN("生け捕りを試みる", "放っておく")
 IF RESULT == 1
@@ -40,7 +40,7 @@ ENDIF
 
 CALL COMBAT_FISHERMAN_SELECT_BOARDING_MEMBER(直接設置参加候補ID, 参加メンバーリスト)
 IF RESULT == 0
-	PRINTFORMW %SHIP_NAME:TARGET_SHIP_ID%の生け捕りは中止され%GET_TYPE_NAME(SHIP_CATEGORY:(TARGET_SHIP_ID))%、@C:{カラー_オレンジ}@%SHIP_NAME:TARGET_SHIP_ID%@/C@は宇宙に帰っていった
+	PRINTFORMW %SHIP_NAME:TARGET_SHIP_ID%の生け捕りは中止され%SHIP_CATEGORY_NAME:(SHIP_CATEGORY:(TARGET_SHIP_ID))%、@C:{カラー_オレンジ}@%SHIP_NAME:TARGET_SHIP_ID%@/C@は宇宙に帰っていった
 	RETURN
 ENDIF 
 
