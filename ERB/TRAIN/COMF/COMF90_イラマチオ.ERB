@@ -53,6 +53,12 @@ SIF IS_INSERT_MUTUAL(MPLY:0, MTAR:0) > 0
 	RETURN 0
 SIF IS_RIDE(MPLY:0, MTAR:0)
 	RETURN 0
+
+;ペニス直径＞開口サイズが1パターンでもあったら不可
+SIF IS_INSERT_MOUTH(90) != 1
+	RETURN 0
+
+
 RETURN 1
 
 ;-------------------------------------------------
@@ -296,7 +302,7 @@ RETURN 1
 ;地の文(前文)
 ;-------------------------------------------------
 @COM_TEXT_BEFORE90
-IF TALENT:(MTAR:0):体格 == 体格_小柄
+	IF PERMILL_MOUTH_PENIS(MTAR:0, MPLY:0) > 800
 	LOCALS:0 = 小さな口
 ELSE
 	LOCALS:0 = 口
