@@ -23,16 +23,23 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 3
 STATUS:SHIP_SIELD_SLOT = 2
 STATUS:SHIP_ARMOR_SLOT = 2
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 10
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
-@GET_SHIP_DESCRIPTION_F_75
-RESULTS:0 = 巡洋艦級の船体に艦載機運用能力を与えた自称巡洋艦。
-RESULTS:1 = 実際、運用コストは巡洋艦と同程度。
-RESULTS:2 = 名目としては巡洋艦であるが、実態としては限定的な艦載機運用能力を持つ小型空母である。
-RESULTS:3 = ---
-RESULTS:4 = 企業連合が作った艦船であるものの、他国家での生産が許可されている。
-RESULTS:5 = 時に古きを知る事で最良の結果が齎される
-RESULTS:6 = ――企業連合 条約解釈部
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_75(動作モード = 0)
+#DIM 動作モード
+
+CALL SHIP_PRINTFORML_MESSAGE("巡洋艦級の船体に艦載機運用能力を与えた自称巡洋艦。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("実際、運用コストは巡洋艦と同程度。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("名目としては巡洋艦であるが、実態としては限定的な艦載機運用能力を持つ小型空母である。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("企業連合が作った艦船であるものの、他国家での生産が許可されている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("時に古きを知る事で最良の結果が齎される", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("――企業連合 条約解釈部", カラー_選択不可, 動作モード)
+
 
 @GET_SHIP_RESOURCE_75(USE_RESOURCE)
 #DIM REF USE_RESOURCE
@@ -45,6 +52,7 @@ USE_RESOURCE:合金加工剤 = 300
 USE_RESOURCE:耐熱合金 = 80
 USE_RESOURCE:超電導回路 = 80
 USE_RESOURCE:タイラーセンサー = 20
+
 
 @SET_SHIP_PRESET_75(SHIP_ID)
 #DIM SHIP_ID
@@ -62,9 +70,9 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 3
 SHIP_EQUIP:AI:0:SHIP_ID = 1
 SHIP_EQUIP:センサー:0:SHIP_ID = 1
 
+
 @IS_SALE_SHIP_75(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
-
 
 CAN_SALE_SHIP:必要技術ID = 20
 CAN_SALE_SHIP:必要好感度 = 650
@@ -76,12 +84,19 @@ SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_アレス宗教 + 国家ID_ビ
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_機械文明 + 国家ID_ビット演算ヘッダー調整
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_豊秋津皇国 + 国家ID_ビット演算ヘッダー調整
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_ハールバルズ + 国家ID_ビット演算ヘッダー調整
+RETURN 0
 
 
-
-
-@IS_VARIANT_75
-RETURN 特殊分類_通常艦艇
+; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
+@TERM_OF_SALE_75
+RETURN 0
 
 @CAN_SPACECRAFT_CARRYING_75
 RETURN 1
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_75(動作モード = 0)
+#DIM 動作モード
+
+

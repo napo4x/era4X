@@ -1,5 +1,5 @@
 ﻿;------------------------
-; 汎用空母
+; ルー級空母
 ;------------------------
 @GET_SHIP_NAME_34
 RESULTS = ルー級空母
@@ -23,12 +23,18 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 3
 STATUS:SHIP_SIELD_SLOT = 3
 STATUS:SHIP_ARMOR_SLOT = 3
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 10
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_34(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_34
-RESULTS:0 = 他国の空母運用に追従し開発された防御性能の高い空母
-RESULTS:1 = 防御系ドクトリンの脅威である魚雷やミサイルなど高威力の空対艦攻撃への対処をメインで行うために、メインスロットではなくサブスロットを増やし量産性も増している
+CALL SHIP_PRINTFORML_MESSAGE("他国の空母運用に追従し開発された防御性能の高い空母", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("防御系ドクトリンの脅威である魚雷やミサイルなど高威力の空対艦攻撃への対処をメインで行うために、メインスロットではなくサブスロットを増やし量産性も増している", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_34(USE_RESOURCE)
 #DIM REF USE_RESOURCE
@@ -41,6 +47,7 @@ USE_RESOURCE:合金加工剤 = 700
 USE_RESOURCE:耐熱合金 = 120
 USE_RESOURCE:超電導回路 = 120
 USE_RESOURCE:タイラーセンサー = 20
+
 
 @SET_SHIP_PRESET_34(SHIP_ID)
 #DIM SHIP_ID
@@ -60,13 +67,25 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 2
 SHIP_EQUIP:AI:0:SHIP_ID = 1
 SHIP_EQUIP:センサー:0:SHIP_ID = 1
 
+
 @IS_SALE_SHIP_34(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
 
-
-SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_ハールバルズ + 国家ID_ビット演算ヘッダー調整
 CAN_SALE_SHIP:必要好感度 = 999
 
+SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_ハールバルズ + 国家ID_ビット演算ヘッダー調整
+RETURN 0
 
-@IS_VARIANT_34
-RETURN 特殊分類_通常艦艇
+
+; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
+@TERM_OF_SALE_34
+RETURN 0
+
+; @CAN_SPACECRAFT_CARRYING_34が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_34(動作モード = 0)
+#DIM 動作モード
+
+

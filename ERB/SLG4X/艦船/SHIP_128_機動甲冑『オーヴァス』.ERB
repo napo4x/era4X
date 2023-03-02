@@ -23,16 +23,24 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 2
 STATUS:SHIP_SIELD_SLOT = 2
 STATUS:SHIP_ARMOR_SLOT = 1
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 150
+STATUS:SHIP_VARIANT = 特殊分類_メック
 
-@GET_SHIP_DESCRIPTION_F_128
-RESULTS:0 = 友愛騎士団が古代遺跡から発掘した機動甲冑。総合性能は第三世代コルベットをも上回る。
-RESULTS:1 = 外観はポーン級機動甲冑に酷似しフレーム等も共通しているが内部容積や出力において勝り、
-RESULTS:2 = 旧大国時代の「機兵」と同等の次元ヒューリスティックAIを搭載している。
-RESULTS:3 = また本来は単座型のようだが、複座操縦出来るよう強引に改修された形跡も有る。
-RESULTS:4 = ---
-RESULTS:5 = ウソかほんとかわからないけれど、これ、年代測定したら旧大国時代のシロモノなんだって。
-RESULTS:6 = ここんとこには、去年製造って書いてあんのにさ。
-RESULTS:7 = ――　発見当時、友愛騎士団に所属していたクルーの証言
+
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_128(動作モード = 0)
+#DIM 動作モード
+
+CALL SHIP_PRINTFORML_MESSAGE("友愛騎士団が古代遺跡から発掘した機動甲冑。総合性能は第三世代コルベットをも上回る。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("外観はポーン級機動甲冑に酷似しフレーム等も共通しているが内部容積や出力において勝り、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("旧大国時代の「機兵」と同等の次元ヒューリスティックAIを搭載している。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("また本来は単座型のようだが、複座操縦出来るよう強引に改修された形跡も有る。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ウソかほんとかわからないけれど、これ、年代測定したら旧大国時代のシロモノなんだって。", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ここんとこには、去年製造って書いてあんのにさ。", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("――　発見当時、友愛騎士団に所属していたクルーの証言", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
 
 
 @GET_SHIP_RESOURCE_128(USE_RESOURCE)
@@ -47,6 +55,7 @@ USE_RESOURCE:合金加工剤 = 120
 USE_RESOURCE:耐熱合金 = 30
 USE_RESOURCE:超電導回路 = 30
 USE_RESOURCE:タイラーセンサー = 20
+
 
 @SET_SHIP_PRESET_128(SHIP_ID)
 #DIM SHIP_ID
@@ -63,13 +72,22 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 9
 SHIP_EQUIP:AI:0:SHIP_ID = 90
 SHIP_EQUIP:センサー:0:SHIP_ID = 3
 
+
 @IS_SALE_SHIP_128(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
+
 RETURN 0
+
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_128
 RETURN 0
 
-@IS_VARIANT_128
-RETURN 特殊分類_メック
+; @CAN_SPACECRAFT_CARRYING_128が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_128(動作モード = 0)
+#DIM 動作モード
+
+

@@ -1,0 +1,515 @@
+﻿;------------------------
+;全艦船データを出力する関数
+;データ出力処理部分の都合で1隻分の艦船データ枠を確保・下処理・後処理もしている。
+;------------------------
+@ALL_SHIP_DATA_OUTPUT
+#DIM SHIP_MODEL_ID
+#DIM SHIP_ID
+#DIM CONST 生成結果_空データ = -2
+#DIM CONST 生成結果_失敗 = -1
+#DIM CONST 生成結果_成功 = 1
+#DIM CONST 生成結果_要確認 = 0
+
+#DIM GENERATE_LIST, SHIP_CLASS_TOTAL_COUNT
+
+#DIM EQUIP_TYPE_COUNTER
+#DIM EQUIP_SLOT_COUNTER
+
+WHILE 1
+	PRINTL 艦船データを出力しますか？
+	PRINTL 
+	PRINTBUTTON "[0] はい", 0
+	PRINTL 
+	PRINTBUTTON "[1] いいえ", 1
+	INPUT
+	IF RESULT == 0
+		BREAK
+	ELSEIF RESULT == 1
+		RETURN
+	ENDIF
+WEND
+
+VARSET GENERATE_LIST, 生成結果_空データ
+
+; 船を生成できる=利用して問題ないデータ枠、として枠取り手段として船を作る
+CALL INIT_PRESET_SHIP(10, 0, 1, "判定用船", 1)
+SHIP_ID = RESULT
+
+FOR SHIP_MODEL_ID, 1, SHIP_CLASS_TOTAL_COUNT
+
+	;GET_SHIP_NAME_{SHIP_MODEL_ID}が無いならデータ自体が無いものと見做して飛ばす
+	TRYCCALLFORM GET_SHIP_NAME_{SHIP_MODEL_ID}
+	CATCH
+		CONTINUE
+	ENDCATCH
+
+	;装備を剥がす
+	FOR EQUIP_TYPE_COUNTER, 0, EQUIP_TYPE_LENGTH
+		FOR EQUIP_SLOT_COUNTER, 0, MAX_SLOT
+			SHIP_EQUIP:EQUIP_TYPE_COUNTER:EQUIP_SLOT_COUNTER:SHIP_ID == 0
+		NEXT
+	NEXT
+
+	CALL OUTPUT_SHIP_ERBDATA(SHIP_MODEL_ID, SHIP_ID)
+	SELECTCASE RESULT
+		CASE 生成結果_失敗
+			GENERATE_LIST:SHIP_MODEL_ID = 生成結果_失敗
+
+		CASE 生成結果_要確認 
+			GENERATE_LIST:SHIP_MODEL_ID = 生成結果_要確認 
+
+		CASE 生成結果_成功
+			GENERATE_LIST:SHIP_MODEL_ID = 生成結果_成功
+	ENDSELECT
+NEXT
+
+;判定に利用した船を消去する
+CALL GET_SHIP_TOTAL_HP(SHIP_ID)
+SHIP_DAMAGE:SHIP_ID = RESULT
+CALL RETIRE_BROKEN_SHIP
+
+CLEARLINE LINECOUNT
+
+PRINTW 出力等に問題のあった艦船データの番号を表示します。
+PRINTL 
+
+;判定結果の内問題があったものをを改めて表示
+
+FOR SHIP_MODEL_ID, 1, SHIP_CLASS_TOTAL_COUNT
+
+	SELECTCASE GENERATE_LIST:SHIP_MODEL_ID
+		CASE 生成結果_失敗
+			PRINTFORM SHIP_MODEL_ID:{SHIP_MODEL_ID}:
+			SETCOLOR カラー_警告
+			PRINTL 保存失敗
+		CASE 生成結果_要確認
+			PRINTFORM SHIP_MODEL_ID:{SHIP_MODEL_ID}:
+			SETCOLOR カラー_注意
+			PRINTL 要確認
+
+		;成功・空データの場合は処理不要
+	ENDSELECT
+	RESETCOLOR
+NEXT
+
+PRINTW 以上になります。
+
+;------------------------
+;選んだ艦船データを出力する関数
+;装備等の確認に艦船データ枠を使うので呼び出し側で確保・装備のリセットが必要
+;------------------------
+@OUTPUT_SHIP_ERBDATA(SHIP_MODEL_ID, SHIP_ID)
+#DIM SHIP_MODEL_ID
+
+#DIM SHIP_ID
+
+#DIM ITEM_ID
+#DIM EQUIP_TYPE_COUNTER
+#DIM EQUIP_SLOT_COUNTER
+
+#DIM STATUS, SHIP_STATUS_LENGTH
+#DIM USE_RESOURCE, ITEM_LENGTH
+#DIM CAN_SALE_SHIP, MAX_SALE_TERMS
+#DIM TERM_OF_SALE_RESULT
+
+#DIMS COMMENTOUTED
+
+#DIMS OUTPUT_SHIP_NAME
+
+#DIMS CONST 改行コード = UNICODE(13) + UNICODE(10)
+{
+#DIMS CONST 国家ID_定数国家名 = 
+"国家ID_範囲外・番号0", "国家ID_プレイヤー", "国家ID_社会主義", "国家ID_企業連合", "国家ID_民主主義", "国家ID_アレス宗教", "国家ID_機械文明", "国家ID_レジスタンス", "国家ID_慈悲の宙族団", "国家ID_赤の傭兵集団", "国家ID_一般海賊", "国家ID_豊秋津皇国", "国家ID_ハールバルズ"
+}
+
+#DIMS OUTPUT_ERB_DATA
+
+OUTPUT_ERB_DATA '= ""
+VARSET USE_RESOURCE
+VARSET CAN_SALE_SHIP, -1
+CAN_SALE_SHIP:建造可能国家 = 0
+COMMENTOUTED '= ""
+
+TRYCALLFORM IS_SALE_SHIP_{SHIP_MODEL_ID}(CAN_SALE_SHIP)
+TRYCCALLFORM TERM_OF_SALE_{SHIP_MODEL_ID}
+	TERM_OF_SALE_RESULT = RESULT
+CATCH
+	TERM_OF_SALE_RESULT = 0
+ENDCATCH
+
+IF CAN_SALE_SHIP:特殊条件 == 1 || TERM_OF_SALE_RESULT == 1 || CAN_SALE_SHIP:強制可不可判定 != -1
+	;非定型処理はきちんと扱えないのでコメント化している旨を入れる
+	OUTPUT_ERB_DATA += "; 注意" + 改行コード
+	OUTPUT_ERB_DATA += "; 販売条件において非定型処理が行われているので原則としてコメント扱いで出力しています。" + 改行コード
+	OUTPUT_ERB_DATA += "; @IS_SALE_SHIP_" + TOSTR(SHIP_MODEL_ID) + "および@TERM_OF_SALE_" + TOSTR(SHIP_MODEL_ID) + "に関して正常な処理が行われていない可能性が高いです。" + 改行コード
+	OUTPUT_ERB_DATA += "; 艦船データの原本を当たって手動での作業を行ってください。" + 改行コード
+	COMMENTOUTED '= ";要確認;"
+ENDIF
+
+
+TRYCCALLFORM GET_SHIP_NAME_{SHIP_MODEL_ID}
+CATCH
+	RESULTS '= ""
+ENDCATCH
+OUTPUT_SHIP_NAME = %RESULTS%
+
+TRYCALLFORM GET_SHIP_STATUS_{SHIP_MODEL_ID}(STATUS)
+
+OUTPUT_ERB_DATA += ";------------------------" + 改行コード
+OUTPUT_ERB_DATA += "; " + OUTPUT_SHIP_NAME + 改行コード
+OUTPUT_ERB_DATA += ";------------------------" + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "@GET_SHIP_NAME_" + TOSTR(SHIP_MODEL_ID) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "RESULTS = " + OUTPUT_SHIP_NAME + 改行コード + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "@GET_SHIP_STATUS_" + TOSTR(SHIP_MODEL_ID) + "(STATUS)" + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "#DIM REF STATUS" + 改行コード + 改行コード
+
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:CATEGORY = " + SHIP_CATEGORY_NAME:(STATUS:CATEGORY) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_HP = " + TOSTR(STATUS:SHIP_HP) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_AVOID = " + TOSTR(STATUS:SHIP_AVOID) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_MAIN_WEAPON_SIZE = " + TOSTR(STATUS:SHIP_MAIN_WEAPON_SIZE) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_SUB_WEAPON_SIZE = " + TOSTR(STATUS:SHIP_SUB_WEAPON_SIZE) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_SIELD_SIZE = " + TOSTR(STATUS:SHIP_SIELD_SIZE) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_ARMOR_SIZE = " + TOSTR(STATUS:SHIP_ARMOR_SIZE) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_ENGIN_SIZE = " + TOSTR(STATUS:SHIP_ENGIN_SIZE) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_PRICE = " + TOSTR(STATUS:SHIP_PRICE) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_CREW = " + TOSTR(STATUS:SHIP_CREW) + 改行コード + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_MAIN_WEAPON_SLOT = " + TOSTR(STATUS:SHIP_MAIN_WEAPON_SLOT) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_SUB_WEAPON_SLOT = " + TOSTR(STATUS:SHIP_SUB_WEAPON_SLOT) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_SIELD_SLOT = " + TOSTR(STATUS:SHIP_SIELD_SLOT) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_ARMOR_SLOT = " + TOSTR(STATUS:SHIP_ARMOR_SLOT) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_OPTION_SLOT = " + TOSTR(STATUS:SHIP_OPTION_SLOT) + 改行コード
+
+; 回避率を千分率化する為に*1000してから「回避率 > RAND:250+RAND:250」のRANDの最大値合計498で割る事で元々の被クリティカル率と同じ被クリティカル率を設定する
+OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_CRITICAL_RISK = " + TOSTR(STATUS:SHIP_AVOID * 1000 / 498) + 改行コード
+
+TRYCCALLFORM IS_VARIANT_{SHIP_MODEL_ID}
+	OUTPUT_ERB_DATA += COMMENTOUTED + "STATUS:SHIP_VARIANT = 特殊分類_" + SHIP_VARIANT_NAME:RESULT + 改行コード + 改行コード + 改行コード
+CATCH
+	OUTPUT_ERB_DATA += "; SHIP_VARIANTが設定されていません" + 改行コード + 改行コード + 改行コード
+ENDCATCH
+
+
+OUTPUT_ERB_DATA += ";CALL SHIP_PRINTFORML_MESSAGE(\"(説明文が入ります)\", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) " + 改行コード
+OUTPUT_ERB_DATA += ";------------------------" + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "@GET_SHIP_DESCRIPTION_F_" + TOSTR(SHIP_MODEL_ID) + "(動作モード = 0)" + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "#DIM 動作モード" + 改行コード + 改行コード
+
+
+RESULTS '= ""
+TRYCALLFORM GET_SHIP_DESCRIPTION_F_{SHIP_MODEL_ID}(1)
+OUTPUT_ERB_DATA += RESULTS + 改行コード
+
+
+
+OUTPUT_ERB_DATA += 改行コード + COMMENTOUTED + "@GET_SHIP_RESOURCE_" + TOSTR(SHIP_MODEL_ID) + "(USE_RESOURCE)" + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "#DIM REF USE_RESOURCE" + 改行コード + 改行コード
+;必要素材表示
+TRYCALLFORM GET_SHIP_RESOURCE_{SHIP_MODEL_ID}(USE_RESOURCE)
+FOR ITEM_ID, 0, ITEM_LENGTH
+	IF USE_RESOURCE:ITEM_ID > 0
+		CALL GET_ITEM_NAME(ITEM_ID)
+		OUTPUT_ERB_DATA += COMMENTOUTED + "USE_RESOURCE:" + RESULTS +" = " + TOSTR(USE_RESOURCE:ITEM_ID) + 改行コード
+	ENDIF
+NEXT
+
+OUTPUT_ERB_DATA +=  改行コード + 改行コード + COMMENTOUTED + "@SET_SHIP_PRESET_" + TOSTR(SHIP_MODEL_ID) + "(SHIP_ID)" + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "#DIM SHIP_ID" + 改行コード + 改行コード
+
+
+
+TRYCALLFORM SET_SHIP_PRESET_{SHIP_MODEL_ID}(SHIP_ID)
+
+;装備周りを確認する(全装備枠をMAX_SLOT分だけ持つ船の全スロットを確認させる)
+FOR EQUIP_TYPE_COUNTER, 0, EQUIP_TYPE_LENGTH
+	FOR EQUIP_SLOT_COUNTER, 0, MAX_SLOT
+		IF SHIP_EQUIP:EQUIP_TYPE_COUNTER:EQUIP_SLOT_COUNTER:SHIP_ID != 0
+			OUTPUT_ERB_DATA += COMMENTOUTED + "SHIP_EQUIP:" + EQUIP_CATEGORY_NAME:EQUIP_TYPE_COUNTER + ":" + TOSTR(EQUIP_SLOT_COUNTER) + ":SHIP_ID = " + TOSTR(SHIP_EQUIP:EQUIP_TYPE_COUNTER:EQUIP_SLOT_COUNTER:SHIP_ID) + 改行コード
+		ENDIF
+	NEXT
+NEXT
+
+
+OUTPUT_ERB_DATA += 改行コード + 改行コード + COMMENTOUTED + "@IS_SALE_SHIP_" + TOSTR(SHIP_MODEL_ID) + "(CAN_SALE_SHIP)" + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "#DIM REF CAN_SALE_SHIP" + 改行コード + 改行コード
+
+;初期化状態の値の場合項目自体たぶんない。項目があるなら非定型処理なので扱えない
+IF CAN_SALE_SHIP:必要技術ID != -1
+	IF CAN_SALE_SHIP:必要技術ID == -2
+		OUTPUT_ERB_DATA += COMMENTOUTED + "CAN_SALE_SHIP:必要技術ID = 技術不要" + 改行コード
+	ELSE
+		OUTPUT_ERB_DATA += COMMENTOUTED + "CAN_SALE_SHIP:必要技術ID = " + TOSTR(CAN_SALE_SHIP:必要技術ID) + 改行コード
+	ENDIF
+ENDIF
+
+;建造可能国家==0の場合自国建造だけを想定してるか・どこでも作れない船なので好感度は意味を成さないし、建造可能国家を羅列する意味もない
+IF CAN_SALE_SHIP:建造可能国家 != 0
+	OUTPUT_ERB_DATA += COMMENTOUTED + "CAN_SALE_SHIP:必要好感度 = " + TOSTR(CAN_SALE_SHIP:必要好感度) + 改行コード + 改行コード
+	;建造可能国家を羅列する
+	FOR COUNT, 1, MAX_COUNTRY
+		GETBIT CAN_SALE_SHIP:建造可能国家, COUNT + 国家ID_ビット演算ヘッダー調整
+		IF RESULT == 1
+			OUTPUT_ERB_DATA += COMMENTOUTED + "SETBIT CAN_SALE_SHIP:建造可能国家, " + 国家ID_定数国家名:COUNT + " + 国家ID_ビット演算ヘッダー調整" + 改行コード
+		ENDIF
+	NEXT
+ENDIF
+
+OUTPUT_ERB_DATA += COMMENTOUTED + "RETURN 0" + 改行コード + 改行コード
+
+
+OUTPUT_ERB_DATA += 改行コード + "; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却" + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "@TERM_OF_SALE_" + TOSTR(SHIP_MODEL_ID) + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "RETURN " + TOSTR(TERM_OF_SALE_RESULT) + 改行コード + 改行コード
+
+;TRYCCALLFORM IS_VARIANT_{SHIP_MODEL_ID}
+;	OUTPUT_ERB_DATA += COMMENTOUTED + "@IS_VARIANT_" + TOSTR(SHIP_MODEL_ID) + 改行コード
+;	OUTPUT_ERB_DATA += COMMENTOUTED + "RETURN 特殊分類_" + SHIP_VARIANT_NAME:RESULT + 改行コード + 改行コード
+;CATCH
+;	OUTPUT_ERB_DATA += "; @IS_VARIANT_" + TOSTR(SHIP_MODEL_ID) + "が存在しません" + 改行コード + 改行コード
+;ENDCATCH
+
+
+TRYCCALLFORM CAN_SPACECRAFT_CARRYING_{SHIP_MODEL_ID}
+	OUTPUT_ERB_DATA += COMMENTOUTED + "@CAN_SPACECRAFT_CARRYING_" + TOSTR(SHIP_MODEL_ID) + 改行コード
+	OUTPUT_ERB_DATA += COMMENTOUTED + "RETURN " + TOSTR(RESULT) + 改行コード + 改行コード
+CATCH
+	OUTPUT_ERB_DATA += "; @CAN_SPACECRAFT_CARRYING_" + TOSTR(SHIP_MODEL_ID) + "が存在しません" + 改行コード + 改行コード
+ENDCATCH
+
+
+
+OUTPUT_ERB_DATA += "; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。" + 改行コード
+OUTPUT_ERB_DATA += "; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。" + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "@GET_SHIP_COMENT_" + TOSTR(SHIP_MODEL_ID) + "(動作モード = 0)" + 改行コード
+OUTPUT_ERB_DATA += COMMENTOUTED + "#DIM 動作モード" + 改行コード + 改行コード
+
+RESULTS '= ""
+TRYCALLFORM GET_SHIP_COMENT_{SHIP_MODEL_ID}(1)
+OUTPUT_ERB_DATA += RESULTS + 改行コード
+
+;ファイルとして出力する
+
+;通常テキスト版
+SAVETEXT OUTPUT_ERB_DATA, SHIP_MODEL_ID
+
+;EE系統向けの直接ERB出力版(EE系統のEmueraでも出力可能な拡張子にERBを追加する必要あり)
+;SAVETEXT OUTPUT_ERB_DATA, "艦船データ_出力/SHIP_" + TOSTR(SHIP_MODEL_ID) + "_" + OUTPUT_SHIP_NAME + ".ERB"
+
+;処理の成否を表示する
+
+
+PRINTFORM SHIP_MODEL_ID:{SHIP_MODEL_ID}:
+RESULTS '= ""
+IF RESULT != 0
+	IF COMMENTOUTED == RESULTS
+		PRINTL 保存成功
+		RESULT = 1
+	ELSE
+		SETCOLOR カラー_注意
+		PRINTL 要確認
+		RESULT =  0
+	ENDIF
+ELSE
+	SETCOLOR カラー_警告
+	PRINTL 保存失敗
+	RESULT = -1
+ENDIF
+RESETCOLOR
+
+RETURN RESULT
+
+
+;PRINTFORMW %OUTPUT_ERB_DATA%
+
+
+;普段は普通に説明文を表示(+色変えにも対応)して、出力用モードでは前後にあれこれ付けて出力もできる表示用関数
+
+@SHIP_PRINTFORML_MESSAGE(本文, 文字色 = -1, 動作モード)
+#DIMS 本文
+#DIM 文字色
+#DIM 動作モード
+
+#DIMS CONST 改行コード = UNICODE(13) + UNICODE(10)
+
+SELECTCASE 動作モード
+
+CASE 0
+	IF 文字色 == -1
+		PRINTFORMDL %本文%
+	ELSE
+		SETCOLOR 文字色
+		PRINTFORMDL %本文%
+		RESETCOLOR
+	ENDIF
+CASE 1
+	SELECTCASE 文字色
+		CASE -1
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", , 動作モード)" + 改行コード
+		CASE カラー_選択不可
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_選択不可, 動作モード)" + 改行コード
+		CASE カラー_選択中
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_選択中, 動作モード)" + 改行コード
+		CASE カラー_注意
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_注意, 動作モード)" + 改行コード
+		CASE カラー_警告
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_警告, 動作モード)" + 改行コード
+		CASE カラー_男
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_男, 動作モード)" + 改行コード
+		CASE カラー_女
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_女, 動作モード)" + 改行コード
+		CASE カラー_男双
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_男双, 動作モード)" + 改行コード
+		CASE カラー_女双
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_女双, 動作モード)" + 改行コード
+		CASE カラー_男の娘
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_男の娘, 動作モード)" + 改行コード
+		CASE カラー_男の娘双
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_男の娘双, 動作モード)" + 改行コード
+		CASE カラー_性別不明
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_性別不明, 動作モード)" + 改行コード
+		CASE カラー_ダークグレー
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_ダークグレー, 動作モード)" + 改行コード
+		CASE カラー_パ赤
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_パ赤, 動作モード)" + 改行コード
+		CASE カラー_パ青
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_パ青, 動作モード)" + 改行コード
+		CASE カラー_パ緑
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_パ緑, 動作モード)" + 改行コード
+		CASE カラー_青
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_青, 動作モード)" + 改行コード
+		CASE カラー_シアン
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_シアン, 動作モード)" + 改行コード
+		CASE カラー_黄緑
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_黄緑, 動作モード)" + 改行コード
+		CASE カラー_暗緑
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_暗緑, 動作モード)" + 改行コード
+		CASE カラー_パ紫
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_パ紫, 動作モード)" + 改行コード
+		CASE カラー_パ黄
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_パ黄, 動作モード)" + 改行コード
+		CASE カラー_パ青緑
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_パ青緑, 動作モード)" + 改行コード
+		CASE カラー_白
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_白, 動作モード)" + 改行コード
+		CASE カラー_黒
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_黒, 動作モード)" + 改行コード
+		CASE カラー_灰色
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_灰色, 動作モード)" + 改行コード
+		CASE カラー_明灰色
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_明灰色, 動作モード)" + 改行コード
+		CASE カラー_ピンク
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_ピンク, 動作モード)" + 改行コード
+		CASE カラー_黒桃
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_黒桃, 動作モード)" + 改行コード
+		CASE カラー_オレンジ
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_オレンジ, 動作モード)" + 改行コード
+		CASE カラー_クリーム
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_クリーム, 動作モード)" + 改行コード
+		CASE カラー_緑
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_緑, 動作モード)" + 改行コード
+		CASE カラー_シルバー
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_シルバー, 動作モード)" + 改行コード
+		CASE カラー_停戦
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_停戦, 動作モード)" + 改行コード
+		CASE カラー_敵
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_敵, 動作モード)" + 改行コード
+		CASE カラー_素質発動
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_素質発動, 動作モード)" + 改行コード
+		CASE カラー_スキル発動
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_スキル発動, 動作モード)" + 改行コード
+		CASE カラー_妊娠
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_妊娠, 動作モード)" + 改行コード
+		CASE カラー_注釈
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_注釈, 動作モード)" + 改行コード
+		CASE カラー_PA
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", カラー_PA, 動作モード)" + 改行コード
+		CASEELSE
+			RESULTS += "CALL SHIP_PRINTFORML_MESSAGE(\"" + 本文 + "\", 0x" + TOSTR(文字色, "x") + ", 動作モード)" + 改行コード
+	ENDSELECT
+
+
+CASE 2
+	SELECTCASE 文字色
+		CASE -1
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, , 動作モード)
+		CASE カラー_選択不可
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_選択不可, 動作モード)
+		CASE カラー_選択中
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_選択中, 動作モード)
+		CASE カラー_注意
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_注意, 動作モード)
+		CASE カラー_警告
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_警告, 動作モード)
+		CASE カラー_男
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_男, 動作モード)
+		CASE カラー_女
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_女, 動作モード)
+		CASE カラー_男双
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_男双, 動作モード)
+		CASE カラー_女双
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_女双, 動作モード)
+		CASE カラー_男の娘
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_男の娘, 動作モード)
+		CASE カラー_男の娘双
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_男の娘双, 動作モード)
+		CASE カラー_性別不明
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_性別不明, 動作モード)
+		CASE カラー_ダークグレー
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_ダークグレー, 動作モード)
+		CASE カラー_パ赤
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_パ赤, 動作モード)
+		CASE カラー_パ青
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_パ青, 動作モード)
+		CASE カラー_パ緑
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_パ緑, 動作モード)
+		CASE カラー_青
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_青, 動作モード)
+		CASE カラー_シアン
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_シアン, 動作モード)
+		CASE カラー_黄緑
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_黄緑, 動作モード)
+		CASE カラー_暗緑
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_暗緑, 動作モード)
+		CASE カラー_パ紫
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_パ紫, 動作モード)
+		CASE カラー_パ黄
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_パ黄, 動作モード)
+		CASE カラー_パ青緑
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_パ青緑, 動作モード)
+		CASE カラー_白
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_白, 動作モード)
+		CASE カラー_黒
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_黒, 動作モード)
+		CASE カラー_灰色
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_灰色, 動作モード)
+		CASE カラー_明灰色
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_明灰色, 動作モード)
+		CASE カラー_ピンク
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_ピンク, 動作モード)
+		CASE カラー_黒桃
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_黒桃, 動作モード)
+		CASE カラー_オレンジ
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_オレンジ, 動作モード)
+		CASE カラー_クリーム
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_クリーム, 動作モード)
+		CASE カラー_緑
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_緑, 動作モード)
+		CASE カラー_シルバー
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_シルバー, 動作モード)
+		CASE カラー_停戦
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_停戦, 動作モード)
+		CASE カラー_敵
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_敵, 動作モード)
+		CASE カラー_素質発動
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_素質発動, 動作モード)
+		CASE カラー_スキル発動
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_スキル発動, 動作モード)
+		CASE カラー_妊娠
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_妊娠, 動作モード)
+		CASE カラー_注釈
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_注釈, 動作モード)
+		CASE カラー_PA
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, カラー_PA, 動作モード)
+		CASEELSE
+			PRINTFORML CALL SHIP_PRINTFORML_MESSAGE(%本文%, 0x%CONVERT(文字色, 16)%, 動作モード)
+	ENDSELECT
+ENDSELECT

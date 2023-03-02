@@ -1,0 +1,29 @@
+﻿;-----------------------------------
+; オプション
+;-----------------------------------
+@GET_OPTION_NAME_13
+RESULTS = 応急部材・用具
+
+@GET_OPTION_STATUS_13(STATUS)
+#DIM REF STATUS
+STATUS:CRITICAL_RISK = -50
+STATUS:PRICE = 20000
+
+;-----------------------------------
+; オプションの説明
+;-----------------------------------
+@GET_OPTION_DESCRIPTION_F_13
+PRINTFORML 応急修理を行う為の資材と用具類。
+PRINTFORML 被弾時に被害が拡大する確率が低下する。
+
+
+;-----------------------------------
+; オプションの資材
+;-----------------------------------
+@GET_OPTION_RESOURCE_13(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:装甲合金 = 12
+USE_RESOURCE:耐熱合金 = 12
+
+

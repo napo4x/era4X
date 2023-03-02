@@ -1,0 +1,26 @@
+﻿;-----------------------------------
+; オプション
+;-----------------------------------
+@GET_OPTION_NAME_14
+RESULTS = 区画保護シールド
+
+@GET_OPTION_STATUS_14(STATUS)
+#DIM REF STATUS
+STATUS:CRITICAL_RISK = -100
+STATUS:PRICE = 40000
+
+;-----------------------------------
+; オプションの説明
+;-----------------------------------
+@GET_OPTION_DESCRIPTION_F_14
+PRINTFORML 重要区画へのダメージを防ぐ為に艦船内部に展開されるシールド。
+PRINTFORML 被弾時に被害が拡大する確率がとても低下する。
+
+;-----------------------------------
+; オプションの資材
+;-----------------------------------
+@GET_OPTION_RESOURCE_14(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:シールド発生装置 = 48
+

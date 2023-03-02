@@ -23,13 +23,20 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 2
 STATUS:SHIP_SIELD_SLOT = 1
 STATUS:SHIP_ARMOR_SLOT = 1
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 50
+STATUS:SHIP_VARIANT = 特殊分類_宇宙生物
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_101(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_101
-RESULTS:0 = 宇宙まぐろの近縁に当たる小型駆逐艦サイズの宇宙怪獣。その養殖種。
-RESULTS:1 = 宇宙まぐろと比べると需要は劣るが食用も可。
-RESULTS:2 = この快速宇宙怪獣は宇宙遊牧民が時折売りに来るものであり、買うには伝手とタイミングが重要となる。
+CALL SHIP_PRINTFORML_MESSAGE("宇宙まぐろの近縁に当たる小型駆逐艦サイズの宇宙怪獣。その養殖種。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("宇宙まぐろと比べると需要は劣るが食用も可。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("この快速宇宙怪獣は宇宙遊牧民が時折売りに来るものであり、買うには伝手とタイミングが重要となる。", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_101(USE_RESOURCE)
 #DIM REF USE_RESOURCE
@@ -43,20 +50,14 @@ USE_RESOURCE:耐熱合金 = 60
 USE_RESOURCE:超電導回路 = 60
 USE_RESOURCE:タイラーセンサー = 20
 
-;遊牧民側が素材と引き換えに港に売る→プレイヤーがお金と引き換えに港から買う、みたいな感じの流れを想定。宇宙怪獣を0から建造している訳ではない。
 
 @SET_SHIP_PRESET_101(SHIP_ID)
 #DIM SHIP_ID
 
 SHIP_EQUIP:主砲:0:SHIP_ID = 198
-SHIP_EQUIP:主砲:1:SHIP_ID = 0
 SHIP_EQUIP:副砲:0:SHIP_ID = 94
-SHIP_EQUIP:副砲:1:SHIP_ID = 0
-SHIP_EQUIP:シールド:0:SHIP_ID = 0
 SHIP_EQUIP:装甲:0:SHIP_ID = 200
 SHIP_EQUIP:エンジン:0:SHIP_ID = 91
-SHIP_EQUIP:AI:0:SHIP_ID = 0
-SHIP_EQUIP:センサー:0:SHIP_ID = 0
 
 
 @IS_SALE_SHIP_101(CAN_SALE_SHIP)
@@ -145,5 +146,14 @@ SELECTCASE STAR_OWNER:RESULT
 ENDSELECT
 RETURN 0
 
-@IS_VARIANT_101
-RETURN 特殊分類_宇宙生物
+; @CAN_SPACECRAFT_CARRYING_101が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_101(動作モード = 0)
+#DIM 動作モード
+
+CALL SHIP_PRINTFORML_MESSAGE("販売条件で非定型処理をしています", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("販売タイミングは下記惑星間をスピード2で移動しているものとして想定(同一国の他の星で買っても即座に手に入るのはご都合主義)(ちゃんと確認した訳ではないので速過ぎるとしたら「宇宙遊牧民の力ってすげー」で)", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("フロンティア → 女王の食卓 → グレートマザー → 神の右手 → 豊穣の地 → S03 → ビリアン (→ フロンティアに戻る)", , 動作モード)
+

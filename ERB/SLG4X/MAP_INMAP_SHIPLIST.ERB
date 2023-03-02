@@ -26,8 +26,8 @@
 #DIM DYNAMIC FIREPOWER_LIST, 6
 #DIM DYNAMIC SWAP_SHIP_ID
 
-#DIMS CONST HEADER_ITEM = "艦名", "艦種", "耐久", "ｼｰﾙﾄﾞ", "座標", "任務", "実体弾", "ﾚｰｻﾞｰ  ", "ﾐｻｲﾙ  ", "航空  ", "雷撃  ", "ﾋﾞｰﾑ   ", "対空  ", "回避  " 
-#DIM CONST WIDTH_ITEM = 22, 10, 16, 16, 10, 8, 8, 8, 8, 8, 8, 8, 8, 8
+#DIMS CONST HEADER_ITEM = "艦名", "艦種", "耐久", "ｼｰﾙﾄﾞ", "座標", " 任務 ", "実体弾  ", "ﾚｰｻﾞｰ  ", "ﾐｻｲﾙ  ", "航空  ", "雷撃  ", "ﾋﾞｰﾑ   ", "対空  ", "回避  " , "被致  " 
+#DIM CONST WIDTH_ITEM = 22, 10, 16, 16, 10, 8, 8, 6, 6, 6, 6, 6, 6, 6, 6
 #DIM CONST MAX_NUM_LIST = 23
 #DIM DYNAMIC WIDTH_ITEM_TOTAL
 #DIM DYNAMIC NUM_PRINT_ITEM
@@ -46,6 +46,7 @@
 #DIM CONST 項目_ビーム = 11
 #DIM CONST 項目_対空 = 12
 #DIM CONST 項目_回避 = 13
+#DIM CONST 項目_被クリティカル = 14
 
 ;全OFFの場合のみ1で初期化する
 IF FINDELEMENT(FILTER_LIST, 1) == -1
@@ -169,6 +170,8 @@ WHILE 1
 					LOCALS += FuncTagSetText_ShapeSize(DIC_GET(艦船データ:SHIPLIST_IDX, "対空"), WIDTH_ITEM:項目_対空, 1, 0)
 				CASE 項目_回避
 					LOCALS += FuncTagSetText_ShapeSize(DIC_GET(艦船データ:SHIPLIST_IDX, "回避"), WIDTH_ITEM:項目_回避, 1, 0)
+				CASE 項目_被クリティカル
+					LOCALS += FuncTagSetText_ShapeSize(DIC_GET(艦船データ:SHIPLIST_IDX, "被クリティカル"), WIDTH_ITEM:項目_被クリティカル, 1, 0)
 				CASEELSE
 			ENDSELECT
 		NEXT
@@ -270,6 +273,9 @@ WHILE 1
 		CASE TOSTR(項目_回避)
 			INVERTBIT SORTMODE, 0
 			CALL ARRAYSORT_DIC(艦船データ, "回避", SORTMODE)
+		CASE TOSTR(項目_被クリティカル)
+			INVERTBIT SORTMODE, 0
+			CALL ARRAYSORT_DIC(艦船データ, "被クリティカル", SORTMODE)
 		CASE "a","A"
 			SCROLL_IDX_COL --
 			SIF SCROLL_IDX_COL < 0

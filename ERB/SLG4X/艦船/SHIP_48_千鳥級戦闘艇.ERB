@@ -23,20 +23,28 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 0
 STATUS:SHIP_SIELD_SLOT = 1
 STATUS:SHIP_ARMOR_SLOT = 0
 STATUS:SHIP_OPTION_SLOT = 0
+STATUS:SHIP_CRITICAL_RISK = 36
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_48(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_48
-RESULTS:0 = 豊秋津皇国で開発された、大型宙間魚雷の搭載を可能とした単座式大型戦闘艇。
-RESULTS:1 = ---
-RESULTS:2 = 船体に不釣り合いなほど巨大な主砲支持架は機体バランスを壊滅的に悪化させている。
-RESULTS:3 = それを幾重にも施された軽量化加工で挽回しているため、コストが高沸してしまった。
-RESULTS:4 = なお、フレームの一部が歪むだけで、その芸術的な剛性の均衡が崩れ、船体全体が連鎖的に崩壊する。
-RESULTS:5 = ---
-RESULTS:6 = さすがの豊秋津皇国軍部もこれを正式採用するのは無理で、開発費用を少しでも回収するべく
-RESULTS:7 = ライセンスもろとも民間に払い下げた。
-RESULTS:8 = ---
-RESULTS:9 = 使うなら、大型主砲をどう活かすかに尽きるだろう。
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("豊秋津皇国で開発された、大型宙間魚雷の搭載を可能とした単座式大型戦闘艇。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("船体に不釣り合いなほど巨大な主砲支持架は機体バランスを壊滅的に悪化させている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("それを幾重にも施された軽量化加工で挽回しているため、コストが高沸してしまった。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("なお、フレームの一部が歪むだけで、その芸術的な剛性の均衡が崩れ、船体全体が連鎖的に崩壊する。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("さすがの豊秋津皇国軍部もこれを正式採用するのは無理で、開発費用を少しでも回収するべく", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ライセンスもろとも民間に払い下げた。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("使うなら、大型主砲をどう活かすかに尽きるだろう。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_48(USE_RESOURCE)
 #DIM REF USE_RESOURCE
@@ -50,6 +58,7 @@ USE_RESOURCE:耐熱合金 = 30
 USE_RESOURCE:超電導回路 = 30
 USE_RESOURCE:タイラーセンサー = 20
 
+
 @SET_SHIP_PRESET_48(SHIP_ID)
 #DIM SHIP_ID
 
@@ -59,15 +68,25 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 1
 SHIP_EQUIP:AI:0:SHIP_ID = 1
 SHIP_EQUIP:センサー:0:SHIP_ID = 1
 
+
 @IS_SALE_SHIP_48(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
-
 
 CAN_SALE_SHIP:必要好感度 = 0
 
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_豊秋津皇国 + 国家ID_ビット演算ヘッダー調整
+RETURN 0
 
 
+; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
+@TERM_OF_SALE_48
+RETURN 0
 
-@IS_VARIANT_48
-RETURN 特殊分類_通常艦艇
+; @CAN_SPACECRAFT_CARRYING_48が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_48(動作モード = 0)
+#DIM 動作モード
+
+

@@ -217,6 +217,8 @@ CALL GET_SUB_ANTI_AIR(SHIP_ID)
 艦船データ '= DIC_SET(艦船データ, "対空", TOSTR(RESULT))
 CALL GET_AVOID(SHIP_ID)
 艦船データ '= DIC_SET(艦船データ, "回避", TOSTR(RESULT))
+CALL GET_CRITICAL_RISK(SHIP_ID)
+艦船データ '= DIC_SET(艦船データ, "被クリティカル", TOSTR(RESULT, "##0,.0%"))
 
 RESULTS = %艦船データ%
 RETURN 

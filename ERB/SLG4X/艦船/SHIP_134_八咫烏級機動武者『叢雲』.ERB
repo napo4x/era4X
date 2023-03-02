@@ -1,0 +1,96 @@
+﻿;------------------------
+; 八咫烏級機動武者『叢雲』
+;------------------------
+@GET_SHIP_NAME_134
+RESULTS = 八咫烏級機動武者『叢雲』
+
+@GET_SHIP_STATUS_134(STATUS)
+#DIM REF STATUS
+
+STATUS:CATEGORY = コルベット
+STATUS:SHIP_HP = 200
+STATUS:SHIP_AVOID = 60
+STATUS:SHIP_MAIN_WEAPON_SIZE = 1
+STATUS:SHIP_SUB_WEAPON_SIZE = 1
+STATUS:SHIP_SIELD_SIZE = 1
+STATUS:SHIP_ARMOR_SIZE = 1
+STATUS:SHIP_ENGIN_SIZE = 1
+STATUS:SHIP_PRICE = 3000000000
+STATUS:SHIP_CREW = 1
+
+STATUS:SHIP_MAIN_WEAPON_SLOT = 2
+STATUS:SHIP_SUB_WEAPON_SLOT = 1
+STATUS:SHIP_SIELD_SLOT = 1
+STATUS:SHIP_ARMOR_SLOT = 1
+STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 120
+STATUS:SHIP_VARIANT = 特殊分類_メック
+
+
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_134(動作モード = 0)
+#DIM 動作モード
+
+CALL SHIP_PRINTFORML_MESSAGE("皇国の建国帝が設計、改良を施した大型パワードスーツ。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("大型機動歩兵に分類され、その外見は酷似しているが根本的な設計思想が異なる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("当時一部で運用されていた作業用大型パワードスーツの発展型となる機体であり、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("サイオニック関連技術が惜しみなく注ぎ込まれた実験機という名目で建造。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("独立戦争時には強力なサイオニックである建国帝が自ら運用し、多大な戦果を挙げた。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("実験動物として技術を与えられず、原始的戦争に明け暮れていた獣尾人達の啓蒙の際に用いられており、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("今なお続く彼らの人型兵器に対する強い執着は、この機体と建国帝の活躍に由来すると考えられる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("装備はシールド破壊とブレード運用に特化した接近戦仕様。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("未知のコア――サイオニックジェネレーターと短距離ジャンプドライブが搭載されており、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("近接戦闘に特化した機体ながら、長距離からの奇襲、一撃離脱戦法を可能としている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("その絶大な出力を用いた空間干渉と運動性から、大型艦に対する圧倒的な戦闘能力を有する。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ただ、その機体コンセプト上、機動力の高い小型艦に対しては操縦技術に頼る部分が大きい。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("建国帝との戦いの後、大破していたヤタガラスフレームを改修したもの。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("破損部を既存の戦闘艦艇、機動武者技術で補ったものの、完全再現には到っていない。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("コア部分は健在ながら、未知の理由でジャンプドライブの飛距離、安定性が低下している。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("また、最新型のAIを搭載し、サイオニックブースターに頼らない無人制御が可能になったが、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("機体コンセプト上、技量ある搭乗者なしでは十全の性能は発揮出来ない。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+
+
+@GET_SHIP_RESOURCE_134(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+
+
+@SET_SHIP_PRESET_134(SHIP_ID)
+#DIM SHIP_ID
+
+SHIP_EQUIP:主砲:0:SHIP_ID = 213
+SHIP_EQUIP:主砲:1:SHIP_ID = 212
+SHIP_EQUIP:副砲:0:SHIP_ID = 211
+SHIP_EQUIP:シールド:0:SHIP_ID = 210
+SHIP_EQUIP:装甲:0:SHIP_ID = 38
+SHIP_EQUIP:エンジン:0:SHIP_ID = 9
+SHIP_EQUIP:AI:0:SHIP_ID = 5
+SHIP_EQUIP:センサー:0:SHIP_ID = 3
+
+
+@IS_SALE_SHIP_134(CAN_SALE_SHIP)
+#DIM REF CAN_SALE_SHIP
+
+RETURN 0
+
+
+; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
+@TERM_OF_SALE_134
+RETURN 0
+
+; @CAN_SPACECRAFT_CARRYING_134が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_134(動作モード = 0)
+#DIM 動作モード
+
+CALL SHIP_PRINTFORML_MESSAGE("皇国クエスト『神と人』攻略後、最終的にプレイヤーに与えられるもの。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("プレイヤー最終設計コルベットがあっても腐らない、高難度イベント限定の射程２オンリーワン性能。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("例によって船体耐久と装甲一枚が玉に瑕なものの、十分に補えるシールド能力。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("『神と人』の開始条件、攻略難易度的に艦船は揃ってるはずなので、ロマン重視。", , 動作モード)
+

@@ -1,5 +1,5 @@
 ﻿;------------------------
-; 汎用戦艦
+; 旧大国の火力拠点
 ;------------------------
 @GET_SHIP_NAME_138
 RESULTS = 旧大国の火力拠点
@@ -23,15 +23,23 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 8
 STATUS:SHIP_SIELD_SLOT = 2
 STATUS:SHIP_ARMOR_SLOT = 0
 STATUS:SHIP_OPTION_SLOT = 0
+STATUS:SHIP_CRITICAL_RISK = 2
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_138(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_138
-RESULTS:0 = 旧大国で運用されていた軍事要塞の火力拠点。
-RESULTS:1 = 圧倒的な火力を有しており、その一部分を沈黙させるだけでも相当な労力が必要だろう。
+CALL SHIP_PRINTFORML_MESSAGE("旧大国で運用されていた軍事要塞の火力拠点。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("圧倒的な火力を有しており、その一部分を沈黙させるだけでも相当な労力が必要だろう。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_138(USE_RESOURCE)
 #DIM REF USE_RESOURCE
+
 
 
 @SET_SHIP_PRESET_138(SHIP_ID)
@@ -54,13 +62,22 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 21
 SHIP_EQUIP:AI:0:SHIP_ID = 4
 SHIP_EQUIP:センサー:0:SHIP_ID = 3
 
+
 @IS_SALE_SHIP_138(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
+
 RETURN 0
+
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_138
 RETURN 0
 
-@IS_VARIANT_138
-RETURN 特殊分類_通常艦艇
+; @CAN_SPACECRAFT_CARRYING_138が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_138(動作モード = 0)
+#DIM 動作モード
+
+

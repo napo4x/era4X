@@ -23,22 +23,30 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 0
 STATUS:SHIP_SIELD_SLOT = 1
 STATUS:SHIP_ARMOR_SLOT = 1
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 60
+STATUS:SHIP_VARIANT = 特殊分類_メック
 
-@GET_SHIP_DESCRIPTION_F_129
-RESULTS:0 = 企業連合製の大型機動歩兵。
-RESULTS:1 = 初期型は皇国の『仁王級機動武者』と比べて一世代後の機体で、
-RESULTS:2 = 当時の機動歩兵としては珍しく小型艦艇用のシールドを搭載可能であった。
-RESULTS:3 = 皇国内戦では新政府軍によって購入され特に大型機動歩兵との戦闘で活躍した他、
-RESULTS:4 = 後に『水晶級機動武者』という名称でライセンス生産も行われた。
-RESULTS:5 = ---
-RESULTS:6 = Ⅳ型は改修が進んだ現行型であり、フェイツィⅫ機動歩兵と同様の機体制御OSを有する他、
-RESULTS:7 = 外部装甲やシールド装置もモジュール式として小型艦艇や他の機動歩兵との規格共通化が図られた。
-RESULTS:8 = それでも余剰スペースの問題で副砲に相当する武装を搭載出来ない欠点を抱えているが、
-RESULTS:9 = 皇国宙警局においても『瑪瑙級警邏機』として少数が配備されている。
+
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_129(動作モード = 0)
+#DIM 動作モード
+
+CALL SHIP_PRINTFORML_MESSAGE("企業連合製の大型機動歩兵。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("初期型は皇国の『仁王級機動武者』と比べて一世代後の機体で、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("当時の機動歩兵としては珍しく小型艦艇用のシールドを搭載可能であった。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("皇国内戦では新政府軍によって購入され特に大型機動歩兵との戦闘で活躍した他、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("後に『水晶級機動武者』という名称でライセンス生産も行われた。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("Ⅳ型は改修が進んだ現行型であり、フェイツィⅫ機動歩兵と同様の機体制御OSを有する他、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("外部装甲やシールド装置もモジュール式として小型艦艇や他の機動歩兵との規格共通化が図られた。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("それでも余剰スペースの問題で副砲に相当する武装を搭載出来ない欠点を抱えているが、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("皇国宙警局においても『瑪瑙級警邏機』として少数が配備されている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_129(USE_RESOURCE)
 #DIM REF USE_RESOURCE
-
 
 USE_RESOURCE:武装合金 = 50
 USE_RESOURCE:装甲合金 = 40
@@ -48,6 +56,7 @@ USE_RESOURCE:合金加工剤 = 40
 USE_RESOURCE:耐熱合金 = 30
 USE_RESOURCE:超電導回路 = 40
 USE_RESOURCE:タイラーセンサー = 30
+
 
 @SET_SHIP_PRESET_129(SHIP_ID)
 #DIM SHIP_ID
@@ -60,16 +69,16 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 1
 SHIP_EQUIP:AI:0:SHIP_ID = 1
 SHIP_EQUIP:センサー:0:SHIP_ID = 1
 
+
 @IS_SALE_SHIP_129(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
-
 
 CAN_SALE_SHIP:特殊条件 = 1
 CAN_SALE_SHIP:必要好感度 = 150
 
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_企業連合 + 国家ID_ビット演算ヘッダー調整
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_豊秋津皇国 + 国家ID_ビット演算ヘッダー調整
-
+RETURN 0
 
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
@@ -84,5 +93,11 @@ SIF REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー < 150
   RETURN 1
 RETURN 0
 
-@IS_VARIANT_129
-RETURN 特殊分類_メック
+; @CAN_SPACECRAFT_CARRYING_129が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_129(動作モード = 0)
+#DIM 動作モード
+
+

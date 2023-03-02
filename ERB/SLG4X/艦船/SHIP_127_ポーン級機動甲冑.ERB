@@ -23,30 +23,33 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 1
 STATUS:SHIP_SIELD_SLOT = 1
 STATUS:SHIP_ARMOR_SLOT = 0
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 150
+STATUS:SHIP_VARIANT = 特殊分類_メック
 
-@GET_SHIP_DESCRIPTION_F_127
-RESULTS:0 = アレス宗教国家の、拠点防衛及び対大型艦への近距離攻撃を主任務として設計された大型機動歩兵。
-RESULTS:1 = 皇国の機動武者や王国の戦列甲冑等とは違い、水中作業用メックから転用された設計である。
-RESULTS:2 = その為か首が存在せず丸っこく凹凸も少ない胴体や、その割には朱雀級ともまた違う流線形の四肢、
-RESULTS:3 = 加えて「・ω・」に似たセンサー配置等、他の機動歩兵とはかけ離れた独特な外形を持つ。
-RESULTS:4 = 脚部はハードポイントを兼ねており、小型艦艇用の宙間魚雷やロケット等を搭載可能。
-RESULTS:5 = 機体自体の特徴としては、内蔵された遮断シールドで光や磁場を完全に遮断出来ることが挙げられる。
-RESULTS:6 = この機能により高いステルス性を発揮する他、機動予測の難しさ故に回避性能も非常に高い……のだが、
-RESULTS:7 = 逆に言うならば「シールドの内側からもセンサーが遮断されて外側が見えない」ということでもあり、
-RESULTS:8 = 一方向へ集中的に遮断シールドを展開して「見える」部分の情報を基に高度な予測行動が求められる。
-RESULTS:9 = 従って他の機動歩兵と比べ操縦方法の習熟が困難な上に追加装甲を搭載出来ず抗堪性に難があることから、
-RESULTS:10 = アレス宗教国家においても聖騎士ではなく通常の軍人によって運用されることが殆どである。
-RESULTS:11 = 尚、遮断シールドはエネルギーブレード等と同様に通常のシールドが機能停止しても利用可能。
-RESULTS:12 = ---
-RESULTS:13 = 伝説は言う。世界は闇ではない。世界は夜だ
-RESULTS:14 = 夜には星が瞬いている。小さくもはかないが、真っ暗じゃない
-RESULTS:15 = ――　『灰白の戦乙女』の肩書きを持つエースパイロット
 
-;SETCOLOR カラー_選択不可
-;RESULTS:0 = 恐らく、コイツを設計した技術者は某火星海洋雰囲気ゲームのやり過ぎではなかろうか
-;RESULTS:0 = ――　機械文明の女性整備士、本級のメンテナンス中に一言
-;RESETCOLOR
-;PRINTL
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_127(動作モード = 0)
+#DIM 動作モード
+
+CALL SHIP_PRINTFORML_MESSAGE("アレス宗教国家の、拠点防衛及び対大型艦への近距離攻撃を主任務として設計された大型機動歩兵。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("皇国の機動武者や王国の戦列甲冑等とは違い、水中作業用メックから転用された設計である。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("その為か首が存在せず丸っこく凹凸も少ない胴体や、その割には朱雀級ともまた違う流線形の四肢、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("加えて「・ω・」に似たセンサー配置等、他の機動歩兵とはかけ離れた独特な外形を持つ。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("脚部はハードポイントを兼ねており、小型艦艇用の宙間魚雷やロケット等を搭載可能。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("機体自体の特徴としては、内蔵された遮断シールドで光や磁場を完全に遮断出来ることが挙げられる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("この機能により高いステルス性を発揮する他、機動予測の難しさ故に回避性能も非常に高い……のだが、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("逆に言うならば「シールドの内側からもセンサーが遮断されて外側が見えない」ということでもあり、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("一方向へ集中的に遮断シールドを展開して「見える」部分の情報を基に高度な予測行動が求められる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("従って他の機動歩兵と比べ操縦方法の習熟が困難な上に追加装甲を搭載出来ず抗堪性に難があることから、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("アレス宗教国家においても聖騎士ではなく通常の軍人によって運用されることが殆どである。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("尚、遮断シールドはエネルギーブレード等と同様に通常のシールドが機能停止しても利用可能。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("伝説は言う。世界は闇ではない。世界は夜だ", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("夜には星が瞬いている。小さくもはかないが、真っ暗じゃない", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("――　『灰白の戦乙女』の肩書きを持つエースパイロット", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
 
 
 @GET_SHIP_RESOURCE_127(USE_RESOURCE)
@@ -62,6 +65,7 @@ USE_RESOURCE:耐熱合金 = 30
 USE_RESOURCE:超電導回路 = 30
 USE_RESOURCE:タイラーセンサー = 20
 
+
 @SET_SHIP_PRESET_127(SHIP_ID)
 #DIM SHIP_ID
 
@@ -73,14 +77,28 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 1
 SHIP_EQUIP:AI:0:SHIP_ID = 1
 SHIP_EQUIP:センサー:0:SHIP_ID = 1
 
+
 @IS_SALE_SHIP_127(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
-
 
 CAN_SALE_SHIP:必要好感度 = 800
 
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_アレス宗教 + 国家ID_ビット演算ヘッダー調整
+RETURN 0
 
 
-@IS_VARIANT_127
-RETURN 特殊分類_メック
+; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
+@TERM_OF_SALE_127
+RETURN 0
+
+; @CAN_SPACECRAFT_CARRYING_127が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_127(動作モード = 0)
+#DIM 動作モード
+
+CALL SHIP_PRINTFORML_MESSAGE("恐らく、コイツを設計した技術者は某火星海洋雰囲気ゲームのやり過ぎではなかろうか", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("――　機械文明の女性整備士、本級のメンテナンス中に一言", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+

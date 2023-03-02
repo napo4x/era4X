@@ -1,5 +1,5 @@
 ﻿;------------------------
-; フリーダム級輸送船
+; 軍用大型輸送船
 ;------------------------
 @GET_SHIP_NAME_39
 RESULTS = 軍用大型輸送船
@@ -15,7 +15,6 @@ STATUS:SHIP_SUB_WEAPON_SIZE = 1
 STATUS:SHIP_SIELD_SIZE = 4
 STATUS:SHIP_ARMOR_SIZE = 4
 STATUS:SHIP_ENGIN_SIZE = 4
-STATUS:SHIP_CAPACITY = 10000
 STATUS:SHIP_PRICE = 10000000
 STATUS:SHIP_CREW = 100
 
@@ -24,13 +23,20 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 0
 STATUS:SHIP_SIELD_SLOT = 2
 STATUS:SHIP_ARMOR_SLOT = 2
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 10
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_39(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_39
-RESULTS:0 = 軍用物資を星間輸送するために設計された大型輸送艦
-RESULTS:1 = 目的のためにコストが跳ね上がっているが、その輸送量は陸戦輸送船として使えば一個師団を運べるほどのもの
-RESULTS:2 = 味方からの流れ弾も防げるよう、防御性能も高い
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("軍用物資を星間輸送するために設計された大型輸送艦", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("目的のためにコストが跳ね上がっているが、その輸送量は陸戦輸送船として使えば一個師団を運べるほどのもの", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("味方からの流れ弾も防げるよう、防御性能も高い", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_39(USE_RESOURCE)
 #DIM REF USE_RESOURCE
@@ -42,6 +48,7 @@ USE_RESOURCE:耐熱合金 = 300
 USE_RESOURCE:超電導回路 = 300
 USE_RESOURCE:タイラーセンサー = 200
 
+
 @SET_SHIP_PRESET_39(SHIP_ID)
 #DIM SHIP_ID
 
@@ -52,6 +59,7 @@ SHIP_EQUIP:装甲:1:SHIP_ID = 4
 SHIP_EQUIP:エンジン:0:SHIP_ID = 4
 SHIP_EQUIP:AI:0:SHIP_ID = 1
 SHIP_EQUIP:センサー:0:SHIP_ID = 1
+
 
 @IS_SALE_SHIP_39(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
@@ -68,5 +76,11 @@ RETURN 0
 @TERM_OF_SALE_39
 RETURN 0
 
-@IS_VARIANT_39
-RETURN 特殊分類_通常艦艇
+; @CAN_SPACECRAFT_CARRYING_39が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_39(動作モード = 0)
+#DIM 動作モード
+
+

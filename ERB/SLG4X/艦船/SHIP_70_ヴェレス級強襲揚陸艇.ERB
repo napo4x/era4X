@@ -10,7 +10,6 @@ RESULTS = ヴェレス級強襲揚陸艇
 STATUS:CATEGORY = コルベット
 STATUS:SHIP_HP = 300
 STATUS:SHIP_AVOID = 25
-
 STATUS:SHIP_MAIN_WEAPON_SIZE = 2
 STATUS:SHIP_SUB_WEAPON_SIZE = 1
 STATUS:SHIP_SIELD_SIZE = 1
@@ -24,13 +23,20 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 1
 STATUS:SHIP_SIELD_SLOT = 1
 STATUS:SHIP_ARMOR_SLOT = 0
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 50
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_70(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_70
-RESULTS:0 = 人民連邦製ヴォーロス級コルベットの改修艦。強襲揚陸艇に分類される。
-RESULTS:1 = 簡易カタパルトを搭載しており、車両や兵員を直接射出し制圧目標に取り付かせるという戦術も可能。
-RESULTS:2 = 車両サイズの兵器であれば搭載可能であるため、『対艦猟兵』の出撃プラットフォームとして用いられることもあった。
+CALL SHIP_PRINTFORML_MESSAGE("人民連邦製ヴォーロス級コルベットの改修艦。強襲揚陸艇に分類される。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("簡易カタパルトを搭載しており、車両や兵員を直接射出し制圧目標に取り付かせるという戦術も可能。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("車両サイズの兵器であれば搭載可能であるため、『対艦猟兵』の出撃プラットフォームとして用いられることもあった。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_70(USE_RESOURCE)
 #DIM REF USE_RESOURCE
@@ -44,6 +50,7 @@ USE_RESOURCE:耐熱合金 = 30
 USE_RESOURCE:超電導回路 = 35
 USE_RESOURCE:タイラーセンサー = 25
 
+
 @SET_SHIP_PRESET_70(SHIP_ID)
 #DIM SHIP_ID
 
@@ -54,13 +61,22 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 1
 SHIP_EQUIP:AI:0:SHIP_ID = 1
 SHIP_EQUIP:センサー:0:SHIP_ID = 1
 
+
 @IS_SALE_SHIP_70(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
+
 RETURN 0
+
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_70
 RETURN 0
 
-@IS_VARIANT_70
-RETURN 特殊分類_通常艦艇
+; @CAN_SPACECRAFT_CARRYING_70が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_70(動作モード = 0)
+#DIM 動作モード
+
+

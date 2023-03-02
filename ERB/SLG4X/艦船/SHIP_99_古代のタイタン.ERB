@@ -1,5 +1,5 @@
 ﻿;------------------------
-; 汎用戦艦
+; 古代のタイタン
 ;------------------------
 @GET_SHIP_NAME_99
 RESULTS = 古代のタイタン
@@ -23,13 +23,19 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 8
 STATUS:SHIP_SIELD_SLOT = 8
 STATUS:SHIP_ARMOR_SLOT = 8
 STATUS:SHIP_OPTION_SLOT = 2
+STATUS:SHIP_CRITICAL_RISK = 2
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_99(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_99
-RESULTS:0 = 古代遺跡から発掘された古代のタイタン級戦艦
-RESULTS:1 = 仮想敵が想定できないほどの強力な性能を有しいる
-RESULTS:2 = コア部分には強力な超能力エネルギーと繋がる次元門が設置されているが、その正体は現代のテクノロジーでは解析できない
+CALL SHIP_PRINTFORML_MESSAGE("古代遺跡から発掘された古代のタイタン級戦艦", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("仮想敵が想定できないほどの強力な性能を有しいる", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("コア部分には強力な超能力エネルギーと繋がる次元門が設置されているが、その正体は現代のテクノロジーでは解析できない", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_99(USE_RESOURCE)
 #DIM REF USE_RESOURCE
@@ -43,16 +49,27 @@ USE_RESOURCE:耐熱合金 = 1000
 USE_RESOURCE:超電導回路 = 1000
 USE_RESOURCE:タイラーセンサー = 20
 
+
 @SET_SHIP_PRESET_99(SHIP_ID)
 #DIM SHIP_ID
 
+
+
 @IS_SALE_SHIP_99(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
+
 RETURN 0
+
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_99
 RETURN 0
 
-@IS_VARIANT_99
-RETURN 特殊分類_通常艦艇
+; @CAN_SPACECRAFT_CARRYING_99が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_99(動作モード = 0)
+#DIM 動作モード
+
+

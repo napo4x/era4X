@@ -23,19 +23,28 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 3
 STATUS:SHIP_SIELD_SLOT = 1
 STATUS:SHIP_ARMOR_SLOT = 2
 STATUS:SHIP_OPTION_SLOT = 2
+STATUS:SHIP_CRITICAL_RISK = 30
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_89(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_89
-RESULTS:0 = 全宇宙漁業組合設計による最新型武装漁船。
-RESULTS:1 = 過酷な遠洋漁業に耐えられるように様々な試験船の開発経験、高出力センサー作成技術を有する
-RESULTS:2 = 企業連合に全宇宙漁業組合が共同開発を依頼し設計された駆逐艦クラスの武装漁船。
-RESULTS:3 = 標準的な現行戦闘艦の性能を維持したまま漁船用総合漁業システムを搭載可能。
-RESULTS:4 = 建造コストは巡洋艦並みに上昇してしまったが全宇宙漁業組合から組合員へのリースも行われている。
-RESULTS:5 = 共同開発を行った企業連合で生産、販売しており組合員以外も購入可能。
-RESULTS:6 = ※オプションスロットに漁船用総合漁業システムを搭載する漁船は生け捕り漁が可能。
-RESULTS:7 = ※戦闘勝利時に低確率で敵宇宙怪獣への生け捕り漁の実行が可能となる。
-RESULTS:8 = ※漁船用総合漁業システムを装備漁船に、クルーが同乗している必要がある。
+CALL SHIP_PRINTFORML_MESSAGE("全宇宙漁業組合設計による最新型武装漁船。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("過酷な遠洋漁業に耐えられるように様々な試験船の開発経験、高出力センサー作成技術を有する", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("企業連合に全宇宙漁業組合が共同開発を依頼し設計された駆逐艦クラスの武装漁船。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("標準的な現行戦闘艦の性能を維持したまま漁船用総合漁業システムを搭載可能。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("建造コストは巡洋艦並みに上昇してしまったが全宇宙漁業組合から組合員へのリースも行われている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("共同開発を行った企業連合で生産、販売しており組合員以外も購入可能。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("※オプションスロットに漁船用総合漁業システムを搭載する漁船は生け捕り漁が可能。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("※戦闘勝利時に低確率で敵宇宙怪獣への生け捕り漁の実行が可能となる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("※漁船用総合漁業システムを装備漁船に、クルーが同乗している必要がある。", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_89(USE_RESOURCE)
 #DIM REF USE_RESOURCE
@@ -48,6 +57,7 @@ USE_RESOURCE:合金加工剤 = 300
 USE_RESOURCE:耐熱合金 = 80
 USE_RESOURCE:超電導回路 = 80
 USE_RESOURCE:タイラーセンサー = 20
+
 
 @SET_SHIP_PRESET_89(SHIP_ID)
 #DIM SHIP_ID
@@ -63,18 +73,27 @@ SHIP_EQUIP:装甲:1:SHIP_ID = 2
 SHIP_EQUIP:エンジン:0:SHIP_ID = 2
 SHIP_EQUIP:AI:0:SHIP_ID = 1
 SHIP_EQUIP:センサー:0:SHIP_ID = 1
-SHIP_EQUIP:オプション:0:SHIP_ID = 0
 SHIP_EQUIP:オプション:1:SHIP_ID = 10
+
 
 @IS_SALE_SHIP_89(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
 
-
 CAN_SALE_SHIP:必要好感度 = 100
 
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_企業連合 + 国家ID_ビット演算ヘッダー調整
+RETURN 0
 
 
+; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
+@TERM_OF_SALE_89
+RETURN 0
 
-@IS_VARIANT_89
-RETURN 特殊分類_通常艦艇
+; @CAN_SPACECRAFT_CARRYING_89が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_89(動作モード = 0)
+#DIM 動作モード
+
+

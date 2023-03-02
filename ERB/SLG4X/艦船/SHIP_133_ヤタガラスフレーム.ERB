@@ -23,28 +23,35 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 1
 STATUS:SHIP_SIELD_SLOT = 1
 STATUS:SHIP_ARMOR_SLOT = 1
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 120
+STATUS:SHIP_VARIANT = 特殊分類_メック
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_133(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_133
-RESULTS:0 = 皇国の建国帝が設計、改良を施した大型パワードスーツ。
-RESULTS:1 = 大型機動歩兵に分類され、その外見は酷似しているが根本的な設計思想が異なる。
-RESULTS:2 = 当時一部で運用されていた作業用大型パワードスーツの発展型となる機体であり、
-RESULTS:3 = サイオニック関連技術が惜しみなく注ぎ込まれた実験機という名目で建造。
-RESULTS:4 = 独立戦争時には強力なサイオニックである建国帝が自ら運用し、多大な戦果を挙げた。
-RESULTS:5 = 実験動物として技術を与えられず、原始的戦争に明け暮れていた獣尾人達の啓蒙の際に用いられており、
-RESULTS:6 = 今なお続く彼らの人型兵器に対する強い執着は、この機体と建国帝の活躍に由来すると考えられる。
-RESULTS:7 = ---
-RESULTS:8 = 装備はシールド破壊とブレード運用に特化した接近戦仕様。
-RESULTS:9 = 未知のコア――サイオニックジェネレーターと短距離ジャンプドライブが搭載されており、
-RESULTS:10 = 近接戦闘に特化した機体ながら、長距離からの奇襲、一撃離脱戦法を可能としている。
-RESULTS:11 = その絶大な出力を用いた空間干渉と運動性から、大型艦に対する圧倒的な戦闘能力を有する。
-RESULTS:12 = ただ、その機体コンセプト上、機動力の高い小型艦に対しては操縦技術に頼る部分が大きい。
-;安定性の低い高火力二本に頼っているため、回避の高い小型艦を囮として突っ込ませるのが鉄板メタ。
-;大型艦オンリーでは大損害を被る。
-PRINTFORML
+CALL SHIP_PRINTFORML_MESSAGE("皇国の建国帝が設計、改良を施した大型パワードスーツ。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("大型機動歩兵に分類され、その外見は酷似しているが根本的な設計思想が異なる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("当時一部で運用されていた作業用大型パワードスーツの発展型となる機体であり、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("サイオニック関連技術が惜しみなく注ぎ込まれた実験機という名目で建造。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("独立戦争時には強力なサイオニックである建国帝が自ら運用し、多大な戦果を挙げた。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("実験動物として技術を与えられず、原始的戦争に明け暮れていた獣尾人達の啓蒙の際に用いられており、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("今なお続く彼らの人型兵器に対する強い執着は、この機体と建国帝の活躍に由来すると考えられる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("装備はシールド破壊とブレード運用に特化した接近戦仕様。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("未知のコア――サイオニックジェネレーターと短距離ジャンプドライブが搭載されており、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("近接戦闘に特化した機体ながら、長距離からの奇襲、一撃離脱戦法を可能としている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("その絶大な出力を用いた空間干渉と運動性から、大型艦に対する圧倒的な戦闘能力を有する。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ただ、その機体コンセプト上、機動力の高い小型艦に対しては操縦技術に頼る部分が大きい。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+
+
 @GET_SHIP_RESOURCE_133(USE_RESOURCE)
 #DIM REF USE_RESOURCE
+
+
 
 @SET_SHIP_PRESET_133(SHIP_ID)
 #DIM SHIP_ID
@@ -58,13 +65,24 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 9
 SHIP_EQUIP:AI:0:SHIP_ID = 5
 SHIP_EQUIP:センサー:0:SHIP_ID = 3
 
+
 @IS_SALE_SHIP_133(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
+
 RETURN 0
+
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_133
 RETURN 0
 
-@IS_VARIANT_133
-RETURN 特殊分類_メック
+; @CAN_SPACECRAFT_CARRYING_133が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_133(動作モード = 0)
+#DIM 動作モード
+
+CALL SHIP_PRINTFORML_MESSAGE("安定性の低い高火力二本に頼っているため、回避の高い小型艦を囮として突っ込ませるのが鉄板メタ。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("大型艦オンリーでは大損害を被る。", , 動作モード)
+

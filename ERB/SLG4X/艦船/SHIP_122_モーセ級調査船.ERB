@@ -23,25 +23,31 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 2
 STATUS:SHIP_SIELD_SLOT = 2
 STATUS:SHIP_ARMOR_SLOT = 1
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 20
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_122(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_122
-RESULTS:0 = 『ノア計画』に基づいて設計された民主主義国家製の調査船。
-RESULTS:1 = 同計画で生まれた船の共通の特徴として、全艦種で艦種部・推進部が共用の設計となっており、
-RESULTS:2 = 用途に応じた中央ブロックを挟み込む形で生産されている事が上げられる。
-RESULTS:3 = ---
-RESULTS:4 = 銀河人民統一連邦の通商破壊によって民間輸送船・作業船の被害が続出したことから、
-RESULTS:5 = 民間船のクルーの成り手が少なくなることを危惧した民主主義国家中央政府の要請により、
-RESULTS:6 = 『ある程度の武装・生存性を有し、整備性に優れた民間船』という基本方針で開発が要請された。
-RESULTS:7 = ---
-RESULTS:8 = 更に民間船の生産ラインの一本化・パーツの共用化によってコストを抑える方針で案が纏まり、
-RESULTS:9 = 民間船統合プロジェクト『ノア計画』として新型艦群の開発がスタートした。
-RESULTS:10 = ---
-RESULTS:11 = モーセ級は最後にロールアウトした調査船モデル。
-RESULTS:12 = 他二種以上に危険な領域で運用される可能性が高い事から、
-RESULTS:13 = 艦種部・推進部と中央ブロックの接続部分のフレームが増強されている。
-RESULTS:14 = ただし、フレームの増強と中央ブロックの機構の複雑さから、生産コストがやや高沸してしまった。
+CALL SHIP_PRINTFORML_MESSAGE("『ノア計画』に基づいて設計された民主主義国家製の調査船。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("同計画で生まれた船の共通の特徴として、全艦種で艦種部・推進部が共用の設計となっており、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("用途に応じた中央ブロックを挟み込む形で生産されている事が上げられる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("銀河人民統一連邦の通商破壊によって民間輸送船・作業船の被害が続出したことから、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("民間船のクルーの成り手が少なくなることを危惧した民主主義国家中央政府の要請により、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("『ある程度の武装・生存性を有し、整備性に優れた民間船』という基本方針で開発が要請された。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("更に民間船の生産ラインの一本化・パーツの共用化によってコストを抑える方針で案が纏まり、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("民間船統合プロジェクト『ノア計画』として新型艦群の開発がスタートした。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("モーセ級は最後にロールアウトした調査船モデル。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("他二種以上に危険な領域で運用される可能性が高い事から、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("艦種部・推進部と中央ブロックの接続部分のフレームが増強されている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ただし、フレームの増強と中央ブロックの機構の複雑さから、生産コストがやや高沸してしまった。", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_122(USE_RESOURCE)
 #DIM REF USE_RESOURCE
@@ -54,6 +60,7 @@ USE_RESOURCE:合金加工剤 = 80
 USE_RESOURCE:耐熱合金 = 30
 USE_RESOURCE:超電導回路 = 20
 USE_RESOURCE:タイラーセンサー = 30
+
 
 @SET_SHIP_PRESET_122(SHIP_ID)
 #DIM SHIP_ID
@@ -68,17 +75,25 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 19
 SHIP_EQUIP:AI:0:SHIP_ID = 1
 SHIP_EQUIP:センサー:0:SHIP_ID = 1
 
+
 @IS_SALE_SHIP_122(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
 
 CAN_SALE_SHIP:必要好感度 = 0
 
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_民主主義 + 国家ID_ビット演算ヘッダー調整
+RETURN 0
 
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_122
 RETURN 0
 
-@IS_VARIANT_122
-RETURN 特殊分類_通常艦艇
+; @CAN_SPACECRAFT_CARRYING_122が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_122(動作モード = 0)
+#DIM 動作モード
+
+

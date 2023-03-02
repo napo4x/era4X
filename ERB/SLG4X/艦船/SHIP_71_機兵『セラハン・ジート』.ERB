@@ -23,40 +23,46 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 2
 STATUS:SHIP_SIELD_SLOT = 1
 STATUS:SHIP_ARMOR_SLOT = 1
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 170
+STATUS:SHIP_VARIANT = 特殊分類_メック
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_71(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_71
-RESULTS:0 = ハールバルズ王国製の人型兵器。
-RESULTS:1 = 初の全領域対応型機兵であり、他国からは大型機動歩兵に分類される。
-RESULTS:2 = 戦列甲冑シリーズの開発成功後、皇国の機動武者から着想を得た先代国王の勅命により
-RESULTS:3 = 歴史史料同然の儀仗用装備であった「機兵」を戦闘兵器として生まれ変わらせる計画が開始された際、
-RESULTS:4 = 白羽の矢が立ったのが、比較的良好な状態で残されていた『セラハン・ジン・ジート』であった。
-RESULTS:5 = ただ、そもそも「機兵」は一見各国のメックに似てはいるが
-RESULTS:6 = 王国成立以前のハールバルズで建造されており、
-RESULTS:7 = 技術解析どころかメンテナンスすらまともに行われていなかったため、現存機の改修は早々に頓挫。
-RESULTS:8 = 外観だけ似せられた事実上の新規設計機となっている。
-RESULTS:9 = ---
-RESULTS:10 = 「戦列甲冑以上の運動性と高い耐久性を持つ機動武者クラスの人型兵器」という性能要求は
-RESULTS:11 = かなりの無茶振りと呼べるものであり、甲冑技師たちが解決策として選択したのは
-RESULTS:12 = 引火・爆発しやすい欠点を持つ人工筋肉に代わり、民主主義国家の小型機動歩兵に用いられている
-RESULTS:13 = 総機械製内部フレームによる可動構造を大型機動歩兵サイズに巨大化させる、という
-RESULTS:14 = これまた斜め上の解決策であった。
-RESULTS:15 = また、王国は複雑化した機体を制御するためのソフトウェア技術を保有しておらず、
-RESULTS:16 = ブラックボックス化していたオリジナルの「機兵」のものを強引に流用している。
-RESULTS:17 = 武装面では王国艦船の運用思想を受け継いでおり、高出力ジェネレータを搭載することで
-RESULTS:18 = 複数の船舶用武装に相当する火器を運用することが可能。
-RESULTS:19 = 更に専用装備として、駆逐艦用シールド発生装置を内蔵する
-RESULTS:20 = スクトゥム状の大型シールドも開発された。
-RESULTS:21 = ---
-RESULTS:22 = 結果的にコルベットを上回る運動性と、ある程度のダメコン能力を両立させることには成功したが、
-RESULTS:23 = 開発コストは青天井に跳ね上がり、更に新規生産が不可能なパーツまで利用している弊害で
-RESULTS:24 = 巡洋艦並の建造費を食う上に量産効果がまったく見込めない代物となってしまった。
-RESULTS:25 = とはいえ、機械の骨格に騎士の全身鎧を着せたような優美な外観は王国貴族にすこぶる好評であり、
-RESULTS:26 = 先代国王の放蕩財政下で新規艦隊編成レベルの予算が組まれ、20機ほどが建造されている。
-RESULTS:27 = ---
-RESULTS:28 = 連中のフネの名の標準語訳を見たときから、正直イヤな予感はしていたんだ。
-RESULTS:29 = ――　惑星アース出身の技術顧問
+CALL SHIP_PRINTFORML_MESSAGE("ハールバルズ王国製の人型兵器。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("初の全領域対応型機兵であり、他国からは大型機動歩兵に分類される。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("戦列甲冑シリーズの開発成功後、皇国の機動武者から着想を得た先代国王の勅命により", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("歴史史料同然の儀仗用装備であった「機兵」を戦闘兵器として生まれ変わらせる計画が開始された際、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("白羽の矢が立ったのが、比較的良好な状態で残されていた『セラハン・ジン・ジート』であった。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ただ、そもそも「機兵」は一見各国のメックに似てはいるが", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("王国成立以前のハールバルズで建造されており、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("技術解析どころかメンテナンスすらまともに行われていなかったため、現存機の改修は早々に頓挫。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("外観だけ似せられた事実上の新規設計機となっている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("「戦列甲冑以上の運動性と高い耐久性を持つ機動武者クラスの人型兵器」という性能要求は", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("かなりの無茶振りと呼べるものであり、甲冑技師たちが解決策として選択したのは", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("引火・爆発しやすい欠点を持つ人工筋肉に代わり、民主主義国家の小型機動歩兵に用いられている", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("総機械製内部フレームによる可動構造を大型機動歩兵サイズに巨大化させる、という", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("これまた斜め上の解決策であった。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("また、王国は複雑化した機体を制御するためのソフトウェア技術を保有しておらず、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ブラックボックス化していたオリジナルの「機兵」のものを強引に流用している。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("武装面では王国艦船の運用思想を受け継いでおり、高出力ジェネレータを搭載することで", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("複数の船舶用武装に相当する火器を運用することが可能。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("更に専用装備として、駆逐艦用シールド発生装置を内蔵する", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("スクトゥム状の大型シールドも開発された。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("結果的にコルベットを上回る運動性と、ある程度のダメコン能力を両立させることには成功したが、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("開発コストは青天井に跳ね上がり、更に新規生産が不可能なパーツまで利用している弊害で", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("巡洋艦並の建造費を食う上に量産効果がまったく見込めない代物となってしまった。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("とはいえ、機械の骨格に騎士の全身鎧を着せたような優美な外観は王国貴族にすこぶる好評であり、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("先代国王の放蕩財政下で新規艦隊編成レベルの予算が組まれ、20機ほどが建造されている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("連中のフネの名の標準語訳を見たときから、正直イヤな予感はしていたんだ。", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("――　惑星アース出身の技術顧問", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", カラー_選択不可, 動作モード)
 
 
 @GET_SHIP_RESOURCE_71(USE_RESOURCE)
@@ -71,6 +77,7 @@ USE_RESOURCE:耐熱合金 = 100
 USE_RESOURCE:超電導回路 = 999
 USE_RESOURCE:タイラーセンサー = 300
 
+
 @SET_SHIP_PRESET_71(SHIP_ID)
 #DIM SHIP_ID
 
@@ -84,13 +91,22 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 9
 SHIP_EQUIP:AI:0:SHIP_ID = 90
 SHIP_EQUIP:センサー:0:SHIP_ID = 2
 
+
 @IS_SALE_SHIP_71(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
+
 RETURN 0
+
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_71
 RETURN 0
 
-@IS_VARIANT_71
-RETURN 特殊分類_メック
+; @CAN_SPACECRAFT_CARRYING_71が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_71(動作モード = 0)
+#DIM 動作モード
+
+

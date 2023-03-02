@@ -23,16 +23,24 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 2
 STATUS:SHIP_SIELD_SLOT = 6
 STATUS:SHIP_ARMOR_SLOT = 6
 STATUS:SHIP_OPTION_SLOT = 0
+STATUS:SHIP_CRITICAL_RISK = 0
+STATUS:SHIP_VARIANT = 特殊分類_建造物
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_140(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_140
-RESULTS:0 = 民主主義国と企業連合が合同開発した拠点防衛用の独立モジュール
-RESULTS:1 = 独立防衛モジュールとして初めて広く普及し、全ての同型モジュールの先駆けとされている
-RESULTS:2 = 当時は艦隊いらずの強力なモジュールとして人気を博したが、より強大化する昨今の武装に対する防衛性能は疑問視されている
+CALL SHIP_PRINTFORML_MESSAGE("民主主義国と企業連合が合同開発した拠点防衛用の独立モジュール", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("独立防衛モジュールとして初めて広く普及し、全ての同型モジュールの先駆けとされている", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("当時は艦隊いらずの強力なモジュールとして人気を博したが、より強大化する昨今の武装に対する防衛性能は疑問視されている", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_140(USE_RESOURCE)
 #DIM REF USE_RESOURCE
+
 
 
 @SET_SHIP_PRESET_140(SHIP_ID)
@@ -42,29 +50,35 @@ SHIP_EQUIP:主砲:0:SHIP_ID = 14
 SHIP_EQUIP:主砲:1:SHIP_ID = 14
 SHIP_EQUIP:副砲:0:SHIP_ID = 3
 SHIP_EQUIP:副砲:1:SHIP_ID = 3
-SHIP_EQUIP:装甲:0:SHIP_ID = 4
-SHIP_EQUIP:装甲:1:SHIP_ID = 4
-SHIP_EQUIP:装甲:2:SHIP_ID = 4
-SHIP_EQUIP:装甲:3:SHIP_ID = 4
-SHIP_EQUIP:装甲:4:SHIP_ID = 4
-SHIP_EQUIP:装甲:5:SHIP_ID = 4
 SHIP_EQUIP:シールド:0:SHIP_ID = 4
 SHIP_EQUIP:シールド:1:SHIP_ID = 4
 SHIP_EQUIP:シールド:2:SHIP_ID = 4
 SHIP_EQUIP:シールド:3:SHIP_ID = 4
 SHIP_EQUIP:シールド:4:SHIP_ID = 4
 SHIP_EQUIP:シールド:5:SHIP_ID = 4
-SHIP_EQUIP:エンジン:0:SHIP_ID = 0
-SHIP_EQUIP:AI:0:SHIP_ID = 0
-SHIP_EQUIP:センサー:0:SHIP_ID = 0
+SHIP_EQUIP:装甲:0:SHIP_ID = 4
+SHIP_EQUIP:装甲:1:SHIP_ID = 4
+SHIP_EQUIP:装甲:2:SHIP_ID = 4
+SHIP_EQUIP:装甲:3:SHIP_ID = 4
+SHIP_EQUIP:装甲:4:SHIP_ID = 4
+SHIP_EQUIP:装甲:5:SHIP_ID = 4
+
 
 @IS_SALE_SHIP_140(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
+
 RETURN 0
+
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_140
 RETURN 0
 
-@IS_VARIANT_140
-RETURN 特殊分類_建造物
+; @CAN_SPACECRAFT_CARRYING_140が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_140(動作モード = 0)
+#DIM 動作モード
+
+

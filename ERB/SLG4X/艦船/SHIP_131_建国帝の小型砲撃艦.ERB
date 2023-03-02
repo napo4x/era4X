@@ -1,5 +1,5 @@
 ﻿;------------------------
-; 旧文明の小型砲撃艦
+; 建国帝の小型砲撃艦
 ;------------------------
 @GET_SHIP_NAME_131
 RESULTS = 建国帝の小型砲撃艦
@@ -23,16 +23,22 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 0
 STATUS:SHIP_SIELD_SLOT = 2
 STATUS:SHIP_ARMOR_SLOT = 0
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 130
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_131(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_131
-RESULTS:0 = 旧大国との独立戦争時代に設計された小型砲撃艦。
-RESULTS:1 = 小型ながら現代大型艦クラスの主砲を三門搭載する。
-RESULTS:2 = 当時のコアジェネレーターから展開される強大なシールドの貫通を目的にしているのだろう。
-RESULTS:3 = 現在の最先端技術に匹敵する大型コイルガンが標準搭載されている。
-RESULTS:4 = ただし、対空防御を想定されておらず、副砲は一門。
-RESULTS:5 = 運動性能は高いが、船体防御をシールドに頼り切っている。
+CALL SHIP_PRINTFORML_MESSAGE("旧大国との独立戦争時代に設計された小型砲撃艦。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("小型ながら現代大型艦クラスの主砲を三門搭載する。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("当時のコアジェネレーターから展開される強大なシールドの貫通を目的にしているのだろう。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("現在の最先端技術に匹敵する大型コイルガンが標準搭載されている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ただし、対空防御を想定されておらず、副砲は一門。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("運動性能は高いが、船体防御をシールドに頼り切っている。", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_131(USE_RESOURCE)
 #DIM REF USE_RESOURCE
@@ -45,6 +51,7 @@ USE_RESOURCE:合金加工剤 = 125
 USE_RESOURCE:耐熱合金 = 45
 USE_RESOURCE:超電導回路 = 80
 USE_RESOURCE:タイラーセンサー = 60
+
 
 @SET_SHIP_PRESET_131(SHIP_ID)
 #DIM SHIP_ID
@@ -59,13 +66,22 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 10
 SHIP_EQUIP:AI:0:SHIP_ID = 3
 SHIP_EQUIP:センサー:0:SHIP_ID = 3
 
+
 @IS_SALE_SHIP_131(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
+
 RETURN 0
+
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_131
 RETURN 0
 
-@IS_VARIANT_131
-RETURN 特殊分類_通常艦艇
+; @CAN_SPACECRAFT_CARRYING_131が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_131(動作モード = 0)
+#DIM 動作モード
+
+

@@ -23,13 +23,18 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 3
 STATUS:SHIP_SIELD_SLOT = 2
 STATUS:SHIP_ARMOR_SLOT = 2
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 100
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_100(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_100
-RESULTS:0 = 古代に使用されていたとされるフリゲート
-RESULTS:1 = 使用されているテクノロジーは現在の科学力では解析できずにいる
-RESULTS:2 = 現代の標準型フリゲートよりも回避性能が大分優れている
+CALL SHIP_PRINTFORML_MESSAGE("古代に使用されていたとされるフリゲート", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("使用されているテクノロジーは現在の科学力では解析できずにいる", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("現代の標準型フリゲートよりも回避性能が大分優れている", , 動作モード)
 
 
 @GET_SHIP_RESOURCE_100(USE_RESOURCE)
@@ -44,17 +49,27 @@ USE_RESOURCE:耐熱合金 = 200
 USE_RESOURCE:超電導回路 = 40
 USE_RESOURCE:タイラーセンサー = 20
 
+
 @SET_SHIP_PRESET_100(SHIP_ID)
 #DIM SHIP_ID
 
 
+
 @IS_SALE_SHIP_100(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
+
 RETURN 0
+
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_100
 RETURN 0
 
-@IS_VARIANT_100
-RETURN 特殊分類_通常艦艇
+; @CAN_SPACECRAFT_CARRYING_100が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_100(動作モード = 0)
+#DIM 動作モード
+
+

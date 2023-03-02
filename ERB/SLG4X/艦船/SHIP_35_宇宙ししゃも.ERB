@@ -23,11 +23,17 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 0
 STATUS:SHIP_SIELD_SLOT = 0
 STATUS:SHIP_ARMOR_SLOT = 0
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 100
+STATUS:SHIP_VARIANT = 特殊分類_宇宙生物
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_35(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_35
-RESULTS:0 = 探査船サイズの宇宙怪獣。エーテルや鉱物資源を求めて小惑星帯を回遊する
+CALL SHIP_PRINTFORML_MESSAGE("探査船サイズの宇宙怪獣。エーテルや鉱物資源を求めて小惑星帯を回遊する", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_35(USE_RESOURCE)
 #DIM REF USE_RESOURCE
@@ -41,19 +47,29 @@ USE_RESOURCE:耐熱合金 = 30
 USE_RESOURCE:超電導回路 = 30
 USE_RESOURCE:タイラーセンサー = 20
 
+
 @SET_SHIP_PRESET_35(SHIP_ID)
 #DIM SHIP_ID
 
 SHIP_EQUIP:主砲:0:SHIP_ID = 192
 SHIP_EQUIP:エンジン:0:SHIP_ID = 91
 
+
 @IS_SALE_SHIP_35(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
+
+RETURN 0
 
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_35
 RETURN 0
 
-@IS_VARIANT_35
-RETURN 特殊分類_宇宙生物
+; @CAN_SPACECRAFT_CARRYING_35が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_35(動作モード = 0)
+#DIM 動作モード
+
+

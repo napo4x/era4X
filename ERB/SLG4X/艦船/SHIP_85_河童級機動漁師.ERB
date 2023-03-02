@@ -1,5 +1,5 @@
 ﻿;------------------------
-; 標準型機動漁師
+; 河童級機動漁師
 ;------------------------
 @GET_SHIP_NAME_85
 RESULTS = 河童級機動漁師
@@ -23,22 +23,31 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 2
 STATUS:SHIP_SIELD_SLOT = 1
 STATUS:SHIP_ARMOR_SLOT = 1
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 80
+STATUS:SHIP_VARIANT = 特殊分類_メック
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_85(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_85
-RESULTS:0 = 全宇宙漁業組合設計による大型機動漁師。
-RESULTS:1 = 熟練漁師以外には扱いずらい青龍級機動漁師の各種技術を扱いやすい標準型機動漁師に取り込んだ新型漁業支援機。
-RESULTS:2 = 遠洋漁業に耐えられ一般漁師でも扱える漁業支援機の存在を多くの漁師から求められたため開発が進められた。
-RESULTS:3 = 増設した肩部外装の複数のワイヤー射出装置と脚部外装の集中姿勢制御スラスタ－により機動性は大きく改善、
-RESULTS:4 = 運用上の問題最大の問題点であった防御面もシールドジェネレーターを積めた事により解決している。
-RESULTS:5 = 標準型機動漁師に比べると現行兵器と遜色ない性能を有するが本体以外の外装部分が大型化してしまい
-RESULTS:6 = 船種分類上はフリゲートに分類される事となった。
-RESULTS:7 = 新造ではなく旧式大型起動歩兵を改修した機体も存在している。
+CALL SHIP_PRINTFORML_MESSAGE("全宇宙漁業組合設計による大型機動漁師。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("熟練漁師以外には扱いずらい青龍級機動漁師の各種技術を扱いやすい標準型機動漁師に取り込んだ新型漁業支援機。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("遠洋漁業に耐えられ一般漁師でも扱える漁業支援機の存在を多くの漁師から求められたため開発が進められた。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("増設した肩部外装の複数のワイヤー射出装置と脚部外装の集中姿勢制御スラスタ－により機動性は大きく改善、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("運用上の問題最大の問題点であった防御面もシールドジェネレーターを積めた事により解決している。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("標準型機動漁師に比べると現行兵器と遜色ない性能を有するが本体以外の外装部分が大型化してしまい", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("船種分類上はフリゲートに分類される事となった。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("新造ではなく旧式大型起動歩兵を改修した機体も存在している。", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_85(USE_RESOURCE)
 #DIM REF USE_RESOURCE
-
 
 USE_RESOURCE:武装合金 = 80
 USE_RESOURCE:装甲合金 = 40
@@ -48,6 +57,7 @@ USE_RESOURCE:合金加工剤 = 60
 USE_RESOURCE:耐熱合金 = 40
 USE_RESOURCE:超電導回路 = 40
 USE_RESOURCE:タイラーセンサー = 20
+
 
 @SET_SHIP_PRESET_85(SHIP_ID)
 #DIM SHIP_ID
@@ -61,9 +71,9 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 1
 SHIP_EQUIP:AI:0:SHIP_ID = 1
 SHIP_EQUIP:センサー:0:SHIP_ID = 1
 
+
 @IS_SALE_SHIP_85(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
-
 
 CAN_SALE_SHIP:必要技術ID = 14
 CAN_SALE_SHIP:必要好感度 = 300
@@ -75,7 +85,18 @@ SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_アレス宗教 + 国家ID_ビ
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_機械文明 + 国家ID_ビット演算ヘッダー調整
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_豊秋津皇国 + 国家ID_ビット演算ヘッダー調整
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_ハールバルズ + 国家ID_ビット演算ヘッダー調整
+RETURN 0
 
 
-@IS_VARIANT_85
-RETURN 特殊分類_メック
+; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
+@TERM_OF_SALE_85
+RETURN 0
+
+; @CAN_SPACECRAFT_CARRYING_85が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_85(動作モード = 0)
+#DIM 動作モード
+
+

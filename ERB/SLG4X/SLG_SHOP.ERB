@@ -900,7 +900,7 @@ ENDIF
 
 #DIM PREVIOUS_LINECOUNT
 
-#DIM COLUMN_ORDER = データ_艦名, データ_艦種, データ_所属, データ_任務, データ_HP, データ_シールド, データ_実体弾, データ_レーザー, データ_ミサイル, データ_艦載機, データ_魚雷, データ_ビーム, データ_対空, データ_回避
+#DIM COLUMN_ORDER = データ_艦名, データ_艦種, データ_所属, データ_任務, データ_HP, データ_シールド, データ_実体弾, データ_レーザー, データ_ミサイル, データ_艦載機, データ_魚雷, データ_ビーム, データ_対空, データ_回避, データ_被クリティカル率
 #DIM DATA_WIDTH, 船舶一覧データ数 
 #DIM INDEX
 ;列幅
@@ -918,6 +918,7 @@ DATA_WIDTH:データ_魚雷 = 4
 DATA_WIDTH:データ_ビーム = 4
 DATA_WIDTH:データ_対空 = 4
 DATA_WIDTH:データ_回避 = 4
+DATA_WIDTH:データ_被クリティカル率 = 4
 INDEX = 1
 
 TOTAL_SHIP_COUNT = 0
@@ -1097,6 +1098,7 @@ FOR LOCAL, INDEX, VARSIZE("COLUMN_ORDER")
 	SIF LOCAL == 0
 		CONTINUE
 	;各列のデータ長+半角スペース
+	;行からはみ出るので実体弾以降はちょっと無理矢理
 	TOTAL_COLUMN_WIDTH += DATA_WIDTH:(COLUMN_ORDER:LOCAL) + 1
 	SIF TOTAL_COLUMN_WIDTH > RIGHT_COLUMN_LENGTH
 		BREAK
@@ -1110,7 +1112,7 @@ FOR LOCAL, INDEX, VARSIZE("COLUMN_ORDER")
 		CASE データ_任務
 			PRINTBUTTON "任務", 10000 + ソート_任務
 		CASE データ_HP
-			PRINTBUTTON "   耐久    ", 10000 + ソート_MAXHP
+			PRINTBUTTON "     耐久    ", 10000 + ソート_MAXHP
 		CASE データ_シールド
 			PRINTBUTTON "  シールド ", 10000 + ソート_MAXシールド
 		CASE データ_実体弾
@@ -1120,15 +1122,17 @@ FOR LOCAL, INDEX, VARSIZE("COLUMN_ORDER")
 		CASE データ_ミサイル
 			PRINTBUTTON "ﾐｻｲﾙ", 10000 + ソート_ミサイル
 		CASE データ_艦載機
-			PRINTBUTTON "航空", 10000 + ソート_艦載機
+			PRINTBUTTON " 航空", 10000 + ソート_艦載機
 		CASE データ_魚雷
-			PRINTBUTTON "雷撃", 10000 + ソート_魚雷
+			PRINTBUTTON " 雷撃", 10000 + ソート_魚雷
 		CASE データ_ビーム
-			PRINTBUTTON "ﾋﾞｰﾑ", 10000 + ソート_ビーム
+			PRINTBUTTON " ﾋﾞｰﾑ", 10000 + ソート_ビーム
 		CASE データ_対空
 			PRINTBUTTON "対空", 10000 + ソート_対空
 		CASE データ_回避
 			PRINTBUTTON "回避", 10000 + ソート_回避
+		CASE データ_被クリティカル率
+			PRINTBUTTON "被致", 10000 + ソート_被クリティカル率
 	ENDSELECT
 	PRINT  
 NEXT
@@ -1158,7 +1162,14 @@ CALL GET_TOTAL_FIREPOWER(SHIP_ID, FIREPOWER_LIST)
 
 ;先頭列の固定表示
 TOTAL_COLUMN_WIDTH = 2 + DATA_WIDTH:データ_艦名
-COLUMN_DATA =   %SHIP_NAME:(SHIP_ID), DATA_WIDTH:データ_艦名, LEFT%
+
+;IF STRLENS(SHIP_NAME:(SHIP_ID)) >= ((DATA_WIDTH:(COLUMN_ORDER:LOCAL)) - 2)
+IF STRLENS(SHIP_NAME:(SHIP_ID)) >= (DATA_WIDTH:データ_艦名 - 2)
+	COLUMN_DATA = %(TOHALF(SHIP_NAME:(SHIP_ID))), DATA_WIDTH:データ_艦名, LEFT%
+ELSE
+	COLUMN_DATA = %SHIP_NAME:(SHIP_ID), DATA_WIDTH:データ_艦名, LEFT%
+ENDIF
+;COLUMN_DATA =   %SHIP_NAME:(SHIP_ID), DATA_WIDTH:データ_艦名, LEFT%
 COLUMN_DATA += "|"
 FOR LOCAL, INDEX, VARSIZE("COLUMN_ORDER")
 	;各列のデータ長+半角スペース
@@ -1178,9 +1189,9 @@ FOR LOCAL, INDEX, VARSIZE("COLUMN_ORDER")
 			COLUMN_DATA += @"%GET_SHIP_MISSION_STR(SHIP_ID), DATA_WIDTH:(COLUMN_ORDER:LOCAL), LEFT%"
 		CASE データ_HP
 			CALL GET_SHIP_HP(SHIP_ID)
-			COLUMN_DATA += @"{RESULT, 5, RIGHT}"
+			COLUMN_DATA += @"{RESULT, 6, RIGHT}"
 			COLUMN_DATA += "/"
-			COLUMN_DATA += @"{RESULT + (SHIP_DAMAGE:SHIP_ID), 5, RIGHT}"
+			COLUMN_DATA += @"{RESULT + (SHIP_DAMAGE:SHIP_ID), 6, RIGHT}"
 		CASE データ_シールド
 			CALL GET_SHIP_SIELD(SHIP_ID)
 			COLUMN_DATA += @"{RESULT, 5, RIGHT}"
@@ -1188,23 +1199,26 @@ FOR LOCAL, INDEX, VARSIZE("COLUMN_ORDER")
 			CALL GET_SHIP_TOTAL_SIELD(SHIP_ID)
 			COLUMN_DATA += @"{RESULT, 5, RIGHT}"
 		CASE データ_実体弾
-			COLUMN_DATA += @"{FIREPOWER_LIST:実体弾, 4, RIGHT}"
+			COLUMN_DATA += @"{FIREPOWER_LIST:実体弾, 5, RIGHT}"
 		CASE データ_レーザー
-			COLUMN_DATA += @"{FIREPOWER_LIST:レーザー, 4, RIGHT}"
+			COLUMN_DATA += @"{FIREPOWER_LIST:レーザー, 5, RIGHT}"
 		CASE データ_ミサイル
-			COLUMN_DATA += @"{FIREPOWER_LIST:ミサイル, 4, RIGHT}"
+			COLUMN_DATA += @"{FIREPOWER_LIST:ミサイル, 5, RIGHT}"
 		CASE データ_艦載機
-			COLUMN_DATA += @"{FIREPOWER_LIST:艦載機, 4, RIGHT}"
+			COLUMN_DATA += @"{FIREPOWER_LIST:艦載機, 5, RIGHT}"
 		CASE データ_魚雷
-			COLUMN_DATA += @"{FIREPOWER_LIST:魚雷, 4, RIGHT}" 
+			COLUMN_DATA += @"{FIREPOWER_LIST:魚雷, 5, RIGHT}" 
 		CASE データ_ビーム
-			COLUMN_DATA += @"{FIREPOWER_LIST:ビーム, 4, RIGHT}" 
+			COLUMN_DATA += @"{FIREPOWER_LIST:ビーム, 5, RIGHT}" 
 		CASE データ_対空
 			CALL GET_SUB_ANTI_AIR(SHIP_ID)
 			COLUMN_DATA += @"{RESULT, 4, RIGHT}" 
 		CASE データ_回避
 			CALL GET_AVOID(SHIP_ID)
 			COLUMN_DATA += @"{RESULT, 4, RIGHT}" 
+		CASE データ_被クリティカル率
+			CALL GET_CRITICAL_RISK(SHIP_ID)
+			COLUMN_DATA += @"%(TOSTR(RESULT, "##0,.0%")), 6, RIGHT%"
 	ENDSELECT
 	COLUMN_DATA += " " 
 NEXT
@@ -1280,6 +1294,9 @@ FOR LOCAL, 0, MAX_SHIP
 		CASE ソート_回避
 			CALL GET_AVOID(CURRENT_SHIP_LIST:LOCAL)
 			SORT_VALUE:LOCAL = RESULT
+		CASE ソート_被クリティカル率
+			CALL GET_CRITICAL_RISK(CURRENT_SHIP_LIST:LOCAL)
+			SORT_VALUE:LOCAL = RESULT			
 	ENDSELECT
 	SORT_LIST:LOCAL = CURRENT_SHIP_LIST:LOCAL
 	SORT_END ++

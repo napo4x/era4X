@@ -1,5 +1,5 @@
 ﻿;------------------------
-; 汎用戦艦
+; 旧大国のタイタン
 ;------------------------
 @GET_SHIP_NAME_135
 RESULTS = 旧大国のタイタン
@@ -23,18 +23,25 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 8
 STATUS:SHIP_SIELD_SLOT = 6
 STATUS:SHIP_ARMOR_SLOT = 0
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 2
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_135(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_135
-RESULTS:0 = 旧大国で艦隊旗艦として運用されていたタイタン級戦艦。
-RESULTS:1 = 圧倒的な火力、シールド耐久力を誇り、その全長は２０ｋｍに及ぶ。
-;EVEタイタンをイメージ。
-RESULTS:2 = 大和級と比較して十倍近い巨大さはもはや機動要塞と言え、多数建造されたタイタンの存在は旧大国の力を示した。
-RESULTS:3 = コアジェネレーターには対消滅炉が用いられていたと推測されている。
+CALL SHIP_PRINTFORML_MESSAGE("旧大国で艦隊旗艦として運用されていたタイタン級戦艦。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("圧倒的な火力、シールド耐久力を誇り、その全長は２０ｋｍに及ぶ。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("大和級と比較して十倍近い巨大さはもはや機動要塞と言え、多数建造されたタイタンの存在は旧大国の力を示した。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("コアジェネレーターには対消滅炉が用いられていたと推測されている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_135(USE_RESOURCE)
 #DIM REF USE_RESOURCE
+
 
 
 @SET_SHIP_PRESET_135(SHIP_ID)
@@ -66,13 +73,23 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 21
 SHIP_EQUIP:AI:0:SHIP_ID = 4
 SHIP_EQUIP:センサー:0:SHIP_ID = 3
 
+
 @IS_SALE_SHIP_135(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
+
 RETURN 0
+
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_135
 RETURN 0
 
-@IS_VARIANT_135
-RETURN 特殊分類_通常艦艇
+; @CAN_SPACECRAFT_CARRYING_135が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_135(動作モード = 0)
+#DIM 動作モード
+
+CALL SHIP_PRINTFORML_MESSAGE("EVEタイタンをイメージ。", , 動作モード)
+

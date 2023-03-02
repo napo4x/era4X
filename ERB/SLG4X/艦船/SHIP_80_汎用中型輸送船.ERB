@@ -1,5 +1,5 @@
 ﻿;------------------------
-; 汎用輸送船
+; 汎用中型輸送船
 ;------------------------
 @GET_SHIP_NAME_80
 RESULTS = 汎用中型輸送船
@@ -15,25 +15,32 @@ STATUS:SHIP_SUB_WEAPON_SIZE = 0
 STATUS:SHIP_SIELD_SIZE = 1
 STATUS:SHIP_ARMOR_SIZE = 1
 STATUS:SHIP_ENGIN_SIZE = 3
-STATUS:SHIP_CAPACITY = 600
 STATUS:SHIP_PRICE = 5000000
+STATUS:SHIP_CREW = 30
 
 STATUS:SHIP_MAIN_WEAPON_SLOT = 0
 STATUS:SHIP_SUB_WEAPON_SLOT = 0
 STATUS:SHIP_SIELD_SLOT = 1
 STATUS:SHIP_ARMOR_SLOT = 1
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 40
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_80(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_80
-RESULTS:0 = 各国で使用される中型の汎用輸送船
+CALL SHIP_PRINTFORML_MESSAGE("各国で使用される中型の汎用輸送船", , 動作モード)
+
 
 @GET_SHIP_RESOURCE_80(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
 USE_RESOURCE:装甲合金 = 160
 USE_RESOURCE:合金加工剤 = 80
+
 
 @SET_SHIP_PRESET_80(SHIP_ID)
 #DIM SHIP_ID
@@ -44,9 +51,9 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 18
 SHIP_EQUIP:AI:0:SHIP_ID = 1
 SHIP_EQUIP:センサー:0:SHIP_ID = 1
 
+
 @IS_SALE_SHIP_80(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
-
 
 CAN_SALE_SHIP:必要技術ID = 0
 CAN_SALE_SHIP:必要好感度 = 0
@@ -58,11 +65,18 @@ SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_アレス宗教 + 国家ID_ビ
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_機械文明 + 国家ID_ビット演算ヘッダー調整
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_豊秋津皇国 + 国家ID_ビット演算ヘッダー調整
 SETBIT CAN_SALE_SHIP:建造可能国家, 国家ID_ハールバルズ + 国家ID_ビット演算ヘッダー調整
+RETURN 0
 
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_80
 RETURN 0
 
-@IS_VARIANT_80
-RETURN 特殊分類_通常艦艇
+; @CAN_SPACECRAFT_CARRYING_80が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_80(動作モード = 0)
+#DIM 動作モード
+
+

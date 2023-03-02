@@ -23,16 +23,24 @@ STATUS:SHIP_SUB_WEAPON_SLOT = 4
 STATUS:SHIP_SIELD_SLOT = 3
 STATUS:SHIP_ARMOR_SLOT = 2
 STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 0
+STATUS:SHIP_VARIANT = 特殊分類_通常艦艇
 
 
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_68(動作モード = 0)
+#DIM 動作モード
 
-@GET_SHIP_DESCRIPTION_F_68
-RESULTS:0 = パロス教団の旗艦となるべく設計された戦艦。恐るべき耐久性を持つ。
-RESULTS:1 = また、実質的に本級専用とされる非人道的兵器が存在するらしいが……？
-RESULTS:2 = ---
-RESULTS:3 = 殆どの戦争では両者が蛮族となるか、両者がスポーツマンとなるかの二択だ
-RESULTS:4 = だが俺は常に蛮族だ、誰に対しても情け容赦はしない
-RESULTS:5 = ――　パロス教団祭官　オリス＝エッカート，友愛騎士団との戦闘に際して
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("パロス教団の旗艦となるべく設計された戦艦。恐るべき耐久性を持つ。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("また、実質的に本級専用とされる非人道的兵器が存在するらしいが……？", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("殆どの戦争では両者が蛮族となるか、両者がスポーツマンとなるかの二択だ", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("だが俺は常に蛮族だ、誰に対しても情け容赦はしない", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("――　パロス教団祭官　オリス＝エッカート，友愛騎士団との戦闘に際して", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", カラー_選択不可, 動作モード)
+
 
 @GET_SHIP_RESOURCE_68(USE_RESOURCE)
 #DIM REF USE_RESOURCE
@@ -46,6 +54,7 @@ USE_RESOURCE:合金加工剤 = 660
 USE_RESOURCE:耐熱合金 = 130
 USE_RESOURCE:超電導回路 = 130
 USE_RESOURCE:タイラーセンサー = 20
+
 
 @SET_SHIP_PRESET_68(SHIP_ID)
 #DIM SHIP_ID
@@ -64,13 +73,22 @@ SHIP_EQUIP:エンジン:0:SHIP_ID = 4
 SHIP_EQUIP:AI:0:SHIP_ID = 1
 SHIP_EQUIP:センサー:0:SHIP_ID = 1
 
+
 @IS_SALE_SHIP_68(CAN_SALE_SHIP)
 #DIM REF CAN_SALE_SHIP
+
 RETURN 0
+
 
 ; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
 @TERM_OF_SALE_68
 RETURN 0
 
-@IS_VARIANT_68
-RETURN 特殊分類_通常艦艇
+; @CAN_SPACECRAFT_CARRYING_68が存在しません
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_68(動作モード = 0)
+#DIM 動作モード
+
+
