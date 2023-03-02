@@ -1,23 +1,23 @@
-﻿@SET_BODYSIZE(対象, セット位置 = 0)
+﻿@SET_BODYSIZE(対象, セット位置 = 0b111111)
 #DIM 対象
 #DIM セット位置
 
-SIF GETBIT(セット位置, サイズ_身長) || セット位置 == 0
+SIF GETBIT(セット位置, サイズ_身長)
 	CALL SET_BODYSIZE_HEIGHT(対象)
 
-SIF GETBIT(セット位置, サイズ_バスト) || セット位置 == 0
+SIF GETBIT(セット位置, サイズ_バスト)
 	CALL SET_BODYSIZE_BUST(対象)
 
-SIF GETBIT(セット位置, サイズ_ウェスト) || セット位置 == 0
+SIF GETBIT(セット位置, サイズ_ウェスト)
 	CALL SET_BODYSIZE_WEIST(対象)
 
-SIF GETBIT(セット位置, サイズ_ヒップ) || セット位置 == 0
+SIF GETBIT(セット位置, サイズ_ヒップ)
 	CALL SET_BODYSIZE_HIP(対象)
 
-SIF GETBIT(セット位置, サイズ_体重) || セット位置 == 0
+SIF GETBIT(セット位置, サイズ_体重)
 	CALL SET_BODYSIZE_WEIGHT(対象)
 
-SIF GETBIT(セット位置, サイズ_ペニス) || セット位置 == 0
+SIF GETBIT(セット位置, サイズ_ペニス)
 	CALL SET_BODYSIZE_PENIS(対象)
 
 CALL CUT_WOMB_SPERM_AMOUNT(対象)
@@ -374,6 +374,38 @@ ENDSELECT
 BASE:対象:ペニス = サイズ基礎値
 MAXBASE:対象:ペニス = BASE:対象:ペニス
 
+
+;-------------------------
+;チンポ直径
+;-------------------------
+@CALC_PENIS_DIAMETER(対象)
+#FUNCTION
+#DIM 対象
+#DIM サイズ
+
+SIF !HAS_PENIS(対象)
+	RETURNF 0
+
+サイズ = BASE:対象:ペニス * 3 / 10
+SIF HAS_TAG(対象, タグ_小人)
+	サイズ /= 5
+RETURNF サイズ
+
+;-------------------------
+;開口サイズ
+;-------------------------
+@CALC_OPEN_MOUTH_SIZE(対象)
+#FUNCTION
+#DIM 対象
+#DIM サイズ
+
+サイズ = SQRT(BASE:対象:身長) * 43 / 10
+SIF GETBIT(TALENT:対象:淫乱系, 素質_淫乱_蕩唇)
+	TIMES サイズ, 1.2
+SIF HAS_TAG(対象, タグ_小人)
+	サイズ /= 5
+RETURNF サイズ
+
 ;-------------------------
 ;胃
 ;-------------------------
@@ -724,33 +756,38 @@ ENDIF
 ;-------------------------------------------------
 ;表記上のサイズを取得する関数
 ;-------------------------------------------------
-@REAL_BODYSIZE(ARG,ARGS)
+@REAL_BODYSIZE(対象,ARGS)
 #FUNCTION
+#DIM 対象
 SELECTCASE ARGS
 CASE "身長"
-	SIF HAS_TAG(ARG, タグ_小人)
-		RETURNF BASE:ARG:身長 / 5
-	RETURNF BASE:ARG:身長
+	LOCAL = BASE:対象:身長
+	SIF HAS_TAG(対象, タグ_小人)
+		LOCAL /= 5
 CASE "体重"
-	SIF HAS_TAG(ARG, タグ_小人)
-		RETURNF (BASE:ARG:体重 + 子供重量) / 20
-	RETURNF BASE:ARG:体重
+	LOCAL = BASE:対象:体重 + GET_BABY_WEIGHT(対象)
+	SIF HAS_TAG(対象, タグ_小人)
+		LOCAL /= 20
 CASE "バスト"
-	SIF HAS_TAG(ARG, タグ_小人)
-		RETURNF (BASE:ARG:バスト + 子供バスト) / 5
-	RETURNF BASE:ARG:バスト
+	LOCAL = BASE:対象:バスト + GET_BABY_BUST(対象)
+	SIF HAS_TAG(対象, タグ_小人)
+		LOCAL /= 5
 CASE "ウェスト"
-	SIF HAS_TAG(ARG, タグ_小人)
-		RETURNF (BASE:ARG:ウェスト + 子供サイズ) / 5
-	RETURNF BASE:ARG:ウェスト
+	LOCAL = BASE:対象:ウェスト + GET_BABY_SIZE(対象)
+	SIF HAS_TAG(対象, タグ_小人)
+		LOCAL /= 5
 CASE "ヒップ"
-	SIF HAS_TAG(ARG, タグ_小人)
-		RETURNF BASE:ARG:ヒップ / 5
-	RETURNF BASE:ARG:ヒップ
+	LOCAL = BASE:対象:ヒップ
+	SIF HAS_TAG(対象, タグ_小人)
+		LOCAL /= 5
 CASE "ペニス"
-	SIF HAS_TAG(ARG, タグ_小人)
-		RETURNF BASE:ARG:ペニス / 5
-	RETURNF BASE:ARG:ペニス
+	LOCAL = BASE:対象:ペニス
+	SIF !HAS_PENIS(対象)
+		RETURNF 0
+	SIF HAS_TAG(対象, タグ_小人)
+		LOCAL /= 5
 CASEELSE
 	RETURNF 0
 ENDSELECT
+RETURNF LOCAL
+
