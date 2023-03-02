@@ -6,12 +6,12 @@
 ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 @SETUP_WINDOW
-#DIM  nWndId, 10	;;ウィンドウID格納用
-#DIM  nLocX,  10	;;起点X
-#DIM  nLocY,  10	;;起点Y
-#DIM  nWidth, 10	;;幅X
-#DIM  nHeigth,10	;;高さY
-#DIM  nExFlag,10	;;枠の有無　0x00 なし 0x01 太 0x02 細	
+#DIM  nWndId, 12	;;ウィンドウID格納用
+#DIM  nLocX,  12	;;起点X
+#DIM  nLocY,  12	;;起点Y
+#DIM  nWidth, 12	;;幅X
+#DIM  nHeigth,12	;;高さY
+#DIM  nExFlag,12	;;枠の有無　0x00 なし 0x01 太 0x02 細	
 
 ;;ウィンドウ未生成なら初期設定する
 ; 航宙画面	WndId 0.コントローラー / 1.メインマップ / 2.セクターマップ / 3.右下情報枠 / 4.下部メッセージ
@@ -95,15 +95,14 @@ CALL WndMgr_Exist( 5 )
 SIF ! RESULT:0	
 	CALL WndMgr_CreateWindow( nWndId:5, nLocX:5, nLocY:5, nWidth:5, nHeigth:5, nExFlag:5 )
 
-
 ; ウィンドウ6の生成
-; 船ステータス表示詳細 ;;;未完成
+; 船ステータス表示詳細 
 	nWndId:6  = 6
-	nLocX:6   = nLocX:5
-	nLocY:6   = nLocY:5 + nHeigth:5 -1
-	nWidth:6  = 80
+	nLocX:6   = 2
+	nLocY:6   = 2
+	nWidth:6  = 53
 	nHeigth:6 = 20
-	nExFlag:6 = nExFlag:5
+	nExFlag:6 = 0X02
 CALL WndMgr_Exist( 6 )
 SIF ! RESULT:0
 	CALL WndMgr_CreateWindow( nWndId:6, nLocX:6, nLocY:6, nWidth:6, nHeigth:6, nExFlag:6 )
@@ -131,6 +130,42 @@ SIF ! RESULT:0
 CALL WndMgr_Exist( 8 )
 SIF ! RESULT:0
 	CALL WndMgr_CreateWindow( nWndId:8, nLocX:8, nLocY:8, nWidth:8, nHeigth:8, nExFlag:8 )
+
+; ウィンドウ9の生成
+; 船ステータス表示詳細 
+	nWndId:9  = 9
+	nLocX:9   = 56
+	nLocY:9   = 2
+	nWidth:9  = 54
+	nHeigth:9 = 20
+	nExFlag:9 = 0X02
+CALL WndMgr_Exist( 9 )
+SIF ! RESULT:0
+	CALL WndMgr_CreateWindow( nWndId:9, nLocX:9, nLocY:9, nWidth:9, nHeigth:9, nExFlag:9 )
+
+; ウィンドウ10の生成
+; 装備ステータス表示詳細 
+	nWndId:10  = 10
+	nLocX:10   = 56
+	nLocY:10   = 16
+	nWidth:10  = 54
+	nHeigth:10 = 20
+	nExFlag:10 = 0X02
+CALL WndMgr_Exist( 10 )
+SIF ! RESULT:0
+	CALL WndMgr_CreateWindow( nWndId:10, nLocX:10, nLocY:10, nWidth:10, nHeigth:10, nExFlag:10 )
+
+; ウィンドウ11の生成
+; 装備ステータス表示詳細 
+	nWndId:11  = 11
+	nLocX:11   = 56
+	nLocY:11   = 8
+	nWidth:11  = 54
+	nHeigth:11 = 30
+	nExFlag:11 = 0X02
+CALL WndMgr_Exist( 11 )
+SIF ! RESULT:0
+	CALL WndMgr_CreateWindow( nWndId:11, nLocX:11, nLocY:11, nWidth:11, nHeigth:11, nExFlag:11 )
 
  ;;ウィンドウ初期設定ここまで
 ;--------------------------------

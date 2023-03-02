@@ -27,18 +27,14 @@ STATUS:SHIP_OPTION_SLOT = 1
 
 
 @GET_SHIP_DESCRIPTION_F_66
-PRINTL 
-PRINTFORML パロス教団で多数運用されているコルベット。
-PRINTFORML 汎用コルベットと比べて全体的なスペックは低いが、乗員数は多い。
-PRINTFORML 戦闘においては艦首に搭載された円鋸で衝角じみた近接攻撃を果敢に行う他、
-PRINTFORML 小型移乗コンテナを搭載しており、移乗艇としても運用可能である。
-PRINTL 
-SETCOLOR カラー_選択不可
-PRINTFORML 「近接戦闘兵器による対艦攻撃は、意を決した者たちが用いる際に真価を発揮する」
-PRINTFORML というのが、これまでの戦闘とその結果により導かれた教訓である
-PRINTFORML ――　『パロス聖国軍宇宙戦闘教範』
-PRINTL 
-RESETCOLOR
+RESULTS:0 = パロス教団で多数運用されているコルベット。
+RESULTS:1 = 汎用コルベットと比べて全体的なスペックは低いが、乗員数は多い。
+RESULTS:2 = 戦闘においては艦首に搭載された円鋸で衝角じみた近接攻撃を果敢に行う他、
+RESULTS:3 = 小型移乗コンテナを搭載しており、移乗艇としても運用可能である。
+RESULTS:4 = ---
+RESULTS:5 = 「近接戦闘兵器による対艦攻撃は、意を決した者たちが用いる際に真価を発揮する」
+RESULTS:6 = というのが、これまでの戦闘とその結果により導かれた教訓である
+RESULTS:7 = ――　『パロス聖国軍宇宙戦闘教範』
 
 @GET_SHIP_RESOURCE_66(USE_RESOURCE)
 #DIM REF USE_RESOURCE

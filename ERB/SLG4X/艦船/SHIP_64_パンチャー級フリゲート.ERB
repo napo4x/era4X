@@ -27,17 +27,13 @@ STATUS:SHIP_OPTION_SLOT = 1
 
 
 @GET_SHIP_DESCRIPTION_F_64
-PRINTL 
-PRINTFORML パロス教団が開発し運用している小型フリゲート。
-PRINTFORML 漁船から改修出来るように、船体の大部分は漁船と同様の設計である。
-PRINTFORML ただ巡洋艦レベルのシールドを採用したために装甲が薄くならざるを得なくなり、
-PRINTFORML その余波で全体的な船体バランスが様変わりしてしまっている。
-PRINTL 
-SETCOLOR カラー_選択不可
-PRINTFORML 誰だよ、「ドリルは男のロマン」だなんて最初に言った奴……
-PRINTFORML ――　パロス教団弓官　ヤンティス＝フェーダー
-PRINTL
-RESETCOLOR
+RESULTS:0 = パロス教団が開発し運用している小型フリゲート。
+RESULTS:1 = 漁船から改修出来るように、船体の大部分は漁船と同様の設計である。
+RESULTS:2 = ただ巡洋艦レベルのシールドを採用したために装甲が薄くならざるを得なくなり、
+RESULTS:3 = その余波で全体的な船体バランスが様変わりしてしまっている。
+RESULTS:4 = ---
+RESULTS:5 = 誰だよ、「ドリルは男のロマン」だなんて最初に言った奴……
+RESULTS:6 = ――　パロス教団弓官　ヤンティス＝フェーダー
 
 @GET_SHIP_RESOURCE_64(USE_RESOURCE)
 #DIM REF USE_RESOURCE

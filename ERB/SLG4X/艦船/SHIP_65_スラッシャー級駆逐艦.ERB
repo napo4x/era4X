@@ -27,16 +27,12 @@ STATUS:SHIP_OPTION_SLOT = 1
 
 
 @GET_SHIP_DESCRIPTION_F_65
-PRINTL 
-PRINTFORML パロス教団が開発した、やたら強力なシールドを有する駆逐艦。
-PRINTFORML そのシールド強度を活かした近接戦闘能力は脅威だが、船体そのものの耐久性はフリゲート並み。
-PRINTL 
-SETCOLOR カラー_選択不可
-PRINTL 間違っても『Thrasher(鞭打つ者)』なんて艦名を付けないでおくれよ
-PRINTL そんなことをしたら皇国出身の矢卒が1番艦と乗り間違えてしまうからな
-PRINTL ――　パロス教団の技術顧問
-PRINTL
-RESETCOLOR
+RESULTS:0 = パロス教団が開発した、やたら強力なシールドを有する駆逐艦。
+RESULTS:1 = そのシールド強度を活かした近接戦闘能力は脅威だが、船体そのものの耐久性はフリゲート並み。
+RESULTS:2 = ---
+RESULTS:3 = 間違っても『Thrasher(鞭打つ者)』なんて艦名を付けないでおくれよ
+RESULTS:4 = そんなことをしたら皇国出身の矢卒が1番艦と乗り間違えてしまうからな
+RESULTS:5 = ――　パロス教団の技術顧問
 
 @GET_SHIP_RESOURCE_65(USE_RESOURCE)
 #DIM REF USE_RESOURCE

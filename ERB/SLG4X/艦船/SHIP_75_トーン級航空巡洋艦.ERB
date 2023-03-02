@@ -26,15 +26,13 @@ STATUS:SHIP_OPTION_SLOT = 1
 
 
 @GET_SHIP_DESCRIPTION_F_75
-PRINTL 巡洋艦級の船体に艦載機運用能力を与えた自称巡洋艦。
-PRINTL 実際、運用コストは巡洋艦と同程度。
-PRINTL 名目としては巡洋艦であるが、実態としては限定的な艦載機運用能力を持つ小型空母である。
-PRINTL 
-PRINTL 企業連合が作った艦船であるものの、他国家での生産が許可されている。
-SETCOLOR カラー_選択不可
-PRINTL 時に古きを知る事で最良の結果が齎される
-PRINTL ――企業連合 条約解釈部
-RESETCOLOR
+RESULTS:0 = 巡洋艦級の船体に艦載機運用能力を与えた自称巡洋艦。
+RESULTS:1 = 実際、運用コストは巡洋艦と同程度。
+RESULTS:2 = 名目としては巡洋艦であるが、実態としては限定的な艦載機運用能力を持つ小型空母である。
+RESULTS:3 = ---
+RESULTS:4 = 企業連合が作った艦船であるものの、他国家での生産が許可されている。
+RESULTS:5 = 時に古きを知る事で最良の結果が齎される
+RESULTS:6 = ――企業連合 条約解釈部
 
 @GET_SHIP_RESOURCE_75(USE_RESOURCE)
 #DIM REF USE_RESOURCE
