@@ -35,6 +35,26 @@ FOR SHIP_ID, 0, MAX_SHIP
 NEXT
 RETURN COUNTER
 
+;---------------------------------
+; 艦船一覧取得(LIST LIBRARY使用版)
+;---------------------------------
+@GET_SHIP_LIST_STR(POSID = -1, COUNTRY_ID)
+#FUNCTIONS
+#DIMS LIST
+#DIM POSID
+#DIM COUNTRY_ID
+#DIM SHIP_ID
+
+VARSET LIST
+FOR SHIP_ID, 0, MAX_SHIP
+	SIF COUNTRY_ID != SHIP_COUNTRY:SHIP_ID
+		CONTINUE
+	SIF POSID != -1 && POSID != SHIP_POSITION:SHIP_ID
+		CONTINUE
+	LIST = %LIST_ADD(LIST, TOSTR(SHIP_ID))%
+NEXT
+RETURNF LIST
+
 ;----------------------------
 ; マップに表示する艦船タイルを返す
 ;----------------------------
