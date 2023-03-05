@@ -1730,7 +1730,7 @@ ENDIF
 #DIM _WEAPON_HP
 #DIM _WEAPON_TOTAL_HP
 
-IF GROUPMATCH(_WEAPON_STATUS, ミサイル, 艦載機, 魚雷, ミサイル_自爆, 艦載機_自爆, 魚雷_自爆)
+IF GROUPMATCH(_WEAPON_STATUS:WEAPON_TYPE, ミサイル, 艦載機, 魚雷, ミサイル_自爆, 艦載機_自爆, 魚雷_自爆)
 		SELECTCASE _WEAPON_STATUS:WEAPON_TYPE
 		CASE ミサイル, ミサイル_自爆
 			_WEAPON_HP = MISSILE_HP
