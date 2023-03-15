@@ -82,7 +82,7 @@ ENDIF
 @DELETE_CHARA(ARG:0)
 #DIM IS_ORIGIN
 ;ランダムキャラ(子供)の場合
-EXISTCSV ARG:0
+EXISTCSV NO:(ARG:0)
 IS_ORIGIN = RESULT
 IF IS_CHILD(ARG:0)
 	;キャラARG:0より後ろのNOを持つキャラのNOを詰める
@@ -97,13 +97,21 @@ IF IS_CHILD(ARG:0)
 ;イベントキャラの場合
 
 ;ランダムキャラ(汎用)の場合
-ELSEIF IS_ORIGIN == -1
-	;キャラARG:0より後ろのNOを持つキャラのNOを詰める
+ELSEIF IS_ORIGIN == 0 && MAX_FIXED_CHARA <= NO:(ARG:0) && NO:(ARG:0) < (MIN_NO_RANDOM_CHARA + MAX_RANDOM_CHARA)
+	;キャラARG:0より後ろで・汎用武将の範囲(MIN_NO_RANDOM_CHARA～(MIN_NO_RANDOM_CHARA + MAX_RANDOM_CHARA) - 1)のNOを詰める(汎用武将の範囲外のNOを持つ子供やカスタムキャラ・メカのは変えない)
 	FOR LOCAL:0, 0, CHARANUM
-		IF NO:(LOCAL:0) > NO:(ARG:0)
+		IF NO:(LOCAL:0) > NO:(ARG:0) && MIN_NO_RANDOM_CHARA <= NO:(LOCAL:0) && NO:(LOCAL:0) < (MIN_NO_RANDOM_CHARA + MAX_RANDOM_CHARA)
 			NO:(LOCAL:0) --
 		ENDIF
 	NEXT
+; カスタムキャラ等の場合
+ELSEIF IS_ORIGIN == 0 && MIN_NO_SP_CHARA <= NO:(ARG:0)
+	;キャラARG:0より後ろで・カスタムキャラ等の範囲(MIN_NO_SP_CHARA～)のNOを詰める
+	FOR LOCAL:0, 0, CHARANUM
+		IF NO:(LOCAL:0) > NO:(ARG:0) && MIN_NO_SP_CHARA <= NO:(LOCAL:0)
+			NO:(LOCAL:0) --
+		ENDIF
+	NEXT	
 ELSE
 	;固有の処理は不要
 ENDIF
@@ -116,24 +124,25 @@ IF CFLAG:(ARG:0):行動不能状態 == 行動不能_子供
 	NEXT
 ENDIF
 
-;ランダムキャラのNO割り振りの更新
-LOCAL:1 = 0
+;キャラの削除
+DELCHARA ARG:0
+
+; 武将カウントの更新(キャラ削除後にする)
 LOCAL:2 = 0
 FOR LOCAL, 0, CHARANUM
-	EXISTCSV LOCAL
-	LOCAL:1 = RESULT
-	SIF LOCAL:1
-		CONTINUE
+	; 子供は汎用武将カウントには関係ないので弾く
 	SIF IS_CHILD(LOCAL)
 		CONTINUE
-	SIF LOCAL:1 == -1
+	EXISTCSV NO:LOCAL
+	LOCAL:1 = RESULT
+	; CSVが無くて、NOが汎用武将の範囲(MIN_NO_RANDOM_CHARA～(MIN_NO_RANDOM_CHARA + MAX_RANDOM_CHARA) - 1)にあるのなら汎用武将として数える
+	IF LOCAL:1 == 0 && MIN_NO_RANDOM_CHARA <= NO:(LOCAL:0) && NO:(LOCAL:0) < (MIN_NO_RANDOM_CHARA + MAX_RANDOM_CHARA)
 		LOCAL:2 ++
+	ENDIF
 NEXT
 
 FLAG:汎用武将カウント = LOCAL:2
 
-;キャラの削除
-DELCHARA ARG:0
 
 ;REL_LIKE、REL_HATEの修正
 FOR LOCAL:0, 0, CHARANUM
@@ -4377,4 +4386,4 @@ FOR LOCAL, 0, CHARANUM
 		LOCAL:1 ++
 	ENDIF
 NEXT
-FLAG:汎用武将カウント += LOCAL:1
+FLAG:汎用武将カウント == LOCAL:1
