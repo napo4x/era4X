@@ -60,9 +60,11 @@ ELSE
 		CASE 体格_長身
 			基礎値 = IS_MALE(対象) ? 1800 + RAND:150 # 1700 + RAND:100
 		CASE 体格_大柄
-			基礎値 = IS_MALE(対象) ? 1950 + RAND:200 # 1800 + RAND:200
+			基礎値 = IS_MALE(対象) ? 1950 # 1800
+			基礎値 += RAND:200
 		CASE 体格_巨大
-			基礎値 = 3000 + RAND:1000
+			基礎値 = IS_MALE(対象) ? 2150 # 2000
+			基礎値 += RAND:300
 	ENDSELECT
 ENDIF
 
@@ -387,8 +389,7 @@ SIF !HAS_PENIS(対象)
 	RETURNF 0
 
 サイズ = BASE:対象:ペニス * 3 / 10
-SIF HAS_TAG(対象, タグ_小人)
-	サイズ /= 5
+サイズ = CALC_BODYSIZE_TAG_TIMES(対象, サイズ)
 RETURNF サイズ
 
 ;-------------------------
@@ -402,8 +403,7 @@ RETURNF サイズ
 サイズ = SQRT(BASE:対象:身長) * 43 / 10
 SIF GETBIT(TALENT:対象:淫乱系, 素質_淫乱_蕩唇)
 	TIMES サイズ, 1.2
-SIF HAS_TAG(対象, タグ_小人)
-	サイズ /= 5
+サイズ = CALC_BODYSIZE_TAG_TIMES(対象, サイズ)
 RETURNF サイズ
 
 ;-------------------------
@@ -415,19 +415,13 @@ RETURNF サイズ
 #DIM サイズ
 
 サイズ = LIMIT(BASE:対象:身長 / 5, 100, 1000)
-SIF HAS_TAG(対象, タグ_小人)
-	サイズ /= 5
 
 SIF GETBIT(TALENT:対象:淫乱系, 素質_淫乱_蕩唇)
 	TIMES サイズ, 1.5
 
+サイズ = CALC_BODYSIZE_TAG_TIMES(対象, サイズ)
 サイズ += SQRT(STOMACH_TOTAL_CREAMPIED_AMOUNT:対象:0 * 3)
-
-IF HAS_TAG(対象, タグ_小人)
-	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 50)
-ELSE
-	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 10)
-ENDIF
+サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 *CALC_BODYSIZE_TAG_TIMES(対象, サイズ) / 10)
 RETURNF サイズ
 
 
@@ -440,8 +434,6 @@ RETURNF サイズ
 #DIM サイズ
 
 サイズ = LIMIT(BASE:対象:身長 / 15, 10, 200)
-SIF HAS_TAG(対象, タグ_小人)
-	サイズ /= 5
 
 SIF GETBIT(TALENT:対象:淫乱系, 素質_淫乱_淫壷)
 	TIMES サイズ, 1.5
@@ -455,14 +447,10 @@ SIF GETBIT(TALENT:対象:淫乱系, 素質_淫乱_良質母胎)
 SIF TALENT:対象:妊娠
 	TIMES サイズ, 0.3
 
+サイズ = CALC_BODYSIZE_TAG_TIMES(対象, サイズ)
 サイズ += SQRT(WOMB_TOTAL_CREAMPIED_AMOUNT:対象:0 * 3)
 サイズ += EXP:対象:出産経験 * 3
-
-IF HAS_TAG(対象, タグ_小人)
-	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 50)
-ELSE
-	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 10)
-ENDIF
+サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 *CALC_BODYSIZE_TAG_TIMES(対象, サイズ) / 10)
 RETURNF サイズ
 
 ;-------------------------
@@ -474,19 +462,12 @@ RETURNF サイズ
 #DIM サイズ
 
 サイズ = LIMIT(BASE:対象:身長 / 13, 10, 300)
-SIF HAS_TAG(対象, タグ_小人)
-	サイズ /= 5
 
 SIF GETBIT(TALENT:対象:淫乱系, 素質_淫乱_尻穴狂い)
 	TIMES サイズ, 1.5
 
+サイズ = CALC_BODYSIZE_TAG_TIMES(対象, サイズ)
 サイズ += SQRT(ANUS_TOTAL_CREAMPIED_AMOUNT:対象:0 * 3)
-
-IF HAS_TAG(対象, タグ_小人)
-	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 50)
-ELSE
-	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 10)
-ENDIF
 RETURNF サイズ
 
 ;-------------------------
@@ -501,16 +482,10 @@ RETURNF サイズ
 
 SIF GETBIT(TALENT:対象:淫乱系, 素質_淫乱_尿道狂い)
 	TIMES サイズ, 1.5
-SIF HAS_TAG(対象, タグ_小人)
-	サイズ /= 5
 
+サイズ = CALC_BODYSIZE_TAG_TIMES(対象, サイズ)
 サイズ += SQRT(BLADDER_TOTAL_CREAMPIED_AMOUNT:対象:0 * 3)
-
-IF HAS_TAG(対象, タグ_小人)
-	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 50)
-ELSE
-	サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 / 10)
-ENDIF
+サイズ = LIMIT(サイズ, 0, BASE:対象:身長 * 3 *CALC_BODYSIZE_TAG_TIMES(対象, サイズ) / 10)
 RETURNF サイズ
 
 ;-------------------------
@@ -549,51 +524,28 @@ RETURNF TALENT:対象:妊娠 ? (BASE:対象:バスト / 100 * CFLAG:対象:妊�
 ;-------------------------
 @SHOW_BODYSIZE(対象)
 #DIM 対象
-#DIM 子供重量
-#DIM 子供サイズ
-#DIM 子供バスト
-
-子供重量 = GET_BABY_WEIGHT(対象)
-子供サイズ = GET_BABY_SIZE(対象)
-子供バスト = GET_BABY_BUST(対象)
-
-IF HAS_TAG(対象, タグ_小人) || GROUPMATCH(対象, NAME_TO_CHARA("上海人形"), NAME_TO_CHARA("蓬莱人形"), NAME_TO_CHARA("大江戸人形"), NAME_TO_CHARA("針妙丸"))
-	PRINTFORM 身長:%DECIMAL_STRING(BASE:対象:身長 / 5, 1), 5, RIGHT%cm/ 
-	PRINTFORM 体重:{BASE:対象:体重 * 5 + 子供重量, 5, RIGHT}g
+PRINTFORM 身長:%DECIMAL_STRING(REAL_BODYSIZE(対象,"身長"), 1), 6, RIGHT%cm
+PRINT / 体重:
+IF IS_SHOW_WEIGHT_g(対象)
+	PRINTFORM {REAL_BODYSIZE(対象,"体重_g"), 5, RIGHT}g
 ;	SIF TALENT:対象:妊娠
-;		PRINTFORM (妊娠前{BASE:対象:体重 * 5, 5, RIGHT}g)
-	PRINTFORM /
-	PRINTFORM  B:%DECIMAL_STRING((BASE:対象:バスト + 子供バスト) / 5, 1), 6, RIGHT%cm 
-	SIF TALENT:対象:妊娠
-		PRINTFORM (妊娠前%DECIMAL_STRING(BASE:対象:バスト / 5, 1), 6, RIGHT%cm)
-
-	CALL PRINT_CUPSIZE(対象)
-	PRINTFORM / W:%DECIMAL_STRING((BASE:対象:ウェスト + 子供サイズ) / 5, 1), 6, RIGHT%cm
-	SIF TALENT:対象:妊娠
-		PRINTFORM (妊娠前%DECIMAL_STRING(BASE:対象:ウェスト / 5, 1), 6, RIGHT%cm)
-	PRINTFORM / H:%DECIMAL_STRING(BASE:対象:ヒップ / 5, 1), 6, RIGHT%cm 
-	CALL PRINT_HIPSIZE(対象)
-	SIF HAS_PENIS(対象)
-		PRINTFORM / P:%DECIMAL_STRING(BASE:対象:ペニス / 5, 1), 6, RIGHT%cm
+;		PRINTFORM (妊娠前{REAL_BODYSIZE(対象,"体重_g",1), 5, RIGHT}g
 ELSE
-	PRINTFORM 身長:%DECIMAL_STRING(BASE:対象:身長, 1), 6, RIGHT%cm/ 
-	PRINTFORM 体重:%DECIMAL_STRING(BASE:対象:体重 + 子供重量, 1), 5, RIGHT%kg
+	PRINTFORM %DECIMAL_STRING(REAL_BODYSIZE(対象,"体重"), 1), 5, RIGHT%kg
 ;	SIF TALENT:対象:妊娠
-;		PRINTFORM (妊娠前%DECIMAL_STRING(BASE:対象:体重, 1), 5, RIGHT%kg)
-	PRINTFORM /
-	PRINTFORM  B:%DECIMAL_STRING(BASE:対象:バスト + 子供バスト, 1), 6, RIGHT%cm 
-	CALL PRINT_CUPSIZE(対象)
-;	SIF TALENT:対象:妊娠
-;		PRINTFORM (妊娠前%DECIMAL_STRING(BASE:対象:バスト, 1), 6, RIGHT%cm)
-	PRINTFORM / W:%DECIMAL_STRING(BASE:対象:ウェスト + 子供サイズ, 1), 6, RIGHT%cm
-;	SIF TALENT:対象:妊娠
-;		PRINTFORM (妊娠前%DECIMAL_STRING(BASE:対象:ウェスト, 1), 6, RIGHT%cm)
-	PRINTFORM / H:%DECIMAL_STRING(BASE:対象:ヒップ, 1), 6, RIGHT%cm 
-	CALL PRINT_HIPSIZE(対象)
-	SIF HAS_PENIS(対象)
-		PRINTFORM / P:%DECIMAL_STRING(BASE:対象:ペニス, 1), 5, RIGHT%cm 
+;		PRINTFORM (妊娠前%DECIMAL_STRING(REAL_BODYSIZE(対象,"体重",1), 1), 5, RIGHT%kg)
 ENDIF
-
+PRINTFORM / B:%DECIMAL_STRING(REAL_BODYSIZE(対象,"バスト"), 1), 6, RIGHT%cm 
+CALL PRINT_CUPSIZE(対象)
+;SIF TALENT:対象:妊娠
+;	PRINTFORM (妊娠前%DECIMAL_STRING(REAL_BODYSIZE(対象,"バスト",1), 1), 6, RIGHT%cm)
+PRINTFORM / W:%DECIMAL_STRING(REAL_BODYSIZE(対象,"ウェスト"), 1), 6, RIGHT%cm
+;SIF TALENT:対象:妊娠
+;	PRINTFORM (妊娠前%DECIMAL_STRING(REAL_BODYSIZE(対象,"ウェスト",1), 1), 6, RIGHT%cm)
+PRINTFORM / H:%DECIMAL_STRING(REAL_BODYSIZE(対象,"ヒップ"), 1), 6, RIGHT%cm 
+CALL PRINT_HIPSIZE(対象)
+SIF HAS_PENIS(対象)
+	PRINTFORM / P:%DECIMAL_STRING(REAL_BODYSIZE(対象,"ペニス"), 1), 5, RIGHT%cm 
 PRINTL
 
 @TOSTR_CUPSIZE(対象)
@@ -650,7 +602,7 @@ SIF IS_MALE(対象)
 PRINTFORM (%LOCALS:0%) 
 
 ;-------------------------
-;ボディーサイズを自動入力できるようにする関数
+;ボディーサイズを手動入力できるようにする関数
 ;-------------------------
 @CHANGE_BODYSIZE(対象)
 #DIM 対象
@@ -680,10 +632,21 @@ IF RESULT == 0
 	CALL ASK_YESNO(LOCALS)
 	SIF !RESULT
 		GOTO INPUT_LOOP0
-	SIF HAS_TAG(対象, タグ_小人)
-		VALUE *= 5
+	VALUE = CALC_BODYSIZE_TAG_TIMES_REV(対象, VALUE)
 	BASE:対象:身長 = VALUE
 	MAXBASE:対象:身長 = VALUE
+ELSEIF RESULT == 1 && IS_SHOW_WEIGHT_g(対象)
+	PRINTFORML そのまま入力してください。例:3000->3000g
+	$INPUT_LOOP1_1
+	INPUT
+	VALUE = RESULT
+	LOCALS = {RESULT}gでいいですか？
+	CALL ASK_YESNO(LOCALS)
+	SIF !RESULT
+		GOTO INPUT_LOOP1_1
+	VALUE = CALC_BODYSIZE_TAG_TIMES_REV(対象, VALUE,1)/100
+	BASE:対象:体重 = VALUE
+	MAXBASE:対象:体重 = VALUE
 ELSEIF RESULT == 1
 	PRINTFORML 小数点第一位までを十倍した数を入力してください。例:550->55.0kg
 	$INPUT_LOOP1
@@ -693,8 +656,7 @@ ELSEIF RESULT == 1
 	CALL ASK_YESNO(LOCALS)
 	SIF !RESULT
 		GOTO INPUT_LOOP1
-	SIF HAS_TAG(対象, タグ_小人)
-		VALUE *= 20
+	VALUE = CALC_BODYSIZE_TAG_TIMES_REV(対象, VALUE,1)
 	BASE:対象:体重 = VALUE
 	MAXBASE:対象:体重 = VALUE
 ELSEIF RESULT == 2
@@ -706,8 +668,7 @@ ELSEIF RESULT == 2
 	CALL ASK_YESNO(LOCALS)
 	SIF !RESULT
 		GOTO INPUT_LOOP2
-	SIF HAS_TAG(対象, タグ_小人)
-		VALUE *= 5
+	VALUE = CALC_BODYSIZE_TAG_TIMES_REV(対象, VALUE)
 	BASE:対象:バスト = VALUE
 	MAXBASE:対象:バスト = VALUE
 ELSEIF RESULT == 3
@@ -719,8 +680,7 @@ ELSEIF RESULT == 3
 	CALL ASK_YESNO(LOCALS)
 	SIF !RESULT
 		GOTO INPUT_LOOP3
-	SIF HAS_TAG(対象, タグ_小人)
-		VALUE *= 5
+	VALUE = CALC_BODYSIZE_TAG_TIMES_REV(対象, VALUE)
 	BASE:対象:ウェスト = VALUE
 	MAXBASE:対象:ウェスト = VALUE
 ELSEIF RESULT == 4
@@ -732,8 +692,7 @@ ELSEIF RESULT == 4
 	CALL ASK_YESNO(LOCALS)
 	SIF !RESULT
 		GOTO INPUT_LOOP4
-	SIF HAS_TAG(対象, タグ_小人)
-		VALUE *= 5
+	VALUE = CALC_BODYSIZE_TAG_TIMES_REV(対象, VALUE)
 	BASE:対象:ヒップ = VALUE
 	MAXBASE:対象:ヒップ = VALUE
 ELSEIF RESULT == 5
@@ -745,8 +704,7 @@ ELSEIF RESULT == 5
 	CALL ASK_YESNO(LOCALS)
 	SIF !RESULT
 		GOTO INPUT_LOOP5
-	SIF HAS_TAG(対象, タグ_小人)
-		VALUE *= 5
+	VALUE = CALC_BODYSIZE_TAG_TIMES_REV(対象, VALUE)
 	BASE:対象:ペニス = VALUE
 	MAXBASE:対象:ペニス = VALUE
 ELSE
@@ -756,38 +714,109 @@ ENDIF
 ;-------------------------------------------------
 ;表記上のサイズを取得する関数
 ;-------------------------------------------------
-@REAL_BODYSIZE(対象,ARGS)
+@REAL_BODYSIZE(対象, ARGS, 妊娠前フラグ = 0)
 #FUNCTION
 #DIM 対象
+#DIM 妊娠前フラグ
+#DIM 体重フラグ
+体重フラグ = 0
 SELECTCASE ARGS
 CASE "身長"
 	LOCAL = BASE:対象:身長
-	SIF HAS_TAG(対象, タグ_小人)
-		LOCAL /= 5
-CASE "体重"
-	LOCAL = BASE:対象:体重 + GET_BABY_WEIGHT(対象)
-	SIF HAS_TAG(対象, タグ_小人)
-		LOCAL /= 20
+CASE "体重","体重_g"
+	体重フラグ = 1
+	LOCAL = BASE:対象:体重
+	SIF 妊娠前フラグ == 0
+		LOCAL += GET_BABY_WEIGHT(対象)
+	SIF ARGS == "体重_g"
+		LOCAL *= 100
 CASE "バスト"
-	LOCAL = BASE:対象:バスト + GET_BABY_BUST(対象)
-	SIF HAS_TAG(対象, タグ_小人)
-		LOCAL /= 5
+	LOCAL = BASE:対象:バスト
+	SIF 妊娠前フラグ == 0
+		LOCAL += GET_BABY_BUST(対象)
 CASE "ウェスト"
-	LOCAL = BASE:対象:ウェスト + GET_BABY_SIZE(対象)
-	SIF HAS_TAG(対象, タグ_小人)
-		LOCAL /= 5
+	LOCAL = BASE:対象:ウェスト
+	SIF 妊娠前フラグ == 0
+		LOCAL += GET_BABY_SIZE(対象)
 CASE "ヒップ"
 	LOCAL = BASE:対象:ヒップ
-	SIF HAS_TAG(対象, タグ_小人)
-		LOCAL /= 5
 CASE "ペニス"
-	LOCAL = BASE:対象:ペニス
 	SIF !HAS_PENIS(対象)
 		RETURNF 0
-	SIF HAS_TAG(対象, タグ_小人)
-		LOCAL /= 5
+	LOCAL = BASE:対象:ペニス
 CASEELSE
 	RETURNF 0
 ENDSELECT
+
+RETURNF CALC_BODYSIZE_TAG_TIMES(対象, LOCAL, 体重フラグ)
+
+;-------------------------------------------------
+;タグ毎の身体の大きさの係数
+;-------------------------------------------------
+@CALC_BODYSIZE_TAG_TIMES(対象, LOCAL, 体重フラグ = 0)
+#FUNCTION
+#DIM 対象
+#DIM 体重フラグ
+IF 体重フラグ == 0
+	体重フラグ = 1
+ELSE
+	体重フラグ = 4
+ENDIF
+IF (HAS_TAG(対象, タグ_巨人) && HAS_TAG(対象, タグ_小人)) || (!HAS_TAG(対象, タグ_巨人) && !HAS_TAG(対象, タグ_小人))
+	RETURNF LOCAL
+ELSEIF HAS_TAG(対象, タグ_巨人)
+	IF HAS_TAG(対象, タグ_人間)
+		LOCAL = LOCAL*体重フラグ*2
+	ELSE
+		LOCAL = LOCAL*体重フラグ*3
+	ENDIF
+ELSEIF HAS_TAG(対象, タグ_小人)
+	IF HAS_TAG(対象, タグ_人間)
+		LOCAL = LOCAL*3/5/体重フラグ
+	ELSE
+		LOCAL = LOCAL*1/5/体重フラグ
+	ENDIF
+ENDIF
 RETURNF LOCAL
+
+
+;-------------------------------------------------
+;タグ毎の身体の大きさの係数（大小反転）（手入力時に使用）
+;-------------------------------------------------
+@CALC_BODYSIZE_TAG_TIMES_REV(対象, LOCAL, 体重フラグ = 0)
+#FUNCTION
+#DIM 対象
+#DIM 体重フラグ
+IF 体重フラグ == 0
+	体重フラグ = 1
+ELSE
+	体重フラグ = 4
+ENDIF
+
+IF (HAS_TAG(対象, タグ_巨人) && HAS_TAG(対象, タグ_小人)) || (!HAS_TAG(対象, タグ_巨人) && !HAS_TAG(対象, タグ_小人))
+	RETURNF LOCAL
+ELSEIF HAS_TAG(対象, タグ_巨人)
+	IF HAS_TAG(対象, タグ_人間)
+		LOCAL = LOCAL/2/体重フラグ
+	ELSE
+		LOCAL = LOCAL/3/体重フラグ
+	ENDIF
+ELSEIF HAS_TAG(対象, タグ_小人)
+	IF HAS_TAG(対象, タグ_人間)
+		LOCAL = LOCAL*体重フラグ*5/3
+	ELSE
+		LOCAL = LOCAL*体重フラグ*5
+	ENDIF
+ENDIF
+RETURNF LOCAL
+
+;-------------------------
+;体重をグラム表記する条件
+;-------------------------
+@IS_SHOW_WEIGHT_g(対象)
+#FUNCTION
+#DIM 対象
+SIF HAS_TAG(対象, タグ_小人) && !HAS_TAG(対象, タグ_人間) && !HAS_TAG(対象, タグ_巨人)
+	RETURNF 1
+RETURNF 0
 
