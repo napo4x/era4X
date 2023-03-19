@@ -726,17 +726,17 @@ CASE "身長"
 CASE "体重","体重_g"
 	体重フラグ = 1
 	LOCAL = BASE:対象:体重
-	SIF 妊娠前フラグ == 0
+	SIF 妊娠前フラグ != 0
 		LOCAL += GET_BABY_WEIGHT(対象)
 	SIF ARGS == "体重_g"
 		LOCAL *= 100
 CASE "バスト"
 	LOCAL = BASE:対象:バスト
-	SIF 妊娠前フラグ == 0
+	SIF 妊娠前フラグ != 0
 		LOCAL += GET_BABY_BUST(対象)
 CASE "ウェスト"
 	LOCAL = BASE:対象:ウェスト
-	SIF 妊娠前フラグ == 0
+	SIF 妊娠前フラグ != 0
 		LOCAL += GET_BABY_SIZE(対象)
 CASE "ヒップ"
 	LOCAL = BASE:対象:ヒップ
