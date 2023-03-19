@@ -395,6 +395,97 @@ FOR _CNT,0,_KEYCOUNT
 NEXT
 RETURN
 
+;勝手に追加
+;================================================
+;@LIST_GET_NUM (#FUNCTIONS);対象の可変長配列の_INDEX番目の要素を返す。配列の範囲外である場合、空文字列を返す。
+;_LIST       対象の可変長配列（文字列）
+;_INDEX      取得する要素のインデックス
+;RETURNF     取得した要素(数字)
+;================================================
+@LIST_GET_NUM(_LIST, _INDEX)
+#FUNCTION
+#DIMS _LIST
+#DIM _INDEX
+#DIM _COUNT
+IF _INDEX < 0
+	THROW _List.ERB:_INDEXに負の値({_INDEX})が指定された→%_LIST%
+ENDIF
+;(_INDEX-1)番目のカンマと_INDEX番目のカンマを探索して_LIST_INDEX_LEFT,_LIST_INDEX_RIGHTに代入
+_LIST_INDEX_COMMA = -1
+_LIST_INDEX_LEFT = -1
+_COUNT = 0
+WHILE 1
+	_LIST_INDEX_COMMA = STRFINDU(_LIST, "," , _LIST_INDEX_COMMA + 1)
+	IF _COUNT == _INDEX
+		_LIST_INDEX_RIGHT = _LIST_INDEX_COMMA
+		BREAK
+	ENDIF
+	;_INDEXが配列外参照
+	IF _LIST_INDEX_COMMA < 0
+		RETURNF -1
+	ENDIF
+	_LIST_INDEX_LEFT = _LIST_INDEX_COMMA
+	_COUNT ++
+WEND
+RETURNF TOINT(SUBSTRINGU(_LIST,_LIST_INDEX_LEFT + 1, _LIST_INDEX_RIGHT - _LIST_INDEX_LEFT - 1))
 
+;================================================
+;@LIST_ADD (#FUNCTIONS);対象の可変長配列の末尾に_VALUEを追加した可変長配列を返す。
+;_LIST       対象の可変長配列（文字列）
+;_VALUE      追加する値(数字)
+;RETURNF     追加された可変長配列（文字列）
+;================================================
+@LIST_ADD_NUM(_LIST, _VALUE)
+#FUNCTIONS
+#DIMS _LIST
+#DIM _VALUE
+RETURNF _LIST + TOSTR(_VALUE) + ","
 
+;================================================
+;@LIST_SET_NUM (#FUNCTIONS);対象の可変長配列の_INDEX番目の要素を_VALUEで上書きした可変長配列を返す。配列サイズが不足していれば自動的に拡張される。
+;_LIST       対象の可変長配列（文字列）
+;_INDEX      追加又は変更する場所のインデックス
+;_VALUE      追加又は変更する値(数字)
+;RETURNF     追加又は変更された可変長配列（文字列）
+;================================================
+@LIST_SET_NUM(_LIST, _INDEX, _VALUE)
+#FUNCTIONS
+#DIMS _LIST
+#DIM _INDEX
+#DIM _VALUE
+#DIM _COUNT
+#DIMS _SVALUE
 
+_SVALUE = %TOSTR(_VALUE)%
+IF _INDEX < 0
+	THROW _List.ERB:_INDEXに負の値({_INDEX})が指定された→%_LIST%
+ENDIF
+_LIST_LENGTH = STRCOUNT(_LIST, ",")
+;配列数不足なら拡張（,を増やす）して終了
+IF _INDEX >= _LIST_LENGTH
+	RETURNF _LIST + ("," * (_INDEX - _LIST_LENGTH)) + _SVALUE + ","
+ENDIF
+;(_INDEX-1)番目のカンマと_INDEX番目のカンマを探索して_LIST_INDEX_LEFT,_LIST_INDEX_RIGHTに代入
+_LIST_INDEX_COMMA = -1
+_LIST_INDEX_LEFT = -1
+_COUNT = 0
+WHILE 1
+	_LIST_INDEX_COMMA = STRFINDU(_LIST, "," , _LIST_INDEX_COMMA + 1)
+	IF _COUNT == _INDEX
+		_LIST_INDEX_RIGHT = _LIST_INDEX_COMMA
+		BREAK
+	ENDIF
+	_LIST_INDEX_LEFT = _LIST_INDEX_COMMA
+	_COUNT ++
+WEND
+IF _INDEX > 0
+	;右端にカンマを含む形で切り取る
+	_LIST_LEFT '= SUBSTRINGU(_LIST,0,_LIST_INDEX_LEFT+1)
+ELSE
+	_LIST_LEFT '= ""
+ENDIF
+;左端にカンマを含む形で切り取る
+_LIST_RIGHT '= SUBSTRINGU(_LIST, _LIST_INDEX_RIGHT , -1)
+
+;足して返す
+RETURNF _LIST_LEFT + _SVALUE + _LIST_RIGHT
