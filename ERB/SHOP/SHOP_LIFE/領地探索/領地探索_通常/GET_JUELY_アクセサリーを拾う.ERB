@@ -29,10 +29,11 @@ IF RESULT == 0
 	PRINTFORML が、店主にすごい剣幕で怒鳴られた
 	PRINTFORML まさにこの店から数日前に盗まれた品だったらしい
 	PRINTFORML どうにか誤解を解いたが、疲れてしまった
-	CALL ADD_COOLTIME(対象, 1)
 ELSEIF RESULT == 1
 	PRINTFORML ネコババはよくない
-	PRINTFORML 衛兵に届けた
+	PRINTFORML 警察に届けた
 ENDIF
+CALL PRINT_ADD_EXP(対象, "話術経験値", 3)
+
 
 RETURN 1

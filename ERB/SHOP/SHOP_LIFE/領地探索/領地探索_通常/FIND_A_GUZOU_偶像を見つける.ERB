@@ -2,25 +2,25 @@
 ;存在判定
 ;なにもさせないこと
 ;-------------------
-@TERRITORY_EVENT_FIND_A_OZIZOU_EXISTS()
+@TERRITORY_EVENT_FIND_A_GUZOU_EXISTS()
 #DIM 対象
 RETURN 1
 
 ;-------------------
 ;発生判定
 ;-------------------
-@TERRITORY_EVENT_FIND_A_OZIZOU_DECISION(対象)
+@TERRITORY_EVENT_FIND_A_GUZOU_DECISION(対象)
 #DIM 対象
 RETURN 1
 
 ;-------------------
 ;本体
 ;-------------------
-@TERRITORY_EVENT_FIND_A_OZIZOU(対象)
+@TERRITORY_EVENT_FIND_A_GUZOU(対象)
 #DIM 対象
 
-PRINTFORML 人里離れた道端に、さびれたお地蔵さんを見つけた
-PRINTFORML 人通りの少ない道なので、忘れられて放置されているのだろう
+PRINTFORML 舗装されていない道の端に、さびれた偶像を見つけた
+PRINTFORML 有名な宗教の偶像だが今は汚れてしまい、御供物入れも空っぽだ
 
 PRINTL
 CALL ASK_MULTI("掃除してやる", "お供えをする", "放っておく")
@@ -35,7 +35,7 @@ SELECTCASE RESULT
 		MAXBASE:対象:体力 += 100
 		CALL COLOR_PRINTW(@"体力最大値が100上がって、{MAXBASE:対象:体力}になった", カラー_注意)
 	CASE 1
-		PRINTFORML 手持ちのお菓子を備えて手を合わせた
+		PRINTFORML 手持ちのお菓子を備えた
 		PRINTFORMW …心なしか気分がよくなった気がする
 		MAXBASE:対象:体力 += 50
 		CALL COLOR_PRINTW(@"体力最大値が50上がって、{MAXBASE:対象:体力}になった", カラー_注意)

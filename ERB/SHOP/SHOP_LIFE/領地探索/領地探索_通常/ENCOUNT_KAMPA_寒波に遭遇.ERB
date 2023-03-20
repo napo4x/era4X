@@ -1,0 +1,60 @@
+﻿;-------------------
+;存在判定
+;なにもさせないこと
+;-------------------
+@TERRITORY_EVENT_ENCOUNT_KAMPA_EXISTS()
+#DIM 対象
+RETURN 1
+
+;-------------------
+;発生判定
+;-------------------
+@TERRITORY_EVENT_ENCOUNT_KAMPA_DECISION(対象)
+#DIM 対象
+RETURN 1
+
+;-------------------
+;本体
+;-------------------
+@TERRITORY_EVENT_ENCOUNT_KAMPA(対象)
+#DIM 対象
+PRINTFORML レンタル航空車を使って遠出をしていると、間も無くこの地域に寒波が来るという情報を入手した
+PRINTFORMW どうする?
+CALL ASK_MULTI("急いで引き返す", "近くの街に避難する", "目的地まで急ぐ")
+
+SELECTCASE RESULT
+	CASE 0
+		PRINTFORMW 急いで引き返すことにした
+		PRINTW ……
+		PRINTW …………
+		PRINTW ………………
+		PRINTFORMW やった！
+		PRINTFORMW %ANAME(対象)%は間一髪で寒波の来る地域から脱出することに成功した
+		PRINTFORMW しかしとんだ無駄足になってしまった……
+	CASE 1
+		PRINTFORMW 近くの街に避難することにした
+		PRINTW ……
+		PRINTW …………
+		PRINTW ………………
+		IF LIMIT(ABL:対象:目星 * 2, 50, 100) > RAND:100
+			PRINTFORMW やった！
+			PRINTFORMW %ANAME(対象)%は目端に街影を捉え、とっさにその街に入った
+			PRINTFORMW %ANAME(対象)%は寒波の間、シェルターで炊き出しの手伝いを行い住民に感謝された
+			CALL PRINT_ADD_EXP(対象, "料理経験値", RAND:10 + 1, 1)
+		ELSE
+			PRINTFORML 懸命に探し続けた結果、吹雪が吹き荒む中に避難できそうな大きめの街を見つけた
+			PRINTFORMW 安いホテルはどこも埋まっていたので、仕方なく高級ホテルに泊まることになった……
+			PRINTW -$10,000 
+			CALL PRINT_ADD_EXP(対象, "目星経験値", RAND:10 + 4, 1)
+			MONEY -= 10000
+		ENDIF
+	CASE 2
+		PRINTFORMW 目的地まで急ぐことにした
+		PRINTW ……
+		PRINTW …………
+		PRINTW ………………
+		PRINTFORMW なんとかレンタル航空車を飛ばし、寒波が来るまでに目的地にたどり着いた
+		CALL PRINT_ADD_EXP(対象, "操艦経験値", RAND:5 + 1, 1)
+ENDSELECT
+
+RETURN 1

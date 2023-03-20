@@ -1,0 +1,51 @@
+﻿;-------------------
+;存在判定
+;なにもさせないこと
+;-------------------
+@TERRITORY_EVENT_BEAT_A_CREATURE_EXISTS()
+RETURN 1
+
+;-------------------
+;発生判定
+;-------------------
+@TERRITORY_EVENT_BEAT_A_CREATURE_DECISION(対象)
+#DIM 対象
+RETURN 1
+
+;-------------------
+;本体
+;-------------------
+@TERRITORY_EVENT_BEAT_A_CREATURE(対象)
+#DIM 対象
+PRINTFORML この辺りで原生成物が暴れているらしい
+PRINTFORML 討伐すると報酬がもらえるらしいが、危険な生物らしい……
+PRINTL
+CALL PRINT_ABILITY(対象, GETNUM(ABL, "白兵"))
+CALL ASK_YN("討伐を試みる", "やめておく")
+
+IF RESULT == 1
+	PRINTFORML 危険だし、やめておいたほうがいいだろう
+	PRINTFORMW やめておくことにした
+	RETURN 1
+ENDIF
+
+PRINTFORML 暇つぶしにはちょうどいいだろう
+PRINTFORMW %ANAME(対象)%は原生生物のねぐらへと向かった
+PRINTFORML ・
+PRINTFORML ・
+PRINTFORMW ・
+
+IF LIMIT(ABL:対象:白兵, 50, 100) > RAND:100
+	PRINTFORML やった！
+	PRINTFORML %ANAME(対象)%は見事原生生物を討伐することに成功した
+	CALL ICPRINT("報酬として$3,000を手に入れた", "L", カラー_注意)
+	CALL PRINT_ADD_EXP(対象, "白兵経験値", RAND:8 + 1, 1)
+	MONEY += 3000
+	RETURN 1
+ENDIF
+
+PRINTFORML やられた！
+PRINTFORML 原生生物は想像以上に手強く、返り討ちにあった%ANAME(対象)%は命からがら逃げかえった
+PRINTFORML 治療費に$1,000かかった……
+MONEY -= 1000
+RETURN 1

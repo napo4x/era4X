@@ -20,8 +20,13 @@ RETURN 1
 #DIM 対象
 
 PRINTFORML ふらっと入った書店で気になる本を見かけた
-PRINTFORML どうやら兵法書のようだ
+PRINTFORML どうやら軍人の書いた操艦技術の本のようだ
 PRINTFORMW 折角なので買って読んでみることにした
-CALL PRINT_ADD_EXP(対象, "操艦経験値", RAND:10 + 1, 1)
+PRINTW ……
+PRINTW …………
+PRINTW ………………
+PRINTFORMW $100払った価値のある、とてもいい内容だった
+CALL PRINT_ADD_EXP(対象, "操艦経験値", RAND:10 + 4, 1)
+MONEY -= 100
 
 RETURN 1

@@ -1,0 +1,42 @@
+﻿;-------------------
+;存在判定
+;なにもさせないこと
+;-------------------
+@TERRITORY_EVENT_PSI_GENERATION_EXISTS()
+#DIM 対象
+RETURN 1
+
+;-------------------
+;発生判定
+;-------------------
+@TERRITORY_EVENT_PSI_GENERATION_DECISION(対象)
+#DIM 対象
+RETURN 1
+
+;-------------------
+;本体
+;-------------------
+@TERRITORY_EVENT_PSI_GENERATION(対象)
+#DIM 対象
+
+PRINTFORML %ANAME(対象)%の滞在する街では超能力者が大量発生しているのだという
+PRINTFORMW 見回せば超能力を使っている人間がたくさん見つかるので、本当の話のようだ
+PRINTFORMW 試しに地元住民に話を聞いてみることにした
+PRINTW ……
+PRINTW …………
+PRINTW ………………
+IF TALENT:対象:超能力者 || RAND:100
+  PRINTFORML 残念ながらめぼしい情報は手に入れられなかった……
+  CALL PRINT_ADD_EXP(対象, "社交経験値", 15)
+  CALL PRINT_ADD_EXP(対象, "話術経験値", 15)
+ELSE
+  PRINTFORMW 住民の話によると、この街でとあるダンスをした後に一泊すると超能力に目覚めるのだという
+  PRINTFORMW あまりにも胡散臭い話だが、せっかくなので試すことにした
+  PRINTW ……
+  PRINTW …………
+  PRINTW ………………
+  PRINTW 成功した！
+  PRINTFORMW %ANAME(対象)%は超能力者になった
+  TALENT:対象:超能力者 = 1
+ENDIF
+RETURN 1

@@ -1,0 +1,47 @@
+﻿;-------------------
+;存在判定
+;なにもさせないこと
+;-------------------
+@TERRITORY_EVENT_CHALLENGED_BY_RACER_EXISTS()
+#DIM 対象
+RETURN 1
+
+;-------------------
+;発生判定
+;-------------------
+@TERRITORY_EVENT_CHALLENGED_BY_RACER_DECISION(対象)
+#DIM 対象
+
+;-------------------
+;本体
+;-------------------
+@TERRITORY_EVENT_CHALLENGED_BY_RACER(対象)
+#DIM 対象
+
+PRINTFORML 宇宙港を歩いていると、レーサーだという男に声をかけられた
+PRINTFORML %ANAME(対象)%を宇宙船の乗組員だと知って、レース勝負を持ちかけに来たのだという
+PRINTL
+CALL PRINT_ABILITY(対象, GETNUM(ABL, "操艦"))
+CALL ASK_YN("レースをする", "断る")
+
+IF RESULT == 1
+	PRINTFORMW 断るとレーサーは肩を竦めて去って行った
+	RETURN 1
+ENDIF
+
+PRINTFORMW 挑戦を受けるとレーサーは嬉しそうにレース用の艦船へと%ANAME(対象)%を導いた
+PRINTFORML ・
+PRINTFORML ・
+PRINTFORMW ・
+
+IF ABL:対象:操艦 > RAND:200
+	PRINTFORML 見事レーサーに買った！
+	PRINTFORMW レーサーは%COUNTRY_NAME:国家ID_民主主義%のレース選手だったらしく、彼に勝ったことで%ANAME(対象)%は%COUNTRY_NAME:国家ID_民主主義%で有名になった
+	PRINTFORMW 民主主義国との関係が+1された
+	REL_LIKE_COUNTRY:国家ID_民主主義:国家ID_プレイヤー = MIN(REL_LIKE_COUNTRY:国家ID_民主主義:国家ID_プレイヤー + 1, 1000)
+ELSE
+	PRINTFORMW 本職の実力は本物で、負けてしまった……
+ENDIF
+CALL PRINT_ADD_EXP(対象, "操艦経験値", RAND:8 + 6, 1)
+
+RETURN 1

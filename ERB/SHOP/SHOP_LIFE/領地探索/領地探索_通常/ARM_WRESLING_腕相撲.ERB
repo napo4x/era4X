@@ -19,8 +19,9 @@ RETURN IS_COUNTRY(CFLAG:対象:所属)
 @TERRITORY_EVENT_ARM_WRESLING(対象)
 #DIM 対象
 
-PRINTFORML 領内で人だかりをみかけた
-PRINTFORML 力自慢の男が腕相撲の挑戦者を募っているようだ
+PRINTFORML 街角で人だかりをみかけた
+PRINTFORML 力自慢のサイボーグ男が腕相撲の挑戦者を募っているようだ
+PRINTFORMW 彼の目の前には、かつての挑戦者たちが置いて行った金が乱暴に積まれている
 PRINTL
 CALL PRINT_ABILITY(対象, GETNUM(ABL, "白兵"))
 CALL ASK_YN("挑戦する", "やめておく")
@@ -40,13 +41,16 @@ PRINTFORMW ・
 
 IF LIMIT(ABL:対象:白兵, 30, 100) > RAND:100
 	PRINTFORML %ANAME(対象)%は見事男に勝利した！
-	PRINTFORMW 彼は潔く負けを認め、ぜひ仲間にしてほしいと言ってきた
-	COUNTRY_SOLDIER:(CFLAG:対象:所属) += 3000
-	CALL ICPRINT("男はとてもよく働き、兵士<3000>人分に匹敵する戦力となった", "L", カラー_注意)
+	PRINTFORMW 肩から丸太のような腕が外れ唖然としている男を他所に、%ANAME(対象)%は挑戦金とプラスアルファをもらいその場を後にした
+	PRINTW +$500
+	MONEY += 500
 	RETURN 1
 ENDIF
 
 PRINTFORML やられてしまった…
 PRINTFORMW 男は口ほどにもないと%ANAME(対象)%を嘲笑った
+PRINTFORMW 掛け金を失った
+PRINTW -$100
+MONEY -= 100
 
 RETURN 1

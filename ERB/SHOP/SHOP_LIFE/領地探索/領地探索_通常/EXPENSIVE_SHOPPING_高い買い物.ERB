@@ -19,8 +19,8 @@ RETURN 1
 @TERRITORY_EVENT_EXPENSIVE_SHOPPING(対象)
 #DIM 対象
 
-PRINTFORML 武器を新調しようと、%ANAME(対象)%は店を回る
-PRINTFORML 使いやすそうなのが見つかったが、やや高い
+PRINTFORML 操艦技術に関する本を探して%ANAME(対象)%は店を回る
+PRINTFORML 良さそうな本を見つけたが、やや高い
 CALL ICPRINT("金<5000>ということだが……", "L", カラー_注意)
 PRINTFORML
 PRINTFORML 所持金:{MONEY}
@@ -94,7 +94,7 @@ SELECTCASE RESULT
 		PRINTFORML 
 		PRINTFORMW 店主は%ANAME(対象)%の身体に大変満足したようだ
 		PRINTFORMW 武器をただでゆずってくれた
-		CALL PRINT_ADD_EXP(対象, "操艦経験値", 15)        
+		CALL PRINT_ADD_EXP(対象, "白兵経験値", 15)        
 ENDSELECT
 
 RETURN 1
