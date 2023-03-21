@@ -19,11 +19,11 @@ RETURN 1
 @TERRITORY_EVENT_LOST_CHILD(対象)
 #DIM 対象
 
-PRINTFORML 領内を探索中、迷子の男の子と遭遇した
+PRINTFORML 探索中、迷子の男の子と遭遇した
 PRINTFORML 親とはぐれてしまったらしいが、周囲にそれらしい人物は見当たらない
 
 PRINTL
-CALL ASK_MULTI("一緒に親を探す", "兵士に預ける", "放っておく")
+CALL ASK_MULTI("一緒に親を探す", "警察に預ける", "放っておく")
 
 IF RESULT == 2
 	PRINTFORML 面倒はごめんだ
@@ -32,8 +32,8 @@ IF RESULT == 2
 ENDIF
 
 IF RESULT == 1
-	PRINTFORML 兵士に任せるのがいいだろう
-	PRINTFORML 近くの兵に彼を預け、拠点に帰った
+	PRINTFORML 警察に任せるのがいいだろう
+	PRINTFORML 近くの警察官に彼を預け、拠点に帰った
 	RETURN 1
 ENDIF
 

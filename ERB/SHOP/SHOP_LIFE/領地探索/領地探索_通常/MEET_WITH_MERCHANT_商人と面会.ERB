@@ -11,7 +11,7 @@ RETURN 1
 ;-------------------
 @TERRITORY_EVENT_MEET_WITH_MERCHANT_DECISION(対象)
 #DIM 対象
-RETURN IS_COUNTRY(CFLAG:対象:所属)
+RETURN MONEY > 100000000 && 対象 == MASTER
 
 ;-------------------
 ;本体
@@ -19,7 +19,7 @@ RETURN IS_COUNTRY(CFLAG:対象:所属)
 @TERRITORY_EVENT_MEET_WITH_MERCHANT(対象)
 #DIM 対象
 PRINTFORML ある商人が娘と共に挨拶にきた
-PRINTFORML この地で商売をするので、どうか御贔屓にというありがちな挨拶だった
+PRINTFORML 金持ちとして知られる%ANAME(対象)%に、今後はどうか御贔屓にというありがちな挨拶だった
 PRINTFORML 印象としては狡猾そうな小心者といった感じだ
 PRINTFORMW どうしよう？
 PRINTL

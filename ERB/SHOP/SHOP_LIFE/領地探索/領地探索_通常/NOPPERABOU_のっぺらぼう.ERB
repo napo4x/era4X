@@ -36,13 +36,17 @@ PRINTFORMW のっぺらぼうだ！
 
 IF LIMIT(MAXBASE:対象:気力, 1500, 2500) > RAND:3000
 	PRINTFORML %ANAME(対象)%は悲鳴をあげそうになったところをこらえる
-	PRINTFORMW 正体を現したのっぺらぼうに一喝した！
-	PRINTFORML その勢いに向こうの方が怖じ気づいたのか、慌てて逃げていった……
-	CALL ICPRINT(@"%ANAME(対象)%の気力が<50>上昇し、<{MAXBASE:対象:気力}>になった", "L", カラー_注意)
+	PRINTFORMW よく見ると顔の真ん中に小さな視覚センサーが付いているアンドロイドだ
+	PRINTFORMW 話を聞くと、事故で最近アンドロイドに換装したのだが、新しい見た目が気に入らずさめざめと泣いていたらしい
+	PRINTFORMW %ANAME(対象)%は少女を根気よく励まし、少女を家へ返すことに成功した
+	CALL PRINT_ADD_EXP(対象, "話術経験値", RAND:5 + 1, 1)
+	MAXBASE:対象:気力 += 50
+	CALL ICPRINT(@"%ANAME(対象)%の気力が<50>上昇し、<{MAXBASE:対象:気力}>になった", "W", カラー_注意)
 ELSE
 	PRINTFORML %ANAME(対象)%はあまりのことに悲鳴をあげ、逃げ出した！
 	PRINTFORMW 道中思い切り転んで、怪我をしてしまった……
-	CALL ADD_COOLTIME(対象, 1)
+	CALL ICPRINT(@"治療費として$1,000払った", "W", カラー_注意)
+	MONEY -= 1000
 ENDIF
 
 RETURN 1

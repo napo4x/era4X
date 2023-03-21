@@ -11,20 +11,16 @@ RETURN 1
 ;-------------------
 @TERRITORY_EVENT_DONATION_FOR_BANK_DECISION(対象)
 #DIM 対象
-RETURN IS_COUNTRY(CFLAG:対象:所属)
+RETURN 1
 
 ;-------------------
 ;本体
 ;-------------------
 @TERRITORY_EVENT_DONATION_FOR_BANK(対象)
 #DIM 対象
-#DIM 対象都市
 
-CALL DAILY_EVENT_RAND_CITYSELECT(0)
-対象都市 = RESULT
-SIF 対象都市 < 0
-	RETURN 0
-PRINTFORML %CITY_NAME:対象都市%を散策していると、河川の氾濫で悩んでいる村にたどりついた
+PRINTFORML 散策していると、河川の氾濫で悩んでいる村にたどりついた
+PRINTFORMW 人手はあるが資材を買う金と、堤防を作るノウハウが足りないらしい
 PRINTFORML 堤防を作れれば村は助かるかもしれないが、成功するとも限らない
 PRINTL
 CALL PRINT_ABILITY(対象, GETNUM(ABL, "政治"))
@@ -36,9 +32,8 @@ IF RESULT == 1
 	RETURN 1
 ENDIF
 
-PRINTFORML 金を惜しんでいる場合ではない
-PRINTFORMW %ANAME(対象)%は早速技術者たちを呼びよせ、堤防作製に取り掛からせた
-CALL COLOR_PRINTW("金5000を支払った", カラー_注意)
+PRINTFORML %ANAME(対象)%は早速資材を購入し、村人たちとともに堤防の作り方を調べて作り上げた
+CALL COLOR_PRINTW("$5,000を支払った", カラー_注意)
 MONEY -= 5000
 PRINTFORML ・
 PRINTFORML ・
@@ -46,13 +41,15 @@ PRINTFORMW ・
 IF LIMIT(ABL:対象:政治, 50, 100) > RAND:100
 	PRINTFORML やった！
 	PRINTFORMW 無事に頑丈な堤防が出来た
-	CITY_GUARD:対象都市 += 15
 	PRINTFORMW 村人たちに感謝された
-	CALL ICPRINT(@"%CITY_NAME:対象都市%の操艦率が<15>上昇し、<{CITY_GUARD:対象都市}>になった", "W", カラー_注意)
+	CALL PRINT_ADD_EXP(対象, "政治経験値", RAND:10 + 10, 1)
 ELSE
 	PRINTFORML 失敗した！
 	PRINTFORML 堤防を上手く作ることは出来なかった
-	PRINTFORMW 肩を落とす領民たちから逃げるように立ち去った
+	PRINTFORMW だが協力してくれた%ANAME(対象)%に村人たちは感謝してくれた
+	CALL PRINT_ADD_EXP(対象, "政治経験値", RAND:10 + 10, 1)
 ENDIF
+MAXBASE:対象:体力 += 50
+CALL COLOR_PRINTW(@"体力最大値が50上がって、{MAXBASE:対象:体力}になった", カラー_注意)
 RETURN 1
 

@@ -22,7 +22,7 @@ RETURN 1
 PRINTFORMW 賑やかな歓楽街を歩いていると、酔っ払いに絡まれた
 
 IF IS_MALE(対象) || (HAS_PENIS(対象) && RAND:2)
-	PRINTFORML 女はひどく酔っ払っているようで、着物の隙間から胸の谷間が見えそうになっている
+	PRINTFORML 女はひどく酔っ払っているようで、服の隙間から胸の谷間が見えそうになっている
 	PRINTFORML 一晩相手してくれない？　と言ってきたが……
 	PRINTL
 	CALL ASK_MULTI("相手する", "一緒に飲む", "断る")
@@ -71,7 +71,7 @@ ELSE
 			PRINTFORML 
 			PRINTFORMW 翌朝、連絡先を交換してから長いキスを交わして男と別れた
 			MONEY += 5000
-			CALL ICPRINT("金<5000>を手に入れた", "L", カラー_注意)
+			CALL ICPRINT("$5,000>を手に入れた", "L", カラー_注意)
 		CASE 1
 			PRINTFORML 無礼な奴め！
 			PRINTFORML 男を思いきり殴り、さっさと立ち去った

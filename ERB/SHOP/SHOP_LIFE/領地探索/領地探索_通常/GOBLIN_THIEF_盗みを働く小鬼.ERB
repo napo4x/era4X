@@ -18,8 +18,8 @@ RETURN 1
 ;-------------------
 @TERRITORY_EVENT_GOBLIN_THIEF(対象)
 #DIM 対象
-PRINTFORML 領地を探索中、小鬼が出没するという噂を耳にした
-PRINTFORML 盗みを働いて困っているのだということだが……
+PRINTFORML 惑星を探索中、厄介な原生生物が出没するという噂を耳にした
+PRINTFORML 角の生えた小さな猿のような見た目で、小鬼と呼ばれて面倒がられているらしい……
 CALL PRINT_ABILITY(対象, GETNUM(ABL, "知略"))
 PRINTFORML 
 CALL ASK_MULTI("捜索に協力する", "放っておく")
@@ -44,7 +44,7 @@ IF LIMIT(ABL:対象:知略, 50, 100) > RAND:100
 	CALL ICPRINT("金<3000>をもらった", "L", カラー_注意)
 	MONEY += 3000
 ELSE
-	PRINTFORML ……が、小鬼はずる賢く、逃げられてしまった
+	PRINTFORML ……が、小鬼は賢く、逃げられてしまった
 	PRINTFORMW %ANAME(対象)%は肩を落として拠点へ戻った……
 ENDIF
 

@@ -25,11 +25,11 @@ PRINTFORML %ANAME(対象)%に気付いた少女は一瞬身構えたが、敵意
 PRINTFORML どうやら怪我をして動けないようだが……
 
 PRINTL
-CALL ASK_MULTI("村へ運んでやる", "金目の物を奪って放置する", "助ける見返りを求める")
+CALL ASK_MULTI("彼女の家へ運んでやる", "金目の物を奪って放置する", "助ける見返りを求める")
 
 SELECTCASE RESULT
 	CASE 0
-		PRINTFORML 彼女に肩を貸して村へ運んでやった
+		PRINTFORML 彼女に肩を貸して彼女の家へ運んでやった
 		PRINTFORML 家族と彼女に深く感謝された
 		PRINTFORMW 良い気分で%ANAME(対象)%は拠点へ戻った
 		IF 対象 == MASTER
