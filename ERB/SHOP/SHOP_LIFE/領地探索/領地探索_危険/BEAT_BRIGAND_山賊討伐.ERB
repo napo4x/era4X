@@ -18,7 +18,7 @@ RETURN 1
 ;-------------------
 @TERRITORY_EVENT_BEAT_BRIGAND(対象)
 #DIM 対象
-PRINTFORML この辺りで山賊が現れて困っているらしい
+PRINTFORML この辺りでテロリストが現れて困っているらしい
 PRINTFORML 何とかしてくれと頼まれた
 PRINTL
 CALL PRINT_ABILITY(対象, GETNUM(ABL, "白兵"))
@@ -27,19 +27,19 @@ CALL ASK_YN("討伐を試みる", "やめておく")
 
 IF RESULT == 1
 	PRINTFORML 単身向かうのは危険だ
-	PRINTFORMW 領民には悪いが拠点に帰ることにした
+	PRINTFORMW 地元民には悪いが拠点に帰ることにした
 	RETURN 1
 ENDIF
 
 PRINTFORML 見逃すことはできない
-PRINTFORML %ANAME(対象)%は山賊の討伐に向かった
+PRINTFORML %ANAME(対象)%はテロリストの討伐に向かった
 PRINTFORML ・
 PRINTFORML ・
 PRINTFORMW ・
 
 IF LIMIT(ABL:対象:白兵, 30, 80) > RAND:100
 	PRINTFORML やった！
-	PRINTFORML %ANAME(対象)%は見事山賊を討伐することに成功した
+	PRINTFORML %ANAME(対象)%は見事テロリストを討伐することに成功した
 	PRINTFORMW 領民に感謝されて拠点へ戻った
 	CALL PRINT_ADD_EXP(対象, "白兵経験値", RAND:15 + 1, 1)
 	RETURN 1
@@ -47,20 +47,20 @@ ENDIF
 
 IF IS_MALE(対象)
 	PRINTFORML やられた！
-	PRINTFORMW 山賊は想像以上に手強く、返り討ちにあった%ANAME(対象)%は命からがら逃げかえった
+	PRINTFORMW テロリストは想像以上に手強く、返り討ちにあった%ANAME(対象)%は命からがら逃げかえった
 	CALL ADD_COOLTIME(対象, 2)
 	RETURN 1
 ENDIF
 
 PRINTFORML やられた！
-PRINTFORMW 山賊は想像以上に手強く、%ANAME(対象)%は返り討ちにされてねぐらへと引きずられていった
+PRINTFORMW テロリストは想像以上に手強く、%ANAME(対象)%は返り討ちにされてねぐらへと引きずられていった
 PRINTFORML 
-PRINTFORML %ANAME(対象)%は山賊の慰み者にされている
+PRINTFORML %ANAME(対象)%はテロリストの慰み者にされている
 PRINTFORML 抵抗する度に殴られ、お仕置きと称して犯され続け、%ANAME(対象)%はすっかり彼らに従順に奉仕している
-PRINTFORML 今もまた一人の山賊の上に跨り淫らに体をくねらせながら自ら腰を振っている
+PRINTFORML 今もまた一人のテロリストの上に跨り淫らに体をくねらせながら自ら腰を振っている
 PRINTFORML 男が限界を迎えると%ANAME(対象)%はやや虚ろに笑いながら膣を締めつけ、その精を一滴残らず%STR_BODY("膣：処女確認：時間経過:Ｖ挿入:中出し", 対象)%で受け止めた
 PRINTFORMW 彼らに気に入られた%ANAME(対象)%はその後も%STR_BODY("身体", 対象)%を使われてたっぷりと種付けされ続けた
-CALL FUCK(対象, "欲望, 奉仕, 性技, 性交, 精愛, Ｃ, Ｖ, Ｂ, Ａ, Ｍ, 輪姦, Ｖ性交, Ａ性交", "キス喪失, 処女喪失, Ａ処女喪失, 膣内射精, 腸内射精, CFLAG減少", GET_SPERM_ID("山賊"), @"山賊の\@RAND:2 ? ペニス # 唇\@", "山賊", "", "敗北した末の輪姦")
+CALL FUCK(対象, "欲望, 奉仕, 性技, 性交, 精愛, Ｃ, Ｖ, Ｂ, Ａ, Ｍ, 輪姦, Ｖ性交, Ａ性交", "キス喪失, 処女喪失, Ａ処女喪失, 膣内射精, 腸内射精, CFLAG減少", GET_SPERM_ID("テロリスト"), @"テロリストの\@RAND:2 ? ペニス # 唇\@", "テロリスト", "", "敗北した末の輪姦")
 PRINTFORML 
 PRINTFORMW %ANAME(対象)%は散々犯された後、何とか逃げ帰った
 CALL ADD_COOLTIME(対象, 2)
