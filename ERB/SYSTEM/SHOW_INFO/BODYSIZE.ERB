@@ -141,6 +141,8 @@ ENDIF
 #DIM 対象
 #DIM 基礎値
 
+SIF BASE:対象:身長 == 0
+	RETURNF 0
 基礎値 = BASE:対象:身長 * (IS_MALE(対象) ? 52 # 53) / 100
 
 SELECTCASE GET_BUSTSIZE(対象)
