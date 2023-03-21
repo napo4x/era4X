@@ -19,17 +19,18 @@ RETURN 1
 @TERRITORY_EVENT_HAGURE_SUCCUBUS(対象)
 #DIM 対象
 
-PRINTFORML 村はずれではぐれサキュバスと遭遇した
+PRINTFORML 郊外の寂れた道で、怪しい女と遭遇した
+PRINTFORML 見れば地元で有名な頭の行かれた変態超能力女、通称サキュバスだ
 PRINTFORMW 彼女は%ANAME(対象)%を見ると舌なめずりをして淫気を飛ばしてきた
 PRINTFORML どうしよう？
 PRINTFORML 
 CALL PRINT_ABILITY(対象, GETNUM(ABL, "白兵"))
 CALL PRINT_ABILITY(対象, GETNUM(ABL, "操艦"))
-CALL ASK_MULTI("剣を抜く" ,"気力で耐える" ,"身を委ねる")
+CALL ASK_MULTI("武器を手に取る" ,"気力で耐える" ,"身を委ねる")
 IF RESULT == 2
 	PRINTFORMW あまりの淫気に抗えず身を委ねた…
 ELSEIF RESULT == 0
-	PRINTFORMW %ANAME(対象)%は剣を抜いて挑みかかった
+	PRINTFORMW %ANAME(対象)%は武器を抜いて挑みかかった
 	PRINTFORML ・
 	PRINTFORML ・
 	PRINTFORMW ・
