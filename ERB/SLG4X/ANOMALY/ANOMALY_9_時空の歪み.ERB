@@ -1,0 +1,59 @@
+﻿;--------------------------
+; 時空の歪み
+;--------------------------
+@INIT_ANOMALY_9
+#DIM SECTOR_ID
+#DIM POS_X
+#DIM POS_Y
+
+SECTOR_ID = RAND(0, 99)
+POS_X = 2 * RAND(1, 7)
+POS_Y = 2 * RAND(1, 7)
+
+MAP:SECTOR_ID:POS_X:POS_Y = ANOMALY
+ANOMALY_MAP:SECTOR_ID:POS_X:POS_Y = 時空の歪み
+CALL POS2ID(SECTOR_ID, POS_X, POS_Y)
+ANOMALY_POSITIONID:9 = RESULT
+;--------------------------
+; ANOMALY本体
+;--------------------------
+@ANOMALY_BODY_時空の歪み
+#DIM DYNAMIC MEMBER_COUNT
+#DIM SECTOR_ID
+#DIM POS_X
+#DIM POS_Y
+#DIM SHIP_ID
+
+PRINTFORMW %CALLNAME:MASTER%の前方に異なる空間を映し出している時空の歪みが見つかった
+PRINTFORMW 艦船による簡易調査によると、ごく近距離につながっているワームホールの可能性が高いようだ
+PRINTFORMW だが安定しているわけでもなさそうで、もしかしたら艦船が損傷する可能性もある
+PRINTFORMW ほとんど得はなさそうだが……
+CALL ASK_YN("入ってみる", "入らない")
+IF RESULT == 1
+	PRINTFORMW 危ないものには関わらないほうがいいだろう……
+ELSE
+	SHIP_ID = BOARDING_SHIP_ID:MASTER
+	PRINTFORMW 試しに入ってみた。
+	PRINTFORMW 一瞬のうちにものすごい衝撃が艦船を襲い、艦船が大破した……
+	SHIP_CONDITION:SHIP_ID = 艦船状態_大破
+	SHIP_NAME:SHIP_ID '= "<大破>" + SHIP_NAME:SHIP_ID
+	CALL GET_SHIP_TOTAL_HP(SHIP_ID)
+	SIF CONFIG:300 == 1
+		SHIP_DAMAGE:SHIP_ID --
+	ANOMALY_PROGRESS:9 = 1
+	IF IS_COMPLETE_TECH:44 == 0
+		PRINTFORMW 艦船の空間転移に関する情報が計測機器に残されていた
+		PRINTFORMW もしかしたら何かの技術開発に使えるかも知れない
+	ENDIF
+	CALL POS2ID(RAND(0, 99), 2 * RAND(1, 7), 2 * RAND(1, 7))
+	SHIP_POSITION:SHIP_ID = RESULT
+	CHARACTER_POSITION:MASTER = RESULT
+ENDIF
+
+CALL ID2POS(ANOMALY_POSITIONID:9)
+SECTOR_ID = RESULT:0
+POS_X = RESULT:1
+POS_Y = RESULT:2
+ANOMALY_MAP:SECTOR_ID:POS_X:POS_Y = %""%
+MAP:SECTOR_ID:POS_X:POS_Y = 明瞭
+
