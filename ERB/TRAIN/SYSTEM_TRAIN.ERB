@@ -175,7 +175,7 @@ ENDIF
 ;ただし鬼じゃない場合、捕虜調教時は含めない
 IF FLAG:調教モード == 調教_会う
 	FOR LOCAL, 0, CHARANUM
-		IF CFLAG:(LOCAL:0):調教参加フラグ && !TALENT:(LOCAL:0):下戸 && !TALENT:(LOCAL:0):妊娠 && CFLAG:(LOCAL:0):行動不能状態 != 行動不能_子供 && !TALENT:(LOCAL:0):電子生命体
+		IF CFLAG:(LOCAL:0):調教参加フラグ && !TALENT:(LOCAL:0):下戸 && !TALENT:(LOCAL:0):妊娠 && CFLAG:(LOCAL:0):行動不能状態 != 行動不能_子供 && !HAS_TAG(LOCAL:0, タグ_電子生命体)
 			IF HAS_TAG(LOCAL:0, タグ_鬼) && !RAND:3
 				PRINTFORMW %ANAME(LOCAL:0)%は酔っ払っているようだ……
 				PALAM:(LOCAL:0):酔い = RAND(3000, 6000)
@@ -985,7 +985,7 @@ ELSE
 			ELSE
 				PRINTFORMW %ANAME(MASTER)%は胸を押し付けて%ANAME(MTAR:0)%を誘惑した…
 			ENDIF
-		ELSEIF TALENT:MASTER:電子生命体 || TALENT:(MTAR:0):電子生命体
+		ELSEIF HAS_TAG(MASTER, タグ_電子生命体) || HAS_TAG(MTAR:0, タグ_電子生命体)
 			PRINTFORMW %ANAME(MASTER)%は%ANAME(MTAR:0)%の体を焦らすようにまさぐって誘惑しようとした…
 		ELSE
 			PRINTFORMW %ANAME(MASTER)%は%ANAME(MTAR:0)%の体を焦らすようにまさぐって誘惑した…
@@ -1154,7 +1154,7 @@ IF TALENT:(MTAR:0):キス未経験
 	CALL COM_ORDER_ELEMENT(MTAR:0, "キス未経験", -5)
 ENDIF
 
-IF TALENT:(MTAR:0):電子生命体 || TALENT:(MPLY:0):電子生命体
+IF HAS_TAG(MASTER, タグ_電子生命体) || HAS_TAG(MTAR:0, タグ_電子生命体)
 	CALL COM_ORDER_ELEMENT(MTAR:0, "電子生命体", -1000)
 ENDIF
 
@@ -1218,7 +1218,7 @@ IF TCVAR:(MTAR:0):24 >= TCVAR:(MTAR:0):25
 ;失敗
 ELSE
 	CALL KOJO_EVENT(MTAR:0, 6)
-	IF !TALENT:(MTAR:0):合意 && !TALENT:(MTAR:0):恋慕 && !TALENT:(MTAR:0):親友 && !TALENT:(MTAR:0):電子生命体 && !TALENT:(MPLY:0):電子生命体
+	IF !TALENT:(MTAR:0):合意 && !TALENT:(MTAR:0):恋慕 && !TALENT:(MTAR:0):親友 && !HAS_TAG(MTAR:0, タグ_電子生命体) && !HAS_TAG(MPLY:0, タグ_電子生命体)
 		PRINTFORMW %ANAME(MTAR:0)%の好感度が100下がりました
 		CFLAG:(MTAR:0):2 -= 100
 	ENDIF
@@ -1314,7 +1314,7 @@ IF HAS_PENIS(MTAR:0) && HAS_VAGINA(MPLY:0)
 	CALL COM_ORDER_ELEMENT(MTAR:0, "性別", 20)
 ENDIF
 
-IF TALENT:(MTAR:0):電子生命体 || TALENT:(MPLY:0):電子生命体
+IF HAS_TAG(MTAR:0, タグ_電子生命体) || HAS_TAG(MPLY:0, タグ_電子生命体)
 	CALL COM_ORDER_ELEMENT(MTAR:0, "電子生命体", -1000)
 ENDIF
 
@@ -1375,7 +1375,7 @@ IF TCVAR:(MTAR:0):24 >= TCVAR:(MTAR:0):25
 ;失敗
 ELSE
 	CALL KOJO_EVENT(MTAR:0, 106)
-	IF !TALENT:(MTAR:0):合意 && !TALENT:(MTAR:0):恋慕 && !TALENT:(MTAR:0):親友 && !TALENT:(MTAR:0):電子生命体 && !TALENT:(MPLY:0):電子生命体
+	IF !TALENT:(MTAR:0):合意 && !TALENT:(MTAR:0):恋慕 && !TALENT:(MTAR:0):親友 && !HAS_TAG(MTAR:0, タグ_電子生命体) && !HAS_TAG(MPLY:0, タグ_電子生命体)
 		PRINTFORMW %ANAME(MTAR:0)%の好感度が50下がりました
 		CFLAG:(MTAR:0):2 -= 50
 	ENDIF
@@ -1401,7 +1401,7 @@ IF !TALENT:(MTAR:0):恋慕 && !TALENT:(MTAR:0):恋人 && !TALENT:(MTAR:0):服従
 ENDIF
 
 ;[電子生命体]持ちは不可能
-IF TALENT:(MTAR:0):電子生命体 || TALENT:(MPLY:0):電子生命体
+IF HAS_TAG(MTAR:0, タグ_電子生命体) || HAS_TAG(MPLY:0, タグ_電子生命体)
 	RETURN 0
 ENDIF
 
@@ -1742,7 +1742,7 @@ IF TALENT:(MTAR:0):恋慕
 		;了承した場合
 		IF TFLAG:4
 			;キスの共通処理
-			IF !TALENT:(MTAR:0):電子生命体 && !TALENT:(MPLY:0):電子生命体
+			IF !HAS_TAG(MTAR:0, タグ_電子生命体) && !HAS_TAG(MPLY:0, タグ_電子生命体)
 				CALL KISS_COMMON(MTAR:0, @"%ANAME(MPLY:0)%の唇", "告白を受けての和姦", 0)
 				CALL KISS_COMMON(MPLY:0, @"%ANAME(MTAR:0)%の唇", "告白を受けての和姦", 0)
 			ENDIF
@@ -1777,7 +1777,7 @@ SKIPDISP 0
 
 ;●ファーストキス判定
 ;最低でも好感度800が必要、少なくとも一方がキス未経験、どちらかが電子生命体ではない
-IF CFLAG:(MTAR:0):2 >= 800 && (TALENT:(MTAR:0):キス未経験 || TALENT:(MPLY:0):キス未経験) && !TALENT:(MTAR:0):電子生命体 && !TALENT:(MPLY:0):電子生命体
+IF CFLAG:(MTAR:0):2 >= 800 && (TALENT:(MTAR:0):キス未経験 || TALENT:(MPLY:0):キス未経験) && !HAS_TAG(MTAR:0, タグ_電子生命体) && !HAS_TAG(MPLY:0, タグ_電子生命体)
 	;判定成功
 	IF TCVAR:(MTAR:0):24 >= TCVAR:(MTAR:0):25
 		;口上表示

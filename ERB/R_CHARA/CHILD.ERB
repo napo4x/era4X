@@ -585,7 +585,7 @@ SIF 父 < 0
 	GOTO FATHER_CANCEL
 FOR LOCAL, 0, MAX_TAG
     ;modded to exclude Hourai Immortal from being inheritable. It makes no canon sense and unkillable children are really annyoing.
-	SIF TAG:父:LOCAL != -1 && RAND:2 && (TAG:父:LOCAL != タグ_蓬莱人)
+	SIF TAG:父:LOCAL != -1 && RAND:2 && (TAG:父:LOCAL != タグ_復活者)
 		CALL ADD_TAG(TARGET, TAG:父:LOCAL)
 NEXT
 
@@ -594,7 +594,7 @@ $FATHER_CANCEL
 SIF 母 < 0
 	RETURN
 FOR LOCAL, 0, MAX_TAG
-	SIF TAG:母:LOCAL != -1 && RAND:2 && (TAG:母:LOCAL != タグ_蓬莱人)
+	SIF TAG:母:LOCAL != -1 && RAND:2 && (TAG:母:LOCAL != タグ_復活者)
 		CALL ADD_TAG(TARGET, TAG:母:LOCAL)
 NEXT
 

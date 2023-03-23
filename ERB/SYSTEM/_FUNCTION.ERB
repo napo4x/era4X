@@ -1364,7 +1364,7 @@ RETURNF GROUPMATCH(TALENT:(ARG:0):戦闘機械, 機械_球, 機械_車, 機械_�
 ;-------------------------------------------------
 @IS_MACHINE(ARG:0)
 #FUNCTION
-RETURNF GROUPMATCH(TALENT:(ARG:0):戦闘機械, 機械_球, 機械_車, 機械_人, 機械_狼, 機械_巨, 機械_神) || TALENT:(ARG:0):電子生命体
+RETURNF GROUPMATCH(TALENT:(ARG:0):戦闘機械, 機械_球, 機械_車, 機械_人, 機械_狼, 機械_巨, 機械_神) || HAS_TAG(ARG:0, タグ_電子生命体) || HAS_TAG(ARG:0, タグ_ロボット)
 
 ;-------------------------------------------------
 ;ARG:0番のキャラが東方キャラ（ランダムキャラ、子供、特殊キャラ)なら1を返す関数
@@ -3028,6 +3028,9 @@ ADDCHARA CSVNO
 CALL INIT_NEWCHARA(CHARANUM - 1, 0)
 ;タグ追加
 CALL CSV_CHARA_TAG_SETTING(CHARANUM - 1)
+;性的嗜好を設定
+CALL CSV_CHARA_SEXUAL_PREFERENCE_SETTING(CHARANUM - 1)
+
 ;タグから身長他を補正
 FOR LOCAL, 10, 16
 	LOCAL:1 = 0
@@ -3049,6 +3052,23 @@ FOR LOCAL:0, 0, RESULT
 			CALL ADD_TAG(対象, LOCAL:1)
 	NEXT
 NEXT
+
+;TALENT:性的嗜好をSEXUAL_PREFERENCEに転写して経験値も入れる
+@CSV_CHARA_SEXUAL_PREFERENCE_SETTING(対象)
+#DIM 対象
+LOCAL:1 = 0
+SEXUAL_PREFERENCE:対象:0 = TALENT:対象:性的嗜好
+FOR LOCAL:0, 0, VARSIZE("SEXUAL_PREFERENCE_EXP")
+	IF GETBIT(SEXUAL_PREFERENCE:対象:0, LOCAL:0)
+		LOCAL:1 ++
+	ENDIF
+NEXT
+FOR LOCAL:0, 0, VARSIZE("SEXUAL_PREFERENCE_EXP")
+	IF GETBIT(SEXUAL_PREFERENCE:対象:0, LOCAL:0)
+		SEXUAL_PREFERENCE_EXP:対象:(LOCAL:0) = 50 + 50 * LOCAL:1
+	ENDIF
+NEXT
+
 
 
 ;特殊キャラ用の空きNOを取得する関数

@@ -294,7 +294,7 @@ FOR LOCAL:0, 0, CHARANUM
 	CALL TIGHTNESS_GROW(LOCAL:0)
 
 
-	IF HAS_TAG(LOCAL, タグ_蓬莱人) && CFLAG:LOCAL:特殊状態 == 特殊状態_死亡
+	IF HAS_TAG(LOCAL, タグ_復活者) && CFLAG:LOCAL:特殊状態 == 特殊状態_死亡
 		CALL COLOR_PRINTW("リザレクション！", カラー_注意)
 		CALL COLOR_PRINTW(@"%NAME_FORMAL(LOCAL)%が蘇りました", カラー_注意)
 		CALL CHANGE_COUNTRY(LOCAL, 0, 1)

@@ -359,25 +359,30 @@ RETURNF 基礎値
 ;-------------------------
 @SET_BODYSIZE_PENIS(対象)
 #DIM 対象
-#DIM サイズ基礎値
-SELECTCASE GET_PENISSIZE(対象)
-	CASE -2
-		サイズ基礎値 = RAND:3 + 2
-	CASE -1
-		サイズ基礎値 = RAND:4 + 4
-	CASE 0
-		サイズ基礎値 = RAND:4 + 8
-	CASE 1
-		サイズ基礎値 = RAND:4 + 13
-	CASE 2
-		サイズ基礎値 = RAND:7 + 17
-ENDSELECT
 
-サイズ基礎値 = BASE:対象:身長 / 12 * サイズ基礎値 / 10
-
-BASE:対象:ペニス = サイズ基礎値
+BASE:対象:ペニス = CALC_BODYSIZE_PENIS(対象)
 MAXBASE:対象:ペニス = BASE:対象:ペニス
 
+@CALC_BODYSIZE_PENIS(対象)
+#FUNCTION
+#DIM 対象
+#DIM 基礎値
+
+SELECTCASE GET_PENISSIZE(対象)
+	CASE -2	;2～4	平均3
+		基礎値 = RAND:3 + 2
+	CASE -1	;5～7	平均6
+		基礎値 = RAND:3 + 5
+	CASE 0	;8～12	平均10
+		基礎値 = RAND:5 + 8
+	CASE 1	;13～17	平均15
+		基礎値 = RAND:5 +13
+	CASE 2	;18～24	平均21
+		基礎値 = RAND:7 +18
+ENDSELECT
+基礎値 = BASE:対象:身長 / 12 * 基礎値 / 10
+
+RETURNF 基礎値
 
 ;-------------------------
 ;チンポ直径
@@ -401,10 +406,12 @@ RETURNF サイズ
 #FUNCTION
 #DIM 対象
 #DIM サイズ
+;男なら大きく
+サイズ = (BASE:対象:身長 * 103+ (IS_MALE(対象) ? 103500 # 92500)) / 5000
 
-サイズ = SQRT(BASE:対象:身長) * 43 / 10
 SIF GETBIT(TALENT:対象:淫乱系, 素質_淫乱_蕩唇)
-	TIMES サイズ, 1.2
+	TIMES サイズ, 1.02
+
 サイズ = CALC_BODYSIZE_TAG_TIMES(対象, サイズ)
 RETURNF サイズ
 
@@ -767,13 +774,13 @@ ENDIF
 IF (HAS_TAG(対象, タグ_巨人) && HAS_TAG(対象, タグ_小人)) || (!HAS_TAG(対象, タグ_巨人) && !HAS_TAG(対象, タグ_小人))
 	RETURNF LOCAL
 ELSEIF HAS_TAG(対象, タグ_巨人)
-	IF HAS_TAG(対象, タグ_人間)
+	IF HAS_TAG(対象, タグ_標準人)
 		LOCAL = LOCAL*体重フラグ*2
 	ELSE
 		LOCAL = LOCAL*体重フラグ*3
 	ENDIF
 ELSEIF HAS_TAG(対象, タグ_小人)
-	IF HAS_TAG(対象, タグ_人間)
+	IF HAS_TAG(対象, タグ_標準人)
 		LOCAL = LOCAL*3/5/体重フラグ
 	ELSE
 		LOCAL = LOCAL*1/5/体重フラグ
@@ -798,13 +805,13 @@ ENDIF
 IF (HAS_TAG(対象, タグ_巨人) && HAS_TAG(対象, タグ_小人)) || (!HAS_TAG(対象, タグ_巨人) && !HAS_TAG(対象, タグ_小人))
 	RETURNF LOCAL
 ELSEIF HAS_TAG(対象, タグ_巨人)
-	IF HAS_TAG(対象, タグ_人間)
+	IF HAS_TAG(対象, タグ_標準人)
 		LOCAL = LOCAL/2/体重フラグ
 	ELSE
 		LOCAL = LOCAL/3/体重フラグ
 	ENDIF
 ELSEIF HAS_TAG(対象, タグ_小人)
-	IF HAS_TAG(対象, タグ_人間)
+	IF HAS_TAG(対象, タグ_標準人)
 		LOCAL = LOCAL*体重フラグ*5/3
 	ELSE
 		LOCAL = LOCAL*体重フラグ*5
@@ -818,7 +825,7 @@ RETURNF LOCAL
 @IS_SHOW_WEIGHT_g(対象)
 #FUNCTION
 #DIM 対象
-SIF HAS_TAG(対象, タグ_小人) && !HAS_TAG(対象, タグ_人間) && !HAS_TAG(対象, タグ_巨人)
+SIF HAS_TAG(対象, タグ_小人) && !HAS_TAG(対象, タグ_標準人) && !HAS_TAG(対象, タグ_巨人)
 	RETURNF 1
 RETURNF 0
 
