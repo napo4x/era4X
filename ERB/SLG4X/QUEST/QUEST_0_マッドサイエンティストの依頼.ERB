@@ -23,21 +23,92 @@ RETURN
 ;--------------------------
 @QUEST_BODY_0
 #DIM 入力値
+#DIM OPE_TARGET
 PRINTFORML %CALLNAME:MASTER%は謎のアンドロイドに声をかけられた
 PRINTFORMW 「やあやあ、こんにちは。少し私の実験に付き合ってくれませんか？治験というやつですね」
 PRINTL
-PRINTFORML 実に怪しいアンドロイドだ。しかし本人は全く気にした様子もなく、話し続ける
-PRINTFORML 「性別変換の手術を受けてくれるだけでいいんです。もちろん費用はこちら持ちですので、ただで構いません。いかがですか？」
-PRINTFORMW %CALLNAME:MASTER%はその依頼を……
+PRINTFORMW 実に怪しいアンドロイドだ。しかし本人は全く気にした様子もなく、話し続ける
+PRINTL
+PRINTFORML 「性転換の手術か種族変更の手術を受けてくれるだけでいいんです。もちろん費用はこちら持ちですのでただで構いません」
+PRINTFORMW 「ご知り合いの方でも構いませんよ、いかがですか！？」
+PRINTL
+PRINTFORML %CALLNAME:MASTER%はその依頼を……
 CALL ASK_YN("受け入れた", "断った")
 IF RESULT
 	PRINTFORML 「そうですか。気が向いたらまた声をかけてくださいよ」
 	RETURN
 ENDIF
-PRINTFORML 「素晴らしい！ちなみにどの性別になりたいですか？」
+CALL SELECT_OPE_TARGET
+OPE_TARGET = RESULT
+PRINTFORMW どちらの手術をうけていただけますか？
+CALL ASK_YN("性転換", "種族変更")
+IF RESULT == 0
+	CALL CHANGE_SEX(OPE_TARGET)
+ELSE
+	CALL CHANGE_RACE(OPE_TARGET)
+ENDIF
+PRINTFORML 「わかりました。それではこちらへ」
+PRINTFORML %ANAME(OPE_TARGET)%はタクシーに載せられ、怪しい研究所に連れて行かれた
+PRINTFORMW 『ぎゅいーーーん、がんがんがんがん、どんどんどん、ぽきっ』
+PRINTW ………………
+PRINTW …………
+PRINTW ……
+PRINTFORMW 「成功です！さあ、新しい人生をお楽しみください」
+PRINTL
+PRINTFORMW %ANAME(OPE_TARGET)%の手術は成功した
+RETURN
+
+;--------------------------
+; 手術対象選択
+;--------------------------
+@SELECT_OPE_TARGET
+#DIMS TAG_STR
+FOR LOCAL, 0, CHARANUM
+	VARSET TAG_STR
+	SIF CFLAG:LOCAL:所属 != 国家ID_プレイヤー
+		CONTINUE
+	FOR LOCAL:1, 0, MAX_TAG
+		SIF HAS_TAG(LOCAL, LOCAL:1) == 0
+			CONTINUE
+		IF STRLENS(TAG_STR) == 0
+			TAG_STR = %TAG_NAME:(LOCAL:1)%
+		ELSE
+			TAG_STR = %TAG_STR%/%TAG_NAME:(LOCAL:1)%
+		ENDIF
+	NEXT
+	SELECTCASE TALENT:LOCAL:性別
+		CASE 0
+			LOCALS = 男性
+		CASE 1
+			LOCALS = 女性
+		CASE 2
+			LOCALS = 女双
+		CASE 3
+			LOCALS = 男双
+		CASE 4
+			LOCALS = 男の娘
+		CASE 5
+			LOCALS = 男の娘双
+	ENDSELECT
+	PRINTBUTTON @"[{LOCAL, 3, RIGHT}] %ANAME(LOCAL), 20, LEFT% %LOCALS, 10, LEFT% %TAG_STR%", LOCAL
+	PRINTL
+NEXT
+INPUT
+SIF RESULT > 0 && RESULT < CHARANUM && CFLAG:RESULT:所属 == 国家ID_プレイヤー
+	RETURN RESULT
+RESTART
+
+;--------------------------
+; 性転換手術
+;--------------------------
+@CHANGE_SEX(OPE_TARGET)
+#DIM OPE_TARGET
+#DIM 入力値
+
+PRINTFORML 「素晴らしい！それではどの性別にいたしましょう？」
 $INPUT_LOOP
 PRINTFORM 現在の性別 
-SELECTCASE TALENT:MASTER:性別
+SELECTCASE TALENT:OPE_TARGET:性別
 	CASE 0
 		PRINTL 男性
 	CASE 1
@@ -68,21 +139,34 @@ PRINTBUTTON "[5] 男の娘双", 5
 PRINTL
 INPUT
 入力値 = RESULT
-IF GROUPMATCH(入力値, 0, 1, 2, 3, 4, 5) && TALENT:MASTER:性別 != 入力値
-	PRINTFORML 「わかりました。それではこちらへ」
+IF GROUPMATCH(入力値, 0, 1, 2, 3, 4, 5) && TALENT:OPE_TARGET:性別 != 入力値
+	TALENT:OPE_TARGET:性別 = 入力値
 ELSE
 	GOTO INPUT_LOOP
 ENDIF
 
-PRINTFORML %CALLNAME:MASTER%はタクシーに載せられ、怪しい研究所に連れて行かれた
-PRINTFORMW 『ぎゅいーーーん、がんがんがんがん、どんどんどん、ぽきっ』
-PRINTW ………………
-PRINTW …………
-PRINTW ……
-PRINTFORMW 「成功です！さあ、新しい人生をお楽しみください」
-PRINTL
-PRINTFORMW %CALLNAME:MASTER%は性転換に成功した
-TALENT:MASTER:性別 = 入力値
-RETURN
+;--------------------------
+; 種族変更
+;--------------------------
+@CHANGE_RACE(OPE_TARGET)
+#DIM OPE_TARGET
+#DIM TAG_COUNTER
+#DIM INPUT_VALUE
 
+$INPUT_LOOP
+FOR TAG_COUNTER, 0, VARSIZE("TAG_NAME")
+	IF HAS_TAG(OPE_TARGET, TAG_COUNTER)
+		PRINTBUTTON @"[{TAG_COUNTER}] %TAG_NAME:TAG_COUNTER%を外す", TAG_COUNTER
+	ELSE
+		PRINTBUTTON @"[{TAG_COUNTER}] %TAG_NAME:TAG_COUNTER%をつける", TAG_COUNTER
+	ENDIF
+PRINTL
+NEXT
+INPUT
+INPUT_VALUE = RESULT
+IF INPUT_VALUE >= 0 && INPUT_VALUE < VARSIZE("TAG_NAME")
+	CALL INVERT_TAG(OPE_TARGET, INPUT_VALUE)
+ELSE
+	GOTO INPUT_LOOP
+ENDIF
 
