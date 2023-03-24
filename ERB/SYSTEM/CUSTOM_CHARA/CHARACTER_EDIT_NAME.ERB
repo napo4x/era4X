@@ -43,6 +43,8 @@ IF 入力値 % 100  == 0
 		IF 入力値 / 100 == 1
 			NAME:対象 = %名前%
 			CALLNAME:対象 = %名前%
+			CSTR:対象:3 = %ルビ%
+			CSTR:対象:4 = %ルビ%
 		ENDIF
 	ELSE
 		PRINTFORML 文字列を入力
@@ -97,7 +99,10 @@ ELSEIF 入力値 == 101
 	CSTR:対象:1 = %RESULTS:0%
 	NAME:対象 = %RESULTS:0%
 	CALLNAME:対象 = %RESULTS:0%
+	CSTR:対象:99 = %RESULTS:0%
 	CSTR:対象:6 = %RESULTS:1%
+	CSTR:対象:3 = %RESULTS:1%
+	CSTR:対象:4 = %RESULTS:1%
 ;字ランダム
 ELSEIF 入力値 == 201
 	CALL GENERATE_MIDDLE_NAME

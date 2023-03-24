@@ -23,7 +23,7 @@ ELSEIF ARG == 2
 		PRINTFORMW ……%ANAME(TARGET)%は、少し顔を赤くしながらその思いを受け入れた
 	ENDIF
 
-	IF TALENT:キス未経験 && !HAS_TAG(TARGET, タグ_電子生命体) && !HAS_TAG(MASTER, タグ_電子生命体)
+	IF TALENT:キス未経験 && !CANT_TOUCH(TARGET,MASTER)
 		PRINTFORMW 恋人となった%ANAME(MASTER)%と%ANAME(TARGET)%は、長く、熱い口づけを交わした
 	ENDIF
 
@@ -82,8 +82,12 @@ ELSEIF ARG == 5
 ;押し倒し失敗
 ;-------------------------------------------------
 ELSEIF ARG == 6
-	IF HAS_TAG(MASTER, タグ_電子生命体) || HAS_TAG(TARGET, タグ_電子生命体)
-		PRINTFORMW データ上の存在の為触れ合うことはできない。素体にデータをアップロードする必要があるだろう...
+	IF CANT_TOUCH(TARGET,MASTER)
+		IF HAS_TAG(MASTER, タグ_電子生命体) && !HAS_TAG(MASTER, タグ_ロボット) || HAS_TAG(TARGET, タグ_電子生命体) && !HAS_TAG(TARGET, タグ_ロボット)
+			PRINTFORMW データ上の存在の為触れ合うことはできない。素体にデータをアップロードする必要があるだろう...
+		ELSEIF HAS_TAG(MASTER, タグ_幽霊) && !HAS_TAG(MASTER, タグ_人形) || HAS_TAG(TARGET, タグ_幽霊) && !HAS_TAG(TARGET, タグ_人形)
+			PRINTFORMW 幽霊と触れ合うことはできない。人形に憑依させる必要があるだろう...
+		ENDIF
 	ELSEIF TALENT:合意
 		PRINTFORMW %ANAME(MASTER)%が服を脱がせようとすると、%ANAME(TARGET)%は今はそんな気分ではないと言って断った
 	ELSE
@@ -211,14 +215,14 @@ ELSEIF ARG == 21
 	CALL ASK_YN("受け入れる", "断る")
 
 	IF RESULT == 0
-		IF HAS_TAG(TARGET, タグ_電子生命体) || HAS_TAG(MASTER, タグ_電子生命体)
+		IF CANT_TOUCH(TARGET,MASTER)
 			PRINTFORMW %ANAME(MASTER)%が%ANAME(TARGET)%の想いを受け入れると、%ANAME(TARGET)%は嬉しそうに%ANAME(MASTER)%を見つめ、感謝の言葉を伝えた
 		ELSEIF GROUPMATCH(TALENT:性別, 0, 3)
 			PRINTFORMW %ANAME(MASTER)%が%ANAME(TARGET)%の想いを受け入れると、%ANAME(TARGET)%は嬉しそうに%ANAME(MASTER)%を抱きしめてきた
 		ELSE
 			PRINTFORMW %ANAME(MASTER)%が%ANAME(TARGET)%の想いを受け入れると、%ANAME(TARGET)%は嬉しそうに%ANAME(MASTER)%に抱きついてきた
 		ENDIF
-		IF !HAS_TAG(TARGET, タグ_電子生命体) && !HAS_TAG(MASTER, タグ_電子生命体)
+		IF !CANT_TOUCH(TARGET,MASTER)
 			PRINTFORMW 恋人となった%ANAME(MASTER)%と%ANAME(TARGET)%は、長く、熱い口づけを交わした
 		ENDIF
 		PRINTL 
@@ -1112,8 +1116,12 @@ ELSEIF ARG == 105
 ;誘惑失敗
 ;-------------------------------------------------
 ELSEIF ARG == 106
-	IF HAS_TAG(MASTER, タグ_電子生命体) || HAS_TAG(TARGET, タグ_電子生命体)
-		PRINTFORMW だが、データ上の存在の為触れ合うことはできなかった。素体にデータをアップロードする必要があるだろう...
+	IF CANT_TOUCH(MASTER,TARGET)
+		IF HAS_TAG(MASTER, タグ_電子生命体) && !HAS_TAG(MASTER, タグ_ロボット) || HAS_TAG(TARGET, タグ_電子生命体) && !HAS_TAG(TARGET, タグ_ロボット)
+			PRINTFORMW だが、データ上の存在の為触れ合うことはできなかった。素体にデータをアップロードする必要があるだろう...
+		ELSEIF HAS_TAG(MASTER, タグ_幽霊) && !HAS_TAG(MASTER, タグ_人形) || HAS_TAG(TARGET, タグ_幽霊) && !HAS_TAG(TARGET, タグ_人形)
+			PRINTFORMW だが、幽霊と触れ合うことはできなかった。人形に憑依させる必要があるだろう...
+		ENDIF
 	ELSEIF TALENT:合意
 		PRINTFORMW だが、%ANAME(TARGET)%に今はそんな気分ではないと言われて断られてしまった
 	ELSEIF ABL:性知識 == 0
