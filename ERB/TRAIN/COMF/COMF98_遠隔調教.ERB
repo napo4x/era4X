@@ -275,7 +275,7 @@ SELECTCASE 場所
 			CASE IS < 20
 				相手 = 野盗
 			CASE IS < 40
-				相手 = 野良妖怪
+				相手 = 原生生物
 			CASE IS < 60
 				相手 = 子供
 			CASE IS < 80
@@ -731,7 +731,7 @@ SELECTCASE 場所
 		PRINTFORMW %LOCALS:0%は%LOCALS:1%を森林に送り出した……
 		PRINTFORML
 		SELECTCASE 相手
-			CASE "野盗", "野良妖怪"
+			CASE "野盗", "原生生物"
 				PRINTFORMW %LOCALS:1%は%相手%どもに出くわしたようだ
 				PRINTFORMW 逃げようとした%LOCALS:1%だが、数には敵わず、捕らえられてしまった……
 				PRINTFORML

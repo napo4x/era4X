@@ -38,7 +38,7 @@ PRINTFORML ・
 PRINTFORML ・
 PRINTFORMW ・
 IF LIMIT(ABL:対象:白兵, 40, 90) > RAND:100
-	PRINTFORML %ANAME(対象)%達の攻撃妖怪はたまらず逃げていった
+	PRINTFORML %ANAME(対象)%達の攻撃に化け物のような原生生物はたまらず逃げていった
 	CALL PRINT_ADD_EXP(対象, "白兵経験値", RAND:8 + 1, 1)
 	PRINTFORMW 女戦士は無事なようだが怪我をしている様だ
 	IF HAS_PENIS(対象)
@@ -61,19 +61,19 @@ IF LIMIT(ABL:対象:白兵, 40, 90) > RAND:100
 ENDIF
 PRINTFORMW 負けてしまった…
 IF IS_MALE(対象)
-	PRINTFORML 妖怪は%ANAME(対象)%を無視して女戦士を連れ去って行った
+	PRINTFORML 化け物のような原生生物は%ANAME(対象)%を無視して女戦士を連れ去って行った
 	PRINTFORMW %ANAME(対象)%は何とか人里まで這い戻った
 	CALL ADD_COOLTIME(対象, 2)
 	RETURN 1
 ENDIF
-PRINTFORMW 妖怪は女戦士と%ANAME(対象)%を捕まえると何処かへ引きずっていった
+PRINTFORMW 化け物のような原生生物は女戦士と%ANAME(対象)%を捕まえると何処かへ引きずっていった
 PRINTFORML 
-PRINTFORMW 妖怪のねぐらに連れ込まれた%ANAME(対象)%達は性奴隷として奉仕させられている
+PRINTFORMW 原生生物のねぐらに連れ込まれた%ANAME(対象)%達は性奴隷として奉仕させられている
 PRINTFORML 彼の凶悪な一物を必死で舐め上げる%ANAME(対象)%達の股間からは大量の精液がドロリと垂れ落ちる
 PRINTFORML 散々乱暴に犯されイかされ、立場を解らされた%ANAME(対象)%達はもはや従順な雌と成り下がっていた
 PRINTFORML むせ返る様な雄のフェロモンが鼻を突き、嫌な匂いのはずなのに身体はきゅんと疼いてしまう
 PRINTFORMW 奉仕に満足した彼は低く唸り%ANAME(対象)%と女戦士を並べさせると再びその凶悪な一物をねじ込んできた
-CALL FUCK(対象, "欲望, 性交, 奉仕, 口淫, キス, Ｖ, Ｖ性交", "処女喪失, 膣内射精, 口内射精, キス喪失, CFLAG減少", GET_SPERM_ID("野良妖怪"), @"野良妖怪の\@RAND:2 ? ペニス # 唇\@", "野良妖怪", "", "敗北した末のねぐらでの調教")
+CALL FUCK(対象, "欲望, 性交, 奉仕, 口淫, キス, Ｖ, Ｖ性交", "処女喪失, 膣内射精, 口内射精, キス喪失, CFLAG減少", GET_SPERM_ID("原生生物"), @"原生生物の\@RAND:2 ? ペニス # 唇\@", "原生生物", "", "敗北した末のねぐらでの調教")
 PRINTFORML 
 PRINTFORML 散々弄ばれ続けた%ANAME(対象)%達だったが
 PRINTFORMW 彼がヤリ疲れたころ合いを見計らい何とか脱出できた
