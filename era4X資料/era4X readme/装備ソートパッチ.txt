@@ -1,0 +1,12 @@
+◇パッチの目的
+装備を任意のステータスでのソートを可能にする
+
+
+◇変更内容
+EQUIP_UPDATE.ERB
+装備(ボタン)の表示処理を@EQUIP_LIST_DISPLAYとして分割・@EQUIP_UPDATE_(数値)各関数に用意した二次元配列EQUIP_LISTに入れた装備データを表示する形式に変更
+@EQUIP_LIST_SORTでリストのソート機能を実装(2D_ARRAY_SORT.ERBの@TWO_DIM_ARRAY_SORTを使用)
+
+2D_ARRAY_SORT.ERB
+これそのものを同梱する様に変更。
+(@TWO_DIM_ARRAY_SORT:二次元配列のソート用関数)

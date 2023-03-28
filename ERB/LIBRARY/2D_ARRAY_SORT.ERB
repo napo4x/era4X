@@ -1,0 +1,46 @@
+﻿;--------------------------
+; CC0ライセンスで提供します。
+; 複製・改変・再配布・商用利用 全て可
+; 使用報告 不要
+;--------------------------
+
+
+;--------------------------
+; 二次元配列のソート用関数
+; 「一次元目の各要素の中に二次元目の各要素が入っている」ものと見立てて「二次元目の(第二引数に指定した番号)の要素」の順になる様に入れ替えてソートします。
+; ソートは第三引数に無指定か0が入れられた時に昇順、0以外が入っている時には降順で行います。
+;--------------------------
+@TWO_DIM_ARRAY_SORT(SORT_LIST, SORT_BASIS_NUM = 0, SORT_MODE = 0)
+#DIM REF SORT_LIST,0,0
+#DIM SORT_BASIS_NUM
+#DIM SORT_MODE
+
+#DIM BASE_NUM
+#DIM CHECK_NUM
+#DIM SWAP_COUNT
+
+#DIM CONST 昇順 = 0
+
+VARSIZE SORT_LIST
+
+; 自分より後ろを総当たりして条件を満たした時にスワップ
+FOR BASE_NUM, 0, RESULT - 1
+	FOR CHECK_NUM, BASE_NUM + 1, RESULT
+
+		IF SORT_MODE == 昇順
+			; 昇順=ベースがより大きい時にスワップ
+			IF SORT_LIST:BASE_NUM:SORT_BASIS_NUM > SORT_LIST:CHECK_NUM:SORT_BASIS_NUM
+				FOR SWAP_COUNT, 0, RESULT:1
+					SWAP SORT_LIST:BASE_NUM:SWAP_COUNT, SORT_LIST:CHECK_NUM:SWAP_COUNT
+				NEXT
+			ENDIF
+		ELSE
+			; 降順=ベースがより小さい時にスワップ
+			IF SORT_LIST:BASE_NUM:SORT_BASIS_NUM < SORT_LIST:CHECK_NUM:SORT_BASIS_NUM
+				FOR SWAP_COUNT, 0, RESULT:1
+					SWAP SORT_LIST:BASE_NUM:SWAP_COUNT, SORT_LIST:CHECK_NUM:SWAP_COUNT
+				NEXT
+			ENDIF
+		ENDIF
+	NEXT
+NEXT
