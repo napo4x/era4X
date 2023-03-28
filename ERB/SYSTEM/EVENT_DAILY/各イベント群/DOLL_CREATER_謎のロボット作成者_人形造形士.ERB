@@ -78,7 +78,7 @@ ELSEIF LOCAL:1 >= 3
 ENDIF
 DVAR:謎のロボ人形作者_売り物 = LOCAL:1 - 1
 FOR LOCAL, 0, DAILY_TARGET_NUM
-	DAILY_TARGET:DAILY_TARGET_NUM = D_T_NUM:(DVAR:謎のロボ人形作者_売り物)
+	DAILY_TARGET:DAILY_TARGET_NUM = D_T:(DVAR:謎のロボ人形作者_売り物):(D_T_NUM:(DVAR:謎のロボ人形作者_売り物))
 NEXT
 
 ;作者の性別を決める
