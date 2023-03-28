@@ -48,6 +48,30 @@ FOR LOCAL, 0, MAX_TAG
 		TAG:対象:LOCAL = -1
 NEXT
 
+@SORT_TAG(対象)
+#DIM 対象
+;タグを小さい順にソート
+FOR LOCAL:0, 0, MAX_TAG
+	FOR LOCAL:1, 0, MAX_TAG - 1
+		IF TAG:対象:(LOCAL:1) > TAG:対象:((LOCAL:1) + 1)
+			LOCAL:2 = TAG:対象:(LOCAL:1)
+			TAG:対象:(LOCAL:1) = TAG:対象:((LOCAL:1) + 1)
+			TAG:対象:((LOCAL:1) + 1) = LOCAL:2
+		ENDIF
+	NEXT
+NEXT
+;-1を後ろに移動
+FOR LOCAL:1, 0, MAX_TAG
+	SIF TAG:対象:(LOCAL:1) != -1
+		BREAK
+NEXT
+LOCAL:1 -= 1
+FOR LOCAL:0, 0, MAX_TAG - (LOCAL:1)
+	LOCAL:2 = TAG:対象:(LOCAL:1+LOCAL:0)
+	TAG:対象:(LOCAL:1+LOCAL:0) = TAG:対象:(LOCAL:0)
+	TAG:対象:(LOCAL:0) = LOCAL:2
+NEXT
+
 @HAS_TAG(対象, タグ)
 #FUNCTION
 #DIM 対象
