@@ -72,22 +72,22 @@ PRINTFORML
 PRINTFORML 残行動:{CALC_SHOP_TIME() - SHOP_TIME}
 PRINTFORML 所持金:%MONEY_FORMAT(MONEY)%
 CALL SINGLE_DRAWLINE
-PRINTBUTTON @"%"[湖]", 12, LEFT%", 1
+PRINTBUTTON @"%"[水辺]", 20, LEFT%", 1
 PRINTBUTTON "[行動全消費]", 11
-PRINTL   湖に誘います。白兵値が高いほど相手に好印象を与えられます。
-PRINTBUTTON @"%"[山]", 12, LEFT%", 2
+PRINTL   川や海、湖などに誘います。白兵値が高いほど相手に好印象を与えられます。
+PRINTBUTTON @"%"[森林浴]", 20, LEFT%", 2
 PRINTBUTTON "[行動全消費]", 12
-PRINTL   山に誘います。操艦値が高いほど相手に好印象を与えられます。
-PRINTBUTTON @"%"[森]", 12, LEFT%", 3
+PRINTL   森林浴に誘います。操艦値が高いほど相手に好印象を与えられます。
+PRINTBUTTON @"%"[観光地]", 20, LEFT%", 3
 PRINTBUTTON "[行動全消費]", 13
-PRINTL   森に誘います。知略値が高いほど相手に好印象を与えられます。
-PRINTBUTTON @"%"[人里]", 12, LEFT%", 4
+PRINTL   観光地に誘います。知略値が高いほど相手に好印象を与えられます。
+PRINTBUTTON @"%"[惑星首都]", 20, LEFT%", 4
 PRINTBUTTON "[行動全消費]", 14
-PRINTL   人里に誘います。政治値が高いほど相手に好印象を与えられます。
-PRINTBUTTON @"%"[花畑]", 12, LEFT%", 5
+PRINTL   惑星首都でのショッピングデートに誘います。政治値が高いほど相手に好印象を与えられます。
+PRINTBUTTON @"%"[エンタメ施設]", 20, LEFT%", 5
 PRINTBUTTON "[行動全消費]", 15
-PRINTL   花畑に誘います。歌唱値が高いほど相手に好印象を与えられます。
-PRINTBUTTON @"%"[自宅]", 12, LEFT%", 6
+PRINTL   映画やカラオケ、ゲームセンターなどのエンタメ施設に誘います。歌唱値が高いほど相手に好印象を与えられます。
+PRINTBUTTON @"%"[自宅]", 20, LEFT%", 6
 PRINTBUTTON "[行動全消費]", 16
 PRINTL   自宅に誘います。料理値が高いほど相手に好印象を与えられます。
 CALL SINGLE_DRAWLINE
@@ -148,37 +148,51 @@ ENDIF
 SELECTCASE 内容
 	CASE 1
 		IF LOCAL:5 == 0
-			PRINTFORML %ANAME(対象)%を湖に誘った。
+			SELECTCASE RAND:3
+				CASE 0
+					PRINTFORML %ANAME(対象)%を湖に誘った。
+					PRINTFORMW 湖でボート遊びや景色を楽しんだ。
+				CASE 1
+					PRINTFORML %ANAME(対象)%を海に誘った。
+					PRINTFORMW 泳いだり砂で像を作って楽しんだ。
+				CASE 2
+					PRINTFORML %ANAME(対象)%を川に誘った。
+					PRINTFORMW 川辺で水遊びをしたりバーベキューをして楽しんだ。
+			ENDSELECT
 		ELSE
-			PRINTFORML 引き続き湖で%ANAME(対象)%と楽しんだ。
+			PRINTFORML 引き続き水辺で%ANAME(対象)%と楽しんだ。
 		ENDIF
 		能力 = ABL:MASTER:白兵
 	CASE 2
 		IF LOCAL:5 == 0
-			PRINTFORML %ANAME(対象)%を山に誘った。
+			PRINTFORML %ANAME(対象)%を森林浴に誘った。
+			PRINTFORMW 木々の中でリラックスしながら自然を楽しんだ。
 		ELSE
-			PRINTFORML 引き続き山で%ANAME(対象)%と楽しんだ。
+			PRINTFORML 引き続き森林浴を%ANAME(対象)%と楽しんだ。
 		ENDIF
 		能力 = ABL:MASTER:操艦
 	CASE 3
 		IF LOCAL:5 == 0
-			PRINTFORML %ANAME(対象)%を森に誘った。
+			PRINTFORML %ANAME(対象)%を観光地に誘った。
+			PRINTFORMW 観光地の建物や売店を楽しんだ。
 		ELSE
-			PRINTFORML 引き続き森で%ANAME(対象)%と楽しんだ。
+			PRINTFORML 引き続き観光地で%ANAME(対象)%と楽しんだ。
 		ENDIF
 		能力 = ABL:MASTER:知略
 	CASE 4
 		IF LOCAL:5 == 0
-			PRINTFORML %ANAME(対象)%を人里に誘った。
+			PRINTFORML %ANAME(対象)%をショッピングデートに誘った
+			PRINTFORMW %ANAME(対象)%は目を輝かせて楽しんだ。
 		ELSE
-			PRINTFORML 引き続き人里で%ANAME(対象)%と楽しんだ。
+			PRINTFORML 引き続き%ANAME(対象)%とショッピングを楽しんだ。
 		ENDIF
 		能力 = ABL:MASTER:政治
 	CASE 5
 		IF LOCAL:5 == 0
-			PRINTFORML %ANAME(対象)%を花畑に誘った。
+			PRINTFORML %ANAME(対象)%とエンタメ施設を回って楽しんだ。
+			PRINTFORMW 映画やカラオケ、運動施設やゲームセンターなどをはしごして楽しんだ。
 		ELSE
-			PRINTFORML 引き続き花畑で%ANAME(対象)%と楽しんだ。
+			PRINTFORML 引き続きエンタメ施設で%ANAME(対象)%と楽しんだ。
 		ENDIF
 		能力 = ABL:MASTER:歌唱
 	CASE 6
@@ -193,18 +207,20 @@ SELECTCASE 内容
 ENDSELECT
 
 ;口上でキャラ毎に別のセリフを言わせられるようにしたい
-SELECTCASE RAND:5
-	CASE 0
-		PRINTFORMW %PRONOUN(対象)%は楽しんでくれている様だ。
-	CASE 1
-		PRINTFORMW 二人で楽しい時間を過ごした。
-	CASE 2
-		PRINTFORMW %PRONOUN(対象)%との会話が弾んだ。
-	CASE 3
-		PRINTFORMW はしゃぐ%PRONOUN(対象)%に振り回された。
-	CASE 4
-		PRINTFORMW 楽しすぎてあっという間に時間が過ぎてしまった。
-ENDSELECT
+IF LOCAL:5 != 0
+	SELECTCASE RAND:5
+		CASE 0
+			PRINTFORMW %PRONOUN(対象)%は楽しんでくれている様だ。
+		CASE 1
+			PRINTFORMW 二人で楽しい時間を過ごした。
+		CASE 2
+			PRINTFORMW %PRONOUN(対象)%との会話が弾んだ。
+		CASE 3
+			PRINTFORMW はしゃぐ%PRONOUN(対象)%に振り回された。
+		CASE 4
+			PRINTFORMW 楽しすぎてあっという間に時間が過ぎてしまった。
+	ENDSELECT
+ENDIF
 
 PRINTFORML
 結果 = 100 + RAND:100 + 能力
@@ -254,7 +270,27 @@ IF !イベント発生
 			TALENT:対象:合意 = 1
 			PRINTFORMW %ANAME(対象)%の[合意]を得ました
 		ENDIF
+		LOCAL:6 = 2
 	ENDIF
+ENDIF
+;デート後、いい雰囲気になったらエッできる
+IF CFLAG:対象:好感度 >= 3000 && TALENT:対象:恋人 && TALENT:対象:合意 && !GROUPMATCH(LOCAL:6, 1, 2) && CONFIG:46 == 0
+	IF 内容 == 6
+		PRINTFORMW 遅くなってそろそろお開きにしてもいい時間だが、%ANAME(対象)%はお開きにしたく無いようだ。
+		PRINTFORMW %ANAME(対象)%は%ANAME(対象)%をそっと抱き寄せた……
+		PRINTW ………………
+		PRINTW …………
+		PRINTW ……
+		CALL HOME_DATING_AFTER(対象)
+	ELSE
+		PRINTFORMW 帰りの自動タクシーの中で、%ANAME(対象)%が甘えてきた。帰りたくないのだという
+		PRINTFORMW %ANAME(MASTER)%はタクシーの行き先を変えることにした
+		PRINTW ………………
+		PRINTW …………
+		PRINTW ……
+		CALL DATING_AFTER(対象)
+	ENDIF
+	CALL FUCK_MAKELOVE(MASTER, GET_ID(対象), @"%ANAME(対象)%の\@RAND:2 ? ペニス # 唇\@", ANAME(対象))
 ENDIF
 
 RESULT = 1
@@ -264,3 +300,103 @@ BEGIN TURNEND
 
 RETURN 1
 
+@HOME_DATING_AFTER(対象)
+#DIM 対象
+SELECTCASE RAND:4
+	CASE 0
+		PRINTFORMW %ANAME(対象)%の情けない喘ぎ声がベッドルームに響き渡っている。
+		PRINTFORMW 四つん這いで%ANAME(MASTER)%を迎え入れる%ANAME(対象)%は、後ろから%ANAME(MASTER)%に激しく腰を打ち付けられるたびに快感で脳が揺さぶられ、視界に火花が散った。
+		PRINTFORMW 意識が飛びそうになるも、すぐに次の快感で引き戻される。何度絶頂を迎えたかわからない。
+		PRINTFORMW もう身体は限界だ。しかし、%ANAME(MASTER)%のモノはまだ元気なようで、膣内を犯し続けている。子宮口を突き上げる感覚と共に、熱いものが注ぎ込まれた。それと同時に果ててしまう。
+		PRINTFORMW 朝方までずっとこんな調子だった。何度もイカされ続け、ついに気絶してしまった。
+		PRINTL
+		PRINTFORMW 気がついたときには昼頃で、部屋は性交後の臭気に満たされており体は汗やら汁まみれになっていた。
+		PRINTFORMW そのせいで昨晩のことが思い出され、恥ずかしくなると同時に興奮し体の奥がうずくのを%ANAME(対象)%は抑えることができなかった。
+	CASE 1
+		PRINTFORMW 腰を打ち付ける激しい音が寝室に響いている。
+		PRINTFORMW %ANAME(MASTER)%に組み敷かれた%ANAME(対象)%は、%ANAME(MASTER)%の背中にしがみつくようにして肉棒に膣を蹂躙される快楽に耐えている。
+		PRINTFORMW 結合部から泡立った白い液が漏れ、シーツの上に染みを作った。
+		PRINTFORMW %ANAME(MASTER)%と繋がっている部分の熱さと快感に%ANAME(対象)%は雌としての幸福感が溢れ出してきて止まらない。
+		PRINTFORMW 勝手に精子を求めて降りてきた子宮口が硬い肉棒にこづかれ、%ANAME(対象)%はその度に悲鳴のような喘ぎ声で応える。
+		PRINTFORMW %ANAME(対象)%は全身を貫くような悦楽に身をよじりながら必死になって理性を保とうとする。
+		PRINTFORMW だが一分も持たずに潮を吹き出して情けない降参の声を上げて種汁を求めて、腕だけでなく脚まで使って%ANAME(MASTER)%にしがみつくのだった。
+	CASEELSE
+		CALL DATING_COMMON_AFTER(対象)
+ENDSELECT
+
+@DATING_AFTER(対象)
+#DIM 対象
+SELECTCASE RAND:5
+	CASE 0
+		PRINTFORMW ホテルにたどり着いた二人は、部屋に入るや我慢できないとばかりに互いの唇を貪りあった。
+		PRINTFORMW 舌同士を絡ませあい唾液を交換しあう濃厚なディープキスを交わしていると、股間のモノがどんどん固くなっていくのがわかる。
+		PRINTFORMW もう我慢できず、お互いベッドに腰掛けて服を脱がせ合った。
+		PRINTFORMW %ANAME(対象)%は%STR_BODY("胸", 対象)%の先で勃起した乳首を摘まれると甘い吐息を漏らして反応する。少し強めの方が好きなようでグリっと抓ってやると甲高い声で鳴いた。
+		PRINTFORMW ショーツを脱がせると既にそこは濡れており、糸を引いているほどだった。指を這わせるだけでぴちゃぴちゃという音が響く。
+		PRINTFORMW しっとりと濡れたクリトリスを撫で上げるとビクッと身体を震わせる。もう前座は不要なくらいに高まっているようだ。
+		PRINTFORMW 早く入れてくれと言わんばかりに足をM字開脚させて誘ってくるのでそれに応えてやることにした。
+		PRINTFORMW ペニスをあてがい一気に挿入すると、%ANAME(対象)%はそれだけで軽く達してしまったのか膣壁をひくつかせながら潮を噴いていた。%ANAME(MASTER)%自身もきゅうきゅう締め付けてくる感触に我慢しきれず射精してしまう。
+		PRINTFORMW それでもまだ足りないというように腰を動かし始める%ANAME(対象)%に応えるため、%ANAME(MASTER)%もまたピストン運動を開始した。
+		PRINTFORMW やがて互いに何度目かわからない絶頂を迎えたところで%ANAME(MASTER)%の意識は途切れてしまった……。
+	CASE 1
+		PRINTFORMW 体をソープでヌルヌルにした%ANAME(対象)%が、%ANAME(MASTER)%の肉棒を体中で扱いている。
+		PRINTFORMW 手、口、脇、尻、股、脚、あらゆるところで扱かれた%ANAME(MASTER)%の肉棒は数え切れないほど射精しており、バスルームの床はソープの泡と精液で白く汚れている。
+		PRINTFORMW ぬるぬるの手でシゴかれる感覚に我慢できなくなってきたのか、またびゅるりと勢いよく発射された。
+		PRINTFORMW %ANAME(対象)%の顔にもかかり、それをぺろりと舐め取った彼女の瞳は情欲に濡れておりとても扇情的だ。そして今度は胸に塗りつけてきた。
+		PRINTFORMW ぬらぬらとテカった乳房の先端を口に含み舌で転がす様に舐めると甘い声を出して身を捩らせる。
+		PRINTFORMW 我慢できなくなったのか%ANAME(MASTER)%の方へ向き直りキスしてきた。舌を絡ませあい唾液を交換しあう濃厚な接吻をしながら二人はお互いの胸を押し付け合う。二人の乳首が強く擦れあって快感を生みだし、自然と手が相手の下半身へ伸びていった……。
+	CASE 2
+		PRINTFORMW 浴室に入って服を脱ぎ始める。お互い生まれたままの姿になると、自然と視線が交わり口づけを交わす。舌を絡ませあい、唾液を交換し合いながらお互いの身体に手を這わせる。乳房の感触を楽しむ様に揉みしだき、乳首を刺激すると唯華の口から甘い声が漏れ出る。
+		PRINTFORMW あなたの手が下腹部へと伸びていき、割れ目に触れるとそこはもうぐっしょりと濡れており、指を入れるとくちゅっと音を立てて飲み込んでいく。
+		PRINTFORMW %STR_BODY("クリ", 対象)%を指で摘みあげると面白いくらいに身体が跳ね上がり、そのまま指で押し潰すようにして弄ってやるとそれだけで軽く達してしまったようで、全身をビクビク痙攣させている。
+		PRINTFORMW %STR_BODY("膣", 対象)%に指を二本入れてかき混ぜるように動かすだけで唯華は何度も何度も絶頂し、やがて力が抜けてしまい崩れ落ちそうになるが、それを優しく受け止めるあなた。そして壁に手を突かせるよう立たせた後、後ろから覆い被さるようにして一気に挿入する。いきなり奥まで突かれたことでまたイッてしまったようだが、お構いなしに腰を打ち付け続ける。何度も子宮口をノックされ、その度に声にならない悲鳴を上げている様子はまるで獣のようだ。
+		PRINTFORMW あなたは最後に思い切り最奥まで突き入れ、そこで果てた。ドクンドクンという脈動と共に熱いものが流し込まれる感覚を味わいつつ、同時にあなたも絶頂を迎えたようだ。脱力感に襲われながらもなんとか最後まで出し切った後、肉棒を引き抜く。栓を失ったことで収まりきらなくなった精液が大量に流れ出て、床を白く染め上げる。唯華はそれをぼーっとした表情で見つめていて、時折ピクンと身体を震わせては小さく喘いでいた。
+		PRINTFORMW その後二人でシャワーを浴び直して身体を洗いあったのだが、その際にまたしても我慢できずに今度は浴槽の中でセックスを始めてしまうのだった。
+	CASEELSE
+		CALL DATING_COMMON_AFTER(対象)
+ENDSELECT
+
+@DATING_COMMON_AFTER(対象)
+#DIM 対象
+SELECTCASE RAND:4
+	CASE 0
+		PRINTFORMW 挿入されてから一分も経っていないにも関わらず、%ANAME(対象)%は既に3回連続でイッてしまっていた。
+		PRINTFORMW 膣内はぐねぐねと収縮を繰り返して肉茎を絞り上げてくるため、射精寸前の快感が持続する形となっている。
+		PRINTFORMW 腰を引いて抜く時などは特に強く締め付けられ、危うくそのまま中に出してしまいそうになった。
+		PRINTFORMW %ANAME(対象)%はというと、既に連続イキのせいで頭から煙が出そうな状態になっており、もはや完全にされるがままの状態となっていた。
+		PRINTFORMW そんな状態で抽挿を繰り返すのだから当然長く続くはずもなく、%ANAME(MASTER)%はあっという間に限界を迎えてしまった。
+		PRINTFORMW どくんっと脈打つような感覚と共に大量の白濁液が流れ込み、膣内を満たしていく。同時に%ANAME(対象)%は身体を弓なりに反らせて盛大に絶頂した。
+		PRINTFORMW その衝撃からか%ANAME(対象)%は失禁してしまい、ベッドの上に黄色い水溜まりが出来上がる。
+		PRINTFORMW 彼女はあまりの恥ずかしさに顔を手で覆ってしまうが、%ANAME(MASTER)%は構わずに再び腰を振り始めた。
+		PRINTFORMW 一度出したにもかかわらず、%ANAME(MASTER)%のものは全く萎えていない。むしろ、更に大きくなっているようにすら思えるほどだ。
+		PRINTFORMW %ANAME(対象)%の方もそれは感じ取っているのか、期待するように愛液が溢れ出してくるのだった。
+	CASE 1
+		PRINTFORMW ぱんっ！ぱちゅん！！という肉のぶつかり合う音とベッドの軋む音が混ざり合い、淫らなハーモニーを奏でていた。
+		PRINTFORMW 結合部からは入り切らなかった精液と掻き出された愛液が溢れてシーツを濡らしている。
+		PRINTFORMW %ANAME(MASTER)%が仰向けになった%ANAME(対象)%の上に覆いかぶさるようにして激しく突き上げるたびに%STR_BODY("胸", 対象)%が震え、先端の蕾が刺激されてさらに硬くなる。
+		PRINTFORMW 二人とも何度絶頂を迎えたのか数え切れないが、それでもまだまだ興奮はおさまりそうにない。
+		PRINTFORMW 気持ちが高まっていき段々と腰のスピードが速くなり、最後は一番奥の子宮口に届くように押し付けて大量に射精される。
+		PRINTFORMW どくんどくんと脈打つ感覚が伝わってきて、%ANAME(対象)%のお腹の奥に数回目とは思えないねっとりとした精液が注ぎ込まれた。
+		PRINTFORMW 最後の一滴まで注ぎ込むためにゆっくりと抽挿を繰り返し、それからようやく引き抜かれると、秘裂からどろりと白濁液が溢れ出てきた。
+		PRINTFORMW 息を荒げながら%ANAME(対象)%は震える四肢で%ANAME(MASTER)%を力強く抱きしめる。意識しての行動なのかは知らないが、受精するまで絶対に逃さないという雌の本能がむき出しになっているようだった……
+	CASE 2
+		PRINTFORMW %ANAME(対象)%が%ANAME(MASTER)%にまたがり、下品な喘ぎ声を上げながら腰を振っている。
+		PRINTFORMW %ANAME(対象)%が動く度にた胸が激しく震え暴れ回る。
+		PRINTFORMW 彼女の%STR_BODY("膣", 対象)%からは洪水のように蜜が溢れ出し、%ANAME(MASTER)%の太ももまで濡らしている。
+		PRINTFORMW 更には何度も潮を吹いているのだが、%ANAME(対象)%は気にするそぶりも無く一心不乱に腰を振り続けていた。
+		PRINTFORMW その姿はまさに発情期の獣のようで、雌の本性をむき出しにしている。
+		PRINTFORMW 自ら%ANAME(MASTER)%の剛直を肉穴にねじ込み、精液を求めて降りてきた子宮口に押し付ける。
+		PRINTFORMW 何度%ANAME(MASTER)%の精液を注がれても、子宮が満たされるまで彼女の体は止まることはない。
+		PRINTFORMW こうして%ANAME(MASTER)%は夜が明けるまで絞られ続け、二人共息も絶え絶えになって気絶するまで交わり続けたのだった。
+	CASEELSE
+		PRINTFORMW %ANAME(対象)%はひだがうねる名器で%ANAME(MASTER)%のペニスをくわえ込み、子宮の鎮座する奥へといざなっている
+		PRINTFORMW 枕を抱きしめて快感と羞恥に耐える%ANAME(対象)%の意思に反して、まるで別の生き物のように蠢き絡みついてくるのだ。
+		PRINTFORMW %ANAME(MASTER)%のピストンに合わせて声を上げる%ANAME(対象)%だが、その声に合わせて膣襞もよりいやらしく絡みつき、肉棒を締め上げる。
+		PRINTFORMW 最奥にあるコリッとした部分に亀頭を押し付けてやると、%ANAME(対象)%の身体がビクンと跳ね上がる。
+		PRINTFORMW そこを重点的に攻めるように動くと、次第に甘い喘ぎ声がどんどん大きくなっていき、結合部から溢れ出る白い泡も量を増していく。
+		PRINTFORMW そしてついに我慢できなくなったのか、%ANAME(対象)%は自ら腰を動かし始める。
+		PRINTFORMW とろけた表情で瞳にハートマークを浮かべながら腰を振り、%ANAME(MASTER)%の精液を搾り取ろうと蠕動する。
+		PRINTFORMW 負けじと%ANAME(MASTER)%もねちっこく肉壷を攻めてやると、その度にビクビクっと痙攣し背中を大きく仰け反らせた。
+		PRINTFORMW もうとっくに限界を超えているようで、%ANAME(MASTER)%の背中に爪を立てて必死にしがみついてくるが、それも無視して突き上げ続けた。
+		PRINTFORMW やがて一際大きな声を上げたかと思うと、今まで以上に強く締め付けてきて、それに耐えきれず%ANAME(MASTER)%も果ててしまった……。
+ENDSELECT
