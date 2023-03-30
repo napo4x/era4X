@@ -20,16 +20,27 @@ FOR LOCAL, 0, VARSIZE("ABL")
 		PRINTL
 NEXT
 PRINTL
+	PRINTBUTTON "[経験を元に自動レベルアップ]", 200
+PRINTL
+PRINTL
 
 @CHARACTER_EDIT_INPUT_ABL(対象, 入力値)
 #DIM 対象
 #DIM 入力値
 
-SIF !INRANGE(入力値, 0, VARSIZE("ABL") - 1)
+IF 入力値 == 200
+	FOR LOCAL, 0, VARSIZE("ABL")
+		CALL TRAIN_AUTO_ABLUP(対象, 0)
+	NEXT
+	PRINTW 完了
+	RETURN 0
+ENDIF
+
+SIF !INRANGE(入力値, 0, VARSIZE("ABL") - 1) || ABLNAME:入力値 == ""
 	RETURN 0
 
 PRINTFORML 値を入力 現在値{ABL:対象:入力値} 
-PRINTFORML %ABLNAME:入力値%を編集中 {ABL_MIN:入力値}～{ABL_MAX:入力値})
+PRINTFORML (%ABLNAME:入力値%を編集中 {ABL_MIN:入力値}～{ABL_MAX:入力値})
 
 INPUT
 
@@ -39,3 +50,4 @@ ABL:対象:入力値 = RESULT
 
 SIF ABL:対象:超能力 > 0
 	TALENT:対象:超能力者 = 1
+
