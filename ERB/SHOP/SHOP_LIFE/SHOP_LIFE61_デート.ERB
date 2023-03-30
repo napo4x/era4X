@@ -241,7 +241,25 @@ IF SHOP_TIME < CALC_SHOP_TIME()
 ENDIF
 
 ;デートイベントが発生していなければ、キスと告白を受けるかもしれない
-IF !イベント発生
+;デート後、いい雰囲気になったらエッできる
+IF CFLAG:対象:好感度 >= 3000 && TALENT:対象:恋人 && TALENT:対象:合意 && CONFIG:46 == 0
+	IF 内容 == 6
+		PRINTFORMW 遅くなってそろそろお開きにしてもいい時間だが、%ANAME(対象)%はお開きにしたく無いようだ。
+		PRINTFORMW %ANAME(MASTER)%は%ANAME(対象)%をそっと抱き寄せた……
+		PRINTW ………………
+		PRINTW …………
+		PRINTW ……
+		CALL HOME_DATING_AFTER(対象)
+	ELSE
+		PRINTFORMW 帰りの自動タクシーの中で、%ANAME(対象)%が甘えてきた。帰りたくないのだという
+		PRINTFORMW %ANAME(MASTER)%はタクシーの行き先を変えることにした
+		PRINTW ………………
+		PRINTW …………
+		PRINTW ……
+		CALL DATING_AFTER(対象)
+	ENDIF
+	CALL FUCK_MAKELOVE(対象, GET_ID(MASTER), @"%ANAME(MASTER)%の\@RAND:2 ? ペニス # 唇\@", ANAME(MASTER))
+ELSEIF !イベント発生
 	;デート後、一定条件でキスされる
 	IF CFLAG:対象:好感度 >= 1000 && RAND:3 == 0
 		PRINTFORML 
@@ -272,25 +290,6 @@ IF !イベント発生
 		ENDIF
 		LOCAL:6 = 2
 	ENDIF
-ENDIF
-;デート後、いい雰囲気になったらエッできる
-IF CFLAG:対象:好感度 >= 3000 && TALENT:対象:恋人 && TALENT:対象:合意 && !GROUPMATCH(LOCAL:6, 1, 2) && CONFIG:46 == 0
-	IF 内容 == 6
-		PRINTFORMW 遅くなってそろそろお開きにしてもいい時間だが、%ANAME(対象)%はお開きにしたく無いようだ。
-		PRINTFORMW %ANAME(対象)%は%ANAME(対象)%をそっと抱き寄せた……
-		PRINTW ………………
-		PRINTW …………
-		PRINTW ……
-		CALL HOME_DATING_AFTER(対象)
-	ELSE
-		PRINTFORMW 帰りの自動タクシーの中で、%ANAME(対象)%が甘えてきた。帰りたくないのだという
-		PRINTFORMW %ANAME(MASTER)%はタクシーの行き先を変えることにした
-		PRINTW ………………
-		PRINTW …………
-		PRINTW ……
-		CALL DATING_AFTER(対象)
-	ENDIF
-	CALL FUCK_MAKELOVE(MASTER, GET_ID(対象), @"%ANAME(対象)%の\@RAND:2 ? ペニス # 唇\@", ANAME(対象))
 ENDIF
 
 RESULT = 1
