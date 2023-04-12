@@ -1,0 +1,84 @@
+﻿;------------------------
+; 宇宙にんげん
+;------------------------
+@GET_SHIP_NAME_102
+RESULTS = 宇宙にんげん
+
+@GET_SHIP_STATUS_102(STATUS)
+#DIM REF STATUS
+
+STATUS:CATEGORY = 巡洋艦
+STATUS:SHIP_HP = 4000
+STATUS:SHIP_AVOID = 10
+STATUS:SHIP_MAIN_WEAPON_SIZE = 4
+STATUS:SHIP_SUB_WEAPON_SIZE = 2
+STATUS:SHIP_SIELD_SIZE = 3
+STATUS:SHIP_ARMOR_SIZE = 3
+STATUS:SHIP_ENGIN_SIZE = 3
+STATUS:SHIP_PRICE = 120000000
+STATUS:SHIP_CREW = 5
+
+STATUS:SHIP_MAIN_WEAPON_SLOT = 1
+STATUS:SHIP_SUB_WEAPON_SLOT = 2
+STATUS:SHIP_SIELD_SLOT = 2
+STATUS:SHIP_ARMOR_SLOT = 2
+STATUS:SHIP_OPTION_SLOT = 1
+STATUS:SHIP_CRITICAL_RISK = 20
+STATUS:SHIP_VARIANT = 特殊分類_宇宙生物
+
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_102(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("巡洋艦程度の大きさを持ち、生身でも宇宙空間で問題なく活動できる人間型の生命体。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("スケールの差を別とすれば外見上はおおよそ人間。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("この個体は人の手でサイボーグ化された宇宙怪獣にまま見られる様な自発的な活動などを制限する処置が行われており艦艇としての運用が可能。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("人型とは言ってもスケールが違い過ぎる為にメックよりも一般的な艦艇の方がまだ近い性質を持つ。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("もちろん一般的な艦艇とも程遠い存在であり、灰汁の強い宇宙怪獣の一種と認識する必要がある。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("遺伝子的には宇宙怪獣と人の双方に類似しており、正常な状態であれば性的に成熟した後に子供を産む/産ませる事も可能であったと思われる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ただし文字通りの『成長の為の食事』に食い潰されかねないという点においてそういった機能が損なわれている事は幸運であったのかもしれない。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("とはいえ成熟には短くともあと数百年は掛かるとも試算されているので、個人が所有・運用する限りにおいては気にする必要は薄いだろう。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("なお、様々な理由から未知の遺失技術でも持ち出さない限りはクローンを製造する事も現実的ではないと考えられている。", , 動作モード)
+
+
+@GET_SHIP_RESOURCE_102(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 2000
+USE_RESOURCE:装甲合金 = 1000
+USE_RESOURCE:シールド発生装置 = 1000
+USE_RESOURCE:武装制御機器 = 1000
+USE_RESOURCE:合金加工剤 = 3000
+USE_RESOURCE:耐熱合金 = 800
+USE_RESOURCE:超電導回路 = 800
+USE_RESOURCE:タイラーセンサー = 200
+
+@SET_SHIP_PRESET_102(SHIP_ID)
+#DIM SHIP_ID
+
+SHIP_EQUIP:主砲:0:SHIP_ID = 50
+SHIP_EQUIP:副砲:0:SHIP_ID = 16
+SHIP_EQUIP:副砲:1:SHIP_ID = 52
+SHIP_EQUIP:シールド:0:SHIP_ID = 3
+SHIP_EQUIP:シールド:1:SHIP_ID = 0
+SHIP_EQUIP:装甲:0:SHIP_ID = 200
+SHIP_EQUIP:装甲:1:SHIP_ID = 32
+SHIP_EQUIP:エンジン:0:SHIP_ID = 91
+SHIP_EQUIP:AI:0:SHIP_ID = 1
+SHIP_EQUIP:センサー:0:SHIP_ID = 1
+SHIP_EQUIP:オプション:0:SHIP_ID = 0
+
+@IS_SALE_SHIP_102(CAN_SALE_SHIP)
+#DIM REF CAN_SALE_SHIP
+RETURN 0
+
+@GET_SHIP_COMENT_102(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("脱衣対象の美少女キャラを「これは戦艦です」と言い切って、ゲームプレイ上では美少女を脱衣させつつ・物語上はエロの全く絡まないSFストーリーを展開した脱衣STGがあってですね……", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("性的に成熟していないとは書いたけれども、外見が未成熟だとは書いてない。つまり性的に未成熟なだけのボンキュッボンも可。", , 動作モード)
+
+CALL SHIP_PRINTFORML_MESSAGE("両腕で手持ち化版の砲を持ってるとしてもいいし、STG的な発射手段不明の謎弾を撃てる機能があるとしてもいい。人間型でも宇宙怪獣なので人間に出来ない事の一つや二つ出来ていいのだ！", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("巨大な人間相当なのでなまもの装備は表皮相当の生体装甲のみ。", , 動作モード)

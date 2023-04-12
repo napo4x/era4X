@@ -1,0 +1,30 @@
+﻿;-----------------------------------
+; アーマー
+;-----------------------------------
+@GET_ARMOR_NAME_100
+RESULTS = 堆積物層
+
+@GET_ARMOR_STATUS_100(STATUS)
+#DIM REF STATUS
+
+STATUS:ARMOR = 4000
+STATUS:SIZE = 4
+STATUS:PRICE = 9999
+
+;-----------------------------------
+; アーマーの説明
+;-----------------------------------
+@GET_ARMOR_DESCRIPTION_F_100
+
+PRINTFORML 小惑星などにおける多量の堆積物(レゴリス)
+PRINTFORML 何の加工もされていないので砂地と大差ない強度であるものの
+PRINTFORML その膨大な量によって一種の装甲として機能する
+
+;-----------------------------------
+; 装甲の資材
+;-----------------------------------
+@GET_ARMOR_RESOURCE_100(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+@IS_SALE_ARMOR_100
+RETURN 0

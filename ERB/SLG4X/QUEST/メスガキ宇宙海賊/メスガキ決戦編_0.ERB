@@ -1,0 +1,643 @@
+﻿;--------------------------
+;本拠地イベントマスとかを作る
+;--------------------------
+@MESUGAKI_PIRATES_BASE_GENERATE_0
+;ヤクザルート
+#DIM CONST QUEST_ID = 69
+#DIM SECTOR_ID
+#DIM X_POS
+#DIM Y_POS
+#DIM POSID
+
+#DIM FLEET_POS
+
+
+CALL ID2POS(CHARACTER_POSITION)
+SECTOR_ID = RESULT:0
+PRINTFORML %CALLNAME:MASTER%はメスガキ宇宙海賊の本拠地のありそうな座標にあたりを付けた
+PRINTL
+LOCAL = 1
+WHILE LOCAL
+	; やり直し時に残ってるクエスト地点を処理
+	CALL QUEST_RELEASE_SECTOR(QUEST_ID, SECTOR_ID)
+
+	CALL QUEST_SET_RANDPOINT(QUEST_ID, SECTOR_ID, 7 )
+	IF RESULT >= 0
+		POSID = RESULT
+		X_POS = (POSID / 100) %100
+		Y_POS = POSID %100
+		;四方が端以外で、クエストを指定できないならやり直し
+		IF X_POS + 1 < MAP_WIDTH
+			CALL POS2ID(SECTOR_ID, X_POS + 1, Y_POS)
+			CALL QUEST_SET_POINT(QUEST_ID, RESULT)
+			IF RESULT == -1
+				CONTINUE
+			ENDIF
+		ENDIF
+		IF X_POS - 1 >= 0
+			CALL POS2ID(SECTOR_ID, X_POS - 1, Y_POS)
+			CALL QUEST_SET_POINT(QUEST_ID, RESULT)
+			IF RESULT == -1
+				CONTINUE
+			ENDIF
+		ENDIF
+		IF Y_POS + 1 < MAP_HEIGHT
+			CALL POS2ID(SECTOR_ID, X_POS, Y_POS + 1)
+			CALL QUEST_SET_POINT(QUEST_ID, RESULT)
+			IF RESULT == -1
+				CONTINUE
+			ENDIF
+		ENDIF
+		IF Y_POS - 1 >= 0
+			CALL POS2ID(SECTOR_ID, X_POS, Y_POS - 1)
+			CALL QUEST_SET_POINT(QUEST_ID, RESULT)
+			IF RESULT == -1
+				CONTINUE
+			ENDIF
+		ENDIF
+
+
+		CLEARMAP:SECTOR_ID:X_POS:Y_POS = 1		;;明瞭化おまけ
+		LOCAL --
+	ENDIF
+WEND
+;PRINTFORML ヤクザルートで {SECTOR_ID}:{X_POS}:{Y_POS}に生成しました
+
+;軽空母艦隊
+CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(POSID, 101)
+SHIP_MISSION:RESULT = 遠隔攻撃
+QUEST_FLAG_SHIP_ID:QUEST_ID = RESULT
+CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(POSID, 101)
+CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(POSID, 101)
+CALL SET_DOCTRINE_FOR_POS(POSID, 国家ID_一般海賊, MESUGAKI_DOCTRINE_ID)
+
+;(マップ内であるのなら)護衛艦隊に四方を囲ませる
+IF X_POS + 1 <= MAP_WIDTH
+	CALL POS2ID(SECTOR_ID, X_POS + 1, Y_POS)
+	FLEET_POS = RESULT
+	CALL MESUGAKI_PIRATES_FLEET_GENERATE(FLEET_POS, 20, 1)
+	CALL SET_DOCTRINE_FOR_POS(FLEET_POS, 国家ID_一般海賊, MESUGAKI_DOCTRINE_ID)
+ENDIF
+IF X_POS - 1 >= 0
+	CALL POS2ID(SECTOR_ID, X_POS - 1, Y_POS)
+	FLEET_POS = RESULT
+	CALL MESUGAKI_PIRATES_FLEET_GENERATE(FLEET_POS, 20, 1)
+	CALL SET_DOCTRINE_FOR_POS(FLEET_POS, 国家ID_一般海賊, MESUGAKI_DOCTRINE_ID)
+ENDIF
+IF Y_POS + 1 <= MAP_HEIGHT
+	CALL POS2ID(SECTOR_ID, X_POS, Y_POS + 1)
+	FLEET_POS = RESULT
+	CALL MESUGAKI_PIRATES_FLEET_GENERATE(FLEET_POS, 20, 1)
+	CALL SET_DOCTRINE_FOR_POS(FLEET_POS, 国家ID_一般海賊, MESUGAKI_DOCTRINE_ID)
+ENDIF
+IF Y_POS - 1 >= 0
+	CALL POS2ID(SECTOR_ID, X_POS, Y_POS - 1)
+	FLEET_POS = RESULT
+	CALL MESUGAKI_PIRATES_FLEET_GENERATE(FLEET_POS, 20, 1)
+	CALL SET_DOCTRINE_FOR_POS(FLEET_POS, 国家ID_一般海賊, MESUGAKI_DOCTRINE_ID)
+ENDIF
+
+;--------------------------
+;本拠地イベントマスに乗った時の処理
+;--------------------------
+@MESUGAKI_PIRATES_BASE_REACH_PLACE_0
+#DIM CONST QUEST_ID = 69
+#DIM QUEST_POS_NUM_LIST, 5
+#DIM EXIST_POS_NUM
+
+#DIMS QUEST_POS_STR_LIST, 5
+
+#DIM POS_COUNT
+#DIM CHECK_COUNT
+
+#DIM SECTOR_ID
+#DIM X_POS
+#DIM Y_POS
+
+#DIM CHECK_POS
+#DIM ADJACENT_QUEST_POS
+
+#DIM DYNAMIC DIVISION_SHIP_LIST, MAX_SHIP
+#DIM SHIP_NUM
+
+VARSET QUEST_POS_NUM_LIST, -1
+VARSET QUEST_POS_STR_LIST
+
+;POSIDを文字列塊として貰って・分割しつつイベントマス数を入手
+CALL QUEST_GET_POINT_POSID(QUEST_ID)
+SPLIT RESULTS, ",", QUEST_POS_STR_LIST
+
+; ,の区切りは後端でも付くので末尾分引く
+EXIST_POS_NUM = RESULT - 1
+;PRINTFORMW EXIST_POS_NUM:{EXIST_POS_NUM}
+
+IF EXIST_POS_NUM == 1
+	; イベントマスが1つ=処理不要
+	RETURN
+ELSE
+	; POSID相当の文字列を数値に変換
+	FOR POS_COUNT, 0, EXIST_POS_NUM
+		QUEST_POS_NUM_LIST:POS_COUNT = TOINT(QUEST_POS_STR_LIST:POS_COUNT)
+	NEXT
+
+	; 隣接マスが(イベントマス数-1)だけイベントマスならそこが本拠地
+	; 作成時点では旗艦の場所=本拠地でもいいけど、SLGマップ2マス以遠からの攻撃が可能になっても破綻しない処理を採用
+	FOR POS_COUNT, 0, EXIST_POS_NUM
+		ADJACENT_QUEST_POS = 0
+
+		CALL ID2POS(QUEST_POS_NUM_LIST:POS_COUNT)
+		SECTOR_ID = RESULT:0
+		X_POS = RESULT:1
+		Y_POS = RESULT:2
+		; 隣接マス確認
+		IF X_POS + 1 <= MAP_WIDTH
+			CALL POS2ID(SECTOR_ID, X_POS + 1, Y_POS)
+			CHECK_POS = RESULT
+			IF IS_QUEST(CHECK_POS) == QUEST_ID
+				ADJACENT_QUEST_POS++
+			ENDIF
+		ENDIF
+		IF X_POS - 1 >= 0
+			CALL POS2ID(SECTOR_ID, X_POS - 1, Y_POS)
+			CHECK_POS = RESULT
+			IF IS_QUEST(CHECK_POS) == QUEST_ID
+				ADJACENT_QUEST_POS++
+			ENDIF
+		ENDIF
+		IF Y_POS + 1 <= MAP_HEIGHT
+			CALL POS2ID(SECTOR_ID, X_POS, Y_POS + 1)
+			CHECK_POS = RESULT
+			IF IS_QUEST(CHECK_POS) == QUEST_ID
+				ADJACENT_QUEST_POS++
+			ENDIF
+		ENDIF
+		IF Y_POS - 1 >= 0
+			CALL POS2ID(SECTOR_ID, X_POS, Y_POS - 1)
+			CHECK_POS = RESULT
+			IF IS_QUEST(CHECK_POS) == QUEST_ID
+				ADJACENT_QUEST_POS++
+			ENDIF
+		ENDIF
+		;PRINTFORMW 座標{QUEST_POS_NUM_LIST:POS_COUNT}のADJACENT_QUEST_POSは{ADJACENT_QUEST_POS}です
+		; 本拠地だったら(クエスト旗艦が生きてるなら)本拠地以外の艦隊をクエスト旗艦に向かわせつつ、それ以外のクエストマスを消す
+		IF ADJACENT_QUEST_POS == (EXIST_POS_NUM - 1)
+			SHIP_NUM = 0
+			; 本拠地の周囲のマスの海賊をリストに入れつつ、本拠地以外のクエストマスを消す
+			FOR CHECK_COUNT, 0, EXIST_POS_NUM
+				IF CHECK_COUNT != POS_COUNT
+					;PRINTFORML 座標{QUEST_POS_NUM_LIST:CHECK_COUNT}の船をリストに追加します
+					CALL GET_SHIP_LIST(DIVISION_SHIP_LIST, QUEST_POS_NUM_LIST:CHECK_COUNT, 国家ID_一般海賊, SHIP_NUM)
+					SHIP_NUM = RESULT		
+					CALL QUEST_RELEASE_POINT(QUEST_ID, QUEST_POS_NUM_LIST:CHECK_COUNT)
+				ENDIF
+			NEXT
+
+			;クエスト旗艦が生きてるならクエスト旗艦に向かわせる
+			IF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:QUEST_ID) == 国家ID_一般海賊
+				;PRINTW クエスト旗艦に追従させます
+				;PRINTFORMW SHIP_NUMは{SHIP_NUM}です
+				; リストの船を全部クエスト旗艦に追従させる
+				FOR CHECK_COUNT, 0, SHIP_NUM
+					;PRINTFORML SHIP_NAME:(DIVISION_SHIP_LIST:CHECK_COUNT)を追従にします
+					SHIP_MISSION:(DIVISION_SHIP_LIST:CHECK_COUNT) = 追従
+					SHIP_FOLLOW:(DIVISION_SHIP_LIST:CHECK_COUNT) = QUEST_FLAG_SHIP_ID:QUEST_ID
+				NEXT
+			ENDIF
+			BREAK
+		ENDIF
+
+	NEXT
+ENDIF
+;--------------------------
+;本拠地イベント
+;--------------------------
+@MESUGAKI_PIRATES_BASE_EVENT_0
+#DIM CONST QUEST_ID = 69
+
+#DIM SECTOR_ID
+#DIM X_POS
+#DIM Y_POS
+
+#DIM POS_1
+#DIM POS_2
+#DIM POS_3
+#DIM POS_4
+
+#DIM LIVE_1
+#DIM LIVE_2
+#DIM LIVE_3
+#DIM LIVE_4
+
+#DIM RAND_MEM
+#DIM JUDGE
+
+POS_1 = -1
+POS_2 = -1
+POS_3 = -1
+POS_4 = -1
+
+LIVE_1 = 0
+LIVE_2 = 0
+LIVE_3 = 0
+LIVE_4 = 0
+
+CALL ID2POS(CHARACTER_POSITION)
+SECTOR_ID = RESULT:0
+X_POS = RESULT:1
+Y_POS = RESULT:2
+
+IF X_POS + 1 <= MAP_WIDTH
+	CALL POS2ID(SECTOR_ID, X_POS + 1, Y_POS)
+	POS_1 = RESULT
+ELSE
+	POS_1 = -1
+ENDIF
+IF X_POS - 1 >= 0
+	CALL POS2ID(SECTOR_ID, X_POS - 1, Y_POS)
+	POS_2 = RESULT
+ELSE
+	POS_2 = -1
+ENDIF
+IF Y_POS + 1 <= MAP_HEIGHT
+	CALL POS2ID(SECTOR_ID, X_POS, Y_POS + 1)
+	POS_3 = RESULT
+ELSE
+	POS_3 = -1
+ENDIF
+IF Y_POS - 1 >= 0
+	CALL POS2ID(SECTOR_ID, X_POS, Y_POS - 1)
+	POS_4 = RESULT
+ELSE
+	POS_4 = -1
+ENDIF
+
+FOR COUNT, 0, MAX_SHIP
+	IF SHIP_POSITION:COUNT == CHARACTER_POSITION:MASTER && SHIP_COUNTRY:COUNT == 国家ID_一般海賊
+		PRINTL まだ敵艦隊が残存している。後顧の憂いを残したまま突入する事はできない……
+		RETURN 0
+	ENDIF 
+	IF SHIP_POSITION:COUNT == POS_1 && SHIP_COUNTRY:COUNT == 国家ID_一般海賊
+		LIVE_1 = 1
+	ELSEIF  SHIP_POSITION:COUNT == POS_2 && SHIP_COUNTRY:COUNT == 国家ID_一般海賊
+		LIVE_2 = 1
+	ELSEIF  SHIP_POSITION:COUNT == POS_3 && SHIP_COUNTRY:COUNT == 国家ID_一般海賊
+		LIVE_3 = 1
+	ELSEIF  SHIP_POSITION:COUNT == POS_4 && SHIP_COUNTRY:COUNT == 国家ID_一般海賊
+		LIVE_4 = 1
+	ENDIF
+NEXT
+
+;隣接マスに船が存在しえない(マップ外に当たる)場合には常に生きている判定
+SIF POS_1 == -1
+	LIVE_1 = 1
+SIF POS_2 == -1
+	LIVE_2 = 1
+SIF POS_3 == -1
+	LIVE_3 = 1
+SIF POS_4 == -1
+	LIVE_4 = 1
+
+;白兵戦参加メンバーの初期化
+CALL CC_INIT_MEMBER()
+
+$CQC_LOOP
+CALL QUEST_ANONYM_SQUAD_CHOICE(6)
+FINDELEMENT ANONYM_CQC_SELECTED, 1
+IF RESULT == -1
+	$INPUT_LOOP
+	PRINTL 突入をを止めますか？
+	PRINTBUTTON "[0] はい", 0
+	PRINTL 
+	PRINTBUTTON "[1] いいえ", 1
+	INPUT
+	IF RESULT == 0
+		RETURN 0
+	ELSEIF RESULT == 1
+		GOTO CQC_LOOP
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
+ENDIF
+
+RAND_MEM = RAND:3
+
+;パート1
+PRINTL メスガキ宇宙基地へと突入した。
+PRINTFORML そして%CALLNAME:MASTER%は見た……
+PRINTL 
+IF LIVE_1 == 1 && LIVE_2 == 1 && LIVE_3 == 1 && LIVE_4 == 1
+	PRINTL 「う、嘘でしょう！ 護衛を残して空母だけが！？ 」
+ELSE
+	PRINTL 「く、空母が正面から撃沈された……！？」
+ENDIF
+PRINTW 驚くのはメスガキと呼ぶには少々歳の行った女。
+PRINTL 
+
+SELECTCASE RAND_MEM
+	CASE 0
+		PRINTL 「そりゃあ相手が悪かったんだろうよ……質にしろ量にしろ上には上も居るだろうさ」
+	CASE 1
+		PRINTL 「それなりに良い物ではありましたが、無敵の船なんて空想上の産物ではありませんからね」
+	CASE 2
+		PRINTL 「乗っているのが一山いくらのガキでは性能も生かせなかったみたいですね」
+ENDSELECT
+PRINTL それに返すはメスガキではない女――当然、こんな場所に居るだけあって堅気ではない。
+PRINTW 企業お抱えの傭兵部隊で前線を張る、元は宇宙ヤクザの鉄砲玉だったと噂される悪名高い女部隊長、その一人だ！
+PRINTL 
+PRINTL 辺りに散らばる資料には敵対企業への襲撃計画、略奪品と物資の受け渡し座標、有力メスガキに対する傭兵への華麗なる転職の斡旋、その他多くの関係の証拠！
+PRINTW メスガキ宇宙海賊とは宇宙ヤクザの下部組織！ この基地はメスガキ宇宙海賊と鉄砲玉から成り上がったクソアマヤクザの密会の場だったのだ！
+PRINTL 
+SELECTCASE RAND_MEM
+	CASE 0
+		PRINTFORML 「新進気鋭の%CALLNAME:MASTER%様たぁ大物に目ェ付けられてるじゃあないの。忠告はしたのに馬鹿な真似したねぇ」
+	CASE 1
+		PRINTFORML 「引く手数多の%CALLNAME:MASTER%様とは大物が出て来ましたね。気を引く為にどんな馬鹿な真似をしたのですか？」
+	CASE 2
+		PRINTFORML 「飛ぶ鳥落す%CALLNAME:MASTER%様なんて大物を敵に回すとは、思った以上に馬鹿な真似をしていたようで……」
+ENDSELECT
+PRINTL 言うが早いか資料は焼失！ クソアマヤクザは逃走開始！
+PRINTL 
+
+PRINTDATAW
+　　　　　DATA 「あ、姐御！？」
+　　　　　DATA 「ね、姐さん！？」
+　　　　　DATA 「あ、姉貴！？」
+ENDDATA
+PRINTL 
+SELECTCASE RAND_MEM
+	CASE 0
+		PRINTFORML 「後ろ弾ァ叩き込まんのは最後の情けさ。……%CALLNAME:MASTER%さんよぉ、こいつらは好きに処分しな。それ以上は……企業連と事を構えたいんじゃなきゃオススメはしないよ」
+	CASE 1
+		PRINTFORML 「本来は口を封じるべきですが……%CALLNAME:MASTER%氏が処分を受け持ってくれる事でしょう。%CALLNAME:MASTER%氏もそれで手打ちにしてもらえますね？」
+	CASE 2
+		PRINTFORML 「『%CALLNAME:MASTER%様の所有物になる為に呼びました』という訳でもないのでしょう？ 最大限抵抗する事です。……私は『これら』がどうなろうと感知しませんが、そこまでです。%CALLNAME:MASTER%氏」
+ENDSELECT
+PRINTL 
+PRINTW クソアマヤクザの捨て台詞が早いかメスガキと呼ぶには少々歳の行った、それでもまだガキ臭さの抜けない女が武器を抜く！
+PRINTL 
+PRINTDATAW
+	DATALIST
+		DATA 「ッ！ お前達はいつだって私達から奪っていく……何もかもを！」
+		DATA 「だから奪う側になるんだ、私達が！」
+	ENDLIST
+	DATALIST
+		DATA 「お前達が、お前達さえ居なければ……ッ！」
+		DATA 「違うっ！ お前達さえ消せばまだ元通りにできるんだ！ 絶対に！」
+	ENDLIST
+	DATALIST
+		DATA 「こ、これで終わり……？ こんなヤツの為に何もかもが台無しに…………？」
+		DATA 「ゆ、許さない！ せ、せめて、せめてお前だけでも！」
+	ENDLIST
+ENDDATA
+;PRINTL 「ッ！ お前達はいつだって私達から奪っていく……何もかもを！」
+;PRINTW 「だから奪う側になるんだ、私達が！」
+
+;ここで白兵戦イベント
+;メスガキ戦力登録
+
+CALL CC_ADDMOB("DEFENDER", "メスガキ海賊首領", 1600, 1600, 60)
+FOR COUNT, 0, 5
+	CALL CC_ADDMOB("DEFENDER", "メスガキ精鋭海賊", 1500, 1500, 40 + RAND:30)
+NEXT
+FOR COUNT, 0, CHARANUM
+	SIF ANONYM_CQC_SELECTED:COUNT
+		CALL CC_ADDCHARA("ATTACKER", COUNT)
+NEXT
+
+CALL CLOSE_COMBAT()
+JUDGE = RESULT
+;CLOSE_COMBAT()の戻り値は1 = 攻撃側勝利, 2 = 防御側勝利
+
+IF JUDGE == 2
+	;撃退されEND
+	CALL MESUGAKI_PIRATES_BASE_EVENT_0_REPELLED_END
+
+	RETURN 1
+ENDIF
+CLEARLINE LINECOUNT
+CALL CC_ADD_COMBAT_EXP(15)
+PRINTW 
+CALL CC_ATTACKER_CONTINUED_COMBAT
+
+;パート2
+PRINTW メスガキ海賊団のリーダーは死に、その後継を標榜する無数のメスガキが立ち上がった。
+PRINTL しかし、だからこそ海賊たちは混乱に陥っていた……無数のメスガキが「我こそが次のリーダーだ」と声高に叫び矛盾する命令を出し合っているのだから、いっその事自称リーダーなんて居ない方がよほどマシだろう。
+PRINTW この混乱を利用して残党と遺産を刈り取り利益を得る。それが今あなたのやるべき事だ。
+PRINTL 
+CALL MESUGAKI_PIRATES_RANDOM_CREDIT_EVENT_0
+PRINTL 
+
+CALL CC_ADDMOB("DEFENDER", "メスガキ自称首領", (1500 - RAND:500), 1500, 20 + RAND:30)
+FOR COUNT, 0, 5
+	CALL CC_ADDMOB("DEFENDER", "メスガキ平海賊", (1250 - RAND:300), 1500, 15 + RAND:30)
+NEXT
+CALL CLOSE_COMBAT()
+JUDGE = RESULT
+;CLOSE_COMBAT()の戻り値は1 = 攻撃側勝利, 2 = 防御側勝利
+
+IF JUDGE == 2
+	;撃退されEND
+	CALL MESUGAKI_PIRATES_BASE_EVENT_0_REPELLED_END
+
+	RETURN 1
+ENDIF
+CLEARLINE LINECOUNT
+CALL CC_ADD_COMBAT_EXP(10)
+PRINTW 
+CALL CC_ATTACKER_CONTINUED_COMBAT
+
+;パート3
+PRINTL どこぞから盗まれたシャトルや輸送船の成れ果て、雑多に転がるジャンクの山……宇宙にデブリを増やしつつ、時に自身らをもデブリの一部へと変える珍走集団の夢の跡だろうか？
+PRINTL 珍走集団がメスガキ宇宙海賊となったのか、メスガキ宇宙海賊が珍走集団を喰ったのかは定かではない。
+PRINTW どちらも同じくらい無価値で、どちらであっても同じ様に処分するだけだ。
+PRINTL 
+CALL MESUGAKI_PIRATES_RANDOM_CREDIT_EVENT_0
+PRINTL 
+
+CALL CC_ADDMOB("DEFENDER", "メスガキ自称首領", (1250 - RAND:750), 1500, 20 + RAND:30)
+FOR COUNT, 0, 5
+	CALL CC_ADDMOB("DEFENDER", "メスガキ平海賊", (1000 - RAND:600), 1500, 15 + RAND:30)
+NEXT
+CALL CLOSE_COMBAT()
+JUDGE = RESULT
+;CLOSE_COMBAT()の戻り値は1 = 攻撃側勝利, 2 = 防御側勝利
+
+IF JUDGE == 2
+	;撃退されEND
+	CALL MESUGAKI_PIRATES_BASE_EVENT_0_REPELLED_END
+
+	RETURN 1
+ENDIF
+CLEARLINE LINECOUNT
+CALL CC_ADD_COMBAT_EXP(10)
+PRINTW 
+CALL CC_ATTACKER_CONTINUED_COMBAT
+
+;パート4
+SELECTCASE RAND:2
+CASE 0
+	PRINTL 原型を留めてはいない様だが、この施設そのものも元の持ち主から奪われたものだったのだろうか。
+	PRINTL 壁には文字を削り落とした様な痕が残されている。
+	PRINTW しかし他の略奪物とは違い、丁寧に、少しも残さない様に削り落とされた痕に見える……。
+CASE 1
+	PRINTL 相討つメスガキ共が開けた穴の先にあったのは成金趣味な上に古びた調度品のおいてある部屋だ。
+	PRINTL その多くは壊れているが、無事な物もある。多少は金にもなるだろう。
+	PRINTW しかしなぜそんな――メスガキ共の趣味とは違うであろう――物が置いたままとされているのか……。
+	;金を増やす
+	RAND_MEM = (RAND:80 + 1) * (RAND:80 + 1) * (RAND:80 + 1)
+	MONEY += RAND_MEM
+	PRINTL 
+	CALLF FuncTagSetText_Print(@"資金@C:{カラー_黄}@$%TOSTR((RAND_MEM), "###,###,###")%@/C@に相当する調度品を手に入れた。", 1)
+	WAIT
+	;PRINTFORMW {RAND_MEM}$に相当する調度品を手に入れた。
+	PRINTL 
+ENDSELECT
+
+PRINTL ……どんな事情があったとしても、今日ここに居たのは――あのクソアマヤクザの言った通り「馬鹿な真似をした」――生きている事すら咎められるに値する宇宙海賊と化した者共だ。
+PRINTW 空想1つで同情を向けるにはやり過ぎた存在で、それでも憐れに思うのなら一思いに宇宙の塵に変えてやるのが最大限の情けだろう。
+
+PRINTL 
+CALL MESUGAKI_PIRATES_RANDOM_CREDIT_EVENT_0
+PRINTL 
+
+CALL CC_ADDMOB("DEFENDER", "メスガキ自称首領", (1000 - RAND:999), 1500, 20 + RAND:30)
+FOR COUNT, 0, 5
+	CALL CC_ADDMOB("DEFENDER", "メスガキ平海賊", (500 - RAND:499), 1500, 15 + RAND:30)
+NEXT
+CALL CLOSE_COMBAT()
+JUDGE = RESULT
+;CLOSE_COMBAT()の戻り値は1 = 攻撃側勝利, 2 = 防御側勝利
+
+IF JUDGE == 2
+	;撃退されEND
+	CALL MESUGAKI_PIRATES_BASE_EVENT_0_REPELLED_END
+
+	RETURN 1
+ENDIF
+CLEARLINE LINECOUNT
+CALL CC_ADD_COMBAT_EXP(10)
+PRINTW 
+
+;完全クリアイベントを入れる
+PRINTL うじゃうじゃと居るメスガキ共をかき分け、値打ち物のありそうな場所へとたどり着いた……
+PRINTL 港湾設備へとメスガキ共の使っていた大破した軽空母、その一隻が収容されている！
+$LAST_EVENT_LOOP
+PRINTL 辺りにはもはやメスガキの姿は無く、その気になればそのままこの船を奪い取る事もできるだろう。
+PRINTL 
+PRINTBUTTON "[0] 誰が使っていたにしろ貴重な戦力だ。拾わない理由はない", 0
+PRINTL 
+PRINTBUTTON "[1] 未だ敵地だ。手早く高価値な物だけを貰っていく", 1
+INPUT
+
+SELECTCASE RESULT
+CASE 0
+	CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(CHARACTER_POSITION, 101)
+	SHIP_COUNTRY:RESULT = 国家ID_プレイヤー
+	SHIP_DAMAGE:RESULT = 11399
+	SHIP_CONDITION:RESULT = 艦船状態_大破
+	PRINTW メスガキ軽空母を鹵獲した！
+CASE 1
+	RAND_MEM = (RAND:4000000) + 1000001
+	MONEY += RAND_MEM
+	CALLF FuncTagSetText_Print(@"メスガキ軽空母から資金@C:{カラー_黄}@$%TOSTR((RAND_MEM), "###,###,###")%@/C@に相当する物品を回収した！", 1)
+	WAIT
+CASEELSE
+	GOTO LAST_EVENT_LOOP
+ENDSELECT
+
+CALL MESUGAKI_PIRATES_BASE_EVENT_0_ENDING
+
+RETURN 1
+
+
+@MESUGAKI_PIRATES_BASE_EVENT_0_REPELLED_END
+PRINTW 思った以上にメスガキの数は多く撃退しきる事は困難だ……
+PRINTL 
+PRINTL 想定していた程の利益は上がらなかったが命あっての物種である。
+CALL MESUGAKI_PIRATES_BASE_ESCAPE
+CALL MESUGAKI_PIRATES_BASE_EVENT_0_ENDING
+
+
+
+@MESUGAKI_PIRATES_BASE_EVENT_0_ENDING
+#DIM ENDING_REWARD
+#DIM CONST QUEST_ID = 69
+
+CLEARLINE LINECOUNT
+CALL REBOARDING_SHIP
+CALL CC_INIT
+PRINTFORML 基地から船へと帰還した%CALLNAME:MASTER%。
+$INPUT_LOOP
+PRINTL メスガキの基地をどう扱おうか？
+PRINTL 
+PRINTBUTTON "[0] 初志貫徹だ。メスガキ共の基地は滅ぼすべきである。", 0
+PRINTL 
+PRINTBUTTON "[1] 考え直す。メスガキ共の基地を潰した所でその分まで普通の海賊がのさばるだけでは？", 1
+INPUT
+
+SELECTCASE RESULT
+CASE 0
+	PRINTL 
+	PRINTL 元よりメスガキを分からせる事が目的なのだ。
+	PRINTW メスガキ共を一層増長させる根拠となる代物を打ち滅ぼさなければ何の為に戦ったのか分からないではないか。
+	PRINTL 
+	PRINTW この場所に居たメスガキ達は遺伝子の欠片すら残さずに消え去らなければならない。
+	PRINTW 海賊となったメスガキが過去を知った時にそれを悔いられる様に。出来る限り過激に、残酷に。このメスガキ海賊共は滅ばなければならない。
+	CLEARLINE LINECOUNT
+	PRINTL ――
+	PRINTL ――――
+	PRINTW ――――――
+	PRINTW メスガキの宇宙海賊が後からいくらでも湧いてくるというのなら、それを戒めるだけの事実が必要なのだ。
+	PRINTL 
+	PRINTL しかし、自分の下した指示によってあの相討つメスガキ共は十把一絡げに焼かれ、裂かれ、窒息し、死んで行っている。
+	PRINTW 抵抗しようにも既に艦隊は失われ、ただ殺されていく事しかできない。
+	PRINTL 
+	PRINTL ……そんな事実に仄暗い歓びを抱いているのだろうか。
+	PRINTW 『次のメスガキ宇宙海賊もこうやって焼き払ったのなら、どれ程に胸がすく気分だろうか？』
+	PRINTL 
+	PRINTL そう……
+	PRINTW 心のどこかでは、次のメスガキ宇宙海賊が出て来る事を期待しているのかもしれない…………
+	PRINTL 
+	PRINTL 
+	ENDING_REWARD = 20000 + RAND:20000
+	MONEY += ENDING_REWARD
+	CALLF FuncTagSetText_Print(@"徹底的に粉砕したメスガキ基地の跡から資金@C:{カラー_黄}@$%TOSTR((ENDING_REWARD), "###,###,###")%@/C@相当の希少資源を回収しました", 1)
+	WAIT
+	QUEST_COMPLETE_DATE:QUEST_ID = DAY + (RAND:4 + 3) * 14
+CASE  1
+	PRINTL 
+	PRINTL 海賊が居るという事は、海賊が存在できるくらいには海賊にとって環境がいいという事だ。
+	PRINTL どの道海賊が居ると言うのなら普通の海賊よりもメスガキの海賊である方が愚かな分だけマシかもしれない。
+	PRINTW そして今回叩き潰したメスガキ共は他のメスガキよりも大人への恐怖を抱いている分だけおとなしくなるかもしれない。
+	PRINTL
+	PRINTW つまり『大打撃を受け、分裂すら起こしているこのメスガキ海賊を滅ぼす事は他の海賊を利するだけかもれしない』という事だ。
+	CLEARLINE LINECOUNT
+	PRINTL ――
+	PRINTL ――――
+	PRINTW ――――――
+	PRINTW メスガキにそれなりの仕置きは出来ているはずで、他の海賊にも利を与えない扱いをした。それは本心だ。
+	PRINTL 
+	PRINTL しかし、分からせるべき次のメスガキ海賊が湧いて出るまでの時間はより短くなるかもしれない。
+	PRINTW そういった思いが全くなかったとも言い切れない。
+	PRINTL 
+	PRINTL ……こんな状況から立ち上がる事になるのだ。
+	PRINTW きっと、次のメスガキ宇宙海賊も分からせ甲斐のあるメスガキが成るのだろう。
+	QUEST_COMPLETE_DATE:QUEST_ID = DAY + (RAND:4 + 3) * 11
+
+CASEELSE
+	GOTO INPUT_LOOP
+ENDSELECT
+CALL QUEST_RELEASE_POINT(QUEST_ID, CHARACTER_POSITION:MASTER)
+
+@MESUGAKI_PIRATES_NOT_BASE_EVENT_0
+PRINTW メスガキ海賊基地のありそうな座標に行ってその正体を確認しよう
+
+@MESUGAKI_PIRATES_BASE_MAP_INFO_0
+		RESULTS:0 '= "メスガキ宇宙基地？"
+;		RESULTS:1 '= ""
+;		RESULTS:2 '= ""
+;		RESULTS:3 '= ""
+;		RESULTS:4 '= ""
+RETURN 1
+@MESUGAKI_PIRATES_BASE_SHOW_COMMAND_0
+RESULTS '= "真・分からせの時間だ！"

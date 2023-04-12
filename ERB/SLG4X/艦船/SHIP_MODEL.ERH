@@ -88,6 +88,7 @@
 #DIM CONST 古代のフリゲート = 100
 
 #DIM CONST 養殖宇宙かつお = 101
+#DIM CONST 宇宙にんげん = 102
 
 #DIM CONST アーラ級コルベット = 110
 #DIM CONST シーナ級駆逐艦 = 111
@@ -128,6 +129,8 @@
 #DIM CONST ローレライ級防衛モジュール = 143
 #DIM CONST 四十一式拠点防衛用ユニット = 144
 #DIM CONST 下級汎用独立モジュール = 145
+
+#DIM CONST 小惑星基地 = 150
 
 #DIM CONST コルベット級FTLミサイル = 160
 #DIM CONST 多弾頭型コルベット級FTLミサイル = 161

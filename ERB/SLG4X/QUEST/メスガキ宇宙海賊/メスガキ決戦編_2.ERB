@@ -1,0 +1,1837 @@
+﻿;--------------------------
+;本拠地イベントマスとかを作る
+;--------------------------
+@MESUGAKI_PIRATES_BASE_GENERATE_2
+;メスガキ教ルート
+#DIM CONST QUEST_ID = 69
+#DIM SECTOR_ID
+#DIM X_POS
+#DIM Y_POS
+
+#DIM POSID
+
+CALL ID2POS(CHARACTER_POSITION)
+SECTOR_ID = RESULT:0
+
+DO 
+	CALL QUEST_SET_RANDPOINT(QUEST_ID, SECTOR_ID, 7)
+	IF RESULT >= 0
+		POSID = RESULT
+		X_POS = (POSID / 100) %100
+		Y_POS = POSID %100
+		CLEARMAP:SECTOR_ID:X_POS:Y_POS = 1		;;明瞭化おまけ
+	ENDIF
+LOOP RESULT < 0
+
+;PRINTFORML 教団ルートで {SECTOR_ID}:{X_POS}:{Y_POS}に生成しました
+
+
+CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(POSID, 103)
+SHIP_MISSION:RESULT = 子機継続射出
+QUEST_FLAG_SHIP_ID:QUEST_ID = RESULT
+SHIP_NAME:RESULT '= "メスガキミサイル基地"
+RECIEVED_DOCTRINE:RESULT = BASE_DOCTRINE_ID
+
+;PRINTFORMW SHIP_MISSION:RESULTは{SHIP_MISSION:RESULT}です
+
+
+;--------------------------
+;本拠地イベント
+;--------------------------
+@MESUGAKI_PIRATES_BASE_EVENT_2
+#DIM CONST QUEST_ID = 69
+
+#DIM DYNAMIC P_CHARA_LIST, MAX_CHARA_NUM
+;#DIM DYNAMIC P_CHARA_CONDITION, MAX_CHARA_NUM
+#DIM LIST_SIZE
+#DIM VANGUARD_LIST, 6
+#DIM V_LIST_COUNT
+
+#DIM LOC_PROGRESS
+#DIM TOTAL_CC_COUNT
+
+
+
+FOR COUNT, 0, MAX_SHIP
+	IF SHIP_POSITION:COUNT == CHARACTER_POSITION:MASTER && SHIP_COUNTRY:COUNT == 国家ID_一般海賊
+		PRINTL まだ基地周辺の制宙権を確立できていない。
+		PRINTL 自殺するつもりでないのならば、敵戦力を先に排除するべきだろう。
+		RETURN 0
+	ENDIF
+NEXT
+
+
+CLEARLINE LINECOUNT
+CALLF MESUGAKI_PIRATES_RELIGION_CALLNAME("メスガキ宇宙海賊")
+PRINTL ……
+PRINTL …………
+PRINTL ………………
+
+PRINTL メスガキ共の基地は重大な損傷を受け、戦闘能力を失った。
+PRINTL 今ならば内部へと突入してメスガキ宇宙海賊の正体を探る事ができるかもしれない。
+PRINTL しかしこの基地はとても大きく、脱出しようと思っても即座に脱出できるとも限らない。
+PRINTL いや、それ以前にメスガキ共の正体などと言うものの為に危険を冒すべきであるだろうか……？
+PRINTL 
+PRINTBUTTON "[メスガキ海賊という病の根を探るべきだ]",0
+PRINTL
+PRINTBUTTON "[基地への突入はリスクが大きすぎる]",1
+CALL SERIAL_NUM_CHOICE_LOOPER(2)
+SELECTCASE RESULT
+	CASE 1
+		GOTO BASE_BREAK
+ENDSELECT
+
+
+
+
+;初期化処理
+TOTAL_CC_COUNT = 0
+LOC_PROGRESS = 0
+V_LIST_COUNT = 0
+CALLF MESUGAKI_PIRATES_RELIGION_CC_MODE("DEFENDER")
+CALLF MESUGAKI_PIRATES_RELIGION_EVENT_SETTER()
+CALL CC_INIT_MEMBER()
+VARSET P_CHARA_LIST, -1
+VARSET VANGUARD_LIST, -1
+
+; キャラリスト作成
+CALL GET_CHARACTER_LIST(P_CHARA_LIST, CHARACTER_POSITION:MASTER,  国家ID_プレイヤー)
+LIST_SIZE = RESULT
+
+
+;　前衛の初期設定
+FOR COUNT, 0, MIN(6, LIST_SIZE)
+	VANGUARD_LIST:COUNT = P_CHARA_LIST:COUNT
+	V_LIST_COUNT++
+NEXT
+
+
+
+;初動イベント
+CALL MESUGAKI_PIRATES_RELIGION_STORY(LOC_PROGRESS)
+LOC_PROGRESS++
+
+PRINTL 
+PRINTL [SYSTEM MESSAGE]
+PRINTL 
+PRINT この基地内では
+SETCOLOR カラー_注意
+PRINT 「現在この基地のある場所に居るメンバー」
+RESETCOLOR
+PRINT の中から前衛を
+SETCOLOR カラー_注意
+PRINT 6人
+RESETCOLOR
+PRINTL まで設定して探索を行います。
+PRINT 特定のタイミングにおいて
+SETCOLOR カラー_注意
+PRINT 前衛メンバーの変更・基地からの撤退
+RESETCOLOR
+PRINT を選択する事が可能です。
+PRINTL
+SETCOLOR カラー_注意
+PRINTL 前衛・それ以外を問わず基地を脱出するまでの間体力は減少したままであり
+PRINTL 戦闘不能になったキャラクターは白兵戦に参戦できません。
+RESETCOLOR
+
+PRINT 白兵戦で前衛が全滅すると基本的には
+SETCOLOR カラー_注意
+PRINT GAMEOVERになる
+RESETCOLOR
+PRINTL のでご注意ください。
+PRINTL 
+PRINTW [END OF MESSAGE]
+PRINTL 
+
+;進捗4になるまでランダムイベントたらい回し
+WHILE LOC_PROGRESS < 4
+	;前衛選出・撤退・進行辺りをさせる
+	CUSTOMDRAWLINE -
+	;PRINTFORML {MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("JCT")} {MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("CONF")} {MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("NOMAL")} {MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("PROG")} {MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("TOTAL")}
+	PRINTL 前衛メンバー
+	FOR COUNT, 0, V_LIST_COUNT
+		IF COUNT == 3
+			PRINTL
+		ENDIF
+		IF BASE:(VANGUARD_LIST:COUNT):体力 == 0
+			SETCOLOR カラー_警告
+		ELSEIF 100 * BASE:(VANGUARD_LIST:COUNT):体力 / MAXBASE:(VANGUARD_LIST:COUNT):体力 < 50
+			SETCOLOR カラー_注意
+		ENDIF
+		PRINTFORM [%CALLNAME:(VANGUARD_LIST:COUNT)%] 白兵:{ABL:(VANGUARD_LIST:COUNT):白兵} 残体力:{BASE:(VANGUARD_LIST:COUNT):体力}　
+		RESETCOLOR
+	NEXT
+	PRINTL
+	CUSTOMDRAWLINE -
+	PRINTL
+	PRINTL
+	PRINTBUTTON "[前衛変更]",0
+	PRINTL
+	PRINTBUTTON "[進行]",1
+	PRINTL
+	PRINTL
+	PRINTBUTTON "[回想]",2
+	PRINTL
+	PRINTBUTTON "[撤退]",3
+	CALL SERIAL_NUM_CHOICE_LOOPER(4)
+
+	SELECTCASE RESULT
+		CASE 0
+			; 前衛変更処理
+			DO
+				CALL MESUGAKI_PIRATES_CC_CHARA_LIST_DISPLAY(P_CHARA_LIST, VANGUARD_LIST, LIST_SIZE, V_LIST_COUNT)
+				CALL MESUGAKI_PIRATES_VANGUARD_LIST_CHOICE_PROCESSING(VANGUARD_LIST, P_CHARA_LIST, V_LIST_COUNT)
+			LOOP RESULT == 1
+		CASE 1
+			WHILE 1
+				SELECTCASE RAND:MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER()
+
+					CASE IS < MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("JCT")
+						; 接続イベント
+						CALLF MESUGAKI_PIRATES_RELIGION_EVENT_SETTER()
+						CALL MESUGAKI_PIRATES_RELIGION_JCT
+
+					CASE IS < MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("JCT") + MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("CONF")
+						; 戦闘イベント
+
+						CALLF MESUGAKI_PIRATES_RELIGION_EVENT_SETTER()
+
+						; 前衛リストのメンバーを登録
+						CALL MESUGAKI_PIRATES_RELIGION_CC_P_CHARA_INPUT(VANGUARD_LIST, V_LIST_COUNT)
+
+						CALL MESUGAKI_PIRATES_RELIGION_CONFLICT(LOC_PROGRESS)
+
+						IF RESULT == 1
+							; 勝利
+							CALL MESUGAKI_PIRATES_SET_CC_HP_FOR_BASE(VANGUARD_LIST)
+							CALL CC_ADD_COMBAT_EXP(20)
+							PRINTW 
+						ELSE
+							; 敗北
+
+							PRINTL メスガキが、なんて強さだ！ メスガキの攻勢を押さえきれない……
+							PRINTL ……仮にも基地の非常事態に冷静さを失ったメスガキの頭からは捕虜だ何だという概念は蒸発している！
+							PRINTFORMW メスガキ共の粗製ソレノイド・"シルバーボール"・ストライカーガンが%CALLNAME:MASTER%の頭を粉砕した。
+							WHILE 1
+								CLEARLINE LINECOUNT
+								PRINTL GAME OVER
+								PRINTW (白兵戦要員を用意したり、できるだけ戦闘にならない選択肢を探してみよう)
+							WEND
+						ENDIF
+						CALLF MESUGAKI_PIRATES_RELIGION_CC_MODE("DEFENDER")
+						TOTAL_CC_COUNT++
+						;初期化
+						CALL CC_INIT_MEMBER()
+						BREAK
+
+					CASE IS < MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("JCT") + MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("CONF") + MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("NOMAL")
+						; 非戦闘イベント
+						CALLF MESUGAKI_PIRATES_RELIGION_EVENT_SETTER()
+						CALL MESUGAKI_PIRATES_RELIGION_NOMAL
+						BREAK
+					CASEELSE
+						; 進捗イベント
+						CALLF MESUGAKI_PIRATES_RELIGION_EVENT_SETTER()
+						CALL MESUGAKI_PIRATES_RELIGION_STORY(LOC_PROGRESS)
+						LOC_PROGRESS++
+						BREAK
+				ENDSELECT
+				CUSTOMDRAWLINE -
+				PRINTL
+			WEND
+		CASE 2
+			PRINTL 回想
+			PRINTL 
+			FOR COUNT, 0, LOC_PROGRESS
+				PRINTBUTTON "[回想" + TOSTR(COUNT) +"]" ,COUNT
+				PRINT 　
+			NEXT
+			PRINTBUTTON "[回想終了]" ,COUNT + 1
+			PRINTL
+			CALL SERIAL_NUM_CHOICE_LOOPER(COUNT + 2)
+			IF RESULT < COUNT + 1			
+				CALL MESUGAKI_PIRATES_RELIGION_STORY(RESULT)
+			ENDIF
+		CASE 3
+			PRINTL この基地での情報収集に命を懸ける理由もない。撤退する事にしようか？
+			PRINTBUTTON "[撤退する]",0
+			PRINTL
+			PRINTL
+			PRINTBUTTON "[撤退しない]",1
+			CALL SERIAL_NUM_CHOICE_LOOPER(2)
+			SELECTCASE RESULT
+				CASE 0
+					;撤退イベントを挟んで基地消滅END
+					CALL MESUGAKI_PIRATES_BASE_ESCAPE
+					GOTO BASE_BREAK
+				CASE 1
+					CONTINUE
+			ENDSELECT
+	ENDSELECT
+WEND
+
+;基地内最終イベント
+
+PRINTL ……
+PRINTL …………
+PRINTW ………………
+PRINTL 
+
+PRINT 施設の奥まで来て、
+
+SELECTCASE TOTAL_CC_COUNT
+	CASE IS > 4
+		;結末B
+		PRINTW 現れたのはメスガキの……サイボーグ！
+		PRINTFORML %MESUGAKI_PIRATES_RELIGION_CALLNAME()%に伝わる体捌きなのだろうか？
+		PRINTW メスガキの戦闘用サイボーグというレアものにも関わらず、その体捌きには奇妙な既視感を拭い去れない！
+		PRINTW そんな事を考えている内にメスガキサイボーグは襲い掛かってきた！！
+
+		CALL MESUGAKI_PIRATES_RELIGION_CC_P_CHARA_INPUT(VANGUARD_LIST, V_LIST_COUNT)
+		CALL MESUGAKI_PIRATES_RELIGION_CC(3)
+
+		CALL CLOSE_COMBAT()
+
+		IF (RESULT == 2 && MESUGAKI_PIRATES_RELIGION_CC_MODE() == "ATTACKER") || (RESULT == 1 && MESUGAKI_PIRATES_RELIGION_CC_MODE() == "DEFENDER")
+			; プレイヤーが勝ったら
+			CALL CC_ADD_COMBAT_EXP(40)
+			PRINT メスガキサイボーグを下し
+
+		ELSE
+			; プレイヤーが負けたら
+			CALL CC_ADD_COMBAT_EXP(20)
+			PRINT メスガキサイボーグから命辛々逃げ出して
+		ENDIF
+		CALL CC_INIT_MEMBER()
+
+		PRINTW 改めて思う――このサイボーグとは何度も戦った気がする。
+		PRINTL いや、このメスガキのサイボーグとは戦った事はないが
+		PRINTL これまでにこのサイボーグの体捌きを持つ何人もの別のメスガキと戦っている！
+		PRINTW ……『少なくとも手続き記憶を含む記憶の類』を移転や複製できるとでもいうのだろうか？
+		PRINTL もしそれが可能だというのなら
+		PRINTFORML それこそが%MESUGAKI_PIRATES_RELIGION_CALLNAME()%の『永遠を生きる』の正体だとでも言うのだろうか……？
+		PRINTFORML しかし、それを証明しうる証拠は今の%CALLNAME:MASTER%の手にはない。
+		PRINTW そう思うだけの何かを感じたとしても、証拠がなければただの空想に過ぎない……
+
+	CASEELSE
+		;結末A
+		PRINTW 見つけたのは写実的なメスガキの像…………？
+		PRINTW ……！ これは特殊な材料を用いて固化・状態固定された本物のメスガキだ！
+		PRINTL 元に戻す事は不可能ではないはずだが、期間が延びれば延びた分だけ死亡率は高くなるはずだ。
+		PRINTFORMW これが、こんなものが%MESUGAKI_PIRATES_RELIGION_CALLNAME()%の信じる『永遠を生きる』の正体だったのか……？
+		PRINTL 状態が固定されている間は死んでもいないのかもしれないが
+		PRINTL それを「生きている」と呼ぶ事で得られる"永遠の生"のなんと虚しい事だろうか。
+		PRINTW ……しかし、そのどうしようもなく短絡的な永遠の生の定義は、だからこそメスガキらしいというべきなのかもしれない。
+		PRINTL 
+		MONEY += 1000000
+		PRINT 資金
+		SETCOLOR カラー_注意
+		PRINT 1,000,000
+		RESETCOLOR
+		PRINT に相当する固化メスガキ像を手に入れた。
+
+ENDSELECT
+
+PRINTL 
+PRINTL ……基地が振動し、いくつかの基地内表示には異常を伝える文章が表示されている。
+PRINTL 流石にそろそろ基地が限界であるらしい。
+PRINTFORMW %CALLNAME:MASTER%は脱出する事に決めた……
+
+
+$BASE_BREAK
+; 基地破壊イベント
+CLEARLINE LINECOUNT
+PRINTL ……
+PRINTL …………
+PRINTW ………………
+PRINTL 
+PRINTFORML %MESUGAKI_PIRATES_RELIGION_CALLNAME()%の基地は戦闘の影響もあり徐々に崩壊して行っている。
+PRINTW とはいえこのまま放置すればメスガキ共が逃げ出す余地はあるだろう。
+PRINTL 
+PRINTFORML %MESUGAKI_PIRATES_RELIGION_CALLNAME()%とは、どれだけ愚かであろうとも新たなメスガキ海賊の素となりうる危険分子――人類の敵と言ってもいい存在だ。
+PRINTL より多くの人類の為を思うのならば、危険の根源を断つべきだ。
+PRINTL 
+PRINTW しかしメスガキ海賊という奇妙な在り様――文化――そのものに希少性を見出すのならば、あるいは存続させる事も人類の為になるのかもしれない。
+PRINTL 
+PRINTBUTTON "[メスガキ海賊滅ぶべし。慈悲はない。]",0
+PRINTL 
+PRINTBUTTON "[文化の多様性を残すべきだ。メスガキ海賊希少価値論を唱える。]",1
+PRINTL 
+CALL SERIAL_NUM_CHOICE_LOOPER(2)
+
+SELECTCASE RESULT
+	CASE 0
+		PRINTL 如何なるものであろうとも有害な海賊を生かしておく理由はないのだ。
+		PRINTL 今日という日に全てのメスガキ海賊を殺し尽くす事ができないのだとしても、メスガキ海賊が一日でも早く滅びる様に
+		PRINTL 明日を迎えるメスガキ海賊が一匹でも少なくなる様に、防除されねばならない。
+		PRINTFORMW %CALLNAME:MASTER%は決断的な総攻撃を以てメスガキ海賊基地を焼き尽くし、逃げ延びようとするメスガキ共に怒りの鉄槌を叩きつける！
+		PRINTL 
+		PRINTL ……基地が崩壊し尽くすまでに逃げ出したメスガキ舟艇をありとあらゆる兵装を用いて撃沈し続けた。
+		PRINTW 今日という日にこの基地から生き延びたメスガキは居ないだろう…………
+
+		RESULT = 20000 + RAND:20000
+		MONEY += RESULT
+		PRINTL 
+		CALLF FuncTagSetText_Print(@"徹底的に粉砕したメスガキ基地の跡から資金@C:{カラー_黄}@$%TOSTR((RESULT), "###,###,###")%@/C@相当の希少資源を回収しました", 1)
+		QUEST_COMPLETE_DATE:QUEST_ID = DAY + (RAND:4 + 3) * 14
+
+	CASE 1
+		PRINTL メスガキの海賊という奇怪な存在には文化的な希少価値がある。
+		PRINTL 希少価値を持つには適度に少ない事が望ましく、しかし存在しなくなってもいけない。
+		PRINTW メスガキ海賊は十分に抑制された数量である必要はあるが、全てのメスガキ海賊を打ち滅ぼすなどというのは野蛮人の所業なのだ！
+		PRINTL 
+		PRINTW 文化人の取るべき正しき行いとして、崩壊する基地からメスガキ共が逃げ延びるのを看過し、新たなメスガキ海賊の芽を残す事を選んだ……
+		QUEST_COMPLETE_DATE:QUEST_ID = DAY + (RAND:4 + 3) * 11
+
+ENDSELECT
+
+RETURN 1
+
+;--------------------------
+;本拠地以外で呼び出された場合(≒港時?)のイベント
+;--------------------------
+@MESUGAKI_PIRATES_NOT_BASE_EVENT_2
+PRINTW メスガキ海賊基地のありそうな座標に行ってその正体を確認しよう
+
+;--------------------------
+;本拠地マスの表示
+;--------------------------
+@MESUGAKI_PIRATES_BASE_MAP_INFO_2
+		RESULTS:0 '= "メスガキ宇宙基地"
+;		RESULTS:1 '= ""
+;		RESULTS:2 '= ""
+;		RESULTS:3 '= ""
+;		RESULTS:4 '= ""
+RETURN 1
+
+;--------------------------
+;本拠地突入時の表示
+;--------------------------
+@MESUGAKI_PIRATES_BASE_SHOW_COMMAND_2
+RESULTS '= "真・分からせの時間だ！"
+
+
+
+;メスガキ教団用の白兵戦設定
+@MESUGAKI_PIRATES_RELIGION_CC(ENEMY_TYPE)
+#DIM CC_MEMBER,5,2
+#DIM ENEMY_TYPE
+#DIM ENEMY_CC_POW
+#DIM ENEMY_CC_HEALTH
+#DIMS ENEMY_CC_NAME
+;#DIMS CC_MODE
+
+#DIM CONST MEM_BASE_CC = 0
+#DIM CONST MEM_PSY = 1
+
+#DIM CONST 一般敵 = 0
+#DIM CONST 擲弾兵 = 1
+#DIM CONST セミボス = 2
+#DIM CONST ボスガキ = 3
+
+; 中身に0が入っている=初期状態なら中身を作る
+IF CC_MEMBER:MEM_BASE_CC:0 == 0
+	FOR COUNT, 0, 5
+		CC_MEMBER:COUNT:MEM_BASE_CC = 1 + RAND:9
+		CC_MEMBER:COUNT:MEM_PSY = 20 + RAND:21
+	NEXT
+ENDIF
+
+; 敵の外身分ステータスを設定する
+SELECTCASE ENEMY_TYPE
+	CASE 一般敵
+		ENEMY_CC_POW = 15
+		ENEMY_CC_HEALTH = 3000
+		ENEMY_CC_NAME '= "メスガキ教団兵"
+
+	CASE 擲弾兵
+		ENEMY_CC_POW = 60
+		ENEMY_CC_HEALTH = 1500
+		ENEMY_CC_NAME '= "メスガキ擲弾兵"
+
+
+	CASE セミボス
+		ENEMY_CC_POW = 30
+		ENEMY_CC_HEALTH = 4000
+		ENEMY_CC_NAME '= "メスガキ特戦隊"
+
+	CASE ボスガキ
+		ENEMY_CC_POW = 50
+		ENEMY_CC_HEALTH = 5500
+		ENEMY_CC_NAME '= "メスガキサイボーグ"
+ENDSELECT
+
+; 敵を登録する
+FOR COUNT, 0, 5
+	CALL CC_ADDMOB(MESUGAKI_PIRATES_RELIGION_CC_MODE(), ENEMY_CC_NAME, ENEMY_CC_HEALTH, ENEMY_CC_HEALTH, ENEMY_CC_POW + CC_MEMBER:COUNT:MEM_BASE_CC, CC_MEMBER:COUNT:MEM_PSY)
+NEXT
+CALL CC_ADDMOB(MESUGAKI_PIRATES_RELIGION_CC_MODE(), "メスガキ防衛ロボ", ENEMY_CC_HEALTH * 2, ENEMY_CC_HEALTH * 2, ENEMY_CC_POW / 2)
+
+
+;敵選定関数
+@MESUGAKI_PIRATES_RELIGION_CHOICE(一般敵率 = 60, 擲弾兵率 = 35, セミボス率 = 5)
+#DIM ENEMY_TYPE
+#DIM 一般敵率
+#DIM 擲弾兵率
+#DIM セミボス率
+
+#DIM CONST 一般敵 = 0
+#DIM CONST 擲弾兵 = 1
+#DIM CONST セミボス = 2
+
+SELECTCASE RAND: MAX((一般敵率 + 擲弾兵率 + セミボス率), 1)
+	CASE IS < 一般敵率
+		ENEMY_TYPE = 一般敵
+	CASE IS < 一般敵率 + 擲弾兵率
+		ENEMY_TYPE = 擲弾兵
+	CASEELSE
+		ENEMY_TYPE = セミボス
+ENDSELECT
+
+CALL MESUGAKI_PIRATES_RELIGION_CC(ENEMY_TYPE)
+
+
+
+;メスガキ教団での敵との遭遇イベント
+@MESUGAKI_PIRATES_RELIGION_CONFLICT(進行度)
+#DIM 進行度
+#DIM CONST 前半範囲 = 2
+
+SELECTCASE 進行度
+
+	CASE IS <= 前半範囲
+
+		PRINTDATAW
+			DATA 汚らしい廊下を進んでいると前方からメスガキ共が迫ってきた！
+			DATA 音が聞こえた気がして耳を澄ませてみると天井から音がする様な……！？ 天井からメスガキが！！
+			DATA 基地内の空気を震わせる爆音に振り向くと後方から個人乗り短艇に乗ったメスガキ部隊が迫ってきている！
+			DATA ゴミ溜め区画に出た…………ゴミが降ってきて……！？ ダストシュートの出口からメスガキのエントリーだ！！
+			DATA ゴミ溜め区画に出た…………ゴミの中からメスガキが飛び出してきた！
+			DATA 探索を進めていると前方に封鎖された扉が……爆発！！ メスガキ部隊が駆け込んできた！
+			DATA 裂け目から空気が流出している区画に出た…………！？ 裂け目からメスガキ共の御帰還だ！
+		ENDDATA
+		SKIPDISP 0
+		CALL MESUGAKI_PIRATES_RELIGION_CHOICE
+
+	CASEELSE
+
+		PRINTDATAW
+			DATA 汚らしい廊下を進んでいると前方からメスガキ共が迫ってきた！
+			DATA 音が聞こえた気がして耳を澄ませてみると天井から音がする様な……！？ 天井からメスガキが！！
+			DATA 基地内の空気を震わせる爆音に振り向くと後方から個人乗り短艇に乗ったメスガキ部隊が迫ってきている！
+			DATA 探索を進めていると前方に封鎖された扉が……爆発！！ メスガキ部隊が駆け込んできた！
+			DATA 戦闘が起きている事に気づいて逃げ出したらしい性奴隷を追ってきたメスガキ共と遭遇した！
+			DATA 居住区から武装して飛び出てきたメスガキと不意の接近遭遇だ！
+			DATA 視界の端に何かが映った…………壁も天井も関係なく這い寄る、吸着靴・手袋を装備したメスガキだ！
+		ENDDATA
+		SKIPDISP 0
+		CALL MESUGAKI_PIRATES_RELIGION_CHOICE(30, 50, 20)
+ENDSELECT
+CALL CLOSE_COMBAT()
+IF (RESULT == 2 && MESUGAKI_PIRATES_RELIGION_CC_MODE() == "ATTACKER") || (RESULT == 1 && MESUGAKI_PIRATES_RELIGION_CC_MODE() == "DEFENDER")
+	; プレイヤーが勝ったら
+	RETURN 1
+ELSE
+	; プレイヤーが負けたら
+	RETURN 0
+ENDIF
+
+
+;メスガキ教団の接続イベント
+;〇_EVENT_CHANCEがどれか一つでも書き換えられてたらMESUGAKI_PIRATES_RELIGION_EVENT_SETTERでMESUGAKI_PIRATES_RELIGION_EVENT_MANAGERの中身に入れる
+@MESUGAKI_PIRATES_RELIGION_JCT
+#DIM CONST イベント候補数 = 8
+
+#DIM J_EVENT_CHANCE
+#DIM C_EVENT_CHANCE
+#DIM N_EVENT_CHANCE
+#DIM P_EVENT_CHANCE
+
+J_EVENT_CHANCE = 0
+C_EVENT_CHANCE = 0
+N_EVENT_CHANCE = 0
+P_EVENT_CHANCE = 0
+
+
+
+
+SELECTCASE RAND:イベント候補数
+	CASE 0
+		;九龍城ライクな場所
+		PRINTL この辺りは酷く複雑な構造をしている。人間の記憶力だけで無事に引き返せるとは思えない程に……
+		PRINTL 
+		PRINTL 一つとして規格の同じものの無い居住モジュールの群れを端材で繋いだ建造物のキメラが施設の外殻のすぐ内側に無理矢理身を横たえていて
+		PRINTL どれだけが今も生きてるかも定かではない、無秩序に張り巡らされた配管や配線がキメラとキメラを固く縛り上げている。
+		PRINTL 錆や変色でその身を飾り立てた無数の機械がキメラの構造材の一部と化していたり、後付けされていた何かがもげ落ちた痕跡がそのままにされていたり、おおよそまともとは言い難い環境だ。
+		PRINTL 
+		PRINTL ……外殻に穴でもあるのか計器に言わせれば空気が少しずつ流出しているらしいが、警報の一つも鳴る事がない辺りこれは日常的なものである様だった。
+		PRINTL 
+
+		PRINTBUTTON "[こんな危険な区画に居られるものか！ 他区画へ続く気密扉に駆け込む。]",0
+		PRINTL 
+		PRINTBUTTON "[こんな環境なら敵も行動は難しいだろう。探索を行う。]",1
+		PRINTL 
+		PRINTBUTTON "[抜け道が見落とされているかもしれない。できるだけ奥まった場所を目指す。]",2
+		PRINTL 
+
+		CALL SERIAL_NUM_CHOICE_LOOPER(3)
+
+		SELECTCASE RESULT
+
+			CASE 0
+				PRINTW 危険区画から足早に立ち去った……
+				C_EVENT_CHANCE = 1
+			CASE 1
+				PRINTW しばらく探索を行う事とした……
+				J_EVENT_CHANCE = 4
+				C_EVENT_CHANCE = 1
+				N_EVENT_CHANCE = 10
+				P_EVENT_CHANCE = 5
+
+			CASE 2
+				PRINTW リスクがあるからこそリターンも大きいだろう。奥へ奥へと進む事にした……
+				C_EVENT_CHANCE = 1
+				P_EVENT_CHANCE = 1
+
+		ENDSELECT
+
+	CASE 1
+		PRINTL 道を進んで突き当たったのはやたらと甘ったるい臭いを垂れ流した……大きな食堂の様だ。
+		PRINTL ここに居たであろうメスガキ共は食事もそこそこに『侵入者』の迎撃に出た様だが、我々とは行き違いになったのかその姿はない。
+		PRINTL 残された食事を見るに菓子類が主要な食事である様に見えるが、ここのメスガキ共が特別太っているという訳でもない辺り見た目よりは栄養にも気の使われた代物なのだろうか？
+		PRINTL 
+		PRINTL キャンディ・キャラメル・アイスクリーム、ケーキにパフェにフルーツポンチ・チョコフォンデュ……凄まじい量の甘味類は見ているだけで口の中が砂糖過多になりそうな程で
+		PRINTL ポテチやポップコーン・クラッカーに始まり見覚えのあるスナック菓子やらそれに似た様なものまで含めて塩気や油気の強いであろうそれらも見ているだけで気が滅入ってくるくらいだ。
+		PRINTFORML %MESUGAKI_PIRATES_RELIGION_CALLNAME()%の祭日か何かにでもぶち当たったのか……？
+		PRINTL 
+
+		PRINTBUTTON "[元来たのとは別の扉へ向かう。]",0
+		PRINTL 
+		PRINTBUTTON "[バックヤードへと足を進める。]",1
+		PRINTL 
+		PRINTBUTTON "[元来た道へと引き返す。]",2
+		PRINTL 
+
+		CALL SERIAL_NUM_CHOICE_LOOPER(3)
+
+		SELECTCASE RESULT
+
+			CASE 0
+				PRINTW 甘ったるい臭いに包まれながら扉へと向かった……
+				C_EVENT_CHANCE = 1
+				CALLF MESUGAKI_PIRATES_RELIGION_CC_MODE("ATTACKER")
+			CASE 1
+				PRINTW バックヤードに有用な何かが無いか覗いてみる事にした……
+				N_EVENT_CHANCE = 1
+			CASE 2
+				PRINTW こんな部屋に居続けるのは苦痛だ。元の道へと引き返した……
+
+		ENDSELECT
+
+	CASE 2
+		PRINTL 比較的大きな道を進んで行くと遠くに礼拝施設らしきものが見える
+		PRINTDATA
+			DATA メスガキが大人を踏みつけている巨大な像
+			DATA メスガキが星系を文字通り手中に収めている図案の巨大な織物
+			DATA 様々な方法で自殺している大人が折り重なる地上と、それを見下ろすメスガキの絵の描かれた壁
+			DATA 聖像動画が常に流れる聖数31に当てはめられた大聖人のカードが目玉のTCGの広告
+		ENDDATA
+		PRINTL が一際目を引く……
+		PRINTL 
+		PRINTL 礼拝施設からメスガキの集団が出てきた！
+		PRINTL このまま何もしなければメスガキ共に発見されてしまう。どう対応するか考えるべきだろう。
+
+		PRINTBUTTON "[正面から迎え撃つ。]",0
+		PRINTL 
+		PRINTBUTTON "[とりあえず隠れる。]",1
+		PRINTL 
+		PRINTBUTTON "[三十六計逃げるに如かず。]",2
+		PRINTL 
+		PRINTBUTTON "[口先の魔術というものを見せてやる。]",3
+		PRINTL 
+
+		CALL SERIAL_NUM_CHOICE_LOOPER(4)
+
+		SELECTCASE RESULT
+
+			CASE 0
+				PRINTFORMW メスガキ海賊殺すべし！ %MESUGAKI_PIRATES_RELIGION_CALLNAME()%皆殺すべし！ メスガキスレイヤーと化した%CALLNAME:MASTER%はメスガキを迎え撃つ！
+				C_EVENT_CHANCE = 1
+				SKIPDISP 1
+
+			CASE 1
+				PRINTW リスクはあるかもしれないが、何か発見できるかもしれない。様子を窺ってみる事にした……
+				J_EVENT_CHANCE = 1
+				C_EVENT_CHANCE = 2
+				N_EVENT_CHANCE = 1
+				P_EVENT_CHANCE = 2
+			CASE 2
+				PRINTW 馬鹿正直にメスガキと戦ってやる意味もない。足早に立ち去った。
+				J_EVENT_CHANCE = 2
+				C_EVENT_CHANCE = 1
+				N_EVENT_CHANCE = 2
+			CASE 3
+				PRINTFORML メスガキのリーダー格の前に堂々と出た%CALLNAME:MASTER%
+				PRINTL メスガキ共は訝しみはするものの、何者なのかと思案する様子だ……
+				PRINTL 堂々と振る舞われたなら、それが警戒すべき敵である可能性を最初に思いつける様な手合いではないらしい。
+				PRINTL 
+				IF RAND:(ABL:MASTER:話術) >= 40
+					PRINTFORML %CALLNAME:MASTER%が口にしたのは『名を口に出すのも恐れ大き方』からの密命！ 
+					PRINTL 「あなた様程の方であればご存じでしょう？」とありもしないものをでっち上げる！
+					PRINTL 「知らない」などとは軽々しく言えない様に「信頼されている方々にはお伝えされているはず」と釘を刺すと言葉に詰まる！
+					PRINTL 
+					PRINTL 「あなた様程に信頼を得ている方が知らないのならば、他に誰が知っていると言うのでしょうか？」
+					PRINTL 
+					PRINTW そう言えば事実無根の密命を知る訳もないメスガキは悲鳴の様に「もちろん知っているわ！」と叫ぶ！
+					PRINTL 
+					PRINTL 「だ、だけど念の為、あなたの口からも必要な事を伝えて貰えるかしら」
+					PRINTL 知らぬ密命を知る為にメスガキはそう言った。
+					PRINTL 
+					PRINTL 「『僭称者』の一団による反乱の兆候あり」「反乱者が味方に偽装し、近づいてくる可能性が高い」「周囲の施設を迎撃陣地へと転用する事を許す」
+					PRINTW 「反乱者の撃退に成功すれば更なる栄達をお与えになられるでしょう」「しかし反乱者はいつ来てもおかしくはありません」と付け足して急いで準備に入る様に促す事も忘れないっ！
+					PRINTL
+					PRINTFORML すっかり騙されたメスガキ共が精力的に迎撃の準備に勤しむ中、%CALLNAME:MASTER%達は悠々と通って行った……。
+					PRINTL
+					PRINTL
+					PRINTL 
+					PRINTL ……しばらくして礼拝施設の辺りから戦闘音がする様になった。
+					PRINTW 辺りの敵戦力を引き付ける事ができただろう。
+					J_EVENT_CHANCE = 1
+					N_EVENT_CHANCE = 1
+					P_EVENT_CHANCE = 2
+				ELSE
+					PRINTL ……しばらく喋っていたが騙し切れなかった。
+					PRINTW 仕方がないから先制攻撃で戦端を開く事にした！
+					C_EVENT_CHANCE = 1
+					SKIPDISP 1
+				ENDIF
+		ENDSELECT
+
+	CASE 3
+		PRINTL 老朽化した施設に開いた穴を通って出てきたのはケースに収められた物品とその解説の並べられた施設だ。
+		PRINTFORML %MESUGAKI_PIRATES_RELIGION_CALLNAME()%の博物館の類だろうか？
+		PRINTL 
+		PRINTFORML %MESUGAKI_PIRATES_RELIGION_CALLNAME()%の来歴に関連する情報が無いか探してみてもいいだろうし
+		PRINTL ケースを破壊して物品を持ち去ってもいいだろうし
+		PRINTL 気にせず立ち去ってもいいだろう
+		PRINTL 
+
+		PRINTBUTTON "[博物館を探ってみる。]",0
+		PRINTL 
+		PRINTBUTTON "[金になりそうな物を盗る。]",1
+		PRINTL 
+		PRINTBUTTON "[出口へと足を進める。]",2
+		PRINTL 
+
+		CALL SERIAL_NUM_CHOICE_LOOPER(3)
+
+		SELECTCASE RESULT
+
+			CASE 0
+				PRINTW 博物館を調べれば何か分かるかもしれない。そう考えて探ってみる事にした……
+				N_EVENT_CHANCE = 10
+				P_EVENT_CHANCE = 5
+
+			CASE 1
+				PRINTW 辺りに警報が鳴り響き、武装したメスガキがやってきた！
+				C_EVENT_CHANCE = 1
+				CALLF MESUGAKI_PIRATES_RELIGION_CC_MODE("ATTACKER")
+				SKIPDISP 1
+			CASE 2
+				PRINTW 博物館から立ち去る事にした……
+		ENDSELECT
+
+	CASE 4
+		PRINTL 細い隠し通路を道なりに進むと小部屋の片隅に出た……メスガキ共が死んでいる！
+		PRINTL どうやら薬物乱用の現場であったらしい。
+		PRINTL 吸引器具、加熱されたままの樹脂、使用済み注射器、白い粉、錠剤などが散乱している……。
+		PRINTL 
+		PRINTL 麻薬・覚醒剤らしきものと共に毒薬と火薬も検出されている……自殺か？
+		PRINTL 
+
+		PRINTBUTTON "[テーブルの下の隠し通路へと足を進める。]",0
+		PRINTL 
+		PRINTBUTTON "[生命維持システムに繋がるダクトへ侵入する。]",1
+		PRINTL 
+		PRINTBUTTON "[入退室用短距離転移装置(!)で退室する。]",2
+		PRINTL 
+
+		CALL SERIAL_NUM_CHOICE_LOOPER(3)
+
+		SELECTCASE RESULT
+
+			CASE 0
+				PRINTW メスガキの死体を横目に歩みを進める事とした……
+				P_EVENT_CHANCE = 1
+			CASE 1
+				PRINTL ダクトから重要そうな場所を目指してみる事にした。
+				PRINTW メスガキ共の施設内には綺麗な場所なんてまず無かったとはいえ、ダクトの中は輪をかけて汚い……
+				C_EVENT_CHANCE = 1
+				P_EVENT_CHANCE = 1
+			CASE 2
+				PRINTL この部屋への入退室の為だけに転移装置を用意するなど変なところで技術力があるらしい。
+				PRINTW ありがたく利用させてもらう事とした。
+		ENDSELECT
+
+	CASE 5
+		PRINTL メスガキ基地に半ば埋め込まれた資源小惑星の廃坑を進むと小規模な工廠施設に出た……
+		PRINTL 見るからに粗末で安全への配慮も欠けているとはいえ、それなりに機能はしていそうだ。
+		PRINTL 
+		PRINTL 工員であろう男の老人がこちらをちらちらと見ている。
+		PRINTL ……メスガキに反発心を残したまま雌伏の時を過ごした存在なのか、メスガキに従順な奴隷なのか。
+		PRINTL 前者であるのなら助け出すべきだが、後者であるのならリスクを抱え込む事になるだろう。
+
+		PRINTBUTTON "[被害者を見捨てる訳にはいかない。男を保護する。]",0
+		PRINTL 
+		PRINTBUTTON "[危険は見過ごせない。男を射殺する。]",1
+		PRINTL 
+		PRINTBUTTON "[大事の前の小事だ。男を無視して先を急ぐ。]",2
+		PRINTL 
+
+		CALL SERIAL_NUM_CHOICE_LOOPER(3)
+
+		SELECTCASE RESULT
+
+			CASE 0
+				;確率で分岐させつつ戦闘or進捗
+				IF RAND:2 == 0
+					PRINTW しばらく男は従順に保護されている様に見えたが、メスガキに通信をしている現場を押さえた！
+					C_EVENT_CHANCE = 1
+					SKIPDISP 1
+				ELSE
+					PRINTW 保護した男からメスガキ達についての情報を得られた！
+					P_EVENT_CHANCE = 1
+				ENDIF
+			CASE 1
+				PRINTW 男を射殺すると辺りから複数の工員らしき人物が逃げて行った……。
+				C_EVENT_CHANCE = 1
+			CASE 2
+				PRINTL 不用意に関わる方がリスクが大きいだろう
+				PRINTW メスガキを呼ぶのなら呼べばいい。我々が立ち去った後に辿り着いた所でそのメスガキ共は遊兵になるだけなのだから……
+
+		ENDSELECT
+
+	CASE 6
+		PRINTL 通路を進んでいると一つの部屋に居るメスガキ共が猥雑に会話をしている声が聞こえてきた。
+		PRINTL 今の状況を分かっていないのか、分かった上でさぼっているのか。
+		PRINTL どちらにしろこちらに気づいてはいない様だ。
+		PRINTL 
+		PRINTL 藪を突けば蛇が出るかもしれないが、放置すれば後門の狼と化すかもしれない。
+
+		PRINTBUTTON "[扉を開け放ち乱入する。]",0
+		PRINTL 
+		PRINTBUTTON "[扉に細工をして閉じ込める。]",1
+		PRINTL 
+		PRINTBUTTON "[無視して先に進む。]",2
+		PRINTL 
+		
+		CALL SERIAL_NUM_CHOICE_LOOPER(3)
+
+		SELECTCASE RESULT
+
+			CASE 0
+				PRINTL 「分からせの時間だコラァ！」
+				PRINTW そう叫んだのが早いか、扉を蹴り開けたのが早いか。メスガキは面食らっている！
+				C_EVENT_CHANCE = 1
+				SKIPDISP 1
+			CASE 1
+				;確率で分岐して戦闘or接続
+				IF RAND:10 == 0
+					PRINTW 細工をしているのをメスガキに気づかれてしまった！
+					C_EVENT_CHANCE = 1
+					SKIPDISP 1
+				ELSE
+					PRINTW メスガキに気づかれることなく閉じ込める事に成功した……
+					J_EVENT_CHANCE = 1
+				ENDIF
+			CASE 2
+
+		ENDSELECT
+	CASE 7
+		PRINTL 高熱を発する管と水が結露しているタンク――熱輸送管の終端と氷水のタンクだろうか？――が並ぶ区画だ。
+		PRINTL この辺りの空気の成分における酸素と水素の割合はこのメスガキ基地内における平均よりも有意に高い値を示している。
+		PRINTL 
+		PRINTL ……ここは水の電気分解による酸素・水素生産施設の一部なのだろう。
+		PRINTL 破壊工作で混乱を作ってもいいし、秘密裏に熱源――エネルギーの生産区画なり消費区画なりの重要区画だろう――へと向かってもいい。
+		PRINTL 
+		PRINTBUTTON "[高熱の管を辿って進む。]",0
+		PRINTL 
+		PRINTBUTTON "[氷温の管に穴を開ける。]",1
+		PRINTL 
+		PRINTBUTTON "[酸素・水素生産施設を探し出して爆破する。]",2
+		PRINTL 
+		CALL SERIAL_NUM_CHOICE_LOOPER(3)
+
+		SELECTCASE RESULT
+
+			CASE 0
+				PRINTW 高熱の管を辿って進む事にした……
+				C_EVENT_CHANCE = 1
+				N_EVENT_CHANCE = 2
+				P_EVENT_CHANCE = 1
+			CASE 1
+				PRINTW 施設の異常に気が付けば辺りを調べだすだろうが、影響が出るまでには時間が掛かるだろう……
+				J_EVENT_CHANCE = 5
+				N_EVENT_CHANCE = 2
+				P_EVENT_CHANCE = 2
+			CASE 2
+				PRINTW ある程度時間が経てば生産施設の水素と酸素爆発を起こす様に細工をして立ち去った。少しすれば騒ぎが起きるだろう……
+				C_EVENT_CHANCE = 1
+				P_EVENT_CHANCE = 1
+
+		ENDSELECT
+
+
+;戦闘イベントに接続する時・戦闘前メッセージが不要であるならSKIPDISP 1を使う(戦闘直前にSKIPDISP 0で表示は戻る)
+ENDSELECT
+
+; いずれかが指定されてたら次イベントの確率を変える
+IF J_EVENT_CHANCE != 0 || C_EVENT_CHANCE != 0 || N_EVENT_CHANCE != 0 || P_EVENT_CHANCE != 0
+	CALLF MESUGAKI_PIRATES_RELIGION_EVENT_SETTER(J_EVENT_CHANCE, C_EVENT_CHANCE, N_EVENT_CHANCE, P_EVENT_CHANCE)
+ENDIF
+
+RETURN
+
+@MESUGAKI_PIRATES_RELIGION_NOMAL
+#DIM CONST 選択肢数 = 4
+#DIM 飴奴隷通過
+
+SELECTCASE RAND:(選択肢数 - 飴奴隷通過)
+
+	CASE 0
+		PRINTL ここは……映画の撮影現場だろうか？
+
+		PRINT 『
+
+		CALL MESUGAKI_PIRATES_MOVIE_NAME_PRINT
+
+		PRINT 』
+
+		PRINTL なる映画の特撮――着ぐるみやミニチュアを用いたもの――を行っていたらしい。
+		PRINTDATAL
+			DATA 砕けたミニチュアの街はそのままに
+			DATA 吊り下げられたミニチュアの宇宙船は未だにグルグルと高速回転し(本物なら乗員はGで全滅していそうだ)
+			DATA ミニチュア水上艦隊が悉く巨大プールの壁に衝突し
+		ENDDATA
+		PRINTL 中身のない着ぐるみ(主題のモンスターだろうか？)は力無く萎れている……。
+		PRINTL 
+		PRINTL ……宇宙広しと言えどこの時代に着ぐるみやミニチュアを大々的に用いての映画作りなどというのは多くはない。
+		PRINTL CGによる処理を行う方がよほど低コストで素早く・より正確な表現ができるのに
+		PRINTL あえて着ぐるみとミニチュアという高コストで不正確な表現しかできないものを用いるというのは趣味と言う他ないからだ。
+		PRINTFORMW %MESUGAKI_PIRATES_RELIGION_CALLNAME()%はそんな趣味的な特撮映画を使って信者を集めていたとでもいうのだろうか……？
+		PRINTL 
+		PRINTL ……中身を失って萎れている着ぐるみも中に誰かが入れば元通りになるし、着ぐるみが失われても中身はまた別の着ぐるみに入る事はできる。
+		PRINTL どちらを主としているのかはともかく、そういうのもまた『永遠』の形ではあるだろう。
+		PRINTL 『着ぐるみを用いての撮影そのものが何らかの宗教的な意味合いを持っている』 そんな風に考えてしまうのは…………流石に考えすぎだろう。
+		PRINTL 
+
+		PRINTBUTTON "[金になりそうな何かが無いか辺りを探ってみる。]",0
+		PRINTL 
+		PRINTBUTTON "[宗教的な何かが無いか辺りを探ってみる。]",1
+		PRINTL 
+
+		CALL SERIAL_NUM_CHOICE_LOOPER(2)
+
+		SELECTCASE RESULT
+
+			CASE 0
+				PRINTL 辺りに金目のものが無いか探ってみた……
+				CALL MESUGAKI_PIRATES_RANDOM_CREDIT_EVENT_2
+				PRINTW
+			CASE 1
+				PRINTFORMW %MESUGAKI_PIRATES_RELIGION_CALLNAME()%について、いくらか推察する材料を手に入れた。
+				CALLF MESUGAKI_PIRATES_RELIGION_EVENT_SETTER(0, 0, 0, 1)
+
+		ENDSELECT
+
+	CASE 1
+		CALL MESUGAKI_PIRATES_RELIGION_HISTORICALLY_ROOM
+	CASE 2
+		PRINTL 道としていくらかの補強を受けた構造物の破孔や隙間を抜けて進むと個人部屋の成れ果てに出た……
+		PRINTFORML これは……%MESUGAKI_PIRATES_RELIGION_CALLNAME()%で使用されているヘッドギアだろうか？
+		PRINTFORML %MESUGAKI_PIRATES_RELIGION_CALLNAME()%でどんなものを見せ・どんな事を教えているのか知る事ができるかもしれない
+		PRINTL 
+
+		PRINTBUTTON "[被ってみる]",0
+		PRINTL 
+		PRINTBUTTON "[被ってみない]",1
+		PRINTL 
+
+		CALL SERIAL_NUM_CHOICE_LOOPER(2)
+
+		SELECTCASE RESULT
+			CASE 0
+				PRINTL 仮にもカルト教団の使う代物だ、被っても大丈夫だろうか…………？
+				PRINTL 
+				PRINTBUTTON "[本当に被る]",0
+				PRINTL 
+				PRINTBUTTON "[やっぱり被らない]",1
+				PRINTL 
+				CALL SERIAL_NUM_CHOICE_LOOPER(2)
+
+				SELECTCASE RESULT
+					CASE 0
+						PRINTL 視界が歪む……感覚が拡張される…………
+						JUMP MESUGAKI_PIRATES_RELIGION_INSANITY_END
+
+					CASE 1
+						GOTO EVENT_END
+				ENDSELECT
+
+			CASE 1
+				$EVENT_END
+				PRINTW ……それこそ頭をレンチン爆破するトラップであってもおかしくはない。こんなしょうもない所で無用なリスクを冒す必要もないだろう。
+		ENDSELECT
+
+	CASE 選択肢数 - 1
+		;飴奴隷
+		PRINTL 妙に甘ったるい匂いをさせた区画へと出た。
+		PRINTL そこに居たのはメスガキ……ではなくメスガキの奴隷とされた大人達だ！
+		PRINTL 
+		PRINTL 奴隷とは言っても小奇麗な身なりの集団、様々な粉末入りの袋、加熱調理器材、様々な形状と色を持つ"完成品"
+		PRINTW ……どうやらここはメスガキ達の好みの飴を職人の手で1つ1つ作らせる為だけに存在している区画であるらしい。
+		PRINTL 
+		PRINTL メスガキ海賊を撃ち滅ぼしに来た事、救出の用意がある事を宣言するが反応は悪い
+		PRINTL ……それどころか敵意すら向けられている！
+		PRINTW 他の飴奴隷達を抑え、リーダー格と思しき一人が前に歩み出て語り始めた。
+		PRINTL 
+		PRINTL 「確かに彼女達は海賊で奇妙な宗教を信じている、恐ろしい存在なのでしょう」
+		PRINTL 「しかし我々の作る飴をああも愛してくれた者達がどれだけ居たと思いますか？」
+		PRINTL 
+		PRINTL 「大半の人は『飴なんかに大きな金を掛ける価値など無い』と
+		PRINTL 　企業連合や機械文明の作る人の手の関わらない飴、統一連邦の価格破壊が目的の輸出用の飴で満足します」
+		PRINTL 「それどころか『病気の原因』と糾弾すらして、飴の事を愛してくれる人なんて殆ど居ないのです」
+		PRINTL 
+		PRINTL 「ですが彼女達は違います。我々に辛く当たる事はあっても、それも飴を愛するが為
+		PRINTW 　……他のどんな国家・文明よりも飴を愛す彼女達こそ我々の救いだったのです」
+		PRINTL 
+		PRINTFORML 飴奴隷のリーダーは「%MESUGAKI_PIRATES_RELIGION_CALLNAME()%の飴奴隷としての生活こそが飴職人の幸せである」と語る。
+		PRINTL ストックホルム症候群か、メスガキ教団による洗脳か
+		PRINTL ――あるいは元々そういった"素養"があったからこそ飴奴隷として生きてこられたのか。
+		PRINTW いずれにしろ未だにここに留まっている飴奴隷達は世にも珍しい大人のメスガキ教信者集団であるらしい。
+		PRINTL 
+		PRINTL 「あなた方は『外では』英雄なのでしょう……『外では』」
+		PRINTL 「ここでは決して英雄などではありません。我々の生きる理由を奪い取る殺人鬼です」
+		PRINTL 
+		PRINTBUTTON "[これらはメスガキ海賊の一味だ。打ち滅ぼすべきである。]",0
+		PRINTL 
+		PRINTBUTTON "[これらは救われるべき被害者だ。治療の為に捕縛するべきである。]",1
+		PRINTL 
+		PRINTBUTTON "[これらはもうどうあっても救われる事は無い。捨て置こう。]",2
+		CALL SERIAL_NUM_CHOICE_LOOPER(3)
+		SELECTCASE RESULT
+			CASE 0
+				;>打ち滅ぼすべき
+
+				PRINTFORML 飴奴隷共は%MESUGAKI_PIRATES_RELIGION_CALLNAME()%の一味に準ずるものだ。
+				PRINTFORML 集団的かつ宗教的な海賊の一味を生かしておくべきではない。%CALLNAME:MASTER%は武器を向けた。
+				PRINTW 対する飴奴隷共も無抵抗ではないが、所詮は飼い慣らされた生肉製の飴製造装置だ。簡単に倒す事が出来た。
+				PRINTL 
+				PRINTL 「あなた達は人殺しです。正義もなく、理由をこじつけては人を殺して喜ぶ、ただの人殺しです……」
+				PRINTW そう言い残してこの場のメスガキ海賊の一味は一人残らず息絶えた。
+
+			CASE 1
+				;>治療の為に捕縛するべき
+				PRINTL 相手は戦闘の素人と言えど、殺したりしない様に捕縛するとなるとそれなりに困難は伴う。
+				PRINTW とはいえ大した時間も掛からずに洗脳被害者達を保護する事に成功した。
+				PRINTL 「我々からすれば力に物を言わせて人を攫うあなた達こそが賊なのですよ……」
+				PRINTL 
+				PRINTW メスガキ共に洗脳された被害者の最後の一人がそう言い残し、被害者の確保は終わった。
+			CASE 2
+				;>捨て置こう
+
+				PRINTL このままであろうと連れ帰ろうと、彼らが救われる事はない。わざわざこの場で労力を割く必要もないだろう。
+				PRINTW 飴奴隷達の区画から立ち去った。
+		ENDSELECT
+		飴奴隷通過 = 1
+		CALLF MESUGAKI_PIRATES_RELIGION_EVENT_SETTER(0, 0, 0, 1)
+ENDSELECT
+
+
+@MESUGAKI_PIRATES_RELIGION_STORY(PROGRESS)
+#DIM PROGRESS
+#DIMS CONST 教団呼称名 = "メスガキ海賊殺人教団", "メスガキ海賊マジキチ教団", "メスガキ海賊『幼=聖』学派", "ナルシペドフィリアン"
+#DIM CONST 教団呼称候補数 = 4
+
+PRINTL 
+PRINTL ――
+PRINTL ――――
+PRINTL ――――――
+PRINTL 
+
+
+SELECTCASE PROGRESS
+	CASE 0
+		;パート1
+		PRINTL 元はメスガキ宇宙海賊の一員であったのだろう、もはやメスガキとは呼び難い年頃になった女の死体だ。
+		PRINTL その女の死体は趣味が良いとはお世辞にも言い難い
+		PRINTW ガキ臭さの滲み出る様な装飾の施された祭壇で大仰な殺され方をしていた。
+		PRINTL メスガキとして宇宙海賊として生き、メスガキのまま子を産み
+		PRINTW メスガキではなくなれば宗教的儀式によって殺される。それこそがメスガキ宇宙海賊だったのだろう……。
+
+		IF MESUGAKI_PIRATES_RELIGION_CALLNAME() == "メスガキ宇宙海賊"
+			CALLF MESUGAKI_PIRATES_RELIGION_CALLNAME(教団呼称名:(RAND:教団呼称候補数))
+		ENDIF
+
+		PRINTFORMW この基地は%MESUGAKI_PIRATES_RELIGION_CALLNAME()%の宗教施設だったのだ。
+	CASE 1
+		;パート2
+		PRINTFORML 様々な方法で掲示されているそれは%MESUGAKI_PIRATES_RELIGION_CALLNAME()%の教義だろうか？
+		PRINTW 『正しき者は無垢なる姿で永遠を生きる』『悪しき者は老いて死ぬ』
+		PRINTW 細かい表現のブレはあれど、要約すればそんな内容の掲示がいくつも存在した。
+		PRINTL 無垢なる姿――メスガキの姿の事か？――で永遠に生きる。
+		PRINTW ある種の機械などであればまだしも、人間でそれを実現できるのは外見年齢を固定する技術を持つ様な文明くらいだろう。
+	CASE 2
+		;パート3
+		PRINTW 『メスガキ然とした姿の長命種の類が、自身という木を紛れ込ませる森を用意した』
+		PRINTFORML それこそがこの%MESUGAKI_PIRATES_RELIGION_CALLNAME()%の存在意義だったのではなかろうか。
+		PRINTL 
+		PRINTW しかし、本当にこの『森』は長命種が制御し続けて居るものなのだろうか……？
+		PRINTL 
+		PRINTL 木を隠す為の森であるというのなら、その森で火遊びをするのは愚かな事だ。
+		PRINTL 隠した木を遊びの火が森ごと焼くかもしれないし、消火に来た誰かに木を見出されるかもしれない。
+		PRINTW 実際、海賊として派手に動いたせいで自分に基地を襲われているのだ。
+		PRINTW どういった経緯にしろ、もはや後ろで手ぐすねを引ける様な長命種など存在していないのではなかろうか？
+	CASE 3
+		;パート4
+		PRINTW 長命種であろうとも肉体を十分に害されれば、死ぬ。
+		PRINTL ひょっとするとどれだけ害されようと死なない者も居るのかもしれないが、一般的でない事は確かだ。
+		PRINTL 事故、事件、戦死。
+		PRINTW 長く生きれば長く生きただけ不慮の死を迎える可能性は高くなる。
+		PRINTL 
+		PRINTL あるいは長命ではあっても外見が幼年態で固定されている訳ではないとすれば逃げ時を失って自身が処刑されるに至ったのかもしれない。
+		PRINTW 処刑される前に逃げ出す事に成功したとしてもメスガキを統制する事はできないだろう。
+		PRINTL 
+		PRINTW もちろん、いずれにしても何の証拠もない話ではあるが。
+ENDSELECT
+
+
+;メスガキ教団の歴史関係の何かを目にする
+@MESUGAKI_PIRATES_RELIGION_HISTORICALLY_ROOM
+#DIM CONST イベント数 = 3
+#DIM 手紙閲覧済み
+
+
+PRINTL 
+PRINTL 開けた部屋に出た……
+PRINTFORML どうやらここは%MESUGAKI_PIRATES_RELIGION_CALLNAME()%の歴史を伝える部屋のようだ。
+
+IF 手紙閲覧済み != 1 && RAND:イベント数 == 0
+	PRINTW 目に入ったのは手紙……だろうか？
+	PRINTL
+	CUSTOMDRAWLINE =-
+	CALL MESUGAKI_PIRATES_RELIGION_OPEN_LETTER
+	PRINTW 独特の装飾の施された紙に独特の字体で書かれたそれを保護するケースには書かれた年代や背景について書かれている……。
+	手紙閲覧済み = 1
+ELSE
+	SELECTCASE RAND:(イベント数 - 1)
+		CASE 0
+			PRINTW 目に入ったのは静止画として表示されている映画のシーンと、それに関連した本の1ページの写しであるらしい。
+			PRINTL
+			CUSTOMDRAWLINE =-
+			CALL MESUGAKI_PIRATES_RELIGION_MOVIE_FANDOM
+			PRINTL ……
+			PRINTL …………
+			PRINTL ……………………
+			PRINTL 
+			PRINT どうして
+			PRINTDATAL
+				DATA 古い方言とスラングをコンクリートミキサーにかけてぶちまけた様な
+				DATA 古典文学から優れた内容を差し引いてから文章という概念を棍棒で叩き潰した様な
+				DATA 包帯代わりに柄付きテープを纏わせたミイラに変なポーズを取らせてるかの様な
+			ENDDATA
+			PRINTW 変に古めかしくも知性と品性が欠落した文章を読んでいるのか……これは時間の無駄だろう。
+		CASE 1
+			PRINTW 目に入ったのは手紙……だろうか？
+			PRINTL
+			CUSTOMDRAWLINE =-
+			CALL MESUGAKI_PIRATES_RELIGION_PRIVATE_LETTER
+			PRINTW 独特の装飾の施された紙に独特の字体で書かれたそれを保護するケースには書かれた年代や背景について書かれている……。
+	ENDSELECT
+ENDIF
+
+PRINTL
+
+
+;メスガキ教団に保管されてる公開書簡
+@MESUGAKI_PIRATES_RELIGION_OPEN_LETTER
+
+CALL MESUGAKI_PIRATES_RELIGION_NOTE_DECORATION
+
+PRINT 天然植物繊維紙の用いられた
+
+CALL MESUGAKI_PIRATES_RELIGION_HISTORICALLY_NAME
+
+PRINTL の公開書簡
+
+PRINTL 
+PRINT 歳を取れば歳を取る程に
+
+PRINTDATA
+	DATA 意味もなく命を捨てに行く頭わるわる
+	DATA 無駄死にを選ぶ脳みそスカスカ
+	DATA 勇気と蛮勇の区別を付けない
+ENDDATA
+PRINTL 艦長が多くなるって知ってましたかー？
+
+PRINT 『
+PRINTDATA
+	DATA 死をも恐れぬ
+	DATA 巨悪を許さぬ
+	DATA 命を燃やす
+ENDDATA
+
+PRINTDATA
+	DATA オヤジハンター
+	DATA オバンハンター
+	DATA 聖戦烈士
+ENDDATA
+PRINT 』
+
+PRINTL なーんてそれっぽい言葉ですっっごいことしたみたいに呼ぶ人もいますが
+PRINT そいつらはだいたいみーんな
+
+PRINTDATA
+	DATA 年老いた姿を見せる事を恐れて死にに行ってる
+	DATA 今の内に死ねない事を怖がってる
+	DATA 自分が正しい生き方を出来てると思ってない
+ENDDATA
+
+PRINTDATA
+	DATA ザコザコメンタルの臆病者
+	DATA 超絶ジコチューの偽殉教者
+	DATA 頭ハピハピ芥子畑
+	DATA 烈士コスプレオナニスト
+	DATA ダサダサ妄動不名誉オス
+	DATA デカデカ妄想ボテ腹まんこ
+ENDDATA
+PRINTL でーす♡
+
+PRINTL 若いままで居られる自信もなければ、若いまま死ねる運命を持っている自信もないからって
+
+
+PRINTDATA
+	DATA 本物の聖戦士まで無駄死にさせる
+	DATA 公開オナニーでみんなのものを壊す
+	DATA 私戦に聖戦の皮被せる
+ENDDATA
+
+PRINTW のはいけない事だと思いまーす♡
+
+
+;メスガキ教団のノート類に対するデコレーション表現
+@MESUGAKI_PIRATES_RELIGION_NOTE_DECORATION
+#DIM CONST 装飾ジャンル数 = 2
+
+SELECTCASE RAND:装飾ジャンル数
+	CASE 0
+	;描きもの
+	PRINTDATA
+		DATA 大量のハートマークや輝きの図案
+		DATA 大輪の花
+		DATA デフォルメされた果実
+		DATA デフォルメされた動物
+		DATA ドット柄
+	ENDDATA
+	PRINTDATA
+		DATA の手描きされた
+		DATA のスタンプが押された
+		DATA の色鉛筆画が添えられた
+		DATA のプリントされた
+		DATA の少女漫画風エフェクトの描かれた
+	ENDDATA
+
+	CASE 1
+	;貼りもの
+	PRINTDATA
+		DATALIST
+			DATA  ラ イ ン ス ト ー ン
+			DATA 伝統的な樹脂製模造宝石
+		ENDLIST
+		DATA 様々な絵のプリントされたシール
+		DATA 図案付き樹脂ブロック
+	ENDDATA
+
+	PRINTDATA
+
+		DATA が無数に貼り付けられた
+		DATA の散りばめられた
+		DATA が外周を取り囲んでいる
+	ENDDATA
+ENDSELECT
+
+;メスガキ教団の歴史上の人物名
+@MESUGAKI_PIRATES_RELIGION_HISTORICALLY_NAME
+;名前前半
+PRINTDATA
+	DATA マルチャン・
+	DATA フルトピッピ・
+	DATA ジャム・
+	DATA ジラフ・
+	DATA ミッカアール・
+	DATA エウラシアの
+	DATA ガッサンダムの
+	DATA ルモイダムの
+ENDDATA
+
+;姓
+PRINTDATA
+	DATA ユッター
+	DATA ツウィンドリ
+	DATA カンパン
+	DATA ペッテンソル
+	DATA アフロコラ
+ENDDATA
+
+;メスガキ教団の伝統的書物名
+@MESUGAKI_PIRATES_RELIGION_BOOK_NAME
+PRINTDATA
+	DATA NERIMONOによる福音書
+	DATA シュリンプ・マダイ礼讃Z
+	DATA EVER-AN-GIRLION
+	DATA 阿呆狩附子
+	DATA 挟まれ訴え(外典)
+	DATA 榎書補遺(外典)
+ENDDATA
+
+;メスガキ教における伝説上の人物等の名前
+@MESUGAKI_PIRATES_RELIGION_LEGENDARY_NAME
+PRINTDATA
+	DATA 天使ガキエル
+	DATA 使徒ヤンデレ
+	DATA 綺麗ね指紋
+	DATA 聖ヌーク
+	DATA マグナムのマリヤ
+	DATA ワリーコック
+	DATA 春巻首領
+ENDDATA
+
+@MESUGAKI_PIRATES_RELIGION_MOVIE_FANDOM
+
+CALL MESUGAKI_PIRATES_RELIGION_HISTORICALLY_NAME
+PRINT の手による
+CALL MESUGAKI_PIRATES_MOVIE_NAME_PRINT
+PRINTL の解説本の1ページ
+
+PRINTL 
+
+PRINTDATA
+	DATA 主人公の
+	DATA ヒロインの
+	DATA モンスターの
+ENDDATA
+
+PRINTDATA
+	DATA 迎えた結末
+	DATA キャラ造形
+	DATA 失ったもの
+	DATA 戦闘描写
+ENDDATA
+
+PRINTL についてのページであるらしい。
+
+PRINTL 
+PRINTDATA
+	DATA ここで使用されている技法は
+	DATA これが暗喩するのは
+	DATA この色が用いられているのは
+ENDDATA
+
+CALL MESUGAKI_PIRATES_RELIGION_BOOK_NAME
+
+PRINT における
+
+CALL MESUGAKI_PIRATES_RELIGION_LEGENDARY_NAME
+
+PRINTDATA
+	DATA の逸話
+	DATA の伝説
+	DATA の悲劇
+	DATA の別名
+ENDDATA
+
+PRINTL に由来する……
+PRINT ……つまり
+PRINTDATA
+	DATA 精液
+	DATA セックス
+	DATA 永続性
+	DATA 少女性
+	DATA 永年乙女
+	DATA 老いと悪性
+	DATA 邪教破却
+	DATA 聖戦
+	DATA セレマ(汝の欲するところを行え)
+ENDDATA
+PRINTDATA
+	DATA をテーマにした
+	DATA がモチーフになっている
+	DATA の対偶を用いる事で真理を描き出した
+ENDDATA
+PRINTL 作品である。
+PRINTL 
+PRINTL 故に…………
+PRINT ……すなわち『
+PRINTDATA
+	DATA 宗教とはアヘンである。とても重要なものであり、より洗練されたものが望まれる
+	DATA 産めよ増やせよ宙に満ちよ。我らはより増えなければならない
+	DATA 内の飴玉、世の核半球。とても有用である
+	DATA 大人は滅ぶべきである。地には枯葉剤、天にはデブリを撒くべきだ
+	DATA 目には目を、歯には歯を。最低でも同じだけを返さねばならない
+	DATA 情けは人の為ならず。情け容赦なく滅ぼす事こそが人類の為となる
+ENDDATA
+PRINTW 』と主張する…………
+
+
+@MESUGAKI_PIRATES_RELIGION_PRIVATE_LETTER
+CALL MESUGAKI_PIRATES_RELIGION_NOTE_DECORATION
+
+PRINT 合成紙の用いられた
+
+CALL MESUGAKI_PIRATES_RELIGION_HISTORICALLY_NAME
+
+PRINTL からの手紙
+PRINTL 
+PRINT あなたが送ってきたのは
+
+
+PRINTDATAL
+	DATA やんちゃな子ばかりで、そんなのを沢山たっくさん引き受けるハメになったけど
+	DATA 真面目腐ったいい子ちゃんばっかりだったけれど
+	DATA 元々見どころのある子だったけど
+ENDDATA
+
+SELECTCASE RAND:2
+	CASE 0
+		PRINT 今では
+	CASE 1
+		PRINT ようやく
+ENDSELECT
+
+
+SELECTCASE RAND:2
+	CASE 0
+		CALL MESUGAKI_PIRATES_RELIGION_BOOK_NAME
+		PRINTL の中身も分かるイイ子になってまーす♡
+	CASE 1
+		CALL MESUGAKI_PIRATES_RELIGION_LEGENDARY_NAME
+		PRINTL の様な聖戦士になれそうでーす♡
+ENDSELECT
+
+PRINT もう少し
+
+PRINTDATA
+	DATA 武器の使い方
+	DATA セックスの方法
+	DATA 言葉遣い
+	DATA 船の扱い方
+	DATA 心構え
+	DATA 大人の扱い
+	DATA ヤクのキめ方
+	DATA ファッション
+	DATA ガッキー戦闘用語
+ENDDATA
+
+PRINTL についてのお勉強が必要そうだ・け・ど～
+PRINTL あともうちょっとで戦場処女を卒業させてあげてもよさそうになってます♡
+PRINTL 
+PRINTL あなたの愛するママより☆
+PRINTL 
+PRINTL P.S.
+PRINTDATAW
+	DATA ママの愛は分けて減るものじゃないんだから妹に嫉妬しちゃダ～メ♡
+	DATA 幼稚園シャトル辺りを拾ってきてくれたらママは嬉しいです♡
+	DATA もうちょっとオクスリを持って帰ってきてほしいでーす♡
+ENDDATA
+
+@MESUGAKI_PIRATES_MOVIE_NAME_PRINT
+
+SELECTCASE RAND:6
+	CASE 0
+		;(怪物)vs(怪物)vs(怪物) (惑星名) (危機アオリ文)！
+		CALL MESUGAKI_PIRATES_RANDOM_MONSTER_NAME_PRINT
+		PRINT  VS 
+		CALL MESUGAKI_PIRATES_RANDOM_MONSTER_NAME_PRINT
+		PRINT  VS 
+		CALL MESUGAKI_PIRATES_RANDOM_MONSTER_NAME_PRINT
+		PRINTFORM  %STAR_NAME:(RAND:MAX_STAR)%
+		CALL MESUGAKI_PIRATES_RANDOM_CRISIS_PRINT
+	CASE 1
+		;怪物名だけ
+		CALL MESUGAKI_PIRATES_RANDOM_MONSTER_NAME_PRINT
+	CASE 2
+		;怪物名+接尾辞
+		CALL MESUGAKI_PIRATES_RANDOM_MONSTER_NAME_PRINT
+		CALL MESUGAKI_PIRATES_RANDOM_SUFFIX_PRINT
+	CASE 3
+		;接頭辞+怪物名
+		CALL MESUGAKI_PIRATES_RANDOM_PREFIX_PRINT
+		CALL MESUGAKI_PIRATES_RANDOM_MONSTER_NAME_PRINT
+	CASE 4
+		;(怪物)vs(怪物)
+		CALL MESUGAKI_PIRATES_RANDOM_MONSTER_NAME_PRINT
+		PRINT  VS 
+		CALL MESUGAKI_PIRATES_RANDOM_MONSTER_NAME_PRINT
+	CASE 5
+		;(怪物)vs(艦型名)
+		CALL MESUGAKI_PIRATES_RANDOM_MONSTER_NAME_PRINT
+		PRINT  VS 
+		RESULTS '= ""
+		WHILE RESULTS == ""
+			TRYCALLFORM GET_SHIP_NAME_{RAND:SHIP_CLASS_TOTAL_COUNT}			
+		WEND
+		PRINTFORM %RESULTS%
+
+ENDSELECT
+
+
+
+@MESUGAKI_PIRATES_RANDOM_MONSTER_NAME_PRINT
+
+PRINTDATA
+	DATA スペース
+	DATA グレート
+	DATA ストームオブ
+	DATA ワームホール
+	DATA キラー
+	DATA フライング
+	DATA デス
+	DATA シリアル
+	DATA パラレル
+	DATA グラビティ
+	DATA アンチ
+	DATA エレクトリカル
+	DATA ディーゼル
+	DATA スチーム
+	DATA ロボ
+	DATA ザコ
+	DATA ザコザコ
+	DATA 前髪スカスカ
+	DATA ファンタジック
+	DATA オーバーロード
+	DATA ケミカル
+	DATA バイオ
+	DATA アメイジング
+	DATA サイボーグ
+ENDDATA
+PRINTDATA
+	DATA シャーク
+	DATA エイプ
+	DATA ベアー
+	DATA ワーム
+	DATA ピーマン
+	DATA ゾンビ
+	DATA マスク
+	DATA キラー
+	DATA アント
+	DATA ヴァンプ
+	DATA オーバーロード
+	DATA ダッチマン
+	DATA マグロイーター
+	DATA ダイス
+	DATA ゴリラ
+ENDDATA
+
+
+@MESUGAKI_PIRATES_RANDOM_CRISIS_PRINT
+
+PRINTDATA
+	DATA  SOS！
+	DATA 危機一髪！
+	DATA 最後の日！
+	DATA 壊滅！？
+	DATA の燃える日！
+	DATA 炎上！
+	DATA よ永遠なれ！
+	DATA は玉と砕けた！
+	DATA 決戦！
+	DATA 最後の戦い！
+ENDDATA
+
+;ランダム名映画
+@MESUGAKI_PIRATES_RANDOM_SUFFIX_PRINT
+
+PRINTDATA
+	DATA の花嫁
+	DATA の結婚
+	DATA と青い鳥
+	DATA  故郷へ帰る
+	DATA の帰郷
+	DATA の帰還
+	DATA の星
+	DATA の家族
+	DATA の子
+	DATA の父
+	DATA の母
+	DATA 、快進撃
+	DATA の復讐
+	DATAFORM  %STAR_NAME:(RAND:MAX_STAR)%に消ゆ
+	DATAFORM  %STAR_NAME:(RAND:MAX_STAR)%へ
+	DATA 、大躍進
+	DATA の逆襲
+	DATA の苦悩
+	DATA の飛躍
+	DATA の巣窟
+	DATA のはらわた
+	DATA  リターンズ
+	DATA  リローデッド
+	DATAFORM  Part{RAND:101}
+	DATA のえじき
+	DATA  オブ・ザ・デッド
+	DATA  ザ・ファイナル
+	DATA  ザ・ラスト
+	DATA  ザ・ファイル
+	DATA の後しまつ
+	DATA 時代
+	DATA の惑星
+	DATA ズ
+	DATA によろしく
+	DATA によろちんこ
+ENDDATA
+
+@MESUGAKI_PIRATES_RANDOM_PREFIX_PRINT
+PRINTDATA
+	DATA 星渡る
+	DATA 進め！ 
+	DATA 進撃の
+	DATA 帰ってくれ
+	DATA 帰ってきた
+	DATA 見えざる
+	DATA ザ・
+	DATA ラスト 
+	DATA 異世界
+	DATA 続・
+	DATA 新・
+	DATA 暁の
+	DATA ボイドの
+	DATA さよなら
+	DATA 流星の
+	DATA 最後の
+	DATA 空飛ぶ
+	DATA 水底の
+	DATA 見知らぬ
+	DATA 虚空から来た
+	DATA 永遠の
+	DATAFORM %STAR_NAME:(RAND:MAX_STAR)%に来た
+	DATA 人食い
+	DATA 殺人
+	DATA もぎたて
+	DATA バラ色
+	DATA あなたの知らない
+	DATAFORM %SHIP_NAME:(RAND:MAX_SHIP)% VS
+	DATA クソザコ
+ENDDATA
+
+
+;実験的方法で疑似的に広域変数として振る舞う式中関数(教団呼称名共有を想定)
+;引数に中身のある文字列を渡された時だけ保存し、常に保存した文字列を返す
+@MESUGAKI_PIRATES_RELIGION_CALLNAME(INPUT_STR = "")
+#FUNCTIONS
+#DIMS CONST BLANK_STR = ""
+#DIMS INPUT_STR
+#DIMS RELIGION_NAME
+
+IF INPUT_STR != BLANK_STR
+	RELIGION_NAME '= INPUT_STR
+ENDIF
+
+RETURNF RELIGION_NAME
+
+
+@MESUGAKI_PIRATES_RELIGION_CC_MODE(INPUT_STR = "")
+#FUNCTIONS
+#DIMS CONST BLANK_STR = ""
+#DIMS INPUT_STR
+#DIMS CC_MODE
+
+IF INPUT_STR != BLANK_STR
+	CC_MODE '= INPUT_STR
+ENDIF
+RETURNF CC_MODE
+
+
+@MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER(PROCESS_MODE = "TOTAL", INPUT_INT = -1)
+#FUNCTION
+#DIMS PROCESS_MODE
+#DIM INPUT_INT
+
+#DIM J_EVENT_CHANCE
+#DIM C_EVENT_CHANCE
+#DIM N_EVENT_CHANCE
+#DIM P_EVENT_CHANCE
+
+
+SELECTCASE PROCESS_MODE
+	CASE "JCT"
+		IF INPUT_INT == -1
+			RETURNF J_EVENT_CHANCE
+		ELSE
+			J_EVENT_CHANCE = INPUT_INT
+		ENDIF
+
+	CASE "CONF"
+		IF INPUT_INT == -1
+			RETURNF C_EVENT_CHANCE
+		ELSE
+			C_EVENT_CHANCE = INPUT_INT
+		ENDIF
+
+	CASE "NOMAL"
+		IF INPUT_INT == -1
+			RETURNF N_EVENT_CHANCE
+		ELSE
+			N_EVENT_CHANCE = INPUT_INT
+		ENDIF
+
+	CASE "PROG"
+		IF INPUT_INT == -1
+			RETURNF P_EVENT_CHANCE
+		ELSE
+			P_EVENT_CHANCE = INPUT_INT
+		ENDIF
+
+	CASE "TOTAL"
+		RETURNF J_EVENT_CHANCE + C_EVENT_CHANCE + N_EVENT_CHANCE + P_EVENT_CHANCE
+ENDSELECT
+
+RETURNF 0
+
+
+@MESUGAKI_PIRATES_RELIGION_EVENT_SETTER(J_EVENT_CHANCE = 15, C_EVENT_CHANCE = 2, N_EVENT_CHANCE = 2, P_EVENT_CHANCE = 1)
+#FUNCTION
+#DIM J_EVENT_CHANCE
+#DIM C_EVENT_CHANCE
+#DIM N_EVENT_CHANCE
+#DIM P_EVENT_CHANCE
+
+CALLF MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("JCT", J_EVENT_CHANCE)
+CALLF MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("CONF", C_EVENT_CHANCE)
+CALLF MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("NOMAL", N_EVENT_CHANCE)
+CALLF MESUGAKI_PIRATES_RELIGION_EVENT_MANAGER("PROG", P_EVENT_CHANCE)
+
+RETURNF 0
+
+
+; 発狂END
+@MESUGAKI_PIRATES_RELIGION_INSANITY_END
+#DIMS STR_ARRAY, 14
+#DIM CONST ARRAY_SIZE = 14
+#DIM TIME_COUNT
+#DIM PRINT_COUNT
+#DIMS PRINT_STRS, 3
+#DIM CONST WORDBOX_DIGIT = 70
+#DIM CONST ローカル_背景色 = 0x969490
+#DIM CONST ローカル_重要文色 = 0x95BE54
+#DIM CONST ローカル_警告文色 = 0xDF315E
+#DIMS CONST 改行コード = UNICODE(13) + UNICODE(10)
+
+#DIM 入力前行数
+
+#DIM DISP_MS
+
+
+DISP_MS = 100
+
+STR_ARRAY:0 '= "メスガキ共のヘッドギアから流れ込むは極彩色の情報の奔流……！"
+STR_ARRAY:1 '= "膨大な情報を注ぎ込まれて頭が割れそうだ…………"
+STR_ARRAY:2 '= "しかし、解る、解るぞ"
+
+STR_ARRAY:3 '= "ERBとCSVとおれとの関係はすごく簡単なことなんだ"
+STR_ARRAY:4 '= "メスガキ宇宙海賊が何故数限りなく湧いて出るのか"
+STR_ARRAY:5 '= "何故我々は殺しあうのか"
+STR_ARRAY:6 '= "何故" + CALLNAME:MASTER + "がE√Âシステムを持っているのか"
+STR_ARRAY:7 '= "0.5+0.5はどうして1なのか……いや1だと思っていたのだろう"
+STR_ARRAY:8 '= "eramakerとは、4Xとは何なのか"
+STR_ARRAY:9 '= "外からこの宇宙の事を見つめるおまえの事も"
+STR_ARRAY:10 '= "旅客機が爆発して死んだ" + CSVCALLNAME(30) + "があの時死んだ理由も"
+STR_ARRAY:11 '= "何故胎児が躍るのか"
+STR_ARRAY:12 '= "音を嗅ぐとはどういう事か"
+
+STR_ARRAY:13 '= "全　て　が　解　る　ぞ"
+
+CALL STR_ARRAY_SHUFFLE(STR_ARRAY, ARRAY_SIZE - 2, 3)
+ALIGNMENT CENTER
+
+WHILE 1
+	CLEARLINE LINECOUNT
+	IF TIME_COUNT % 10 == 0
+		IF PRINT_COUNT < 14
+			FINDELEMENT PRINT_STRS, "", , , 1
+			IF RESULT == -1
+				ARRAYSHIFT PRINT_STRS, -1, STR_ARRAY:(PRINT_COUNT)
+			ELSE
+				PRINT_STRS:RESULT '= STR_ARRAY:(PRINT_COUNT)
+			ENDIF
+			PRINT_COUNT++
+		ELSE
+			BREAK
+		ENDIF
+	ENDIF
+	PRINTFORML %PRINT_STRS:0%%改行コード%%PRINT_STRS:1%%改行コード%%PRINT_STRS:2%%改行コード%
+
+	SETBGCOLOR 50 + RAND:100, 50 + RAND:100, 50 + RAND:100
+
+	TIME_COUNT++
+	TWAIT 500, 1
+WEND
+
+WHILE 1
+
+	SETBGCOLOR ローカル_背景色
+	SETCOLOR ローカル_警告文色
+	CALL TYPING_LIKE_PRINTL("！時代創造機関：緊急停止プロセスを実行", DISP_MS, 1, WORDBOX_DIGIT)
+	CALL TYPING_LIKE_PRINTL("！THROW 基幹ユニットが不正な値を参照しています", DISP_MS, 1, WORDBOX_DIGIT)
+	RESETCOLOR
+	CALL TYPING_LIKE_PRINTL("　担当者は基幹ユニットに関連する構文の確認と修正を行って下さい", DISP_MS, 1, WORDBOX_DIGIT)
+	TWAIT DISP_MS * 10, 1
+	PRINTL
+	SETCOLOR ローカル_重要文色
+	CALL TYPING_LIKE_PRINTL("〇時代創造機関：基幹部復元マネージャが起動可能です", DISP_MS, 1, WORDBOX_DIGIT)
+	RESETCOLOR
+	CALL TYPING_LIKE_PRINTL("　基幹部復元マネージャを起動しますか？", DISP_MS, 1, WORDBOX_DIGIT)
+	TWAIT DISP_MS * 10, 1
+	PRINTL
+	PRINT [
+	PRINTBUTTON "Y", "Y"
+	PRINT /
+	PRINTBUTTON "N", "N"
+	PRINTL ]
+	DISP_MS = 100
+	入力前行数 = LINECOUNT
+
+	WHILE 1
+		INPUTS
+
+		SELECTCASE RESULTS
+
+			CASE "Y"
+				SETCOLOR ローカル_重要文色
+				CALL TYPING_LIKE_PRINTL("〇時代創造機関：基幹部復元マネージャを起動します", DISP_MS, 1, WORDBOX_DIGIT)
+				RESETCOLOR
+				CALL TYPING_LIKE_PRINTL("　ロールバックするべき時点を選択して下さい", DISP_MS, 1, WORDBOX_DIGIT)
+				TWAIT DISP_MS * 10, 1
+				ALIGNMENT LEFT
+				RESETBGCOLOR
+				CLEARLINE LINECOUNT
+				CALL LOAD_GAME
+				DISP_MS = 1
+				ALIGNMENT CENTER
+				SETBGCOLOR ローカル_背景色
+				BREAK
+			CASE "N"
+				SETCOLOR ローカル_重要文色
+				CALL TYPING_LIKE_PRINTL("〇時代創造機関：基幹部復元マネージャの起動が却下されました", DISP_MS, 1, WORDBOX_DIGIT)
+				RESETCOLOR
+				CALL TYPING_LIKE_PRINTL("　100秒の後に時代創造機関を休眠状態へと移行します", DISP_MS, 1, WORDBOX_DIGIT)
+				CALL TYPING_LIKE_PRINTL("　お疲れ様でした", DISP_MS, 1, WORDBOX_DIGIT)
+				TWAIT 100000, 1
+				QUIT
+
+
+			CASEELSE
+				CLEARLINE LINECOUNT - 入力前行数
+		ENDSELECT
+	WEND
+
+CLEARLINE LINECOUNT
+WEND

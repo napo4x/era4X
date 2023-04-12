@@ -1,0 +1,41 @@
+﻿;--------------------------
+;本拠地イベントマスとかを作る
+;--------------------------
+@MESUGAKI_PIRATES_BASE_GENERATE_XX
+#DIM CONST QUEST_ID = 69
+
+
+;--------------------------
+;本拠地イベントマスに乗った時の処理
+;--------------------------
+@MESUGAKI_PIRATES_BASE_REACH_PLACE_XX
+#DIM CONST QUEST_ID = 69
+
+;--------------------------
+;本拠地イベント
+;--------------------------
+@MESUGAKI_PIRATES_BASE_EVENT_XX
+#DIM CONST QUEST_ID = 69
+
+;--------------------------
+;本拠地以外で呼び出された場合(≒港時?)のイベント
+;--------------------------
+@MESUGAKI_PIRATES_NOT_BASE_EVENT_XX
+PRINTW メスガキ海賊基地のありそうな座標に行ってその正体を確認しよう
+
+;--------------------------
+;本拠地マスの表示
+;--------------------------
+@MESUGAKI_PIRATES_BASE_MAP_INFO_XX
+		RESULTS:0 '= "メスガキ宇宙基地"
+;		RESULTS:1 '= ""
+;		RESULTS:2 '= ""
+;		RESULTS:3 '= ""
+;		RESULTS:4 '= ""
+RETURN 1
+
+;--------------------------
+;本拠地突入時の表示
+;--------------------------
+@MESUGAKI_PIRATES_BASE_SHOW_COMMAND_XX
+RESULTS '= "真・分からせの時間だ！"

@@ -1,0 +1,26 @@
+﻿;--------------------------
+; CC0ライセンスで提供します。
+; 複製・改変・再配布・商用利用 全て可
+; 使用報告 不要
+;--------------------------
+
+
+;--------------------------
+; 同じ範囲から重複しない乱数2つを取得する
+; RESULT:0とRESULT:1に乱数を返す
+;--------------------------
+@OVERLAPLESS_RAND_2PICK(MAX_CHOICES)
+#DIM MAX_CHOICES
+#DIM CHOICE_1
+#DIM CHOICE_2
+
+CHOICE_1 = RAND:MAX_CHOICES
+CHOICE_2 = RAND:(MAX_CHOICES - 1)
+
+IF CHOICE_2 >= CHOICE_1
+	CHOICE_2 += 1
+ENDIF
+
+RESULT:1 = CHOICE_2
+
+RETURN CHOICE_1

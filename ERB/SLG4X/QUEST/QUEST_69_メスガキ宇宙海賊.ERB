@@ -9,8 +9,10 @@
 ; クエスト受注可能か
 ;--------------------------
 @QUEST_ACCEPTABLE_69
-;SIF QUEST_COMPLETE_DATE:69 == 0 || DAY >= QUEST_COMPLETE_DATE:69
-;SIF QUEST_PROGRESS:69 == 0 || -DAY <= QUEST_PROGRESS:69
+; 決戦編(QUEST_PROGRESS:69が5以上)であるならQUEST_COMPLETE_DATE:69を自由に使える様に常に受注可能に
+SIF QUEST_PROGRESS:69 >= 5
+	RETURN 1
+; それ以外ならQUEST_COMPLETE_DATE(=再受注可能になる日付)がDAY以下である時と進捗0の時には受注可能
 SIF QUEST_PROGRESS:69 == 0 || DAY >= QUEST_COMPLETE_DATE:69
 	RETURN 1
 RETURN 0
@@ -22,17 +24,21 @@ RETURN 0
 ;1:初回メスガキ宇宙海賊討伐受注後
 ;2:2回目以降受注前(討伐受注で3・プラント探しで5?に移行)
 ;3:2回目以降メスガキ宇宙海賊討伐受注後
+SELECTCASE QUEST_PROGRESS:69
+	CASE 1
+		RESULTS = メスガキ宇宙海賊を探せ
+	CASE 2
+		RESULTS = 続・メスガキ宇宙海賊
+	CASE 3
+		RESULTS = 続・メスガキ宇宙海賊を探せ
+	CASE 4
+		RESULTS = メスガキ宇宙基地を探せ
+	CASE IS >= 5
+		RESULTS = メスガキ宇宙基地を潰せ
+	CASEELSE
+		RESULTS = メスガキ宇宙海賊
+ENDSELECT
 
-IF QUEST_PROGRESS:69 == 1
-	RESULTS = メスガキ宇宙海賊を探せ
-ELSEIF QUEST_PROGRESS:69 == 2
-	RESULTS = 続・メスガキ宇宙海賊
-ELSEIF QUEST_PROGRESS:69 == 3
-	RESULTS = 続・メスガキ宇宙海賊を探せ
-ELSE
-	RESULTS = メスガキ宇宙海賊
-
-ENDIF
 RETURN
 
 ;--------------------------
@@ -50,12 +56,21 @@ RETURN 1
 
 ;;;右下小窓に出す。隠したければ関数コメントアウトか RETURN 0
 @QUEST_MAP_INFO_69 (ARG:0 )
-		RESULTS:0 '= "メスガキ宇宙海賊"
-;		RESULTS:1 '= "クエスト対象エリア"
-;		RESULTS:2 '= ""
-;		RESULTS:3 '= ""
-;		RESULTS:4 '= ""
-RETURN 1
+IF QUEST_PROGRESS:69 >= 5
+	;基地表示は基地イベントを呼んでやる
+	TRYCCALLFORM MESUGAKI_PIRATES_BASE_MAP_INFO_{(QUEST_PROGRESS:69) - 5}
+	CATCH
+		RESULTS:0 '= "メスガキ宇宙基地？"
+	ENDCATCH
+ELSE
+	RESULTS:0 '= "メスガキ宇宙海賊"
+;	RESULTS:1 '= "クエスト対象エリア"
+;	RESULTS:2 '= ""
+;	RESULTS:3 '= ""
+;	RESULTS:4 '= ""
+	RESULT = 1
+ENDIF
+RETURN RESULT
 
 ;-----------------------
 ; マップ上からQUEST_BODYを実行する処理
@@ -66,20 +81,25 @@ RETURN 1
 @QUEST_SHOW_COMMAND_69 ()
 
 SELECTCASE QUEST_PROGRESS:69
-	CASE 5
-	;プラント探し
-		RESULTS '= "ガサ入れの時間だ！"
-	CASE 6
-	;プラント襲撃
-		RESULTS '= "真・分からせの時間だ！"
+	CASE IS >= 5
+	;基地襲撃
+	TRYCCALLFORM MESUGAKI_PIRATES_BASE_SHOW_COMMAND_{(QUEST_PROGRESS:69) - 5}
+	CATCH
+		RESULTS '= "分からせの時間だ！"
+	ENDCATCH
+
 	CASEELSE
-	;討伐中
+	;通常討伐中
 		RESULTS '= "分からせの時間だ！"
 ENDSELECT
 RETURN 1
 
 @QUEST_REACH_PLACE_69 ()
 ; CALL QUEST_BODY_69
+SELECTCASE QUEST_PROGRESS:69
+	CASE IS >= 5
+	TRYCALLFORM MESUGAKI_PIRATES_BASE_REACH_PLACE_{(QUEST_PROGRESS:69) - 5}
+ENDSELECT
 RETURN
 
 ;--------------------------
@@ -93,7 +113,6 @@ RETURN
 #DIM IS_COMPLETE
 #DIM SHIP_ID
 #DIM COUNTRY_ID
-#DIM BATTLE_RESULT
 #DIM MESUGAKI_LEADER
 #DIM MESUGAKI_CREW
 #DIM MESUGAKI_LEADER_ID
@@ -109,14 +128,17 @@ RETURN
 
 ;MESUGAKI_(立場名)_MAX メスガキの種類数用の定数。
 
+#DIM CONST メスガキ基地種類数 = 3
+
+
 ;クエスト進行度
 ;0:初回受注前
 ;1:初回メスガキ宇宙海賊討伐受注後
-;2:2回目以降受注前(討伐受注で3・プラント探しで5?に移行)
+;2:2回目以降受注前(討伐受注で3・基地探しで4に移行)
 ;3:2回目以降メスガキ宇宙海賊討伐受注後
 
-;5?:プラント探し中
-;6?:プラント出現
+;4:基地探し中
+;5～:基地出現
 
 POSITION_ID = CHARACTER_POSITION
 
@@ -164,10 +186,9 @@ CASE 1
 			CHARACTER_POSITION:MESUGAKI_LEADER_ID = SHIP_POSITION:(QUEST_FLAG_SHIP_ID:QUEST_ID)
 		ENDIF
 ;債権回収からコピペ・改造
-		CALL BATTLE(国家ID_プレイヤー, 国家ID_一般海賊, CHARACTER_POSITION, 1)
-		BATTLE_RESULT = RESULT
+		CALL COMBAT(CHARACTER_POSITION)
 		CALL RETIRE_BROKEN_SHIP
-		IF BATTLE_RESULT == 0
+		IF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:QUEST_ID) != 国家ID_一般海賊
 			SIF MESUGAKI_LEADER_ID != -1
 				BOARDING_SHIP_ID:MESUGAKI_LEADER_ID = -1
 			;; 敵の旗艦を撃破し、自分が撃破されていない
@@ -222,6 +243,7 @@ CASE 1
 				PRINTW しかしメスガキ宇宙海賊が実在したというのなら、いつの日にか別のメスガキ宇宙海賊が現れないとも限らない。
 				PRINTFORMW 戦え！ %CALLNAME:MASTER%！ 負けるな！ %CALLNAME:MASTER%！
 				PRINTFORMW 『メスガキを分からせる』その精神でメスガキ宇宙海賊に立ち向かえるのはきっと%CALLNAME:MASTER%だけなのだから…………
+				QUEST_FLAG_SHIP_ID:QUEST_ID = -1
 				QUEST_COMPLETE_DATE:QUEST_ID = DAY + (RAND:4 + 3) * 10
 				QUEST_PROGRESS:QUEST_ID = 2
 				FOR SHIP_ID, 0, MAX_SHIP
@@ -238,6 +260,7 @@ CASE 1
 		ELSEIF CHARACTER_POSITION == POSITION_ID
 			PRINTFORML メスガキを分からせる事に失敗してしまった。
 			PRINTFORMW メスガキ宇宙海賊はこの宙域から去っていったようだ……。
+			QUEST_FLAG_SHIP_ID:QUEST_ID = -1
 			SIF MESUGAKI_LEADER_ID != -1
 				CALL DELETE_CHARA(MESUGAKI_LEADER_ID)
 			QUEST_PROGRESS:QUEST_ID = 0
@@ -298,10 +321,9 @@ CASE 3
 			CHARACTER_POSITION:MESUGAKI_LEADER_ID = SHIP_POSITION:(QUEST_FLAG_SHIP_ID:QUEST_ID)
 		ENDIF
 ;債権回収からコピペ・改造
-		CALL BATTLE(国家ID_プレイヤー, 国家ID_一般海賊, CHARACTER_POSITION, 1)
-		BATTLE_RESULT = RESULT
+		CALL COMBAT(CHARACTER_POSITION)
 		CALL RETIRE_BROKEN_SHIP
-		IF BATTLE_RESULT == 0
+		IF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:QUEST_ID) != 国家ID_一般海賊
 			SIF MESUGAKI_LEADER_ID != -1
 				BOARDING_SHIP_ID:MESUGAKI_LEADER_ID = -1
 			;; 敵の旗艦を撃破し、自分が撃破されていない
@@ -358,6 +380,7 @@ CASE 3
 				PRINTW しかしいつの日にか別のメスガキ宇宙海賊が現れるという懸念は事実となったのだから、ただ安穏と過ごす訳には行かない。
 				PRINTFORMW 戦え！ %CALLNAME:MASTER%！ 負けるな！ %CALLNAME:MASTER%！
 				PRINTFORMW 『メスガキを分からせる』その精神でメスガキ宇宙海賊に立ち向かえるのはきっと%CALLNAME:MASTER%だけなのだから…………
+				QUEST_FLAG_SHIP_ID:QUEST_ID = -1
 				QUEST_COMPLETE_DATE:QUEST_ID = DAY + (RAND:4 + 3) * 10
 				QUEST_PROGRESS:QUEST_ID = 2
 				FOR SHIP_ID, 0, MAX_SHIP
@@ -374,9 +397,10 @@ CASE 3
 		ELSEIF CHARACTER_POSITION == POSITION_ID
 			PRINTFORML メスガキを分からせる事に失敗してしまった。
 			PRINTFORMW メスガキ宇宙海賊はこの宙域から去っていったようだ……。
+			QUEST_FLAG_SHIP_ID:QUEST_ID = -1
 			SIF MESUGAKI_LEADER_ID != -1
 				CALL DELETE_CHARA(MESUGAKI_LEADER_ID)
-			QUEST_PROGRESS:QUEST_ID = 0
+			QUEST_PROGRESS:QUEST_ID = 2
 			FOR SHIP_ID, 0, MAX_SHIP
 				IF SHIP_COUNTRY:SHIP_ID == 国家ID_一般海賊 && SHIP_POSITION:SHIP_ID == CHARACTER_POSITION
 					CALL GET_SHIP_TOTAL_HP(SHIP_ID)
@@ -391,23 +415,58 @@ CASE 3
 	ELSE
 		PRINTW メスガキ宇宙海賊が居そうな座標に行ってその正体を確認しよう
 	ENDIF
-;CASE 4
-;2回目以降メスガキ宇宙海賊討伐後
-;	PRINTL またしても、この宇宙からメスガキ宇宙海賊は消え去った。
-;	PRINTL しかしいつの日にか別のメスガキ宇宙海賊が現れるという懸念は事実となったのだから、ただ安穏と過ごす訳には行かない。
-;	PRINTFORML 戦え！ %CALLNAME:MASTER%！ 負けるな！ %CALLNAME:MASTER%！
-;	PRINTFORML 『メスガキを分からせる』その精神でメスガキ宇宙海賊に立ち向かえるのはきっと%CALLNAME:MASTER%だけなのだから…………
-;	QUEST_PROGRESS:QUEST_ID = DAY + (RAND:4 + 3) * 10
-CASE 5
-;プラント探し中
-CASE 6
-;プラント出現
+CASE 4
+;メスガキ基地探し中
+	IF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:QUEST_ID) != 国家ID_一般海賊
+		PRINTL 情報を確認していると有望そうな情報が見つかった！
+		PRINTW メスガキ海賊の本拠地と思われる座標情報だ！
+		PRINTL 
+	 	PRINTL この拠点の規模は大きく、戦力も充実している。厳しい戦いになるだろう。
+	 	PRINTW だとしても……否、だからこそそれを潰さなければならない。
+		PRINTL ここを潰したとして、それで全てが解決するとは限らない。
+	 	PRINTW しかし、だからと言ってここを見過ごしておいたのではメスガキ海賊共を全員分からせるなんて不可能である事は明白なのだから！
+		QUEST_FLAG_SHIP_ID:QUEST_ID = -1
+		QUEST_PROGRESS:QUEST_ID = 5 + RAND:メスガキ基地種類数
+		TRYCALLFORM MESUGAKI_PIRATES_BASE_GENERATE_{(QUEST_PROGRESS:QUEST_ID) - 5}
+	
+	ELSE
+		CALL ID2POS(SHIP_POSITION:(QUEST_FLAG_SHIP_ID:QUEST_ID))
+		SECTOR_ID = RESULT:0
+		PRINTFORMW まだめぼしい情報は手に入っていない。セクター：{SECTOR_ID} でメスガキ艦隊を撃破して情報を引き出そう。
+	ENDIF
+CASE IS >= 5
+;メスガキ基地発見後
+	CALL ID2POS(CHARACTER_POSITION)
+	SECTOR_ID = RESULT:0
+	X_POS = RESULT:1
+	Y_POS = RESULT:2
 
+	IF QUESTMAP:SECTOR_ID:X_POS:Y_POS == QUEST_ID
+		TRYCALLFORM MESUGAKI_PIRATES_BASE_EVENT_{(QUEST_PROGRESS:QUEST_ID) - 5}
+		IF RESULT == 1
+			CALL QUEST_RELEASE_POINT(QUEST_ID, CHARACTER_POSITION:MASTER)
+			QUEST_FLAG_SHIP_ID:QUEST_ID = -1
+			QUEST_PROGRESS:QUEST_ID = 2
+			PRINTL
+			PRINTL
+			PRINTL
+			PRINTL
+			PRINTL
+			PRINTL
+			PRINTL
+			PRINTL
+			PRINTL
+			PRINTW かくして、メスガキ宇宙基地は壊滅した。
+			PRINTL しかしメスガキ宇宙基地があれ1つであったとも思えなければ
+			PRINTW そもそもメスガキ宇宙海賊が唯一無二の存在であったとも限らない。
 
+			PRINTFORML 『これからもきっとメスガキ宇宙海賊との戦いは続く』――%CALLNAME:MASTER%はそう予感し、しかしまずは今日の勝利を喜ぶ事とした。
+			PRINTW 戦いの日々は続くのだから、休める時に休まなければ身も心も持ちはしないのだ。
+		ENDIF
+	ELSE
+		TRYCALLFORM MESUGAKI_PIRATES_NOT_BASE_EVENT_{(QUEST_PROGRESS:QUEST_ID) - 5}
+	ENDIF
 ENDSELECT
-;RETURN
-
-
 ;--------------------------
 ;メスガキ宇宙海賊・クエスト導入選択肢
 ;--------------------------
@@ -416,15 +475,22 @@ ENDSELECT
 #DIM SECTOR_ID
 #DIM X_POS
 #DIM Y_POS
+#DIM PORT_ID
+#DIM POS_LOOP_COUNT
+#DIM FLEET_COUNT
+#DIM POS_ID
+
+QUEST_FLAG_SHIP_ID:QUEST_ID = -1
+
 $INPUT_LOOP
 PRINTBUTTON "[0] メスガキだと！？ 分からせだ！", 0
 PRINTL 
 PRINTBUTTON "[1] 刹那で忘れちゃった。まあいいかこんな噂", 1
 
-;IF QUEST_COMPLETE_DATE:QUEST_ID > 0
-;	PRINTL 
-;	PRINTBUTTON "[2] 待て、メスガキ宇宙海賊の二匹目なんて裏があるに違いない！", 2
-;ENDIF
+IF QUEST_COMPLETE_DATE:QUEST_ID > 0
+	PRINTL 
+	PRINTBUTTON "[2] 待て、メスガキ宇宙海賊の二匹目なんて裏があるに違いない！", 2
+ENDIF
 
 INPUT
 IF RESULT == 0
@@ -434,15 +500,15 @@ IF RESULT == 0
 	Y_POS = RESULT:2
 	PRINTFORML %CALLNAME:MASTER%は噂からメスガキ宇宙海賊が居そうな座標にあたりを付けた
 	PRINTL
-	LOCAL = 1
-	WHILE LOCAL
+	POS_LOOP_COUNT = 1
+	WHILE POS_LOOP_COUNT
 		;故障船修理からほぼコピペ
 		CALL QUEST_SET_RANDPOINT(QUEST_ID, SECTOR_ID, 5 )
 		IF RESULT >= 0
 			X_POS = (RESULT / 100) %100
 			Y_POS = RESULT %100
 			CLEARMAP:SECTOR_ID:X_POS:Y_POS = 1		;;明瞭化おまけ
-			LOCAL --
+			POS_LOOP_COUNT --
 		ENDIF
 	WEND
 	IF  QUEST_COMPLETE_DATE:QUEST_ID > 0
@@ -454,7 +520,71 @@ IF RESULT == 0
 ELSEIF RESULT == 1
 	PRINTL メスガキ宇宙海賊の噂はじきに消えた。
 	PRINTL しかし次にメスガキ宇宙海賊の噂が聞こえて来た時には本当にメスガキの宇宙海賊が居るのかもしれない……。
-;ELSEIF RESULT == 2 && QUEST_COMPLETE_DATE:69 > 0
+ELSEIF RESULT == 2 && QUEST_COMPLETE_DATE:69 > 0
+	PRINTFORMW メスガキ宇宙海賊には裏に何かがある。%CALLNAME:MASTER%はそう考え、今居るセクターに何かないのかと情報を洗い始めた……
+	PRINTL
+	CALL ID2POS(CHARACTER_POSITION)
+	SECTOR_ID = RESULT:0
+	POS_LOOP_COUNT = 0
+
+	$POS_LOOP
+	POS_LOOP_COUNT ++
+	IF POS_LOOP_COUNT >= 300
+		;たぶん無理
+		PRINTL 今居るセクターにはメスガキ宇宙海賊が存在する余地はなさそうだという事がよく分かった。
+		PRINTL 別のセクターで探してみるべきだろう……。
+		RETURN 0
+	ENDIF
+	CALL RAND_CHOICE_XY( MAP_WIDTH, 6, 1)
+	X_POS = RESULT:0
+	Y_POS = RESULT:1
+	CALL POS2ID(SECTOR_ID, X_POS, Y_POS)
+	POS_ID = RESULT
+	;港被り防止
+	FOR PORT_ID, 0, MAX_PORT
+		IF PORT_POSITION_ID:PORT_ID == POS_ID
+			GOTO POS_LOOP
+		ENDIF
+	NEXT
+
+	CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(POS_ID, 100)
+	QUEST_FLAG_SHIP_ID:QUEST_ID = RESULT
+	CALL MESUGAKI_PIRATES_FLEET_GENERATE(POS_ID, RAND:30 + 31, RAND:12 + 1)
+
+	FLEET_COUNT = 0
+	;300回繰り返して無理か、別艦隊が3つ出来るまでループ(最悪旗艦艦隊だけでもいいので無理でも可)
+	FOR POS_LOOP_COUNT, 0, 300
+		CALL RAND_CHOICE_XY( MAP_WIDTH, 6, 1)
+		X_POS = RESULT:0
+		Y_POS = RESULT:1
+		CALL POS2ID(SECTOR_ID, X_POS, Y_POS)
+		POS_ID = RESULT
+		;港被り防止
+		FOR PORT_ID, 0, MAX_PORT
+			IF PORT_POSITION_ID:PORT_ID == POS_ID
+				CONTINUE
+			ENDIF
+		NEXT
+		SIF SHIP_POSITION:(QUEST_FLAG_SHIP_ID:QUEST_ID) == POS_ID
+			CONTINUE
+		FLEET_COUNT++
+		CALL MESUGAKI_PIRATES_FLEET_GENERATE(POS_ID, RAND:20 + 21, 100)
+		;別艦隊を3つ作ったら作成完了
+		SIF FLEET_COUNT == 3
+			BREAK
+	NEXT
+
+	PRINTFORML %CALLNAME:MASTER%はかつてメスガキ宇宙海賊を探し・分からせた経験から
+	PRINTW このセクターにメスガキ宇宙海賊と関係のありそうな不審船が複数存在する事を見出した！
+	PRINTW しかし、だからと言って安心はできない。見出したそれらから必要な情報が出て来るとは限らないのだから。
+	PRINTL 
+	SETCOLOR 0XFF0000
+	PRINTW めぼしい船を撃沈したら、一度港へと戻って取得物から情報を確認してみよう。
+	RESETCOLOR
+	PRINTL 簡単には情報が手に入らないとしても、重要な情報が得られるまでメスガキを狩るだけだ。
+	PRINTW メスガキは根から分からせなければならないのだから！
+	QUEST_PROGRESS:QUEST_ID = 4
+
 	;メスガキプラント探し編へ
 ELSE
 	GOTO INPUT_LOOP

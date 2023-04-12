@@ -1,0 +1,813 @@
+﻿;--------------------------
+;本拠地イベントマスとかを作る
+;--------------------------
+;怪獣ルート
+@MESUGAKI_PIRATES_BASE_GENERATE_1
+#DIM CONST QUEST_ID = 69
+#DIM SECTOR_ID
+#DIM X_POS
+#DIM Y_POS
+CALL ID2POS(CHARACTER_POSITION)
+SECTOR_ID = RESULT:0
+LOCAL = 1
+WHILE LOCAL
+	;故障船修理からほぼコピペ
+	CALL QUEST_SET_RANDPOINT(QUEST_ID, SECTOR_ID, 5 )
+	IF RESULT >= 0
+		X_POS = (RESULT / 100) %100
+		Y_POS = RESULT %100
+		CLEARMAP:SECTOR_ID:X_POS:Y_POS = 1		;;明瞭化おまけ
+		LOCAL --
+	ENDIF
+WEND
+
+;PRINTFORML 怪獣ルートで {SECTOR_ID}:{X_POS}:{Y_POS}に生成しました
+QUEST_COMPLETE_DATE:QUEST_ID = 0
+
+;--------------------------
+;本拠地イベントマスに乗った時の処理
+;--------------------------
+@MESUGAKI_PIRATES_BASE_REACH_PLACE_1
+#DIM CONST QUEST_ID = 69
+
+#DIM EVENT_POS
+#DIM SECTOR_ID
+#DIM X_POS
+#DIM Y_POS
+
+#DIM PLAYER_SHIP_LIST, MAX_SHIP
+#DIM PLAYER_SHIP_COUNT
+#DIM SECESSION_SHIP_LIST, 3
+#DIM SECESSION_SHIP_COUNT
+
+#DIM TARGET_SHIP_LIST, 3
+#DIM TARGET_SHIP_BOARDING_NUM, 3
+#DIM TARGET_SHIP_COUNT
+
+#DIM WEAPON_STATUS, STATUS_LENGTH
+
+#DIM LOOP_COUNT
+
+#DIM CONST ポッドHP = 30
+#DIM CONST ポッド回避 = 50
+
+#DIM TEMP_TARGET_SHIP
+
+#DIM ATTACKER_COUNT
+#DIM JUDGE
+
+PLAYER_SHIP_COUNT = 0
+SECESSION_SHIP_COUNT = 0
+TARGET_SHIP_COUNT = 0
+
+VARSET PLAYER_SHIP_LIST
+VARSET SECESSION_SHIP_LIST
+VARSET TARGET_SHIP_LIST
+
+
+CALL ID2POS(CHARACTER_POSITION)
+SECTOR_ID = RESULT:0
+X_POS = RESULT:1
+Y_POS = RESULT:2
+;プレイヤー抜きの艦隊でマスに乗ってもイベントを始めない
+IF QUESTMAP:SECTOR_ID:X_POS:Y_POS != QUEST_ID
+	RETURN
+; このマスのイベントは1回だけにする
+ELSEIF QUEST_COMPLETE_DATE:QUEST_ID != 0
+	RETURN
+ENDIF
+
+; 全セクター・全マスを調べてクエストIDと合致する場所を探すよりは呼び出された時に覚えて置く方がたぶん楽
+EVENT_POS = CHARACTER_POSITION
+
+PRINTW この辺りに敵の基地があるはずだ……
+PRINTW ……
+PRINTW …………
+PRINTW ………………
+PRINTW しかし、見つからない……どれだけ探しても見つからない。
+PRINTL 『情報に誤りがあるのではないか？』
+PRINTW 疲弊した状態でそう考えもした頃、小型の接近物を知らせる警報が鳴った！
+PRINTL 接近物は1つや2つではない。直撃はしないであろうものまで含めれば千は下らないだろう。
+PRINTW ――待ち伏せ攻撃だ！
+
+CALL GET_SHIP_LIST(PLAYER_SHIP_LIST, EVENT_POS, 国家ID_プレイヤー)
+PLAYER_SHIP_COUNT = RESULT
+
+CALL NUM_ARRAY_SHUFFLE(PLAYER_SHIP_LIST, PLAYER_SHIP_COUNT - 1)
+;敵ポッド迎撃
+FOR LOOP_COUNT, 0, MIN(3, PLAYER_SHIP_COUNT)
+	;迎撃処理をする
+	TEMP_TARGET_SHIP = PLAYER_SHIP_LIST:LOOP_COUNT
+	PRINTFORMW %SHIP_NAME:TEMP_TARGET_SHIP%に謎の飛翔物が襲い掛かる！
+
+	CALL MESUGAKI_PIRATES_AA(ポッドHP, ポッド回避, 25 + RAND:11, TEMP_TARGET_SHIP)
+	TARGET_SHIP_BOARDING_NUM:TARGET_SHIP_COUNT = RESULT
+
+	IF TARGET_SHIP_BOARDING_NUM:TARGET_SHIP_COUNT > 0
+		PRINTFORMW %SHIP_NAME:TEMP_TARGET_SHIP%に{TARGET_SHIP_BOARDING_NUM:TARGET_SHIP_COUNT}発の飛翔物が突き刺さった！
+		TARGET_SHIP_LIST:TARGET_SHIP_COUNT = PLAYER_SHIP_LIST:LOOP_COUNT
+		TARGET_SHIP_COUNT++
+	ELSE
+		PRINTFORMW %SHIP_NAME:TEMP_TARGET_SHIP%は襲い掛かってきた全ての飛翔物を迎撃した！
+	ENDIF
+NEXT
+
+
+;白兵戦処理
+FOR LOOP_COUNT, 0, TARGET_SHIP_COUNT
+	;TARGET_SHIP_LIST:LOOP_COUNT の乗員を見て白兵戦をする
+	ATTACKER_COUNT = 0
+	JUDGE = 0
+	PRINTFORMW %SHIP_NAME:(TARGET_SHIP_LIST:LOOP_COUNT)%に突き刺さった飛翔物からメスガキ移乗部隊が現れた！
+	CALL DEFENSIVE_BOARDING_CC_MEMBER_SET(TARGET_SHIP_LIST:LOOP_COUNT)
+
+	;メスガキ移乗部隊が尽きるかプレイヤーが負けるまでループ
+	WHILE TARGET_SHIP_BOARDING_NUM:LOOP_COUNT > 0 && JUDGE != 1
+		CALL CC_ADDMOB("ATTACKER", "メスガキ精鋭海賊", 1500, 1500, 40 + RAND:30)
+		ATTACKER_COUNT++
+		TARGET_SHIP_BOARDING_NUM:LOOP_COUNT--
+		; 白兵戦の人数上限に引っかかるか移乗部隊が尽きたら戦闘
+		IF ATTACKER_COUNT == 6 || TARGET_SHIP_BOARDING_NUM:LOOP_COUNT == 0
+			CALL CLOSE_COMBAT()
+			JUDGE = RESULT
+			IF JUDGE == 1
+				PRINTFORML メスガキ移乗部隊との白兵戦で%SHIP_NAME:(TARGET_SHIP_LIST:LOOP_COUNT)%は行動不能になった……
+				;白兵戦に負けたら戦闘不能として船の所属国家をMAX_COUNTRY(どの国にも所属しないはずの値)に変える
+				SECESSION_SHIP_LIST:SECESSION_SHIP_COUNT = TARGET_SHIP_LIST:LOOP_COUNT
+				SHIP_COUNTRY:(SECESSION_SHIP_LIST:SECESSION_SHIP_COUNT) = MAX_COUNTRY
+				SECESSION_SHIP_COUNT++
+			ENDIF
+			CALL CC_DEFENDER_CONTINUED_COMBAT
+			ATTACKER_COUNT = 0
+		ENDIF
+	WEND
+
+
+
+NEXT
+
+IF PLAYER_SHIP_COUNT <= SECESSION_SHIP_COUNT
+	; 敵艦隊に対応できずにゲームオーバー
+	PRINTW メスガキ共の奇襲で緒戦では押され艦の制御を失ってしまったが、時間さえあれば余裕を持って逆転はできるだろう。
+	PRINTW ……『時間さえあれば』だ。
+	PRINTL 
+	PRINTL 数度、船を謎の揺れが襲った。
+	PRINTFORMW %CALLNAME:MASTER%が乗り込んで来たメスガキに手間取っている間に、メスガキ海賊艦隊が攻撃を仕掛けて来たのだ！
+	PRINTL しかし応戦する艦はない……どの艦もメスガキに手間取っているのか、乗っ取られてしまったのか。
+	PRINTFORML %CALLNAME:MASTER%がメスガキ共から艦の制御を取り戻すよりも
+	PRINTFORMW 中にまだ味方のメスガキが乗っている事など気にも留めていないらしいメスガキ海賊艦隊の攻撃が%CALLNAME:MASTER%の艦を沈める方が早かった……
+
+	WHILE 1
+		CLEARLINE LINECOUNT
+		PRINTL GAME OVER
+		PRINTW (対空や白兵要員を充実させたり、艦隊の艦艇数を増やそう)
+	WEND
+ENDIF
+; 艦隊戦
+CALL MESUGAKI_PIRATES_FLEET_GENERATE(EVENT_POS, RAND:30 + 31, 12)
+CALL COMBAT(EVENT_POS)
+
+;離脱艦艇の復帰
+FOR LOOP_COUNT, 0, SECESSION_SHIP_COUNT
+	;PRINTFORMW SECESSION_SHIP_LISTの{LOOP_COUNT}番目に登録された%SHIP_NAME:(SECESSION_SHIP_LIST:LOOP_COUNT)%を復帰させます
+	SHIP_COUNTRY:(SECESSION_SHIP_LIST:LOOP_COUNT) = 国家ID_プレイヤー
+NEXT
+
+CALL RETIRE_BROKEN_SHIP
+
+; 艦隊戦の結果の判断
+IF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:QUEST_ID) != 国家ID_一般海賊
+	IF CHARACTER_POSITION == EVENT_POS
+		; 敵旗艦が撃破済みで・プレイヤー艦が生きている=勝利したなら
+		PRINTW メスガキ艦隊は瓦解した。
+	ELSE
+		; 相討ち
+		PRINTL メスガキ海賊艦隊はおおよそ崩れた。
+		PRINTFORMW ……しかし、不意に飛び込んできた攻撃は%CALLNAME:MASTER%の艦を破壊した。
+		WHILE 1
+			CLEARLINE LINECOUNT
+			PRINTW GAME OVER
+		WEND
+
+	ENDIF
+ELSEIF BOARDING_SHIP_ID:MASTER == 国家ID_プレイヤー
+	; 敵旗艦もプレイヤー艦も健在=引き分けなら
+	PRINTW 互いに決定的な攻撃を行えないまま戦闘は終わった。
+	PRINTW 消耗を忌避してかメスガキ艦隊は撤退していった……。
+	
+ELSE
+	; 敵旗艦が生きていて、プレイヤー艦が沈んでるか行動不能≒敗北したなら→ゲームオーバー
+	PRINTL 何という事だ！ このメスガキ海賊は……強い！
+	PRINTFORMW %CALLNAME:MASTER%の艦隊はメスガキ海賊艦隊に撃破されてしまった……
+	WHILE 1
+		CLEARLINE LINECOUNT
+		PRINTW GAME OVER
+	WEND
+ENDIF
+
+; 猶予を設けておく
+QUEST_COMPLETE_DATE:QUEST_ID = DAY + 10
+
+; 敵艦隊を消す
+FOR LOOP_COUNT, 0, MAX_SHIP
+	IF SHIP_POSITION:LOOP_COUNT == EVENT_POS && SHIP_COUNTRY:LOOP_COUNT == 国家ID_一般海賊
+		CALL GET_SHIP_TOTAL_HP(LOOP_COUNT)
+		SHIP_DAMAGE:LOOP_COUNT = RESULT
+		; 生存艦の数だけ猶予を削る
+		QUEST_COMPLETE_DATE:QUEST_ID--
+	ENDIF
+NEXT
+
+CALL RETIRE_BROKEN_SHIP
+QUEST_FLAG_SHIP_ID:QUEST_ID = -1
+
+; 生存したままの敵艦が多くて猶予がマイナスになった場合には当日を入れておく
+IF QUEST_COMPLETE_DATE:QUEST_ID < DAY
+	QUEST_COMPLETE_DATE:QUEST_ID = DAY
+ENDIF
+
+PRINTL 
+PRINTW メスガキ達の襲撃を退け、その移動経路と今までの探索の情報から出元となる基地の座標を導き出した！
+PRINTL
+PRINTW しかし、今回の襲撃で敵艦隊が払底したとは考えられない。接近するのなら相応の準備をするべきだろう。
+
+
+;--------------------------
+;本拠地イベント
+;--------------------------
+@MESUGAKI_PIRATES_BASE_EVENT_1
+#DIM CONST QUEST_ID = 69
+#DIM EVENT_POS
+#DIM TIME_LIMIT
+
+#DIM THINK_NUM
+#DIM MESUGAKI_POINT
+#DIM GIANT_POINT
+#DIM ITEM_POINT
+
+#DIM CHARA_COUNT
+#DIM JUDGE
+#DIM TEAM_COUNT
+#DIM REWARD_MESUGAKI
+
+#DIM DYNAMIC P_CHARA_LIST, MAX_CHARA_NUM
+#DIM LIST_SIZE
+
+#DIM MEBOSHI_MANAGER
+#DIM SHIP_ID
+
+;船員になる可能性のあるキャラ類型定数
+#DIM CONST MAX_MESUGAKI = 5
+
+EVENT_POS = CHARACTER_POSITION
+
+VARSET P_CHARA_LIST, -1
+
+;艦隊決戦
+CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(CHARACTER_POSITION, 102)
+QUEST_FLAG_SHIP_ID:QUEST_ID = RESULT
+
+CALL MESUGAKI_PIRATES_FLEET_GENERATE(CHARACTER_POSITION, MIN(RAND:11 + DAY + 10 - QUEST_COMPLETE_DATE:QUEST_ID, 100), 12)
+
+PRINTFORMW メスガキ宇宙基地へと突入しようとする%CALLNAME:MASTER%達の行く手を阻む様に、基地の外壁を破壊しながら何かが出て来た！
+PRINTL 
+PRINTW それは人間――その様にも見える、「大きさを除いたのならば人間としか言い様の無い何か」であった。
+
+PRINT その
+; タイミングが遅かったら
+IF QUEST_COMPLETE_DATE:QUEST_ID <= DAY
+	CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(CHARACTER_POSITION, 102)
+	PRINT 2体の
+ENDIF
+CALL SET_DOCTRINE_FOR_POS(CHARACTER_POSITION, 国家ID_一般海賊, MESUGAKI_DOCTRINE_ID)
+PRINTW ヒトガタはメスガキらしき姿をしていて、艦砲級の大砲をこちらに向けている！
+PRINTL 
+PRINTW 更に宇宙怪獣までもが飛び出してきた！
+
+
+
+CALL COMBAT(CHARACTER_POSITION)
+CALL RETIRE_BROKEN_SHIP
+
+; 艦隊戦の結果の判断
+IF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:QUEST_ID) != 国家ID_一般海賊
+	IF CHARACTER_POSITION == EVENT_POS
+		; 敵旗艦が撃破済みで・プレイヤー艦が生きている=勝利したなら
+		PRINTW 今度こそメスガキ艦隊の排除に成功した……そのはずだ。
+	ELSE
+		; 相討ち
+		PRINTL メスガキ海賊艦隊はおおよそ崩れた。
+		PRINTFORMW ……しかし、不意に飛び込んできた攻撃は%CALLNAME:MASTER%の艦を破壊した。
+		WHILE 1
+			CLEARLINE LINECOUNT
+			PRINTW GAME OVER
+		WEND
+
+	ENDIF
+ELSEIF CHARACTER_POSITION == EVENT_POS
+	; 敵旗艦もプレイヤー艦も健在=引き分けなら
+	PRINTW 互いに決定的な攻撃を行えないままひとまず戦闘は終わった……
+	PRINTW ……これでは突入する事はできない！
+	PRINTL 
+	PRINTFORML どうやって敵艦隊を排除するかを考えていると、メスガキ宇宙基地は%CALLNAME:MASTER%の目の前から突如として消え去った……。
+	PRINTL どのような手段が使われたのかは定かではないが、痕跡などからすると現在普及している技術ではなさそうだ。
+	PRINTW ……そんなものを用いる事のできるあのメスガキ共はいったい何だったのか。それはもはや知る事はできないだろう。
+	;終了処理をする
+	QUEST_COMPLETE_DATE:QUEST_ID = DAY + (RAND:4 + 3) * 11
+	RETURN 1
+ELSE
+	; 敵旗艦が生きていて、プレイヤー艦が沈んでる≒敗北したなら→ゲームオーバー
+	PRINTL 何という事だ！ このメスガキ海賊は……強い！
+	PRINTFORMW %CALLNAME:MASTER%の艦隊はメスガキ海賊艦隊に撃破されてしまった……
+	WHILE 1
+		CLEARLINE LINECOUNT
+		PRINTW GAME OVER
+	WEND
+ENDIF
+
+
+; 敵艦隊を消す
+FOR SHIP_ID, 0, MAX_SHIP
+	IF SHIP_POSITION:SHIP_ID == EVENT_POS && SHIP_COUNTRY:SHIP_ID == 国家ID_一般海賊
+		CALL GET_SHIP_TOTAL_HP(SHIP_ID)
+		SHIP_DAMAGE:SHIP_ID = RESULT
+	ENDIF
+NEXT
+
+CALL RETIRE_BROKEN_SHIP
+QUEST_FLAG_SHIP_ID:QUEST_ID = -1
+
+THINK_NUM = 0
+MESUGAKI_POINT = 0
+GIANT_POINT = 0
+ITEM_POINT = 0
+MEBOSHI_MANAGER = 0
+
+CALL GET_CHARACTER_LIST(P_CHARA_LIST, EVENT_POS,  国家ID_プレイヤー)
+LIST_SIZE = RESULT
+
+CLEARLINE LINECOUNT
+PRINTL ……
+PRINTL …………
+PRINTW ………………
+PRINTL 敵艦隊を排除し、今度こそメスガキ共の基地へと突入した。
+PRINTW ……至近距離で行われた戦闘の余波で大きな被害は出ているが、全てが失われたという訳ではないだろう。
+PRINTL 
+CALL MESUGAKI_PIRATES_THINK(THINK_NUM)
+THINK_NUM++
+
+PRINTL 
+PRINTW ……そんな事を考えていると、自爆までの時間を伝える基地内放送が入った。
+
+TIME_LIMIT = 20
+
+PRINTL 
+PRINTW 自爆までにはそれなりに余裕がある。探索を行ってもいいだろうし、見切りを付けて帰ってもいい。
+PRINTL 
+PRINTW この施設は高いバイオ技術の産物だ。上手く見つけ出せたなら金になる様な情報や物品は多くあるだろう。
+IF QUEST_COMPLETE_DATE:QUEST_ID > DAY
+	PRINTW メスガキの巨人が1体だけとは限らない。未だに眠る個体があるのならそれを運用してみるのも一興か。
+ENDIF
+PRINTW 未だに管の中に居るメスガキの大半はまだ自発的に行動するのは難しい状態の様だ。だか中には目を覚ませば動ける個体も居るかもしれない。
+PRINTW この施設を探ればメスガキ海賊の起源に迫れるかもしれない。歴史を探るのもロマンだ。
+
+;時間切れまでループ
+WHILE TIME_LIMIT > 0
+	WHILE 1
+		PRINTL 
+		PRINT 脱出予定時間まで：行動
+		SELECTCASE TIME_LIMIT
+			;通常
+			CASE 1 TO 5
+				SETCOLOR カラー_警告
+			CASE 6 TO 10
+				SETCOLOR カラー_注意
+		ENDSELECT
+		PRINTV TIME_LIMIT
+		RESETCOLOR
+		PRINTL 回
+		PRINTFORML 目星担当：%CALLNAME:MEBOSHI_MANAGER%(目星{ABL:MEBOSHI_MANAGER:目星})
+		PRINTL
+
+		IF ITEM_POINT > 0
+			PRINTFORM 物品探索進行度 {ITEM_POINT * 100 / 250}　
+		ENDIF
+		IF QUEST_COMPLETE_DATE:QUEST_ID > DAY && GIANT_POINT > 0
+			PRINTFORM メスガキの巨人探索進行度 {GIANT_POINT / 5}　
+		ENDIF
+		IF MESUGAKI_POINT > 0
+			PRINTFORM メスガキ探索進行度 {MESUGAKI_POINT * 100 / 250}
+		ENDIF
+		IF ITEM_POINT > 0 || (QUEST_COMPLETE_DATE:QUEST_ID > DAY && GIANT_POINT > 0) || MESUGAKI_POINT > 0
+			PRINTL
+		ENDIF
+		PRINTL
+		PRINTBUTTON "[金目の物を探す]", 0
+		PRINT 　
+		
+		IF QUEST_COMPLETE_DATE:QUEST_ID > DAY
+			PRINTBUTTON "[メスガキの巨人を探す]", 1
+			PRINT 　
+		ENDIF
+
+		PRINTBUTTON "[メスガキを拾う]", 2
+		PRINT 　
+
+		IF THINK_NUM < 5
+			PRINTBUTTON "[メスガキの正体を探る]", 3
+			PRINT 　
+		ENDIF
+		PRINTL
+		PRINTBUTTON "[目星担当を変更する]", 10
+		PRINT 　
+		PRINTBUTTON "[考えを思い返す]", 20
+		PRINT 　
+		PRINTBUTTON "[切り上げて脱出する]", 9999
+		INPUT
+
+		SELECTCASE RESULT
+			CASE 0
+				PRINTW この施設から金になりそうな何かを探す事にした。
+				CALL MESUGAKI_PIRATES_MEBOSHI_ACHIEVEMENT(MEBOSHI_MANAGER)
+				ITEM_POINT += RESULT
+				IF ITEM_POINT > 150
+					ITEM_POINT -= 150
+					CALL MESUGAKI_PIRATES_RANDOM_CREDIT_EVENT_1
+				ELSE
+					PRINTL それらしき発見物は無かったが、いくらか場所を絞り込む事ができた。
+				ENDIF
+
+			BREAK
+
+			CASE 1
+				IF QUEST_COMPLETE_DATE:QUEST_ID > DAY
+					;メスガキの巨人探し
+					PRINTW メスガキの巨人を探す事にした。
+					CALL MESUGAKI_PIRATES_MEBOSHI_ACHIEVEMENT(MEBOSHI_MANAGER)
+					GIANT_POINT += RESULT
+					PRINTL 
+					SELECTCASE GIANT_POINT
+						CASE IS >= 250
+							PRINTDATAW
+								DATA メスガキ達がそうであった様に、大型の管の中に宇宙怪獣の幼生らしきものが詰められている……
+								DATA 半透明の仕切りの向こう側には宇宙怪獣から切り取られたであろう大型の生体組織が凍結保存されている……
+								DATA 倉庫に宇宙怪獣を改造する為の物であろう巨大な手術器具が放置されている……
+								DATA まだ育ち切っていない宇宙怪獣が管の外に排出されたまま力なく漂っている……
+								DATA 宇宙に放り出された端末にはメスガキの巨人の解析情報らしきものが表示されている……
+							ENDDATA
+						CASEELSE
+							PRINTDATAW
+								DATA 右手側には水。左手側には食物らしきブロック。この辺りの区画は消費財のプラントの様だ……
+								DATA 宙を漂うメスガキの死体が清掃用ドローンに回収されている……
+								DATA 戦闘の余波か施設の残骸が突き刺さった管が真っ赤に染まっている……
+								DATA 栄養剤プラントの原料釜らしきそれにはメスガキの死体――動くものもあった様にも見えた――が纏めて放り込まれている……
+								DATA 生育不良メスガキが管から排出されたままのベタベタの姿で宙を彷徨っている……
+							ENDDATA
+					ENDSELECT
+					IF GIANT_POINT >= 500
+						QUEST_COMPLETE_DATE:QUEST_ID = DAY
+						PRINTW メスガキの巨人の眠ると思われる区画へとたどり着いた！
+						PRINTL 
+						PRINTL ……遠くには巨大なメスガキの姿！ メスガキの巨人だ！
+						PRINTW しかし、突如として宇宙怪獣が通路へと溢れ出してきた！
+						CALL CC_INIT_MEMBER()
+
+						CALL CC_ADDMOB("ATTACKER", "改造こばんざめ", 19000, 19000, 180, 70)
+						CALL CC_ADDMOB("ATTACKER", "改造こばんざめ", 19000, 19000, 180, 70)
+						CALL CC_ADDMOB("ATTACKER", "改造こばんざめ", 19000, 19000, 180, 70)
+						CALL CC_ADDMOB("ATTACKER", "改造こばんざめ", 19000, 19000, 180, 70)
+						CALL CC_ADDMOB("ATTACKER", "改造こばんざめ", 19000, 19000, 180, 70)
+						CALL CC_ADDMOB("ATTACKER", "改造こばんざめ", 19000, 19000, 180, 70)
+						JUDGE = 0
+						WHILE 1
+							TEAM_COUNT = 0
+							CALL NUM_ARRAY_SHUFFLE(P_CHARA_LIST, LIST_SIZE -1)
+
+							FOR CHARA_COUNT, 0, LIST_SIZE
+								; 現地に居るプレイヤー側キャラを防衛側に入れる
+								CALL CC_ADDCHARA("DEFENDER", P_CHARA_LIST:CHARA_COUNT)
+								TEAM_COUNT++
+								; 6人入るかリストの端にたどり着いたら戦闘
+								IF TEAM_COUNT == 6 || CHARA_COUNT == (LIST_SIZE - 1)
+									CALL CLOSE_COMBAT()
+									JUDGE = RESULT
+									CALL CC_ADD_COMBAT_EXP(20)
+									TEAM_COUNT = 0
+									PRINTW 
+									IF JUDGE == 2
+										; プレイヤーが勝ったらFORから抜ける
+										BREAK
+									ELSE
+										; プレイヤーが負けたら戦闘続行の準備
+										CALL CC_ATTACKER_CONTINUED_COMBAT
+									ENDIF
+								ENDIF
+							NEXT
+							TIME_LIMIT--
+							WHILE 1
+								IF JUDGE == 2
+									; メスガキの巨人を獲得
+									PRINTL 
+									PRINTW メスガキの巨人の元へと辿り着いた……。
+									PRINTL メスガキの巨人の周囲には先ほどの宇宙怪獣に殺されたと思われるメスガキ海賊の死体が漂っている。
+									PRINTL 周囲の施設からすると元々は冷凍睡眠状態に置かれていた事が伺えたが、このメスガキ共の手で解凍作業が行われていたらしい。
+									PRINTW メスガキの巨人は既に殆ど目覚めている状態だ。
+									PRINTL
+									PRINTL 操縦用のコンソールを確認するとサイボーグ宇宙怪獣にありがちな特異な操縦コマンドも存在するが
+									PRINTW 通常航行させる分には一般的な艦艇のそれと同じ様に操縦する事もできる様だ。
+									PRINTL 
+									PRINTW メスガキの巨人を手に入れた。
+									CALL MESUGAKI_PIRATES_SHIP_TEMPLATE(CHARACTER_POSITION, 102)
+									SHIP_COUNTRY:RESULT = 国家ID_プレイヤー
+									GOTO AFTER_GIANT
+								ELSEIF TIME_LIMIT <= 0
+									; 時間切れEND
+									PRINTL メスガキの巨人は目前だが、これ以上ここに留まり続ける事は死を意味する。
+									PRINTW 後ろ髪を引かれる思いをしながら脱出した……
+									CALL MESUGAKI_PIRATES_BASE_EVENT_1_ENDING
+									RETURN 1
+								ENDIF
+								; メスガキの巨人終盤限定メニュー
+								PRINT 脱出予定時間まで：行動
+								SELECTCASE TIME_LIMIT
+									CASE 1 TO 5
+										SETCOLOR カラー_警告
+									CASE 6 TO 10
+										SETCOLOR カラー_注意
+								ENDSELECT
+								PRINTV TIME_LIMIT
+								RESETCOLOR
+								PRINTL 回
+								PRINTFORML 目星担当：%CALLNAME:MEBOSHI_MANAGER%(目星{ABL:MEBOSHI_MANAGER:目星})
+								PRINTL
+								PRINTBUTTON "[再び戦いを挑む]", 0
+								PRINT 　
+								PRINTBUTTON "[他の手を探す]", 1
+								PRINT 　
+								PRINTBUTTON "[目星担当を変更する]", 10
+								PRINT 　
+								PRINTBUTTON "[メスガキの巨人を諦める]", 9999
+								PRINTL 
+								PRINTL 
+								PRINTL 行く手を阻む宇宙怪獣を何とかしなければメスガキの巨人には辿り着けない……
+								PRINTL しかし宇宙怪獣としては小型とは言え、生身で対峙するには厳しい相手だ。
+								PRINTL 正面からの戦い以外で何とかする事も考えるべきかもしれない。
+								INPUT
+
+								SELECTCASE RESULT
+									CASE 0
+										PRINTL いくら怪獣と言えども傷つかない訳ではない、血が出るのなら殺せるのだ！
+										PRINTW 態勢を整え、再び宇宙怪獣との戦いへと向う事とした……。
+										BREAK
+									CASE 1
+										TIME_LIMIT--
+										CALL MESUGAKI_PIRATES_MEBOSHI_ACHIEVEMENT(MEBOSHI_MANAGER)
+										GIANT_POINT += RESULT
+										IF GIANT_POINT >= 600
+											PRINTDATAW
+												DATALIST
+													DATA 可搬式の殺獣光線銃座を発見した！
+													DATA 状態は悪いが、生身で戦うのに比べれば遥かにマシだ。
+													DATA ……その名に違わぬ殺傷力で宇宙怪獣の駆除が完了した。
+												ENDLIST
+												DATALIST
+													DATA 対怪獣用超々重粒子線銃ウェヌス354を発見した！
+													DATA 作るのに天文学的なコストの掛かる弾丸で尋常ではない威力を発揮する、色んな意味で伝説の銃だ！
+													DATA ……その片手間に施設に大穴を開けつつも、宇宙怪獣を消滅させた！！
+												ENDLIST
+												DATALIST
+													DATA オーガニック・デストラクターを発見した！
+													DATA 効果を発揮すればどんな炭素生命体も原子まで分解してしまう強力な薬品だ！
+													DATA ODは宇宙怪獣共を骨すら残さず分解し、施設内の空気と混ざって失活した……。
+												ENDLIST
+											ENDDATA
+											JUDGE = 2
+										ELSE
+											PRINTL 辺りの区画を探ったが、目的に適う何かを見つけるには至らなかった……。
+										ENDIF
+										CONTINUE
+									CASE 10
+										CALL MESUGAKI_PIRATES_MEBOSHI_MANAGER
+										MEBOSHI_MANAGER = RESULT
+									CASE 9999
+										PRINTL メスガキの巨人を手に入れるのは現実的ではないのだろう。
+										PRINTW 『きっと、別の何かに時間を使う方が有意義なのだ』そう自分に言い聞かせる様にしながら区画から立ち去った……
+										GOTO AFTER_GIANT
+									CASEELSE
+										CONTINUE
+								ENDSELECT
+							; JUDGE～限定メニューループに戻る
+							WEND
+						; 宇宙怪獣との戦闘に戻る
+						WEND
+						$AFTER_GIANT
+						; 一応白兵戦周りを初期化しておく
+						CALL CC_INIT_MEMBER()
+
+					ELSE
+						PRINTL メスガキの巨人を見つけるには至らなかったが、いくらか場所を絞り込む事ができた。
+					ENDIF
+					BREAK
+				ELSE
+					CONTINUE
+				ENDIF
+
+			CASE 2
+				PRINTW 連れ出しうる状態のメスガキを探す事にした。
+				CALL MESUGAKI_PIRATES_MEBOSHI_ACHIEVEMENT(MEBOSHI_MANAGER)
+				MESUGAKI_POINT += RESULT
+				PRINTDATAW
+					DATA メスガキ用であろう管がいくつも並んでいるが、どれも中身が排出済みだ……
+					DATA 無数の管が並んでいるが、その中身はまだ胎児程度にしかなっていない……
+					DATA 問題のなさそうな姿をしたメスガキが入った管、と思ったらこれは管は管でもサンプルとしての死体が入った管だ……
+					DATA メスガキ入りの管の区画から外れた所にはメスガキの死体から卵巣を取り出している作業場があった……
+					DATA 何らかの問題が見つかったと思われるメスガキが管から直接清掃用ドローンへと排出されていた……
+				ENDDATA
+				PRINTL 
+				IF MESUGAKI_POINT >= 250
+					MESUGAKI_POINT -= 250
+					REWARD_MESUGAKI = RAND:MAX_MESUGAKI
+					CALL MESUGAKI_PIRATES_CHARA_GENERATE(REWARD_MESUGAKI, 0)
+					IF RESULT >= 0
+						; RESULT=キャラIDが0以上であるなら追加する
+						PRINTL まだ目覚めていない状態の、それでも身体的には無事と思われるメスガキを見つける事に成功した！
+						PRINTW このメスガキを連れ帰る為に管から排出した……
+						PRINTL 
+						CALL CHANGE_COUNTRY(RESULT, CFLAG:MASTER:所属, 1)
+						PRINT 目を覚ました
+						IF REWARD_MESUGAKI == 4
+							;友釣られはメスガキではない生産物なので表現を変える
+							PRINTW メスガキというには臆病なそれは、メスガキ海賊の一員としての認識を持っている訳ではない様だ。
+						ELSE
+							;一般メスガキ
+							PRINTW このメスガキはメスガキではあるものの、他のメスガキが海賊として活動している事を認識している訳ではない様だ。
+						ENDIF
+						PRINTL 
+						PRINTL 連れ帰るのに余計な手間を掛ける必要もないだろう。とりあえずは仲間として扱う事とした。
+						PRINTW ……手元に置いておけば適当な理由を用意して投獄する事だって簡単なのだから、今は手間だけを考えればいいのだ。
+
+					ELSE
+						PRINTW 無事なメスガキを発見したと思ったのも束の間、管の中でメスガキは崩れ去った……
+						SETCOLOR カラー_選択不可
+						PRINTW キャラ数が多すぎるのかランダムキャラクターの生成に失敗している様です。
+						RESETCOLOR
+					ENDIF
+				ELSE
+					PRINTL それらしき発見物は無かったが、いくらか候補を絞り込む事ができた。
+				ENDIF
+			BREAK
+
+			CASE 3
+			IF THINK_NUM == 5
+				CONTINUE
+			ELSEIF THINK_NUM == 4
+				PRINTL メスガキの正体の考察を続けるには情報が足りず、手掛かりとなりそうな情報は探し尽くしてしまった。
+				PRINTW メスガキの正体を探るのにこれ以上時間を費やしても成果は得られないだろう。
+				THINK_NUM++
+				CONTINUE
+			ELSE
+				CALL MESUGAKI_PIRATES_THINK(THINK_NUM)
+				THINK_NUM++
+			ENDIF
+			BREAK
+
+			CASE 10
+				CALL MESUGAKI_PIRATES_MEBOSHI_MANAGER
+				MEBOSHI_MANAGER = RESULT
+			CASE 20
+				WHILE 1
+					FOR COUNT, 0, MIN(THINK_NUM, 4)
+						PRINTBUTTON "[パート" + TOSTR(COUNT+1) + "]",COUNT
+						PRINT 　
+					NEXT
+					INPUT
+					SELECTCASE RESULT
+						CASE IS <= 3
+							PRINTL 
+							CALL MESUGAKI_PIRATES_THINK(RESULT)
+							BREAK
+						CASEELSE
+							CONTINUE
+					ENDSELECT
+				WEND
+			CASE 9999
+				PRINTL 猶予はまだあるだろうが仮にも敵地だ。早めに脱出してしまう事とした。
+				;PRINTFORMW %CALLNAME:MASTER%達は探索を切り上げて脱出した……
+				CALL MESUGAKI_PIRATES_BASE_ESCAPE
+				; 脱出イベントへ
+				CALL MESUGAKI_PIRATES_BASE_EVENT_1_ENDING
+				RETURN 1
+			CASEELSE
+				CONTINUE
+		ENDSELECT
+
+	WEND
+	TIME_LIMIT--
+WEND
+
+PRINTL 施設の自爆まで猶予はもうあまりない。これ以上探索を続けるのは無謀だ。
+;PRINTFORMW %CALLNAME:MASTER%達は急いで脱出した……
+CALL MESUGAKI_PIRATES_BASE_ESCAPE
+; 脱出イベントへ
+CALL MESUGAKI_PIRATES_BASE_EVENT_1_ENDING
+RETURN 1
+
+
+
+@MESUGAKI_PIRATES_THINK(THINK_NUM)
+#DIM THINK_NUM
+SELECTCASE THINK_NUM
+
+	CASE 0
+		PRINTL 液体の入った半透明の管が大量に並んでいる。……その半透明の管の中にはメスガキが浮かんでいた。
+		PRINTL その管は培養槽なのだろう。どういった方法で用意された遺伝子なのかはさておき、その遺伝子を用いてメスガキを生産するメスガキ工場。
+		PRINTW この基地は股も無い機械からメスガキ海賊をひりだす、メスガキ共の巨大な無機の子宮だったのだ！
+		PRINTL 
+		PRINTL 製品たる管の中のメスガキ以外に人の姿の無い、完全無人メスガキ工場。
+		PRINTW 一体如何なる存在が、どんな理由でそんなものを用意したというのか。
+		PRINTL 
+
+	CASE 1
+		PRINTL 何かがあった時に人類文明を復活させる為のバックアップ施設だとか
+		PRINTL 人類をより広い範囲へと広める為の古の播種施設だとかというのなら
+		PRINTW そこで生産されるのが女のみという事に違和感はない。
+		PRINTL 
+		PRINTL 女のみであるとしても初歩的な細胞制御技術や遺伝子修飾技術が存在すれば分化を制御して精子を作成し
+		PRINTW あるいはあらかじめ凍結保存しておいた精子を使用し、生身の子宮で子供を作る事はできる。
+		PRINTL 
+		PRINTL しかし男のみではこうはいかない。
+		PRINTL 卵子を作成し、あるいは凍結保存した卵子を使用し受精卵を作った所で
+		PRINTL それを育てるには高度な機械技術が必要となる人工子宮か
+		PRINTW 卵子・精子よりも余程複雑な生身の子宮を男へと後付けできる技術が必要になるだろう。
+		PRINTL 
+		PRINTL 男女両方を作れば何の技術も残らずとも子孫を生み出し続ける事はできるが
+		PRINTW 最低限の環境が整う事を前提とするのであれば、男が増えれば増えた分だけ初期段階での人数増加が遅れる。
+		PRINTL 
+		PRINTL 祖母たる機械が生身の母世代を生産し
+		PRINTL 母世代達が機械よりも多くの子を生み出し
+		PRINTL 子世代において男を含めた人類社会の構造を再構築していく。
+		PRINTW SFにしろ、遺跡の類にしろ――成功したのかはともかく――聞かない話ではなかった。
+	CASE 2
+		;パート3
+		PRINTL だとしてもその肉体に宿る精神があのメスガキ共というのは解せない。
+		PRINTL 施設はともかく、あのメスガキ共は良く言ってもまあ蛮族だ。
+		PRINTW 教育の失敗なのか、そもそも教育を用意できなかったのか……
+		PRINTL 
+		PRINTL そう、例えば施設の目的を人類再興なり人類播種なりからただただメスガキを生産する事へと上書きした第三者でも存在したのだろうか？
+		PRINTW ただ悪意を持っていただけなのか。あるいは善意からそんな事をする様な何かが居たのか。理由なんてなんだっていい。
+
+	CASE 3
+		;パート4
+		PRINTL あるいは、あれらを生身の人間であると思うから様々な違和感を抱くのであって
+		PRINTL 生体パーツを使用したバイオロイドの類として運用されていたのだとすれば
+		PRINTW 「まともな人間」を作る場だったとするには差支えのある要素は問題ですらなくなりうる。
+		PRINTL 
+		PRINTL 最初から娯楽に供する為のメスガキを生産する施設であったとしてもいいし
+		PRINTW 生体パーツを使用した純然たる機械として増やしやすい形態を選んだ道具でしかなかった物が、野生化してメスガキ化したとしてもいい。
+		PRINTW いずれにしろ人類の復活や播種を目的とした施設よりもまともじゃないものが出て来るのは、むしろ自然だ。
+		PRINTL 
+		PRINTW メスガキそのものの生産施設なる奇妙な物の来歴にどれだけ思いを馳せようと、そこには真実に辿り着く手がかりなど何一つとしてありはしなかった。
+ENDSELECT
+PRINTL 
+RETURN
+
+
+@MESUGAKI_PIRATES_BASE_EVENT_1_ENDING
+#DIM CONST QUEST_ID = 69
+; 基地が自爆して終了
+PRINTL 
+PRINTW メスガキ生産基地から脱出してどれくらい経ったのか。
+PRINTL 尊厳という概念の欠如した連中に、『生命など所詮は炭素素材で形作られた機械だ』と吐き捨てる様な悍ましい使い方をされたかの施設は最早現存していない。
+PRINTW メスガキ生産基地は自爆して果てたのだ。
+PRINTL
+PRINTL 『いつ』『誰が』『何の為に』
+PRINTL 見聞きしたものから尤もらしい理屈をこじつける事はできるし・それが真実ではないとする理由も見つからないが、それが真実であったという証拠も残ってはいない。
+PRINTW 血の通う事のない彼女らの母は空想の下敷きにするのが限度の真実の骸の一片すら残す事なく、二度と人の目の届かない所へと逝ってしまった。
+PRINTL 
+PRINTL それでも「この施設を作った何者かはそれなりに手慣れているのではないか」と、また別のメスガキ生産基地がある事を
+PRINTW そして「そこに辿り着いた時には今度こそ正体を暴けるのではないか」と、真実を見つけられる事を期待しているのだ……
+QUEST_COMPLETE_DATE:QUEST_ID = DAY + (RAND:4 + 3) * 14
+RETURN
+
+;--------------------------
+;本拠地以外で呼び出された場合(≒港時?)のイベント
+;--------------------------
+@MESUGAKI_PIRATES_NOT_BASE_EVENT_1
+PRINTW メスガキ海賊基地のありそうな座標に行ってその正体を確認しよう
+
+;--------------------------
+;本拠地マスの表示
+;--------------------------
+@MESUGAKI_PIRATES_BASE_MAP_INFO_1
+		RESULTS:0 '= "メスガキ宇宙基地"
+;		RESULTS:1 '= ""
+;		RESULTS:2 '= ""
+;		RESULTS:3 '= ""
+;		RESULTS:4 '= ""
+RETURN 1
+
+;--------------------------
+;本拠地突入時の表示
+;--------------------------
+@MESUGAKI_PIRATES_BASE_SHOW_COMMAND_1
+RESULTS '= "真・分からせの時間だ！"

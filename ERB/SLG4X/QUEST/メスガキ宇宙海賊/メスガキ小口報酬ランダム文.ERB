@@ -1,0 +1,245 @@
+﻿@MESUGAKI_PIRATES_RANDOM_CREDIT_EVENT_0
+
+#DIMS CONST ペット種族名 = "犬", "ネコ", "うさぎ", "馬", "むにゅむにゅ", "スライム", "亀", "ワニ", "インコ", "にわとり", "きんぎょ", "ハムスター", "フェレット", "ハリネズミ", "カブトムシ", "クワガタ"
+#DIM CONST ペット種類 = 16
+#DIM CONST 大ジャンル数 = 3
+
+#DIM 入手金
+
+入手金 = (RAND:100 + 1) * (RAND:100 + 1) * (RAND:100 + 1)
+
+MONEY += 入手金
+CALLF FuncTagSetText_Print(@"資金@C:{カラー_黄}@$%TOSTR((入手金), "###,###,###")%@/C@に相当する", 0)
+
+SELECTCASE RAND:大ジャンル数
+CASE 0
+	;材質表現
+	PRINTDATA
+		DATA プラチナ
+		DATA 金
+		DATA 銀
+		DATA ルビー
+		DATA サファイア
+		DATA エメラルド
+		DATA ダイヤ
+		DATA ラジウム夜光塗料
+		DATA 聖人の骨
+		DATA レッドマーキュリー
+	ENDDATA
+
+	PRINT の使われている
+
+	;内容言及
+	PRINTDATA
+		DATA オモチャっぽい
+		DATA ガキ臭い
+		DATA 成金趣味の
+		DATA 露骨に性的な
+		DATA 品の無い
+		DATA 奇妙に歪んだ
+	ENDDATA
+
+	;オブジェ名
+	PRINTDATA
+		DATA メスガキの像
+		DATA 性奴隷の像
+		DATA 謎生物の像
+		DATA 指輪
+		DATA 首飾り
+		DATA 首輪
+		DATA ピアス
+		DATA 装飾の付いた銃
+	ENDDATA
+
+CASE 1
+	;動画形容詞
+	PRINTDATA
+		DATAFORM %ペット種族名:(RAND:ペット種類)%は死なない
+		DATA 全員死ぬのがオチの
+		DATA 常時手ブレしてる
+		DATA 構図選びに失敗した
+		DATA 場違いなSEが邪魔な
+		DATA タイトルだけ凝った
+		DATA 途中で趣旨がどっかに行く
+		DATA 出オチ系で
+		DATA 編集が下手くそな
+		DATA 薬物でもキメながら作ってそうな
+	ENDDATA
+	;評価表現
+	PRINTDATA
+		DATA 好き者には売れる
+		DATA 狙っては作れない
+		DATA マニア向け
+		DATA 顔は良い
+		DATA 品性を疑う
+		DATA タイトル詐欺
+		DATA 勢いは凄い
+		DATA 道徳0点の
+		DATA 金の掛け所がおかしい
+	ENDDATA
+
+	;動画ジャンル
+	PRINTDATA
+		DATA メスガキ乱交AV
+		DATA メスガキ上位AV
+		DATA スナッフフィルム
+		DATA メスガキ罵倒集
+		DATA メスガキ決闘動画
+		DATA メスガキ珍走動画
+		DATA メスガキ隠し撮り動画
+		DATA 艦船カスタム動画
+		DATA コスプレ配信切り抜き
+		DATAFORM %STAR_NAME:(RAND:MAX_STAR)%ヴァンダリズム旅行動画
+	ENDDATA
+	PRINT のオリジナルデータ
+
+
+
+CASE 2
+	;保管経路
+	PRINTDATA
+		DATA 横領して備蓄されていた
+		DATA 収奪したまま放り込まれた
+		DATA コンテナで受け取られたままの
+	ENDDATA
+
+	;保管品目
+	PRINTDATA
+		DATA リアクター燃料
+		DATA 工作機材
+		DATA ダクトテープ
+		DATA アイスクリーム製造機
+		DATA レトルト食品
+		DATA 寿命の尽きたカリホルニウム弾
+	ENDDATA
+
+	PRINT の保管座標データ
+
+ENDSELECT
+
+
+PRINTW を手に入れた。
+
+
+
+
+@MESUGAKI_PIRATES_RANDOM_CREDIT_EVENT_1
+#DIM CONST 大ジャンル数 = 2
+
+#DIMS CONST 原種動物名 = "犬", "ネコ", "うさぎ", "馬", "むにゅむにゅ", "スライム", "亀", "ワニ", "マグロ", "ネズミ", "ハリネズミ", "豚", "こうもり", "ハチ", "アコヤガイ", "にわとり"
+#DIMS CONST 接頭動物名A = "ワン", "ニャ", "ぴょん", "ぱか", "むにゅ", "べと", "のろ", "ガブ", "ツナ", "チュー", "ちく", "ブー", "ばさ", "ビー", "つや", "こけ"
+#DIMS CONST 接頭動物名B = "ガルル", "ゴロ", "うさ", "ぶるる", "にゅむ", "ドロ", "カチ", "クロコ", "シビ", "ガジ", "はり", "ベコ", "シロプ", "ブン", "パル", "ぴよ"
+
+#DIMS CONST 接尾動物名A = "ワワン", "ニャー", "ぴょこ", "ぱから", "むにゅにゅ", "べっと", "タートル", "ガブ", "ぐるる", "チュー", "ちくり", "ブー", "バット", "ビー", "たまま", "こけこ"
+#DIMS CONST 接尾動物名B = "ワオン", "ニャーゴ", "いなば", "ひひん", "むにゅむ", "ぬた", "こもり", "ダイル", "トロ", "ちょろろ", "ぐさり", "ホッグ", "キュラ", "ばち", "貝", "ぴよよ"
+
+#DIM CONST 原種数 = 16
+
+#DIM 入手金
+
+
+入手金 = (RAND:100 + 1) * (RAND:100 + 1) * (RAND:100 + 1)
+
+MONEY += 入手金
+CALLF FuncTagSetText_Print(@"資金@C:{カラー_黄}@$%TOSTR((入手金), "###,###,###")%@/C@に相当する", 0)
+SELECTCASE RAND:大ジャンル数
+	CASE 0
+	PRINT 「
+		PRINTDATA
+			DATA つくね
+			DATA たんぽ
+			DATA ちまき
+			DATA おこわ
+			DATA とろろ
+			DATA そぼろ
+			DATA つみれ
+			DATA ちくわ
+			DATA がんす
+			DATA さしみ
+			DATA たたき
+			DATA あらい
+			DATA きずし
+			DATA なます
+	ENDDATA
+
+	PRINT 式
+
+		PRINTDATA
+			DATA 戦闘
+			DATA 探索
+			DATA 作業
+			DATA 研究
+			DATA 芸術
+			DATA 芸能
+			DATA 愛玩
+			DATA 生産
+		ENDDATA
+
+		PRINT 用
+
+		PRINTDATA
+			DATA 卵生
+			DATA 矮性
+			DATA 無性
+			DATA 両性
+			DATA 順従
+			DATA 冬眠
+			DATA 大食
+			DATA 小食
+			DATA 低排泄
+			DATA 早熟
+		ENDDATA
+
+		PRINT 人種」の設計技術情報
+		;PRINTL 具体的な遺伝子データなどはないものの、設計思想そのものや臓器の機能変更に伴う影響への対応論
+		;PRINTW 臓器のレイアウトなど強化人間や遺伝子操作による改良に転用しうる情報が存在している。
+	CASE 1
+		CALL OVERLAPLESS_RAND_2PICK(原種数)
+
+		PRINTFORM %原種動物名:(RESULT:0)%と%原種動物名:(RESULT:1)%の特徴を持つ改造生物「
+		PRINTDATA
+			DATAFORM %接頭動物名A:(RESULT:0)%
+			DATAFORM %接頭動物名B:(RESULT:0)%
+		ENDDATA
+		PRINTDATA
+			DATAFORM %接尾動物名A:(RESULT:1)%
+			DATAFORM %接尾動物名B:(RESULT:1)%
+		ENDDATA
+
+		PRINT 」の遺伝子データ
+ENDSELECT
+
+PRINTW を手に入れた。
+
+;「つくね式戦闘用卵生人種」つまり 遺伝子組み換え傭兵種族「卵つくね人」が居るかもしれない、という事……
+
+
+
+@MESUGAKI_PIRATES_RANDOM_CREDIT_EVENT_2
+#DIM 入手金
+
+
+入手金 = (RAND:100 + 1) * (RAND:100 + 1) * (RAND:100 + 1)
+
+MONEY += 入手金
+CALLF FuncTagSetText_Print(@"資金@C:{カラー_黄}@$%TOSTR((入手金), "###,###,###")%@/C@に相当する", 0)
+PRINTDATA
+	DATA メスガキ教団が推奨している
+	DATA メスガキ教的黙示思想が反映された
+	DATA 巷でもカルト的人気がある
+	DATA 一目で正気を疑うポスターの添えられた
+	DATA 古式ゆかしいSFXの技法の用いられた
+	DATA 星間ネット史に未だなお色褪せないヒット記録の残る
+	DATA キャッチーな主題歌の懐かしい
+ENDDATA
+PRINT 「
+CALL MESUGAKI_PIRATES_MOVIE_NAME_PRINT
+PRINT 」
+PRINTDATA
+	DATA の編集前データ
+	DATA の未公開NGシーン集
+	DATA に使われた大道具
+	DATA のマスターネガ
+ENDDATA
+
+PRINT を手に入れた。
