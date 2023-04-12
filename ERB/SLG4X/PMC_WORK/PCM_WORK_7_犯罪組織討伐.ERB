@@ -1,0 +1,115 @@
+﻿;----------------------------
+; 犯罪組織討伐
+;----------------------------
+
+;----------------------------
+; 受注可能か
+;----------------------------
+@PMC_QUEST_ACCEPTABLE_7
+CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
+RETURN STAR_OWNER:RESULT == 国家ID_企業連合
+
+;----------------------------
+; クエスト名
+;----------------------------
+@PMC_QUEST_NAME_7
+RESULTS = 犯罪組織討伐(難易度1)
+RETURN
+
+;----------------------------
+; クエスト本体
+;----------------------------
+@PMC_QUEST_BODY_7
+#DIM _BATTLE_UNIT_ID
+#DIM DYNAMIC _RETIER
+#DIM DYNAMIC _SCORE
+#DIM DYNAMIC _LINE_CHAN
+#DIMS _DIC, MAX_PMC_UNIT, MAX_PMC_UNIT_MEMBER
+#DIM _EXP
+#DIM DYNAMIC _MESSAGE
+
+FOR LOCAL, 0, MAX_PMC_UNIT
+  VARSET _DIC:LOCAL:0, "-1"
+NEXT
+
+PRINTFORML ブリーフィングを受けますか？
+CALL ASK_YN
+SIF !RESULT
+  CALL PMC_QUEST_BRIEFING_7
+CALL PMC_EDIT_UNIT
+
+PRINTFORML 目的の犯罪組織は海辺の倉庫街に存在していた
+PRINTFORML 一見すると貧相な貸しテナントを利用した地元企業か何かに見えるが、その実、剣呑な顔つきの男たちが頻繁に出入りしておりあからさまに怪しい
+PRINTFORMW とはいえ、警察の印が入った装甲トラックから装備を担いで降りてきた%ANAME(MASTER)%達に比べればマシだろう
+PRINTL
+PRINTFORMW %ANAME(MASTER)%たちが挨拶代わりにテナントの薄壁越しに銃撃を始めると中から悲鳴が上がり、慌てたように中にいた男たちも反撃を開始した
+PRINTL ………………
+PRINTL …………
+PRINTL ……
+CALL SELECT_PMC_BATTLE_UNIT
+_BATTLE_UNIT_ID = RESULT
+IF _BATTLE_UNIT_ID == -1
+  PRINTFORMW 戦闘に参加できるユニットがいない
+  PRINTFORMW ユニットを編成してから再度クエストを受けよう
+  RETURN
+ENDIF
+
+;白兵戦参加メンバーの初期化
+CALL CC_INIT()
+;前の戦いの記録が残っていたら上書き
+IF _DIC:_BATTLE_UNIT_ID:0 != "-1" && _LINE_CHAN == 1
+  FOR LOCAL, 0, FINDELEMENT(CC_ATTACKER_LIST, "-1")
+    CC_ATTACKER_LIST:LOCAL = %DIC_SET(CC_ATTACKER_LIST:LOCAL, "体力", DIC_GET(_DIC:_BATTLE_UNIT_ID:LOCAL, "体力"))%
+    CC_ATTACKER_LIST:LOCAL = %DIC_SET(CC_ATTACKER_LIST:LOCAL, "状態", "待機")%
+  NEXT
+ELSE
+  FOR LOCAL, 0, CHARANUM
+    SIF UNIT_ID:LOCAL == _BATTLE_UNIT_ID
+      CALL CC_ADDCHARA("ATTACKER", LOCAL)
+  NEXT
+  IF _DIC:_BATTLE_UNIT_ID:0 != "-1"
+    FOR LOCAL, 0, FINDELEMENT(CC_ATTACKER_LIST, "-1")
+      CC_ATTACKER_LIST:LOCAL = %DIC_SET(CC_ATTACKER_LIST:LOCAL, "体力", DIC_GET(_DIC:_BATTLE_UNIT_ID:LOCAL, "体力"))%
+      CC_ATTACKER_LIST:LOCAL = %DIC_SET(CC_ATTACKER_LIST:LOCAL, "状態", "待機")%
+    NEXT
+  ENDIF 
+ENDIF
+CALL CC_ADDMOB("DEFENDER", "運び屋", 1500, 1500, 10)
+CALL CC_ADDMOB("DEFENDER", "運び屋", 1500, 1500, 10)
+CALL CC_ADDMOB("DEFENDER", "運び屋", 1500, 1500, 10)
+CALL CC_ADDMOB("DEFENDER", "用心棒", 3000, 3000, 70)
+CALL CC_ADDMOB("DEFENDER", "用心棒", 3000, 3000, 70)
+CALL CC_ADDMOB("DEFENDER", "元締", 2000, 2000, 50)
+_EXP = 15
+;白兵戦イベント呼出
+CALL CLOSE_COMBAT()
+SIF RESULT == 2
+  CALL GAMEOVER_46
+CALL CC_ADD_COMBAT_EXP(_EXP)
+FOR LOCAL, 0, FINDELEMENT(CC_ATTACKER_LIST, "-1")
+  _DIC:_BATTLE_UNIT_ID:LOCAL = %CC_ATTACKER_LIST:LOCAL%
+NEXT
+PRINTFORML 敵方からの反撃がなくなると同時に、薄壁をボロボロにされたテナントの入った建物が音を建てて倒壊した
+PRINTFORML 元からプレハブ小屋のような一階建ての小さな建物に一つだけ存在していたテナントだったので、壊れたところで問題はない
+PRINTFORML それなのに遅ればせながらやってきた警官には、もっと穏便にやれと小言を言われてしまった……
+PRINTFORMW 報酬として$50,000手に入れた。
+MONEY += 50000
+DAY ++
+
+;----------------------------
+; クエスト説明
+;----------------------------
+@PMC_QUEST_BRIEFING_7
+SETCOLOR 0X666666
+CUSTOMDRAWLINE ///
+RESETCOLOR
+PRINTFORML 企業連合にはびこる犯罪組織の討伐作戦に参加することになった
+PRINTFORMW 今回は警察の連携組織として多数のPMCが作戦に参加し、割り当てられた犯罪組織を討伐することが目標である
+PRINTL
+PRINTFORML 人手が足りないため事前の周辺住民への退去命令などは出せない。戦う前から戦闘が発生することを全面に表し、市民が自発的に逃げるように仕向けること
+PRINTFORMW 敵組織にも作戦前から襲撃がばれて迎撃の準備をされること必至なので、迎撃に留意して戦うこと
+SETCOLOR 0X666666
+CUSTOMDRAWLINE ///
+RESETCOLOR
+
+
