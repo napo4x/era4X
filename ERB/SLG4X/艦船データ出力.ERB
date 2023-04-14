@@ -509,13 +509,9 @@ CASE 2
 	ENDSELECT
 
 CASE 3
-	SIF STRLENS(本文) == 0
-		RESULTS = 　
-	IF 文字色 == -1
-		RESULTS = %本文%
-	ELSE
-		SETCOLOR 文字色
-		RESULTS = %本文%
-		RESETCOLOR
-	ENDIF
+	; 本文が空の時に"RESULTS ="すると本来は純粋に改行する事を想定しているコードでそれまでの説明文が全て消滅するのでは？
+	;SIF STRLENS(本文) == 0
+	;	RESULTS = 　
+	; 「(本文の中身)[カラーコード:(文字色の数値)]/仕切り/」が追加され続けていく
+	RESULTS += DIC_SET(本文, "カラーコード", TOSTR(文字色)) + "/仕切り/"
 ENDSELECT
