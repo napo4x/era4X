@@ -15,3 +15,10 @@
   #DIMS CONST CC_FLAG_DIC_KEYS = LINE_CHAN, FIRST_STRIKE
 }
 
+;-------------------------
+; 地上戦における戦闘関連
+;-------------------------
+#DIM CONST FIRE_POWER = 0; 火力
+#DIM CONST DEF = 1; 防御
+#DIM CONST REDUCE = 2; 回避
+#DIM CONST PROV = 3; 挑発、攻撃優先度の高さ

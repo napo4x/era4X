@@ -176,20 +176,36 @@ CC_FLAG_DIC = %DIC_SET(CC_FLAG_DIC, FLAG_NAME, FLAG_VALUE)%
 #DIM 敵視_低脅威
 #DIM 敵視_能力者
 #DIM 敵視_低耐久
+#DIM CC_白兵
+#DIM CC_攻撃力
+#DIM CC_防御力
+#DIM CC_軽減値
+#DIM CC_敵視
 
+CC_白兵 = ABL:ID:白兵
+CC_攻撃力 = ABL:ID:攻撃力
+CC_防御力 = ABL:ID:防御力
+CC_軽減値 = ABL:ID:軽減値
+CC_敵視 = ABL:ID:敵視
 
-IF ABL:ID:白兵 >= ABL:ID:攻撃力
-	W_POWER = ABL:ID:白兵 + ABL:ID:攻撃力 / 10
-ELSEIF ABL:ID:白兵 < ABL:ID:攻撃力
-	W_POWER = ABL:ID:白兵 + LIMIT((ABL:ID:攻撃力 - ABL:ID:白兵) / 2, 0 , ABL:ID:白兵)
+CALL GET_EFFECT_FROM_CLOTH()
+CC_攻撃力 = RESULT:FIRE_POWER
+CC_防御力 = RESULT:DEF
+CC_軽減値 = RESULT:REDUCE
+CC_敵視 = RESULT:PROV
+
+IF CC_白兵 >= CC_攻撃力
+	W_POWER = CC_白兵 + CC_攻撃力 / 9
+ELSEIF CC_白兵 < CC_攻撃力
+	W_POWER = CC_白兵 + LIMIT((CC_攻撃力 - CC_白兵) / 2, 0 , CC_白兵)
 ENDIF
 
-W_ACTIVE = ABL:ID:白兵 + (ABL:ID:白兵 * ABL:ID:行動力 / 100) - ABL:ID:白兵 / 2
+W_ACTIVE = CC_白兵 + (CC_白兵 * ABL:ID:行動力 / 100) - CC_白兵 / 2
 
-敵視_高脅威 = ABL:ID:白兵 * ABL:ID:敵視 / 100
-敵視_低脅威 = ABL:ID:敵視 * 100 / MAX(ABL:ID:白兵, 1)
-敵視_能力者 = ABL:ID:超能力 * ABL:ID:敵視 / 100
-敵視_低耐久 = MAX(MAXBASE:ID:体力 / 10 - ABL:ID:敵視, 100)
+敵視_高脅威 = CC_白兵 * CC_敵視 / 100
+敵視_低脅威 = CC_敵視 * 100 / MAX(CC_白兵, 1)
+敵視_能力者 = ABL:ID:超能力 * CC_敵視 / 100
+敵視_低耐久 = MAX(MAXBASE:ID:体力 / 10 - CC_敵視, 100)
 
 ;
 ;装備処理ココマデ
@@ -204,11 +220,11 @@ MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "キャラID", TOSTR(ID))%
 MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "所属", TOSTR(CFLAG:ID:所属))%
 
 MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "白兵武器", TOSTR(CLOTH:ID:衣装部位_武器))%
-MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "攻撃力", TOSTR(ABL:ID:攻撃力))%
-MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "防御力", TOSTR(ABL:ID:防御力))%
-MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "軽減値", TOSTR(ABL:ID:軽減値))%
+MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "攻撃力", TOSTR(CC_攻撃力))%
+MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "防御力", TOSTR(CC_防御力))%
+MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "軽減値", TOSTR(CC_軽減値))%
 MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "行動力", TOSTR(W_ACTIVE))%
-MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "敵視", TOSTR(ABL:ID:敵視))%
+MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "敵視", TOSTR(CC_敵視))%
 MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "作戦", TOSTR(ABL:ID:作戦))%
 MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "高脅威", TOSTR(敵視_高脅威))%
 MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "低脅威", TOSTR(敵視_低脅威))%
@@ -276,3 +292,30 @@ MEM_LIST:IDX = %DIC_SET(MEM_LIST:IDX, "低耐久", TOSTR(敵視_低耐久))%
 
 ;PRINTFORMW 　%MEM_LIST:IDX%
 RETURN
+
+;--------------------------------
+; 白兵武器を除く衣装から能力を算出
+;--------------------------------
+@GET_EFFECT_FROM_CLOTH(CID)
+#DIM CID
+#DIM INDEX
+#DIM STATUS_INDEX
+#DIM DYNAMIC CC_STATUS, 4
+#DIM VAR_SIZE
+VARSIZE CLOTH_PART_NAME_ENG
+VAR_SIZE = RESULT
+FOR INDEX, 0, VAR_SIZE
+    SIF 衣装部位_武器 == INDEX
+        CONTINUE
+    VARSET RESULT
+    TRYCCALLFORM CLOTH_EFFECT_%CLOTH_PART_NAME_ENG:INDEX%_{CLOTH:CID:INDEX}
+        FOR STATUS_INDEX, 0, 4
+            CC_STATUS:STATUS_INDEX = RESULT:STATUS_INDEX
+        NEXT
+    CATCH
+        CONTINUE
+    ENDCATCH
+NEXT
+FOR STATUS_INDEX, 0, 4
+    RESULT:STATUS_INDEX = CC_STATUS:STATUS_INDEX
+NEXT
