@@ -10,6 +10,7 @@
 #DIMS DYNAMIC 参加メンバーリスト, CC_MAX_MEMBER_NUM / 2
 #DIM CONST 鹵獲イベント発生率 = 300, 200, 130, 100, 50, 0, 0, 300, 300
 #DIM DYNAMIC 鹵獲手段補正
+#DIM CAPTAIN_ID
 
 
 ;移乗攻撃に参加可能な条件を満たしているメンバーを候補としてリストに追加
@@ -21,6 +22,10 @@ FOR SHIP_ID, 0, MAX_SHIP
 			IF RESULTS == "BOARDING_POD"
 				SIF 鹵獲手段補正 < 1
 					鹵獲手段補正 = 1
+				FINDELEMENT BOARDING_SHIP_ID, SHIP_ID
+				CAPTAIN_ID = RESULT
+				SIF CAPTAIN_ID != -1
+						移乗攻撃参加候補ID = %LIST_ADD(移乗攻撃参加候補ID, TOSTR(CAPTAIN_ID))%
 				FOR CHARA_ID, 0, CHARANUM
 					SIF RIDING_WITH:CHARA_ID == SHIP_ID
 						移乗攻撃参加候補ID = %LIST_ADD(移乗攻撃参加候補ID, TOSTR(CHARA_ID))%
@@ -31,12 +36,17 @@ FOR SHIP_ID, 0, MAX_SHIP
 			IF RESULTS == "LANDING_CRAFT"
 				SIF 鹵獲手段補正 < 2
 					鹵獲手段補正 = 2
+				FINDELEMENT BOARDING_SHIP_ID, SHIP_ID
+				CAPTAIN_ID = RESULT
+				SIF CAPTAIN_ID != -1
+						移乗攻撃参加候補ID = %LIST_ADD(移乗攻撃参加候補ID, TOSTR(CAPTAIN_ID))%
 				FOR CHARA_ID, 0, CHARANUM
 					SIF RIDING_WITH:CHARA_ID == SHIP_ID
 						移乗攻撃参加候補ID = %LIST_ADD(移乗攻撃参加候補ID, TOSTR(CHARA_ID))%
 				NEXT
 				BREAK
 			ENDIF
+
 		NEXT
 	ENDIF
 NEXT
