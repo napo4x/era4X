@@ -1,0 +1,160 @@
+﻿;----------------------------
+; 犯罪組織討伐
+;----------------------------
+
+;----------------------------
+; 受注可能か
+;----------------------------
+@PMC_QUEST_ACCEPTABLE_8
+RETURN 1
+
+;----------------------------
+; クエスト名
+;----------------------------
+@PMC_QUEST_NAME_8
+RESULTS = 宙族の地上基地破壊(難易度2)
+RETURN
+
+;----------------------------
+; クエスト本体
+;----------------------------
+@PMC_QUEST_BODY_8
+#DIM _BATTLE_UNIT_ID
+#DIM DYNAMIC _RETIER
+#DIM DYNAMIC _SCORE
+#DIM DYNAMIC _LINE_CHAN
+#DIMS _DIC, MAX_PMC_UNIT, MAX_PMC_UNIT_MEMBER
+#DIM _EXP
+#DIM DYNAMIC _MESSAGE
+
+FOR LOCAL, 0, MAX_PMC_UNIT
+  VARSET _DIC:LOCAL:0, "-1"
+NEXT
+
+PRINTFORML ブリーフィングを受けますか？
+CALL ASK_YN
+SIF !RESULT
+  CALL PMC_QUEST_BRIEFING_8
+CALL PMC_EDIT_UNIT
+
+PRINTFORML 山と海の間に存在する片田舎の村にその非合法宇宙港は存在していた
+PRINTFORML 山肌に物理的な迷彩色と光学迷彩で隠された大きな艦の出し入れを行う搬入口が存在している
+PRINTFORMW サイズ的にはフリゲートがギリギリ入れる程度だ。その入口を、田舎の村に似つかわしくないいかつい顔つきの男たちがうろついている
+PRINTL
+PRINTFORMW 木々に隠れ様子を伺っていた%CALLNAME:MASTER%の部隊は、発砲許可と共に戦闘を開始した
+PRINTL ………………
+PRINTL …………
+PRINTL ……
+CALL SELECT_PMC_BATTLE_UNIT
+_BATTLE_UNIT_ID = RESULT
+IF _BATTLE_UNIT_ID == -1
+  PRINTFORMW 戦闘に参加できるユニットがいない
+  PRINTFORMW ユニットを編成してから再度クエストを受けよう
+  RETURN
+ENDIF
+
+;白兵戦参加メンバーの初期化
+CALL CC_INIT()
+;前の戦いの記録が残っていたら上書き
+IF _DIC:_BATTLE_UNIT_ID:0 != "-1" && _LINE_CHAN == 1
+  FOR LOCAL, 0, FINDELEMENT(CC_ATTACKER_LIST, "-1")
+    CC_ATTACKER_LIST:LOCAL = %DIC_SET(CC_ATTACKER_LIST:LOCAL, "体力", DIC_GET(_DIC:_BATTLE_UNIT_ID:LOCAL, "体力"))%
+    CC_ATTACKER_LIST:LOCAL = %DIC_SET(CC_ATTACKER_LIST:LOCAL, "状態", "待機")%
+  NEXT
+ELSE
+  FOR LOCAL, 0, CHARANUM
+    SIF UNIT_ID:LOCAL == _BATTLE_UNIT_ID
+      CALL CC_ADDCHARA("ATTACKER", LOCAL)
+  NEXT
+  IF _DIC:_BATTLE_UNIT_ID:0 != "-1"
+    FOR LOCAL, 0, FINDELEMENT(CC_ATTACKER_LIST, "-1")
+      CC_ATTACKER_LIST:LOCAL = %DIC_SET(CC_ATTACKER_LIST:LOCAL, "体力", DIC_GET(_DIC:_BATTLE_UNIT_ID:LOCAL, "体力"))%
+      CC_ATTACKER_LIST:LOCAL = %DIC_SET(CC_ATTACKER_LIST:LOCAL, "状態", "待機")%
+    NEXT
+  ENDIF 
+ENDIF
+CALL CC_ADDMOB("DEFENDER", "宙族", 1500, 1500, 40)
+CALL CC_ADDMOB("DEFENDER", "宙族海兵", 2000, 2000, 50)
+CALL CC_ADDMOB("DEFENDER", "宙族", 1500, 1500, 40)
+CALL CC_ADDMOB("DEFENDER", "宙族海兵", 2000, 2000, 50)
+CALL CC_ADDMOB("DEFENDER", "宙族", 1500, 1500, 40)
+CALL CC_ADDMOB("DEFENDER", "宙族海兵", 2000, 2000, 50)
+_EXP = 20
+;白兵戦イベント呼出
+CALL CLOSE_COMBAT()
+SIF RESULT == 2
+  CALL GAMEOVER_46
+CALL CC_ADD_COMBAT_EXP(_EXP)
+FOR LOCAL, 0, FINDELEMENT(CC_ATTACKER_LIST, "-1")
+  _DIC:_BATTLE_UNIT_ID:LOCAL = %CC_ATTACKER_LIST:LOCAL%
+NEXT
+
+PRINTFORML 入り口の宙族を倒すと、中にいたらしい宙族が慌ただしく武器を構えて飛び出してきた
+PRINTFORMW %CALLNAME:MASTER%の部隊は冷静に武器を構え直す
+PRINTL ………………
+PRINTL …………
+PRINTW ……
+
+;白兵戦参加メンバーの初期化
+CALL CC_INIT()
+;前の戦いの記録が残っていたら上書き
+IF _DIC:_BATTLE_UNIT_ID:0 != "-1" && _LINE_CHAN == 1
+  FOR LOCAL, 0, FINDELEMENT(CC_ATTACKER_LIST, "-1")
+    CC_ATTACKER_LIST:LOCAL = %DIC_SET(CC_ATTACKER_LIST:LOCAL, "体力", DIC_GET(_DIC:_BATTLE_UNIT_ID:LOCAL, "体力"))%
+    CC_ATTACKER_LIST:LOCAL = %DIC_SET(CC_ATTACKER_LIST:LOCAL, "状態", "待機")%
+  NEXT
+ELSE
+  FOR LOCAL, 0, CHARANUM
+    SIF UNIT_ID:LOCAL == _BATTLE_UNIT_ID
+      CALL CC_ADDCHARA("ATTACKER", LOCAL)
+  NEXT
+  IF _DIC:_BATTLE_UNIT_ID:0 != "-1"
+    FOR LOCAL, 0, FINDELEMENT(CC_ATTACKER_LIST, "-1")
+      CC_ATTACKER_LIST:LOCAL = %DIC_SET(CC_ATTACKER_LIST:LOCAL, "体力", DIC_GET(_DIC:_BATTLE_UNIT_ID:LOCAL, "体力"))%
+      CC_ATTACKER_LIST:LOCAL = %DIC_SET(CC_ATTACKER_LIST:LOCAL, "状態", "待機")%
+    NEXT
+  ENDIF 
+ENDIF
+CALL CC_ADDMOB("DEFENDER", "宙族海兵", 2000, 2000, 50)
+CALL CC_ADDMOB("DEFENDER", "宙族海兵", 2000, 2000, 50)
+CALL CC_ADDMOB("DEFENDER", "宙族海兵", 2000, 2000, 50)
+CALL CC_ADDMOB("DEFENDER", "宙族海兵", 2000, 2000, 50)
+CALL CC_ADDMOB("DEFENDER", "宙族海兵", 2000, 2000, 50)
+CALL CC_ADDMOB("DEFENDER", "宙族海兵ドローン", 1000, 1000, 80)
+_EXP += 20
+;白兵戦イベント呼出
+CALL CLOSE_COMBAT()
+SIF RESULT == 2
+  CALL GAMEOVER_46
+CALL CC_ADD_COMBAT_EXP(_EXP)
+FOR LOCAL, 0, FINDELEMENT(CC_ATTACKER_LIST, "-1")
+  _DIC:_BATTLE_UNIT_ID:LOCAL = %CC_ATTACKER_LIST:LOCAL%
+NEXT
+
+PRINTFORML 後続部隊を片付け辺りが静けさに包まれる
+PRINTFORML 警戒しながら中に突入すると、中には武器を持たないチンピラしか残っていなかった
+PRINTFORMW どうやら無力化は完了したようだ。依頼主に連絡すると、引き継ぎの部隊をよこすので少し待てという
+PRINTL ………………
+PRINTL …………
+PRINTW ……
+PRINTFORMW 報酬として$80,000手に入れた。
+MONEY += 80000
+DAY ++
+
+;----------------------------
+; クエスト説明
+;----------------------------
+@PMC_QUEST_BRIEFING_8
+SETCOLOR 0X666666
+CUSTOMDRAWLINE ///
+RESETCOLOR
+PRINTFORML 宙族と呼ばれる犯罪集団の討伐が今作戦の目標である
+PRINTFORMW 宙族は小型戦闘艦を使い宇宙空間で犯罪を行う集団であるが、艦船のメンテナンスなどのための非公認の宇宙港を所有していることが多い
+PRINTL
+PRINTFORML 地上戦力は宇宙戦力に比べ貧弱だが、一個小隊程度の歩兵がいることは想定されている
+PRINTFORMW 分隊規模の戦闘が2連続で行われると推定されるため、それを前提として戦力を整えること
+SETCOLOR 0X666666
+CUSTOMDRAWLINE ///
+RESETCOLOR
+
+
