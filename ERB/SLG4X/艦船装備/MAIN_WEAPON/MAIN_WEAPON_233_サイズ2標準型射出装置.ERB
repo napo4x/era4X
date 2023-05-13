@@ -1,0 +1,36 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_MAIN_WEAPON_NAME_233
+RESULTS = サイズ2標準型射出装置
+
+@GET_MAIN_WEAPON_STATUS_233(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 0
+STATUS:FIRE_RATE = 0
+STATUS:HIT_RATE = 0
+STATUS:FIRE_RANGE = 0
+STATUS:SIZE = 2
+STATUS:WEAPON_TYPE = 射出装置
+STATUS:PRICE = 0
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_MAIN_WEAPON_DESCRIPTION_F_233
+PRINTFORML サイズ2までの射出対象を発射できる標準的な射出装置
+
+;-----------------------------------
+; ランチャーとしてのステータス
+;-----------------------------------
+@GET_LAUNCHER_DATA_233(LAUNCHER_DATA)
+#DIM REF LAUNCHER_DATA
+
+LAUNCHER_DATA:PAYLOAD_MAX_SIZE = 2
+LAUNCHER_DATA:WEAPONS_BAY = 2700
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_MAIN_WEAPON_RESOURCE_233(USE_RESOURCE)
+#DIM REF USE_RESOURCE

@@ -1,0 +1,37 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_MAIN_WEAPON_NAME_238
+RESULTS = サイズ3大型艦向け射出装置
+
+@GET_MAIN_WEAPON_STATUS_238(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 0
+STATUS:FIRE_RATE = 0
+STATUS:HIT_RATE = 0
+STATUS:FIRE_RANGE = 0
+STATUS:SIZE = 4
+STATUS:WEAPON_TYPE = 射出装置
+STATUS:PRICE = 0
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_MAIN_WEAPON_DESCRIPTION_F_238
+PRINTFORML PRINTFORML サイズ3までの射出対象を発射できる大型艦向けの射出装置
+PRINTFORML 容量が多い代わりに主砲サイズ4でなければ装備できない
+
+;-----------------------------------
+; ランチャーとしてのステータス
+;-----------------------------------
+@GET_LAUNCHER_DATA_238(LAUNCHER_DATA)
+#DIM REF LAUNCHER_DATA
+
+LAUNCHER_DATA:PAYLOAD_MAX_SIZE = 3
+LAUNCHER_DATA:WEAPONS_BAY = 6350
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_MAIN_WEAPON_RESOURCE_238(USE_RESOURCE)
+#DIM REF USE_RESOURCE

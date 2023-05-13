@@ -1,0 +1,44 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_PAYLOAD_NAME_29
+RESULTS = TIER3大型汎用ミサイル
+
+@GET_PAYLOAD_STATUS_29(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 240
+STATUS:HIT_RATE = 100
+STATUS:FIRE_RANGE = 3
+STATUS:SIZE = 3
+STATUS:WEAPON_TYPE = ミサイル
+STATUS:PRICE = 160000
+
+@GET_PAYLOAD_VOLUME_29
+RETURN 252
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_PAYLOAD_DESCRIPTION_F_29
+
+
+
+
+
+PRINTFORML 追尾性能の非常に高い大型艦用のミサイルユニット。
+
+
+
+
+
+
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_PAYLOAD_RESOURCE_29(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 16
+USE_RESOURCE:耐熱合金 = 16
+USE_RESOURCE:武装制御機器 = 16

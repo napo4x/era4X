@@ -1,0 +1,38 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_PAYLOAD_NAME_10
+RESULTS = TIER1補用対艦爆撃機
+
+@GET_PAYLOAD_STATUS_10(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 8
+STATUS:FIRE_RATE = 5
+STATUS:HIT_RATE = 80
+STATUS:FIRE_RANGE = 4
+STATUS:SIZE = 3
+STATUS:AIR_SHIP_HP = 100
+STATUS:ANTI_AIR = 17
+STATUS:WEAPON_TYPE = 艦載機
+STATUS:PRICE = 30000
+
+@GET_PAYLOAD_VOLUME_10
+RETURN 189
+
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_PAYLOAD_DESCRIPTION_F_10
+PRINTFORML 性能と引き換えにより簡便な設備でも運用できる様にされた対艦爆撃機。
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_PAYLOAD_RESOURCE_10(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 1
+USE_RESOURCE:耐熱合金 = 1
+USE_RESOURCE:武装制御機器 = 1
+USE_RESOURCE:ジェットガス = 1

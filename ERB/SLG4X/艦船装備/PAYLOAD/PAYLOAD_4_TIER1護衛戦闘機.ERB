@@ -1,0 +1,52 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_PAYLOAD_NAME_4
+RESULTS = TIER1護衛戦闘機
+
+@GET_PAYLOAD_STATUS_4(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 7
+STATUS:FIRE_RATE = 10
+STATUS:HIT_RATE = 75
+STATUS:FIRE_RANGE = 1
+STATUS:SIZE = 4
+STATUS:AIR_SHIP_HP = 500
+STATUS:ANTI_AIR = 70
+STATUS:WEAPON_TYPE = 艦載機
+STATUS:PRICE = 50000
+
+
+@GET_PAYLOAD_VOLUME_4
+RETURN 132
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_PAYLOAD_DESCRIPTION_F_4
+
+
+
+
+
+PRINTFORML 艦隊防衛を主任務に調整された近接支援用の小型航宙機。
+
+
+
+
+
+
+
+
+
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_PAYLOAD_RESOURCE_4(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 1
+USE_RESOURCE:耐熱合金 = 1
+USE_RESOURCE:武装制御機器 = 1
+USE_RESOURCE:ジェットガス = 1

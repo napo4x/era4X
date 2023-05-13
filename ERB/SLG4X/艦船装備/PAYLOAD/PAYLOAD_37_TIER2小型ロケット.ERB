@@ -1,0 +1,44 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_PAYLOAD_NAME_37
+RESULTS = TIER2小型ロケット
+
+@GET_PAYLOAD_STATUS_37(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 200
+STATUS:HIT_RATE = 50
+STATUS:FIRE_RANGE = 2
+STATUS:SIZE = 1
+STATUS:WEAPON_TYPE = 魚雷
+STATUS:PRICE = 20000
+
+@GET_PAYLOAD_VOLUME_37
+RETURN 480
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_PAYLOAD_DESCRIPTION_F_37
+
+
+
+
+
+PRINTFORML 無誘導の対艦ロケット砲。それなりの威力と射程を持つが、命中精度は低い。
+
+
+
+
+
+
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_PAYLOAD_RESOURCE_37(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 2
+USE_RESOURCE:耐熱合金 = 2
+USE_RESOURCE:ジェットガス = 2

@@ -1,0 +1,44 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_PAYLOAD_NAME_27
+RESULTS = TIER3小型汎用ミサイル
+
+@GET_PAYLOAD_STATUS_27(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 60
+STATUS:HIT_RATE = 100
+STATUS:FIRE_RANGE = 3
+STATUS:SIZE = 1
+STATUS:WEAPON_TYPE = ミサイル
+STATUS:PRICE = 40000
+
+@GET_PAYLOAD_VOLUME_27
+RETURN 128
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_PAYLOAD_DESCRIPTION_F_27
+
+
+
+
+
+PRINTFORML 追尾性能の非常に高い小型艦用のミサイルユニット。
+
+
+
+
+
+
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_PAYLOAD_RESOURCE_27(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 4
+USE_RESOURCE:耐熱合金 = 4
+USE_RESOURCE:武装制御機器 = 4

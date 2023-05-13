@@ -1,0 +1,44 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_PAYLOAD_NAME_22
+RESULTS = TIER1中型汎用ミサイル
+
+@GET_PAYLOAD_STATUS_22(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 60
+STATUS:HIT_RATE = 100
+STATUS:FIRE_RANGE = 3
+STATUS:SIZE = 2
+STATUS:WEAPON_TYPE = ミサイル
+STATUS:PRICE = 20000
+
+@GET_PAYLOAD_VOLUME_22
+RETURN 180
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_PAYLOAD_DESCRIPTION_F_22
+
+
+
+
+
+PRINTFORML 追尾性能の非常に高い中型艦用のミサイルユニット。
+
+
+
+
+
+
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_PAYLOAD_RESOURCE_22(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 2
+USE_RESOURCE:耐熱合金 = 2
+USE_RESOURCE:武装制御機器 = 2

@@ -1,0 +1,37 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_MAIN_WEAPON_NAME_234
+RESULTS = サイズ3小型艦向け射出装置
+
+@GET_MAIN_WEAPON_STATUS_234(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 0
+STATUS:FIRE_RATE = 0
+STATUS:HIT_RATE = 0
+STATUS:FIRE_RANGE = 0
+STATUS:SIZE = 2
+STATUS:WEAPON_TYPE = 射出装置
+STATUS:PRICE = 0
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_MAIN_WEAPON_DESCRIPTION_F_234
+PRINTFORML サイズ3までの射出対象を発射できる小型艦向けの射出装置
+PRINTFORML 主砲サイズ2でも装備できる代わりに容量が少ない
+
+;-----------------------------------
+; ランチャーとしてのステータス
+;-----------------------------------
+@GET_LAUNCHER_DATA_234(LAUNCHER_DATA)
+#DIM REF LAUNCHER_DATA
+
+LAUNCHER_DATA:PAYLOAD_MAX_SIZE = 3
+LAUNCHER_DATA:WEAPONS_BAY = 2250
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_MAIN_WEAPON_RESOURCE_234(USE_RESOURCE)
+#DIM REF USE_RESOURCE

@@ -1,0 +1,44 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_PAYLOAD_NAME_33
+RESULTS = TIER1大型宙間魚雷
+
+@GET_PAYLOAD_STATUS_33(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 300
+STATUS:HIT_RATE = 40
+STATUS:FIRE_RANGE = 1
+STATUS:SIZE = 2
+STATUS:WEAPON_TYPE = 魚雷
+STATUS:PRICE = 60000
+
+@GET_PAYLOAD_VOLUME_33
+RETURN 540
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_PAYLOAD_DESCRIPTION_F_33
+
+
+
+
+
+PRINTFORML 高威力の対艦大型魚雷。威力と引き換えに航続距離、追尾性能を犠牲にしており、雷撃には敵艦への接近が必要となる。
+
+
+
+
+
+
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_PAYLOAD_RESOURCE_33(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 2
+USE_RESOURCE:耐熱合金 = 2
+USE_RESOURCE:武装制御機器 = 2

@@ -1,0 +1,53 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_PAYLOAD_NAME_6
+RESULTS = TIER3護衛戦闘機
+
+@GET_PAYLOAD_STATUS_6(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 13
+STATUS:FIRE_RATE = 10
+STATUS:HIT_RATE = 75
+STATUS:FIRE_RANGE = 1
+STATUS:SIZE = 4
+STATUS:AIR_SHIP_HP = 500
+STATUS:ANTI_AIR = 125
+STATUS:WEAPON_TYPE = 艦載機
+STATUS:PRICE = 200000
+
+
+@GET_PAYLOAD_VOLUME_6
+RETURN 132
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_PAYLOAD_DESCRIPTION_F_6
+
+
+
+
+
+PRINTFORML 艦隊防衛を主任務に調整された近接支援用の小型航宙機。
+PRINTFORML 高度なＡＩとフレーム強化により、戦闘機動と連携能力を飛躍的に向上させている。
+
+
+
+
+
+
+
+
+
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_PAYLOAD_RESOURCE_6(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 4
+USE_RESOURCE:耐熱合金 = 4
+USE_RESOURCE:武装制御機器 = 4
+USE_RESOURCE:ジェットガス = 4

@@ -1,0 +1,36 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_MAIN_WEAPON_NAME_239
+RESULTS = サイズ4標準型射出装置
+
+@GET_MAIN_WEAPON_STATUS_239(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 0
+STATUS:FIRE_RATE = 0
+STATUS:HIT_RATE = 0
+STATUS:FIRE_RANGE = 0
+STATUS:SIZE = 4
+STATUS:WEAPON_TYPE = 射出装置
+STATUS:PRICE = 0
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_MAIN_WEAPON_DESCRIPTION_F_239
+PRINTFORML サイズ4までの射出対象を発射できる標準的な射出装置
+
+;-----------------------------------
+; ランチャーとしてのステータス
+;-----------------------------------
+@GET_LAUNCHER_DATA_239(LAUNCHER_DATA)
+#DIM REF LAUNCHER_DATA
+
+LAUNCHER_DATA:PAYLOAD_MAX_SIZE = 4
+LAUNCHER_DATA:WEAPONS_BAY = 5292
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_MAIN_WEAPON_RESOURCE_239(USE_RESOURCE)
+#DIM REF USE_RESOURCE

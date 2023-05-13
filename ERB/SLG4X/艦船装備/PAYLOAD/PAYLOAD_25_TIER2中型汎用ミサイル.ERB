@@ -1,0 +1,44 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_PAYLOAD_NAME_25
+RESULTS = TIER2中型汎用ミサイル
+
+@GET_PAYLOAD_STATUS_25(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 90
+STATUS:HIT_RATE = 100
+STATUS:FIRE_RANGE = 3
+STATUS:SIZE = 2
+STATUS:WEAPON_TYPE = ミサイル
+STATUS:PRICE = 40000
+
+@GET_PAYLOAD_VOLUME_25
+RETURN 180
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_PAYLOAD_DESCRIPTION_F_25
+
+
+
+
+
+PRINTFORML 追尾性能の非常に高い中型艦用のミサイルユニット。
+
+
+
+
+
+
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_PAYLOAD_RESOURCE_25(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 4
+USE_RESOURCE:耐熱合金 = 4
+USE_RESOURCE:武装制御機器 = 4

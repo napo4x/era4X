@@ -1,0 +1,52 @@
+﻿;-----------------------------------
+; メインウェポン
+;-----------------------------------
+@GET_PAYLOAD_NAME_9
+RESULTS = TIER3制宙戦闘機
+
+@GET_PAYLOAD_STATUS_9(STATUS)
+#DIM REF STATUS
+
+STATUS:DAMAGE = 10
+STATUS:FIRE_RATE = 8
+STATUS:HIT_RATE = 85
+STATUS:FIRE_RANGE = 4
+STATUS:SIZE = 4
+STATUS:AIR_SHIP_HP = 300
+STATUS:ANTI_AIR = 160
+STATUS:WEAPON_TYPE = 艦載機
+STATUS:PRICE = 200000
+
+@GET_PAYLOAD_VOLUME_9
+RETURN 132
+
+;-----------------------------------
+; メインウェポンの説明
+;-----------------------------------
+@GET_PAYLOAD_DESCRIPTION_F_9
+
+
+
+
+
+PRINTFORML 制宙権確保を主任務に調整された高機動型の小型航宙機。
+PRINTFORML 高度なＡＩとフレーム強化により、戦闘機動と連携力を飛躍的に向上させている。
+
+
+
+
+
+
+
+
+
+;-----------------------------------
+; メインウェポンの資材
+;-----------------------------------
+@GET_PAYLOAD_RESOURCE_9(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 4
+USE_RESOURCE:耐熱合金 = 4
+USE_RESOURCE:武装制御機器 = 4
+USE_RESOURCE:ジェットガス = 4

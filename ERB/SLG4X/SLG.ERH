@@ -110,7 +110,7 @@
 
 
 ; 船装備
-#DIM CONST EQUIP_TYPE_LENGTH = 8
+#DIM CONST EQUIP_TYPE_LENGTH = 9
 #DIM CONST MAX_SLOT = 10
 #DIM CONST SHIP_MODEL_MAX = 400
 #DIM SAVEDATA SHIP_EQUIP, EQUIP_TYPE_LENGTH, MAX_SLOT, MAX_SHIP
@@ -124,9 +124,10 @@
 #DIM CONST AI = 5
 #DIM CONST センサー = 6
 #DIM CONST オプション = 7
+#DIM CONST 射出対象 = 8
 
-#DIMS CONST EQUIP_CATEGORY_NAME = "主砲", "副砲", "シールド", "装甲", "エンジン", "AI", "センサー", "オプション"
-#DIMS CONST EQUIP_CATEGORY_NAME_EN = "MAIN_WEAPON", "SUB_WEAPON", "SIELD", "ARMOR", "ENGIN", "COMPUTER", "SENSOR", "OPTION"
+#DIMS CONST EQUIP_CATEGORY_NAME = "主砲", "副砲", "シールド", "装甲", "エンジン", "AI", "センサー", "オプション", "射出対象"
+#DIMS CONST EQUIP_CATEGORY_NAME_EN = "MAIN_WEAPON", "SUB_WEAPON", "SIELD", "ARMOR", "ENGIN", "COMPUTER", "SENSOR", "OPTION", "PAYLOAD"
 
 #DIM CONST DAMAGE = 0
 #DIM CONST FIRE_RATE = 1
@@ -150,6 +151,9 @@
 
 #DIMS CONST WEAPON_STATUS_NAME = "攻撃力", "発射回数", "命中率", "射程", "サイズ", "武装タイプ", "シールド", "シールド自動回復", "装甲", "速度", "回避", "センサー", "対空", "艦載機耐久", "艦載機数", "値段", "積載量", "被CRT率"
 
+#DIM CONST PAYLOAD_MAX_SIZE = 0
+#DIM CONST WEAPONS_BAY = 1
+#DIM CONST LAUNCHER_DATA_LENGTH = 2
 
 #DIM SAVEDATA SIELD_DAMAGE, MAX_SHIP
 #DIM SAVEDATA SHIP_DAMAGE, MAX_SHIP
@@ -250,9 +254,10 @@
 #DIM CONST 艦載機_自爆 = 9
 #DIM CONST 魚雷_自爆 = 10
 #DIM CONST ビーム_自爆 = 11
-#DIM CONST 攻撃属性 = 12
-#DIMS CONST WEAPON_TYPE_NAME = "実体弾", "レーザー", "ミサイル", "艦載機", "魚雷", "ビーム", "実体弾_自爆", "レーザー_自爆", "ミサイル_自爆", "艦載機_自爆", "魚雷_自爆", "ビーム_自爆"
-#DIMS CONST WEAPON_TYPE_NAME_EN = "Material Bullet", "Laser", "Missile", "Aircraft", "Torpedo", "Beam","Self Destruct Material Bullet", "Self Destruct Laser", "Self Destruct Missile", "Self Destruct Aircraft", "Self Destruct Torpedo", "Self Destruct Beam"
+#DIM CONST 射出装置 = 12
+#DIM CONST 攻撃属性 = 13
+#DIMS CONST WEAPON_TYPE_NAME = "実体弾", "レーザー", "ミサイル", "艦載機", "魚雷", "ビーム", "実体弾_自爆", "レーザー_自爆", "ミサイル_自爆", "艦載機_自爆", "魚雷_自爆", "ビーム_自爆", "射出装置"
+#DIMS CONST WEAPON_TYPE_NAME_EN = "Material Bullet", "Laser", "Missile", "Aircraft", "Torpedo", "Beam","Self Destruct Material Bullet", "Self Destruct Laser", "Self Destruct Missile", "Self Destruct Aircraft", "Self Destruct Torpedo", "Self Destruct Beam", "LAUNCHER"
 
 #DIM CONST MISSILE_HP = 50
 #DIM CONST MISSILE_AVOID = 70
@@ -264,8 +269,8 @@
 #DIM ARMOR_DAMAGE_MULTIPLIER, 攻撃属性
 #DIM CONST AVOID_REDUCE_RATE = 175
 
-#DIM CONST SIELD_DAMAGE_PERCENTAGE = 150, 67, 150, 125, 140, 25, 150, 67, 150, 125, 140, 25
-#DIM CONST ARMOR_DAMAGE_PERCENTAGE = 67, 150, 125, 150, 140, 400, 67, 150, 125, 150, 140, 400
+#DIM CONST SIELD_DAMAGE_PERCENTAGE = 150, 67, 150, 125, 140, 25, 150, 67, 150, 125, 140, 25, 1
+#DIM CONST ARMOR_DAMAGE_PERCENTAGE = 67, 150, 125, 150, 140, 400, 67, 150, 125, 150, 140, 400, 1
 
 ; MAP_TIP
 #DIM CONST 中立機 = 0
