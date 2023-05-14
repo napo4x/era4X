@@ -79,9 +79,10 @@ ENDIF
 RESETCOLOR
 PRINTFORML ------------%CALLNAME:ID%の働き------------ 
 PRINTFORML 今回の艦内雑務で経費が随分と浮いたようだ。
-SIF ID > 0
+IF ID != MASTER
 	PRINTFORML 働きぶりを褒められた%CALLNAME:ID%は喜んでいるようだ。
 	CFLAG:ID:好感度 += RAND:20 + 10
+ENDIF
 PRINTFORML --------------------------------------------
 
 RETURN 報酬
