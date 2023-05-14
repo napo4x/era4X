@@ -732,37 +732,41 @@ ELSE
 ENDIF
 
 ;■体格・体型の決定
-SELECTCASE RAND:100
-	CASE 0 TO 60
-		TALENT:体格 = 体格_普通
-	CASE 61 TO 70
-		TALENT:体格 = 体格_小柄
-	CASE 71 TO 80
-		TALENT:体格 = 体格_長身
-	CASE 81 TO 87
-		TALENT:体格 = 体格_子供
-	CASE 88 TO 94
-		TALENT:体格 = 体格_大柄
-	CASEELSE
-		TALENT:体格 = 体格_巨大
-ENDSELECT
+IF TALENT:体格 == 0
+	SELECTCASE RAND:100
+		CASE 0 TO 60
+			TALENT:体格 = 体格_普通
+		CASE 61 TO 70
+			TALENT:体格 = 体格_小柄
+		CASE 71 TO 80
+			TALENT:体格 = 体格_長身
+		CASE 81 TO 87
+			TALENT:体格 = 体格_子供
+		CASE 88 TO 94
+			TALENT:体格 = 体格_大柄
+		CASEELSE
+			TALENT:体格 = 体格_巨大
+	ENDSELECT
+ENDIF
 
-SELECTCASE RAND:100
-	CASE 0 TO 60
-		TALENT:体型 = 体型_普通
-	CASE 61 TO 70
-		TALENT:体型 = 体型_スレンダー
-	CASE 71 TO 80
-		TALENT:体型 = 体型_グラマー
-	CASE 81 TO 86
-		TALENT:体型 = 体型_豊満
-	CASE 87 TO 93
-		TALENT:体型 = 体型_細身
-	CASE 94 TO 97
-		TALENT:体型 = 体型_肥満
-	CASEELSE
-		TALENT:体型 = 体型_痩せすぎ
-ENDSELECT
+IF TALENT:体型 == 0
+	SELECTCASE RAND:100
+		CASE 0 TO 60
+			TALENT:体型 = 体型_普通
+		CASE 61 TO 70
+			TALENT:体型 = 体型_スレンダー
+		CASE 71 TO 80
+			TALENT:体型 = 体型_グラマー
+		CASE 81 TO 86
+			TALENT:体型 = 体型_豊満
+		CASE 87 TO 93
+			TALENT:体型 = 体型_細身
+		CASE 94 TO 97
+			TALENT:体型 = 体型_肥満
+		CASEELSE
+			TALENT:体型 = 体型_痩せすぎ
+	ENDSELECT
+ENDIF
 
 ;■バストサイズなどの決定
 CALL RANDOM_CHARA_BUSTSIZE
@@ -1911,7 +1915,6 @@ SELECTCASE JOB_NAME:(TALENT:職業)
 		ELSE
 			TALENT:体格 = 体格_子供
 		ENDIF
-		TALENT:幼児 = 1
 	CASE "中学生"
 		TALENT:自慰しやすい = 1
 	CASE "高校生"
