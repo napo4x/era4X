@@ -82,7 +82,7 @@ CALL ADD_HELP_LINE("通常なら他キャラに伝達できないスキルでも
 ;能力値の意味
 ;-------------------------------
 @PREPARE_HELP_CONTENT_ABOUT_ABL
-CALL ADD_HELP_LINE("eratohoKでは、SLG系の能力は一次関数風の評価をされる。")
+CALL ADD_HELP_LINE("era4Xでは、SLG系の能力は一次関数風の評価をされる。")
 CALL ADD_HELP_LINE("ただしランクA～Cの間は補正が乗り、能力が1上がったときの評価の上昇幅が伸びる。")
 CALL ADD_HELP_LINE("ランクSからはまた通常の伸び方に戻る。なんにせよ、高いに越したことはない。")
 CALL ADD_HELP_LINE("")
@@ -807,7 +807,7 @@ CALL ADD_HELP_LINE("")
 CALL ADD_HELP_LINE("ともかく、この補正は戦闘時に各種能力を最大20%まで引き上げる。")
 CALL ADD_HELP_LINE("割合での強化なので、能力が高いほど効果も高い。")
 CALL ADD_HELP_LINE("")
-CALL ADD_HELP_LINE("eratohoKでは高能力であるほど能力を上げにくくなる。")
+CALL ADD_HELP_LINE("era4Xでは高能力であるほど能力を上げにくくなる。")
 CALL ADD_HELP_LINE("白兵90を91にするくらいなら、好感度を稼いだ方がよっぽど強くなれるというものだ。")
 CALL ADD_HELP_LINE("以上から、好感度補正は強キャラがより強くなるための鍵といえる。")
 CALL ADD_HELP_LINE("")
@@ -824,76 +824,6 @@ CALL ADD_HELP_LINE("")
 CALL ADD_HELP_LINE("なお、主人公自身には好感度補正がかからないが、代わりに今まで陥落させた人数が補正をかける。")
 CALL ADD_HELP_LINE("こちらは1人2%で最大100人まで。つまり200%まで補正がかかる。")
 CALL ADD_HELP_LINE("要はコマせばコマすほど自分も相手も強くなる。こだわりがないなら積極的にハーレムを作ろう。")
-
-;-------------------------------
-;クルーが捕虜になった
-;-------------------------------
-@PREPARE_HELP_CONTENT_THEY_GET_CAPTURED
-CALL ADD_HELP_LINE("クルーが捕虜にされた場合、捕らえた勢力は自分たちの仲間にしようと説得を始める。")
-CALL ADD_HELP_LINE("成功してしまうと、こちらの戦力は減って敵の戦力が増えて踏んだり蹴ったりになる。")
-CALL ADD_HELP_LINE("")
-CALL ADD_HELP_LINE("外交の「捕虜返還交渉」から、解放してもらうための交渉が行える。")
-CALL ADD_HELP_LINE("こちらも相手勢力のクルーを捕虜にしているなら、交換ができるだろう。")
-CALL ADD_HELP_LINE("")
-CALL ADD_HELP_LINE("こちらの捕虜の質が劣っていたり、そもそもいない場合、兵や経済で補填できる。")
-CALL ADD_HELP_LINE("反対に、要らない捕虜を返却して、兵や経済をせびることもできる。")
-
-;-------------------------------
-;各勢力にすごく嫌われる
-;-------------------------------
-@PREPARE_HELP_CONTENT_THEY_HATE_ME
-CALL ADD_HELP_LINE("鬼畜なことをすると、各勢力との関係が悪化する。")
-CALL ADD_HELP_LINE("たとえば夜這いする、とらえた捕虜を性処理に使う、各種イベントでひどい選択肢を選ぶ、などだ。")
-CALL ADD_HELP_LINE("")
-CALL ADD_HELP_LINE("AIは外交フェイズにおいて、嫌いな勢力の「醜聞を流す」ことをする。")
-CALL ADD_HELP_LINE("醜聞は「対象勢力への各勢力の関係が悪化する」という効果をもつ。悪口を流されて皆から嫌われるわけだ。")
-CALL ADD_HELP_LINE("ひとたび嫌われると醜聞を流され、さらにその結果ほかの勢力からも嫌われ、さらに醜聞を流されるようになる。負の連鎖だ。")
-CALL ADD_HELP_LINE("あまりに嫌われると連合を組まれ、みんなからボコボコにされる危険性が出てくる。とにかく初期消火が重要である。")
-CALL ADD_HELP_LINE("")
-CALL ADD_HELP_LINE("こまめな会談（国庫10でも渡さないよりましだ）、それから要らない捕虜をただで返却するなどして関係をなるべく保とう。")
-CALL ADD_HELP_LINE("「自動送金」機能を使えば、毎ターン国庫から拠出して勢力との関係を改善できる。")
-
-;-------------------------------
-;特殊な勢力
-;-------------------------------
-@PREPARE_HELP_CONTENT_SP_COUNTRY
-CALL ADD_HELP_LINE("ゲーム開始時に設定することで、特殊な勢力が出現する。")
-CALL ADD_HELP_LINE("特殊勢力と呼ばれる、お邪魔キャラ的な勢力だ。")
-CALL ADD_HELP_LINE("各勢力には特殊なスキルをもった固有のクルーが所属する。")
-CALL ADD_HELP_LINE("")
-CALL ADD_HELP_LINE("特殊勢力はターン終了時に捕虜を調教する。")
-CALL ADD_HELP_LINE("捕虜は一定回数の調教により陥落し、その勢力のクルーになる。")
-CALL ADD_HELP_LINE("この特徴と引き換えに、彼らはスカウト等を行えない。")
-CALL ADD_HELP_LINE("")
-CALL ADD_HELP_LINE("`野盗`最も特殊な勢力。所有する都市がなくとも存在し、滅ぶことがない。")
-CALL ADD_HELP_LINE("滅ぼせないが、ここ以外を滅ぼせば統一したことになる。")
-CALL ADD_HELP_LINE("所有都市がない間は、ランダムな中継地に定期的に出兵する。")
-CALL ADD_HELP_LINE("捕虜に対しては輪姦・薬物をテーマとした調教を行う。")
-CALL ADD_HELP_LINE("")
-CALL ADD_HELP_LINE("`ホフゴブリン`数ターン毎のイベントと固有スキルでとにかく兵が増える。")
-CALL ADD_HELP_LINE("数が重要なeratohoKにおいては厄介。能力は白兵寄りで実戦に向く。")
-CALL ADD_HELP_LINE("捕虜に対しては輪姦をテーマとした調教を行う。")
-CALL ADD_HELP_LINE("")
-CALL ADD_HELP_LINE("`外来人`能力はあまり戦闘向きではない。")
-CALL ADD_HELP_LINE("だが固有スキルが「敵部隊の能力を自部隊以下にする」という効果で、強力無比。")
-CALL ADD_HELP_LINE("捕虜に対しては性的な研究・実験をテーマとした調教を行う。")
-CALL ADD_HELP_LINE("")
-CALL ADD_HELP_LINE("`自警団`操艦偏重の能力。")
-CALL ADD_HELP_LINE("出現場所が寺子屋付近の経済的に恵まれたところで、伸長しやすい。")
-CALL ADD_HELP_LINE("捕虜の調教テーマは思想教育、（本来の意味の）洗脳。")
-CALL ADD_HELP_LINE("")
-CALL ADD_HELP_LINE("`触手`ホフゴブリンをさらに極端にしたような能力とスキルをもつ。")
-CALL ADD_HELP_LINE("ターンエンド時、クルーに触手を植え付け出産させる。これにより＜虚ろ＞などがつくことがある。")
-CALL ADD_HELP_LINE("捕虜の調教テーマは当然、触手。")
-CALL ADD_HELP_LINE("")
-CALL ADD_HELP_LINE("`サキュバス`対象を戦闘不能にする固有スキルをもつ。")
-CALL ADD_HELP_LINE("相手どる場合、万全の準備で臨んでも崩されがちになるので注意。兵数で圧殺しよう。")
-CALL ADD_HELP_LINE("捕虜の調教テーマはふたなりやレズ。")
-CALL ADD_HELP_LINE("")
-CALL ADD_HELP_LINE("`狂信者`ステータスは外来人に近い。")
-CALL ADD_HELP_LINE("固有スキルは超能力を得るというもので、発動率が高い。")
-CALL ADD_HELP_LINE("捕虜の調教テーマはカルト・孕ませ。")
-
 
 ;-------------------------------
 ;クールタイム
