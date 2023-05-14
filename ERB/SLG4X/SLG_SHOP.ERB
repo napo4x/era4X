@@ -1824,7 +1824,6 @@ IF 入力値 >= 0 && 入力値 < MAX_SHIP
 	CALL ASK_YN
 	SIF RESULT == 1
 		GOTO INPUT_LOOP
-	PRINTFORMW %SHIP_NAME:入力値%を$%TOSTR(SALE_PRICE, "###,###")%で売却しました。(現在の所持金: $%TOSTR(MONEY, "###,###")%)
 	CALL GET_SHIP_TOTAL_HP(入力値)
 	SHIP_DAMAGE:入力値 = RESULT
 	CALL RETIRE_BROKEN_SHIP
@@ -1844,6 +1843,7 @@ IF 入力値 >= 0 && 入力値 < MAX_SHIP
 	NEXT
 	MONEY += SALE_PRICE
 	MONEY:OWNER -= SALE_PRICE
+	PRINTFORMW %SHIP_NAME:入力値%を$%TOSTR(SALE_PRICE, "###,###")%で売却しました。(現在の所持金: $%TOSTR(MONEY, "###,###")%)
 ENDIF
 GOTO INPUT_LOOP
 
