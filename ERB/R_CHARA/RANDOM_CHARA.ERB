@@ -1926,7 +1926,7 @@ SELECTCASE JOB_NAME:(TALENT:職業)
 			EXP:トラウマ経験 += 10
 		ENDIF
 	CASE "未亡人"
-		SIF TALENT:処女 && RAND:100 < 50
+		SIF TALENT:処女 != 1 && RAND:100 < 50
 			EXP:出産経験 += RAND:2 + 1
 	CASE "軍人"
 		TALENT:プライド高い = 1
