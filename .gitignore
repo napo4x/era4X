@@ -9,3 +9,4 @@ debug
 .vs/
 .sav
 .DS_Store
+.vscode/*

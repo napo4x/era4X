@@ -185,12 +185,12 @@
 #DIM CONST 建造物 = 9
 #DIM CONST SHIP_CATEGORY_COUNT = 10
 {
-  #DIMS CONST SHIP_CATEGORY_NAME = 
-    "調査船", "コルベット", "フリゲート","駆逐艦", "巡洋艦", "戦艦", "空母", "輸送船", "作業船", "建造物"
+    #DIMS CONST SHIP_CATEGORY_NAME = 
+        "調査船", "コルベット", "フリゲート","駆逐艦", "巡洋艦", "戦艦", "空母", "輸送船", "作業船", "建造物"
 }
 {
-  #DIMS CONST SHIP_CATEGORY_NAME_EN = 
-    "Research Ship", "Corvette", "Frigate","Destroyer", "Cruiser", "Battleship", "Aircraft Carrier", "Transport Ship", "Working Ship", "Strcture"
+    #DIMS CONST SHIP_CATEGORY_NAME_EN = 
+        "Research Ship", "Corvette", "Frigate","Destroyer", "Cruiser", "Battleship", "Aircraft Carrier", "Transport Ship", "Working Ship", "Strcture"
 }
 
 ; スキル判定用
