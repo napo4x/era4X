@@ -649,7 +649,7 @@ SELECTCASE IS_STAR ? STAR_PORT_SLOT:PORT_ID:SLOT_ID # PORT_SLOT:PORT_ID:SLOT_ID
         PRINTL 効果: 無し
     CASE コンテナ
         PRINTL コンテナ
-        PRINTL 効果: 物資を10000保管できる
+        PRINTL 効果: 物資を30000保管できる
     CASE ドック
         PRINTL ドック
         PRINTL 効果: 艦船を停泊させることのできるドック(効果は重複しない)
@@ -683,7 +683,7 @@ SELECTCASE IS_STAR ? STAR_PORT_SLOT:PORT_ID:SLOT_ID # PORT_SLOT:PORT_ID:SLOT_ID
 ENDSELECT
 PRINTL
 PRINTL 選択できるアイテム(価格): 効果
-PRINTBUTTON "[1] コンテナ($100,000)   : 物資を10000保管できる", 1
+PRINTBUTTON "[1] コンテナ($100,000)   : 物資を30000保管できる", 1
 PRINTL
 PRINTBUTTON "[2] ドック  ($100,000)   : 艦船を停泊させることのできるドック(効果は重複しない)", 2
 PRINTL
