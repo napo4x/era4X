@@ -267,7 +267,7 @@ IF RESULT:0
             SELECTED = RESULT		;; SECTOR_ID + 9999 のまま描画にもどる
             GOTO INPUT_LOOP
         ELSE						;;同セクター内で何かをクリック
-            SELECTED = RESULT		;; SELECTEDに入力値を入れ描画にもどる	
+            SELECTED = RESULT		;; SELECTEDに入力値を入れ描画にもどる
 				;CALL ID2POS(SELECTED)
 				;X_POS = LIMIT(RESULT:1, 0, MAP_WIDTH - 1)
 				;Y_POS = LIMIT(RESULT:2, 0, MAP_HEIGHT - 1)
@@ -901,7 +901,7 @@ ENDIF
 #DIM PREVIOUS_LINECOUNT
 
 #DIM COLUMN_ORDER = データ_艦名, データ_艦種, データ_所属, データ_任務, データ_HP, データ_シールド, データ_実体弾, データ_レーザー, データ_ミサイル, データ_艦載機, データ_魚雷, データ_ビーム, データ_対空, データ_回避, データ_被クリティカル率
-#DIM DATA_WIDTH, 船舶一覧データ数 
+#DIM DATA_WIDTH, 船舶一覧データ数
 #DIM INDEX
 	;列幅
 DATA_WIDTH:データ_艦名 = 20
@@ -1078,7 +1078,7 @@ ENDIF
 #DIM TOTAL_COLUMN_WIDTH
 
 	;オフセット分 + 先頭列
-TOTAL_COLUMN_WIDTH = 2 + DATA_WIDTH:データ_艦名 
+TOTAL_COLUMN_WIDTH = 2 + DATA_WIDTH:データ_艦名
 
 IF INDEX == 1
     SETCOLORBYNAME GRAY
@@ -1205,20 +1205,20 @@ FOR LOCAL, INDEX, VARSIZE("COLUMN_ORDER")
         CASE データ_艦載機
             COLUMN_DATA += @"{FIREPOWER_LIST:艦載機, 5, RIGHT}"
         CASE データ_魚雷
-            COLUMN_DATA += @"{FIREPOWER_LIST:魚雷, 5, RIGHT}" 
+            COLUMN_DATA += @"{FIREPOWER_LIST:魚雷, 5, RIGHT}"
         CASE データ_ビーム
-            COLUMN_DATA += @"{FIREPOWER_LIST:ビーム, 5, RIGHT}" 
+            COLUMN_DATA += @"{FIREPOWER_LIST:ビーム, 5, RIGHT}"
         CASE データ_対空
             CALL GET_SUB_ANTI_AIR(SHIP_ID)
-            COLUMN_DATA += @"{RESULT, 4, RIGHT}" 
+            COLUMN_DATA += @"{RESULT, 4, RIGHT}"
         CASE データ_回避
             CALL GET_AVOID(SHIP_ID)
-            COLUMN_DATA += @"{RESULT, 4, RIGHT}" 
+            COLUMN_DATA += @"{RESULT, 4, RIGHT}"
         CASE データ_被クリティカル率
             CALL GET_CRITICAL_RISK(SHIP_ID)
             COLUMN_DATA += @"%(TOSTR(RESULT, "##0,.0%")), 6, RIGHT%"
     ENDSELECT
-    COLUMN_DATA += " " 
+    COLUMN_DATA += " "
 NEXT
 
 RESULTS = %COLUMN_DATA%
@@ -1783,12 +1783,10 @@ FOR LOCAL, 0, MAX_SHIP
     SIF SHIP_POSITION:LOCAL != PORT_POSID
         CONTINUE
     CALL PRINT_LEFT_COLUMN(LEFT_COLUMNS, LEFT_COLUMNS_BUTTON_VALUE, LINE_ITER)
-    IF SHIP_MODEL:LOCAL >= SHIP_MODEL_BUFFER
-        SALE_PRICE = ORIGIN_SHIP_PRICE:(SHIP_MODEL:LOCAL - SHIP_MODEL_BUFFER)
-    ELSE
-        CALL GET_SHIP_PRICE(SHIP_MODEL:LOCAL)
-        SALE_PRICE = RESULT
-    ENDIF 
+
+    CALL GET_SHIP_PRICE(SHIP_MODEL:LOCAL)
+    SALE_PRICE = RESULT
+
     SALE_PRICE /= 10
     PRINTBUTTON @"%SHIP_NAME:LOCAL% \$%TOSTR(SALE_PRICE, "###,###")%", LOCAL + 100
     PRINTL
@@ -1814,12 +1812,10 @@ IF 入力値 >= 0 && 入力値 < MAX_SHIP
     SIF SHIP_POSITION:入力値 != PORT_POSID
         GOTO INPUT_LOOP
     PRINTL
-    IF SHIP_MODEL:入力値 >= SHIP_MODEL_BUFFER
-        SALE_PRICE = ORIGIN_SHIP_PRICE:(SHIP_MODEL:入力値 - SHIP_MODEL_BUFFER) / 10
-    ELSE
-        CALL GET_SHIP_PRICE(SHIP_MODEL:入力値)
-        SALE_PRICE = RESULT / 10
-    ENDIF 
+
+    CALL GET_SHIP_PRICE(SHIP_MODEL:入力値)
+    SALE_PRICE = RESULT / 10
+
     PRINTFORML %SHIP_NAME:入力値%を$%TOSTR(SALE_PRICE, "###,###")%で売却してよろしいですか?
     CALL ASK_YN
     SIF RESULT == 1
