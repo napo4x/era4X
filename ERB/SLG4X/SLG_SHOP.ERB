@@ -10,7 +10,7 @@
 #DIM X_POS
 #DIM Y_POS
 #DIM PREV_CHARACTER_SECTOR_ID
-#DIM STATUS, STATUS_LENGTH
+#DIM ENGINE_SPEED
 #DIMS strInputResult
 #DIM Wnd4_LINES					;;window4展開用　行数
 #DIM Wnd4FLAG = 30				;;window4展開用　最大行数制限
@@ -51,8 +51,9 @@ CALL SHOW_MESSAGE_QUE_LINK(MQ_LINK_ID)
 	;状態表示とCONTROL表示
 IF BOARDING_SHIP_ID != -1 && SHIP_MISSION:BOARDING_SHIP_ID == 待機
     PRINTFORML 現在%SHIP_NAME:BOARDING_SHIP_ID%に搭乗しています
-    TRYCALLFORM GET_ENGIN_STATUS_{SHIP_EQUIP:エンジン:0:BOARDING_SHIP_ID}(STATUS)
-    IF STATUS:SPEED == 1
+    CALL GET_ENGIN_(BOARDING_SHIP_ID)
+    ENGINE_SPEED = RESULT
+    IF ENGINE_SPEED == 1
         PRINTBUTTON "   [w]↑", "w"
         PRINTL 
         PRINTBUTTON "[a]←", "a"
@@ -61,7 +62,7 @@ IF BOARDING_SHIP_ID != -1 && SHIP_MISSION:BOARDING_SHIP_ID == 待機
         PRINTL 
         PRINTBUTTON "   [s]↓", "s"
         PRINTL 
-    ELSEIF STATUS:SPEED == 2
+    ELSEIF SPEED > 1
         PRINTBUTTON "     [W]↑", "W"
         PRINTBUTTON "[w]↑↑", "w"
         PRINTL 
@@ -458,10 +459,11 @@ SELECTCASE strInputResult
 ENDSELECT
 
 	; 船による移動
-	; エンジン性能STATUS:SPEED と低速移動フラグFLAG:502により wasdの移動量が決まる。 WASDは常に１．
+	; エンジン性能 ENGINE_SPEED と低速移動フラグFLAG:502により wasdの移動量が決まる。 WASDは常に１．
 IF BOARDING_SHIP_ID != -1 && (RESULTS == "w" || RESULTS == "d" || RESULTS == "a" || RESULTS == "s" || RESULTS == "W" || RESULTS == "D" || RESULTS == "A" || RESULTS == "S") && SHIP_MISSION:BOARDING_SHIP_ID == 待機
-    TRYCALLFORM GET_ENGIN_STATUS_{SHIP_EQUIP:エンジン:0:BOARDING_SHIP_ID}(STATUS)
-    SIF STATUS:SPEED < 2
+    CALL GET_ENGIN_(BOARDING_SHIP_ID)
+    ENGINE_SPEED = RESULT
+    SIF ENGINE_SPEED < 2
         FLAG:502 = 0	;低速移動フラグ 0= 無制限 / 1= 低速モード移動量１
 
     SELECTCASE RESULTS

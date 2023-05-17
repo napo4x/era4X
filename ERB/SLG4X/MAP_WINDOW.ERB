@@ -92,7 +92,7 @@ RETURN Wnd4_LINES
 @CREATE_WINDOW_CONTROLL
 #DIM windowID = 0
 #DIM 色
-#DIM STATUS, STATUS_LENGTH
+#DIM ENGINE_SPEED
 
 	CALL WndMgr_WindowTitle( windowID , @"%SHIP_NAME:BOARDING_SHIP_ID%" )
 	
@@ -103,8 +103,9 @@ RETURN Wnd4_LINES
 	CALL WndMgr_TextSet( windowID , 4, @"　@B:a@[←a]@/B@　　　 @B:d@[d→]@/B@" )
 	CALL WndMgr_TextSet( windowID , 5, @"　　　　@B:s@[↓s]@/B@" )
 
-	TRYCALLFORM GET_ENGIN_STATUS_{SHIP_EQUIP:エンジン:0:BOARDING_SHIP_ID}(STATUS)
-	IF STATUS:SPEED >= 2
+	CALL GET_ENGIN_(BOARDING_SHIP_ID)
+	ENGINE_SPEED = RESULT
+	IF ENGINE_SPEED >= 2
 	色 = 0xFFA500	;orange
 		IF FLAG:502 	;低速移動フラグ(0= 制限なし 1= 移動量１)
 			CALL WndMgr_TextSet( windowID , 7, @"　( @B:x@高速 [x] @C:{色}@低速@/C@@/B@ )" )
