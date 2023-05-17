@@ -404,10 +404,8 @@ FOR ITEM_ID, 0, 9
         CONTINUE
     ; 採掘してなかったら
     ELSE
-        CALL ID2POS(STAR_POS_ID)
-        SECTOR_ID = RESULT:0
         ; 最寄りの採掘ポイント取得
-        CALL GET_NEAREST_MINING_POINT(SECTOR_ID, ITEM_ID)
+        CALL GET_NEAREST_MINING_POINT(STAR_POS_ID, ITEM_ID)
         採掘ポイント = RESULT
 
         ; 空いている輸送船と作業船を探索
