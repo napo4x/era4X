@@ -17,7 +17,15 @@ _SHOP_ID = GET_SHOP_ID(STAR_ID, PORT_ID)
 
 $INPUT_LOOP
 PRINTL ■ 商店
-DRAWLINE
+CUSTOMDRAWLINE =
+PRINTL
+PRINTL ルール
+PRINTL 　手動在庫管理で納品した商品は自動在庫管理設定のときは売却されない
+PRINTL 　自動在庫管理設定にすると、コンテナから自動的に商品が販売される
+PRINTFORML 　各国家は{STOCK_TARGET}個を目安に商品を購入し、過剰在庫を抱えないためそれ以上の商品購入は行わない
+PRINTFORML 　担当者の知略が高いほど、商品はより高値で売れる
+PRINTL
+CUSTOMDRAWLINE =
 IF _MODE == _MANUAL
     SETCOLOR 0X00FF00
     PRINT [在庫手動管理]
