@@ -15,11 +15,11 @@ PRINTL
 ;--------------------------
 @QUEST_ACCEPTABLE_26
 SIF QUEST_PROGRESS:26 > 1
-	RETURN 0
+    RETURN 0
 
 CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
 SIF STAR_OWNER:RESULT == 国家ID_アレス宗教
-	RETURN 1
+    RETURN 1
 RETURN 0
 
 ;--------------------------
@@ -94,10 +94,10 @@ SELECTCASE RESULT
     CASE 0
         SIF MONEY < 10000
             RESULT = -1
-	CASE 1
+    CASE 1
         SIF MONEY < 100000
             RESULT = -1
-	CASE 2
+    CASE 2
         SIF MONEY < 3000000
             RESULT = -1
     CASEELSE
@@ -110,79 +110,79 @@ ENDIF
 
 
 SELECTCASE RESULT
-CASE 0
-PRINTFORMW 「確かに受領しましたよ、敬虔な信徒よ。貴殿の旅路に主の加護があらんことを」
-PRINTFORML
-PRINTFORMW 入金額を確認した瞬間、男の柔和な笑みに一瞬影が差したのを%ANAME(MASTER)%は見逃さなかった
-PRINTFORML 
-PRINTFORMW 口にこそ出さないものの、慇懃な態度からは金額に対するいささか不満げな様子が伺える……
-PRINTFORML 
-MONEY -= 10000
-CALL COLOR_PRINTW(@"アレス宗教国との関係性 + 2", カラー_注意)
-REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー += 2
-PRINTFORMW
-QUEST_PROGRESS:26 = 1
-CASE 1
-PRINTFORMW 入金額を確認した男は満足気な笑みを浮かべて頷く
-PRINTFORML
-PRINTFORMW 「実に良い心がけです。友よ、主は貴殿の献身を高く評価しますぞ」
-PRINTFORML 
-MONEY -= 100000
-CALL COLOR_PRINTW(@"アレス宗教国との関係性 + 15", カラー_注意)
-REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー += 15
-QUEST_PROGRESS:26 = 1
-CASE 2
-PRINTFORMW 数隻の輸送船に匹敵する入金額を確認した瞬間、男の貼り付いたような笑みが一瞬驚きに変わった
-PRINTFORMW 男は端末の金額と%ANAME(MASTER)%の顔を交互に伺う
-PRINTFORML
-PRINTFORMW ……彼は一瞬の間に%ANAME(MASTER)%への値踏みを済ませたようだ。そして元の調子で語りかける
-PRINTFORML
-PRINTFORML 「いやはや……なんと素晴らしい……。全くもって素晴らしい！
-PRINTFORMW 貴殿のような模範的な信徒と相まみえることができた今日この日を、主に感謝せねばなりまぬ」
-PRINTFORML 
-PRINTFORMW 
-PRINTFORML 「さて、時に友よ。我々は貴殿のような模範的な信徒と末永き関係を築くことができれば……と考えております」
-PRINTFORMW 立ち話を続けるのも難ですから、あちらでもう少し詳しい話をしませんかな？」
-PRINTFORML 
-PRINTFORMW
-PRINTFORMW %ANAME(MASTER)%は男に促され、応接間に足を運んだ
-PRINTFORML 
-PRINTFORMW 「……さて友よ。宇宙とは実に冷たく暗い。かと思えば灼たる業火の如き戦火に包まれております」
-PRINTFORML 
-PRINTFORMW 男は信者に説法をするのと同じ、やや芝居掛かった調子で続ける
-PRINTFORML 
-PRINTFORMW 「それもまた主が与え給うた試練。我々は甘受し、乗り越えねばなりません」
-PRINTFORML
-PRINTFORMW
-PRINTFORMW 「……しかし一方で……我々人間は弱い。実にか弱い」
-PRINTFORML 
-PRINTFORMW 「ゆえに此岸の身に置きながらにして、救済を欲するのもまた無理からぬこと」
-PRINTFORML 
-PRINTFORMW 「もし、もしも貴殿がたゆまぬ信仰と献身の道中において、魂の救済を欲するのであれば……」
-PRINTFORML
-PRINTFORMW 「この場所を訪れると良いでしょう」
-PRINTFORML
-PRINTFORMW %ANAME(MASTER)%は自身の端末に聖堂地下区画の入り口の座標と認証キーが転送されたのを確認した
-PRINTFORML
-PRINTFORMW 「献身の徒に束の間の救済を供すること……それもまた我々の責務の一つなのですから」
-PRINTFORML 
-MONEY -= 3000000
-CALL COLOR_PRINTW(@"アレス宗教国との関係性 + 75", カラー_注意)
-REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー += 75
-CALL COLOR_PRINTW(@"――　アレス宗教国の裏施設「地下聖堂」が解禁された", カラー_注意)
-PRINTFORMW 
-PRINTFORMW 「ではさらば、志を伴にする友よ。%ANAME(MASTER)%に主の無上の祝福があらんことを……」
-QUEST_PROGRESS:26 = 2
+    CASE 0
+        PRINTFORMW 「確かに受領しましたよ、敬虔な信徒よ。貴殿の旅路に主の加護があらんことを」
+        PRINTFORML
+        PRINTFORMW 入金額を確認した瞬間、男の柔和な笑みに一瞬影が差したのを%ANAME(MASTER)%は見逃さなかった
+        PRINTFORML 
+        PRINTFORMW 口にこそ出さないものの、慇懃な態度からは金額に対するいささか不満げな様子が伺える……
+        PRINTFORML 
+        MONEY -= 10000
+        CALL COLOR_PRINTW(@"アレス宗教国との関係性 + 2", カラー_注意)
+        REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー += LIMIT(REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー + 2, -1000, 1000)
+        PRINTFORMW
+        QUEST_PROGRESS:26 = 1
+    CASE 1
+        PRINTFORMW 入金額を確認した男は満足気な笑みを浮かべて頷く
+        PRINTFORML
+        PRINTFORMW 「実に良い心がけです。友よ、主は貴殿の献身を高く評価しますぞ」
+        PRINTFORML 
+        MONEY -= 100000
+        CALL COLOR_PRINTW(@"アレス宗教国との関係性 + 15", カラー_注意)
+        REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー += LIMIT(REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー + 15, -1000, 1000)
+        QUEST_PROGRESS:26 = 1
+    CASE 2
+        PRINTFORMW 数隻の輸送船に匹敵する入金額を確認した瞬間、男の貼り付いたような笑みが一瞬驚きに変わった
+        PRINTFORMW 男は端末の金額と%ANAME(MASTER)%の顔を交互に伺う
+        PRINTFORML
+        PRINTFORMW ……彼は一瞬の間に%ANAME(MASTER)%への値踏みを済ませたようだ。そして元の調子で語りかける
+        PRINTFORML
+        PRINTFORML 「いやはや……なんと素晴らしい……。全くもって素晴らしい！
+        PRINTFORMW 貴殿のような模範的な信徒と相まみえることができた今日この日を、主に感謝せねばなりまぬ」
+        PRINTFORML 
+        PRINTFORMW 
+        PRINTFORML 「さて、時に友よ。我々は貴殿のような模範的な信徒と末永き関係を築くことができれば……と考えております」
+        PRINTFORMW 立ち話を続けるのも難ですから、あちらでもう少し詳しい話をしませんかな？」
+        PRINTFORML 
+        PRINTFORMW
+        PRINTFORMW %ANAME(MASTER)%は男に促され、応接間に足を運んだ
+        PRINTFORML 
+        PRINTFORMW 「……さて友よ。宇宙とは実に冷たく暗い。かと思えば灼たる業火の如き戦火に包まれております」
+        PRINTFORML 
+        PRINTFORMW 男は信者に説法をするのと同じ、やや芝居掛かった調子で続ける
+        PRINTFORML 
+        PRINTFORMW 「それもまた主が与え給うた試練。我々は甘受し、乗り越えねばなりません」
+        PRINTFORML
+        PRINTFORMW
+        PRINTFORMW 「……しかし一方で……我々人間は弱い。実にか弱い」
+        PRINTFORML 
+        PRINTFORMW 「ゆえに此岸の身に置きながらにして、救済を欲するのもまた無理からぬこと」
+        PRINTFORML 
+        PRINTFORMW 「もし、もしも貴殿がたゆまぬ信仰と献身の道中において、魂の救済を欲するのであれば……」
+        PRINTFORML
+        PRINTFORMW 「この場所を訪れると良いでしょう」
+        PRINTFORML
+        PRINTFORMW %ANAME(MASTER)%は自身の端末に聖堂地下区画の入り口の座標と認証キーが転送されたのを確認した
+        PRINTFORML
+        PRINTFORMW 「献身の徒に束の間の救済を供すること……それもまた我々の責務の一つなのですから」
+        PRINTFORML 
+        MONEY -= 3000000
+        CALL COLOR_PRINTW(@"アレス宗教国との関係性 + 75", カラー_注意)
+        REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー += LIMIT(REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー + 75, -1000, 1000)
+        CALL COLOR_PRINTW(@"――　アレス宗教国の裏施設「地下聖堂」が解禁された", カラー_注意)
+        PRINTFORMW 
+        PRINTFORMW 「ではさらば、志を伴にする友よ。%ANAME(MASTER)%に主の無上の祝福があらんことを……」
+        QUEST_PROGRESS:26 = 2
 
-CASE 3
-PRINTFORML
-PRINTFORMW 金銭的に余裕があるわけでもない、やはり今はやめておこう。
-PRINTFORML
-PRINTFORMW 「無理をすることはありませんよ、信徒よ。教義に忠実たれ。さすれば主の加護は常に%ANAME(MASTER)%と共にあります」
-PRINTFORML 
-PRINTFORMW そう言って一礼すると、男は足早に去っていった。
-PRINTFORMW
-QUEST_PROGRESS:26 = 1
+    CASE 3
+        PRINTFORML
+        PRINTFORMW 金銭的に余裕があるわけでもない、やはり今はやめておこう。
+        PRINTFORML
+        PRINTFORMW 「無理をすることはありませんよ、信徒よ。教義に忠実たれ。さすれば主の加護は常に%ANAME(MASTER)%と共にあります」
+        PRINTFORML 
+        PRINTFORMW そう言って一礼すると、男は足早に去っていった。
+        PRINTFORMW
+        QUEST_PROGRESS:26 = 1
 ENDSELECT
 
 
