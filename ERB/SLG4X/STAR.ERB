@@ -127,7 +127,7 @@ IF STAR_OWNER:STAR_ID == 国家ID_プレイヤー
     NEXT
     FOR LOCAL, 2, MAX_COUNTRY
         SIF SC_外交設定:STAR_ID:LOCAL
-            REL_LIKE_COUNTRY:(LOCAL):国家ID_プレイヤー = LIMIT(REL_LIKE_COUNTRY:(LOCAL):国家ID_プレイヤー + 1, -1000, 1000)
+            CALL ADD_REL_LIKE_COUNTRY(LOCAL, 国家ID_プレイヤー, 1)
     NEXT
 ELSE
     ; 足りない資源の補充

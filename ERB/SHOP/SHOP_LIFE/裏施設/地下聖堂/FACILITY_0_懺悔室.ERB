@@ -358,7 +358,7 @@ PRINTFORML
 PRINTFORMW %ANAME(QUEST_対象)%の"献身"がアレス教の高僧に評価されたようだ……
 PRINTFORMW
 CALL COLOR_PRINTW(@"アレス宗教国との関係性 + 30", カラー_注意)
-REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー += LIMIT(REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー + 30, -1000, 1000)
+CALL ADD_REL_LIKE_COUNTRY(国家ID_アレス宗教, 国家ID_プレイヤー, 30)
 
 ;-------------------------------------------------
 ;MASTERがモブの告解を請ける
@@ -417,7 +417,7 @@ PRINTFORML
 PRINTFORMW %ANAME(MASTER)%自身の"献身"がアレス教の高僧に評価されたようだ……
 PRINTFORMW
 CALL COLOR_PRINTW(@"アレス宗教国との関係性 + 35", カラー_注意)
-REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー += LIMIT(REL_LIKE_COUNTRY:国家ID_アレス宗教:国家ID_プレイヤー + 35, -1000, 1000)
+CALL ADD_REL_LIKE_COUNTRY(国家ID_アレス宗教, 国家ID_プレイヤー, 35)
 
 ;-------------------------------------------------
 ;慰安モブの定義　シスター

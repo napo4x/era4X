@@ -468,7 +468,7 @@ ENDIF
 
 ;購入後の経験値、好感度の処理
 CALL PRINT_ADD_EXP(SHOP_IN_CHARGE:_SHOP_ID, EXPNAME:(GET_EXP(GETNUM(ABL, "知略"))), 5, 1)
-REL_LIKE_COUNTRY:_BUYER:_SELLER = LIMIT(REL_LIKE_COUNTRY:_BUYER:_SELLER + 1 , -1000, 1000)
+CALL ADD_REL_LIKE_COUNTRY(_BUYER, _SELLER, 1)
 
 ;--------------------------------------------
 ; 一番近い取引可能なショップを返却

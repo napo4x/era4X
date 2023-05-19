@@ -549,6 +549,6 @@ PRINTFORML 所持金+%TOSTR(報酬額, "$###,###")%
 PRINTFORMW 皇国好感度+{報酬好感度}
 MONEY += 報酬額
 MONEY:国家ID_豊秋津皇国 -= 報酬額
-REL_LIKE_COUNTRY:国家ID_豊秋津皇国:国家ID_プレイヤー = LIMIT(REL_LIKE_COUNTRY:国家ID_豊秋津皇国:国家ID_プレイヤー + 報酬好感度, -1000, 1000)
+CALL ADD_REL_LIKE_COUNTRY(国家ID_豊秋津皇国, 国家ID_プレイヤー, 報酬好感度)
 QUEST_COMPLETE_DATE:QUEST_ID = DAY
 

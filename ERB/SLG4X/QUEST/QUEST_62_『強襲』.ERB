@@ -6,7 +6,7 @@
 #DIM アニー
 
 アニー = NAME_TO_CHARA("アノニム")
-
+ 
 PRINTL 
 PRINTFORML 　%ANAME(アニー)%は%ANAME(MASTER)%に何か言いたいことがあるらしい。
 PRINTFORML 　時間がある時に行ってみよう。
@@ -23,13 +23,13 @@ CALL ID2POS(CHARACTER_POSITION:MASTER)
 SECTOR_ID = RESULT:0
 
 SIF QUEST_PROGRESS:62 > 10
-    RETURN 0
+	RETURN 0
 SIF QUEST_PROGRESS:62 >= 6 && CFLAG:NAME_TO_CHARA("アノニム"):所属 != 国家ID_プレイヤー && QUEST_61_受注星 == SECTOR_ID
-    RETURN 1
+	RETURN 1
 SIF CFLAG:NAME_TO_CHARA("アノニム"):所属 != 国家ID_プレイヤー
-    RETURN 0
+	RETURN 0
 SIF QUEST_PROGRESS:61 > 10
-    RETURN 1
+	RETURN 1
 RETURN 0
 
 ;--------------------------
@@ -46,31 +46,31 @@ RETURN
 ; 引数１： ARG:0 SSXXYY　座標データ　マップ上でクリックされた座標。表示条件分岐に。
 ;--------------------------
 @QUEST_SET_TILE_62 (ARG:0)
-RESULTS '= "▲"
-SETCOLOR 0xB40000
+	RESULTS '= "▲"
+	SETCOLOR 0xB40000
 RETURN 1
 
 ;;;右下小窓に出す。隠したければ関数コメントアウトか RETURN 0
 @QUEST_MAP_INFO_62 (ARG:0 )
 #DIM QUEST_ID = 62
 IF QUEST_PROGRESS:QUEST_ID 　== 3
-    RESULTS:0 '= "研究所は静まり返っている……"
-    RESULTS:1 '= "戦闘準備を整えよう"
-    RESULTS:2 '= ""
-    RESULTS:3 '= ""
-    RESULTS:4 '= ""
+		RESULTS:0 '= "研究所は静まり返っている……"
+		RESULTS:1 '= "戦闘準備を整えよう"
+		RESULTS:2 '= ""
+		RESULTS:3 '= ""
+		RESULTS:4 '= ""
 ELSEIF QUEST_PROGRESS:QUEST_ID 　== 4
-    RESULTS:0 '= "リベンジ出来る戦力を整えて来た"
-    RESULTS:1 '= "戦闘の準備をしよう"
-    RESULTS:2 '= ""
-    RESULTS:3 '= ""
-    RESULTS:4 '= ""
+		RESULTS:0 '= "リベンジ出来る戦力を整えて来た"
+		RESULTS:1 '= "戦闘の準備をしよう"
+		RESULTS:2 '= ""
+		RESULTS:3 '= ""
+		RESULTS:4 '= ""
 ELSE
-    RESULTS:0 '= "研究所はデブリと化した"
-    RESULTS:1 '= "報告に戻ろう"
-    RESULTS:2 '= ""
-    RESULTS:3 '= ""
-    RESULTS:4 '= ""
+		RESULTS:0 '= "研究所はデブリと化した"
+		RESULTS:1 '= "報告に戻ろう"
+		RESULTS:2 '= ""
+		RESULTS:3 '= ""
+		RESULTS:4 '= ""
 ENDIF
 RETURN 1
 
@@ -94,27 +94,27 @@ RETURN 1
 #DIM ITER
 
 IF QUEST_61_受注星 == 0
-    CALL ID2POS(CHARACTER_POSITION:MASTER)
-    QUEST_61_受注星 = RESULT:0
+	CALL ID2POS(CHARACTER_POSITION:MASTER)
+	QUEST_61_受注星 = RESULT:0
 ENDIF
 
 FOR ITER, 0 ,100
-    CALL QUEST_SET_RANDPOINT(QUEST_ID, QUEST_61_受注星, DISTANCE_FROM_STAR)
-    IF RESULT >= 0
-        X_POS = (RESULT / 100) %100
-        Y_POS = RESULT %100
-        CALL POS2ID(QUEST_61_受注星, X_POS, Y_POS)
-        QUEST_62_研究所 = RESULT
-        ANONYM_SECTOR = QUEST_61_受注星
-        ANONYM_X_POS  = X_POS
-        ANONYM_Y_POS  = Y_POS
-        CLEARMAP:QUEST_61_受注星:X_POS:Y_POS = 明瞭
-        RETURN
-    ENDIF
-    IF ITER == 99
-        CALL COLOR_PRINTW(@"エラー：マップ上にクエストを生成可能な領域が存在しません", カラー_警告)
-        FORCEWAIT
-    ENDIF
+	CALL QUEST_SET_RANDPOINT(QUEST_ID, QUEST_61_受注星, DISTANCE_FROM_STAR)
+	IF RESULT >= 0
+		X_POS = (RESULT / 100) %100
+		Y_POS = RESULT %100
+		CALL POS2ID(QUEST_61_受注星, X_POS, Y_POS)
+		QUEST_62_研究所 = RESULT
+		ANONYM_SECTOR = QUEST_61_受注星
+		ANONYM_X_POS  = X_POS
+		ANONYM_Y_POS  = Y_POS
+		CLEARMAP:QUEST_61_受注星:X_POS:Y_POS = 明瞭
+		RETURN
+	ENDIF
+	IF ITER == 99
+		CALL COLOR_PRINTW(@"エラー：マップ上にクエストを生成可能な領域が存在しません", カラー_警告)
+		FORCEWAIT
+	ENDIF
 NEXT
 
 ;--------------------------
@@ -139,47 +139,47 @@ Y_POS = RESULT:2
 
 
 IF (QUESTMAP:(SECTOR_ID):(X_POS):(Y_POS) == QUEST_ID)
-    IF QUEST_PROGRESS:QUEST_ID == 3
-        PRINTFORML 　{CHARACTER_POSITION:MASTER}
-        PRINTFORML 　
-        PRINTFORML 　研究所を視界に収め、%ANAME(MASTER)%は艦を止めた。
-        PRINTFORML 　%ANAME(アニー)%の言う通りなら生体艦がワープアウトしてくるはずだ……。
-        PRINTFORML 　%ANAME(MASTER)%は戦闘準備をＡＩに命令した。
-        PRINTFORMW 　
-        CALL QUEST_BODY_62_SCENE_3
-    ELSEIF QUEST_PROGRESS:QUEST_ID == 4
-        PRINTFORML 　研究所を視界に収め、%ANAME(MASTER)%は艦を止めた。
-        PRINTFORML 　もう少し待てば生体艦がワープアウトしてくるだろう。
-        PRINTFORML 　%ANAME(MASTER)%は戦闘準備をＡＩに命令した。
-        PRINTFORMW 　
-        CALL QUEST_BODY_62_SCENE_4
-    ENDIF
+	IF QUEST_PROGRESS:QUEST_ID == 3
+		PRINTFORML 　{CHARACTER_POSITION:MASTER}
+		PRINTFORML 　
+		PRINTFORML 　研究所を視界に収め、%ANAME(MASTER)%は艦を止めた。
+		PRINTFORML 　%ANAME(アニー)%の言う通りなら生体艦がワープアウトしてくるはずだ……。
+		PRINTFORML 　%ANAME(MASTER)%は戦闘準備をＡＩに命令した。
+		PRINTFORMW 　
+		CALL QUEST_BODY_62_SCENE_3
+	ELSEIF QUEST_PROGRESS:QUEST_ID == 4
+		PRINTFORML 　研究所を視界に収め、%ANAME(MASTER)%は艦を止めた。
+		PRINTFORML 　もう少し待てば生体艦がワープアウトしてくるだろう。
+		PRINTFORML 　%ANAME(MASTER)%は戦闘準備をＡＩに命令した。
+		PRINTFORMW 　
+		CALL QUEST_BODY_62_SCENE_4
+	ENDIF
 ELSEIF QUEST_PROGRESS:QUEST_ID >= 0
-    SELECTCASE QUEST_PROGRESS:QUEST_ID
-        CASE 0
-            CALL QUEST_BODY_62_SCENE_0
-        CASE 1
-            CALL QUEST_BODY_62_SCENE_1
-        CASE 3
-            PRINTFORML 　
-            PRINTFORML 　目的地に向かおう。
-            PRINTFORML 　目的地は{ANONYM_SECTOR}:{ANONYM_X_POS}:{ANONYM_Y_POS}だ。
-            PRINTFORML 　
-            PRINTFORMW 　
-        CASE 6
-            CALL QUEST_BODY_62_SOLVE_A
-        CASE 7
-            CALL QUEST_BODY_62_SOLVE_B
-    ENDSELECT
+	SELECTCASE QUEST_PROGRESS:QUEST_ID
+	CASE 0
+		CALL QUEST_BODY_62_SCENE_0
+	CASE 1
+		CALL QUEST_BODY_62_SCENE_1
+	CASE 3
+		PRINTFORML 　
+		PRINTFORML 　目的地に向かおう。
+		PRINTFORML 　目的地は{ANONYM_SECTOR}:{ANONYM_X_POS}:{ANONYM_Y_POS}だ。
+		PRINTFORML 　
+		PRINTFORMW 　
+	CASE 6
+		CALL QUEST_BODY_62_SOLVE_A
+	CASE 7
+		CALL QUEST_BODY_62_SOLVE_B
+	ENDSELECT
 ENDIF
 
 IF QUEST_PROGRESS:QUEST_ID == 2
-    CALL QUEST_62_SET_QUEST_POINT_ON_MAP(QUEST_ID, QUEST_61_受注星, DISTANCE_FROM_STAR)
-    QUEST_PROGRESS:QUEST_ID = 3
+	CALL QUEST_62_SET_QUEST_POINT_ON_MAP(QUEST_ID, QUEST_61_受注星, DISTANCE_FROM_STAR)
+	QUEST_PROGRESS:QUEST_ID = 3
 ENDIF
 
 IF QUEST_PROGRESS:QUEST_ID == 5
-    CALL QUEST_BODY_62_SCENE_5
+	CALL QUEST_BODY_62_SCENE_5
 ENDIF
 
 RETURN
@@ -220,9 +220,7 @@ MONEY += 300000
 QUEST_PROGRESS:QUEST_ID += 10
 
 CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
-REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー += LIMIT(REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー + 20, -1000, 1000)
-
-
+CALL ADD_REL_LIKE_COUNTRY(STAR_OWNER:RESULT, 国家ID_プレイヤー, 20)
 CALL QUEST_RELEASE_POINT(QUEST_ID, QUEST_62_研究所)
 ;--------------------------
 ; ６，ことの顛末（勝利した場合）
@@ -255,26 +253,26 @@ PRINTFORML 　「ケンツバ級１隻とオクスタン級２隻を支配下に
 PRINTFORML 
 CALL ASK_YN()
 IF RESULT == 1
-    PRINTFORML 　「さようか、ではなあ」
-    PRINTFORML 　%ANAME(アニー)%はクツクツと嗤うとテレポートで姿を消した。
-    PRINTFORMW 　
+	PRINTFORML 　「さようか、ではなあ」
+	PRINTFORML 　%ANAME(アニー)%はクツクツと嗤うとテレポートで姿を消した。
+	PRINTFORMW 　
 ELSE
-    PRINTFORML 　「まずはケンツバ級、最初に発見されたのが豊秋津皇国周辺でな」
-    PRINTFORML 　「ケンツバ……セスタスの様な見た目をしていることからそう名前が付いた」
-    PRINTFORMW 　
-    PRINTFORML 　「コヤツめの役割は“盾”よ。攻撃を防ぐ盾となって後続が敵を討つ」
-    PRINTFORML 　「裏を返せば、後続の火力が足りなければ十分な働きが出来ぬという事だ」
-    PRINTFORML 　「そして、それ以外のことは殆ど出来ぬ。火力は一切期待出来ぬぞ」
-    PRINTFORMW 
-    PRINTFORML 　「シールドをより強力なものに取り換えれば戦艦の攻撃すら１回くらいは耐えられるかもしれぬな」
-    PRINTFORMW 
-    PRINTFORML 　「次の生体艦はオクスタン級。これは王国で最初に出現が確認され」
-    PRINTFORML 　「その“バジョウソウ”の様な見た目から名前が付いた」
-    PRINTFORMW 　
-    PRINTFORML 　「大きさの割に大きな砲口――波動砲のつるべ打ちで敵を倒す艦だな」
-    PRINTFORML 　「例によってそれ以外は一切出来ん。前衛が倒れればそのまま狩られる運命よ」
-    PRINTFORML 　「とは言え、精度には優れておるから、軽量の艦は近づかれる前に狩れるであろうな」
-    PRINTFORMW 　
+	PRINTFORML 　「まずはケンツバ級、最初に発見されたのが豊秋津皇国周辺でな」
+	PRINTFORML 　「ケンツバ……セスタスの様な見た目をしていることからそう名前が付いた」
+	PRINTFORMW 　
+	PRINTFORML 　「コヤツめの役割は“盾”よ。攻撃を防ぐ盾となって後続が敵を討つ」
+	PRINTFORML 　「裏を返せば、後続の火力が足りなければ十分な働きが出来ぬという事だ」
+	PRINTFORML 　「そして、それ以外のことは殆ど出来ぬ。火力は一切期待出来ぬぞ」
+	PRINTFORMW 
+	PRINTFORML 　「シールドをより強力なものに取り換えれば戦艦の攻撃すら１回くらいは耐えられるかもしれぬな」
+	PRINTFORMW 
+	PRINTFORML 　「次の生体艦はオクスタン級。これは王国で最初に出現が確認され」
+	PRINTFORML 　「その“バジョウソウ”の様な見た目から名前が付いた」
+	PRINTFORMW 　
+	PRINTFORML 　「大きさの割に大きな砲口――波動砲のつるべ打ちで敵を倒す艦だな」
+	PRINTFORML 　「例によってそれ以外は一切出来ん。前衛が倒れればそのまま狩られる運命よ」
+	PRINTFORML 　「とは言え、精度には優れておるから、軽量の艦は近づかれる前に狩れるであろうな」
+	PRINTFORMW 　
 ENDIF
 
 PRINTFORML 　%ANAME(MASTER)%の口座に　３０万クレジットが振り込まれ、生体艦３隻が加わった！
@@ -287,7 +285,7 @@ MONEY += 300000
 QUEST_PROGRESS:QUEST_ID += 10
 
 CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
-REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー += LIMIT(REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー + 50, -1000, 1000)
+CALL ADD_REL_LIKE_COUNTRY(STAR_OWNER:RESULT, 国家ID_プレイヤー, 50)
 
 CALL QUEST_RELEASE_POINT(QUEST_ID, QUEST_62_研究所)
 RETURN
@@ -334,32 +332,32 @@ CALL COMBAT(CHARACTER_POSITION:MASTER)
 CALL QUEST_ANONYM_BATTLE_RESULT()
 
 IF RESULT == 99
-    PRINTFORML 　「よし、この位で良いであろう。どれ、ちょっと制御を乗っ取って来るぞお」
-    PRINTFORML 　そう言うと、%ANAME(アニー)%はテレポートして残骸と化した生体艦へと飛び移った。
-    PRINTFORMW 　
-    PRINTFORML 　%ANAME(アニー)%が制御を乗っ取っている間に軍は研究所を制圧したようだ。
-    PRINTFORML 　ついでに研究所はスペースデブリに変えられた。やることが徹底している……。
-    PRINTFORML 　ことの顛末を報告しよう。
-    PRINTFORML 　
-    CALL COLOR_PRINT(@"　アノニムが勢力から一旦外れました。", カラー_注意)
-    PRINTFORMW 　
-    CFLAG:NAME_TO_CHARA("アノニム"):所属 = 0
-    QUEST_PROGRESS:QUEST_ID = 6
+	PRINTFORML 　「よし、この位で良いであろう。どれ、ちょっと制御を乗っ取って来るぞお」
+	PRINTFORML 　そう言うと、%ANAME(アニー)%はテレポートして残骸と化した生体艦へと飛び移った。
+	PRINTFORMW 　
+	PRINTFORML 　%ANAME(アニー)%が制御を乗っ取っている間に軍は研究所を制圧したようだ。
+	PRINTFORML 　ついでに研究所はスペースデブリに変えられた。やることが徹底している……。
+	PRINTFORML 　ことの顛末を報告しよう。
+	PRINTFORML 　
+	CALL COLOR_PRINT(@"　アノニムが勢力から一旦外れました。", カラー_注意)
+	PRINTFORMW 　
+	CFLAG:NAME_TO_CHARA("アノニム"):所属 = 0
+	QUEST_PROGRESS:QUEST_ID = 6
 ELSE
-    PRINTFORML 　%ANAME(MASTER)%は%ANAME(アニー)%が何処からもなく持って来たコルベットに乗って命からがら逃げかえった！
-    PRINTFORML 　「軍の方は仕事を完遂した様だな。\@IS_MALE(MASTER) ? 父上 # 母上 \@が大損したことを除けば仕事は終わりだな、見るが良い\@IS_MALE(MASTER) ? 父上 # 母上 \@」
-    PRINTFORMW 　
-    PRINTFORML 　%ANAME(アニー)%が外を指差すと、丁度研究所がチリ１つ残らないほど強力な砲撃を浴びて消し飛んだ所だった。
-    PRINTFORML 　これでしばらくは生体艦も現れる事は無いだろう……。
-    PRINTFORML 　撃ち漏らした生体艦を除けば。
-    PRINTFORMW 
-    PRINTFORML 　ことの顛末を報告しよう。
-    PRINTFORMW 
-    CHARACTER_POSITION:MASTER = (QUEST_61_受注星 * 10000) + 707
-    CALL INIT_PRESET_SHIP(国家ID_プレイヤー, (CHARACTER_POSITION:MASTER), 汎用コルベット, "損傷したコルベット", 汎用コルベット)
-    BOARDING_SHIP_ID:(MASTER) = RESULT
-    SHIP_DAMAGE:RESULT = 740
-    QUEST_PROGRESS:QUEST_ID = 7
+	PRINTFORML 　%ANAME(MASTER)%は%ANAME(アニー)%が何処からもなく持って来たコルベットに乗って命からがら逃げかえった！
+	PRINTFORML 　「軍の方は仕事を完遂した様だな。\@IS_MALE(MASTER) ? 父上 # 母上 \@が大損したことを除けば仕事は終わりだな、見るが良い\@IS_MALE(MASTER) ? 父上 # 母上 \@」
+	PRINTFORMW 　
+	PRINTFORML 　%ANAME(アニー)%が外を指差すと、丁度研究所がチリ１つ残らないほど強力な砲撃を浴びて消し飛んだ所だった。
+	PRINTFORML 　これでしばらくは生体艦も現れる事は無いだろう……。
+	PRINTFORML 　撃ち漏らした生体艦を除けば。
+	PRINTFORMW 
+	PRINTFORML 　ことの顛末を報告しよう。
+	PRINTFORMW 
+	CHARACTER_POSITION:MASTER = (QUEST_61_受注星 * 10000) + 707
+	CALL INIT_PRESET_SHIP(国家ID_プレイヤー, (CHARACTER_POSITION:MASTER), 汎用コルベット, "損傷したコルベット", 汎用コルベット)
+	BOARDING_SHIP_ID:(MASTER) = RESULT
+	SHIP_DAMAGE:RESULT = 740
+	QUEST_PROGRESS:QUEST_ID = 7
 ENDIF
 ;--------------------------
 ; ４，戦闘（２回目以降）
@@ -399,28 +397,28 @@ CALL COMBAT(CHARACTER_POSITION:MASTER)
 
 CALL QUEST_ANONYM_BATTLE_RESULT()
 IF RESULT == 99
-    PRINTFORML 　「何とか勝てたなあ\@IS_MALE(MASTER) ? 父上 # 母上 \@、ではちょっと制御を乗っ取って来るぞお」
-    PRINTFORML 　そう言うと、%ANAME(アニー)%はテレポートして残骸と化した生体艦へと飛び移った。
-    PRINTFORMW 　
-    PRINTFORML 　%ANAME(アニー)%が制御を乗っ取っている間に研究所を軍は制圧したようだ。
-    PRINTFORML 　ついでに研究所はスペースデブリに変えられた。やることが徹底している……。
-    PRINTFORML 　ことの顛末を報告しよう。
-    PRINTFORML 　
-    CALL COLOR_PRINT(@"　アノニムが勢力から一旦外れました。", カラー_注意)
-    PRINTFORMW 　
-    CFLAG:NAME_TO_CHARA("アノニム"):所属 = 0
-    QUEST_PROGRESS:QUEST_ID = 6
+	PRINTFORML 　「何とか勝てたなあ\@IS_MALE(MASTER) ? 父上 # 母上 \@、ではちょっと制御を乗っ取って来るぞお」
+	PRINTFORML 　そう言うと、%ANAME(アニー)%はテレポートして残骸と化した生体艦へと飛び移った。
+	PRINTFORMW 　
+	PRINTFORML 　%ANAME(アニー)%が制御を乗っ取っている間に研究所を軍は制圧したようだ。
+	PRINTFORML 　ついでに研究所はスペースデブリに変えられた。やることが徹底している……。
+	PRINTFORML 　ことの顛末を報告しよう。
+	PRINTFORML 　
+	CALL COLOR_PRINT(@"　アノニムが勢力から一旦外れました。", カラー_注意)
+	PRINTFORMW 　
+	CFLAG:NAME_TO_CHARA("アノニム"):所属 = 0
+	QUEST_PROGRESS:QUEST_ID = 6
 ELSE
-    PRINTFORML 　「\@IS_MALE(MASTER) ? 父上 # 母上 \@……分かっているだろうが負ける度に敵戦力は増えるのだぞ？　ン？」
-    PRINTFORML 　「この段階なら何度負けても構わぬが……その度に\@IS_MALE(MASTER) ? 父上 # 母上 \@は損をするのだぞ？」
-    PRINTFORML 　困惑した顔で%ANAME(アニー)%が%ANAME(MASTER)%に忠告する。
-    PRINTFORML 　どうにかしないと……。
-    PRINTFORMW 　
-    CHARACTER_POSITION:MASTER = (QUEST_61_受注星 * 10000) + 707
-    CALL INIT_PRESET_SHIP(国家ID_プレイヤー, (CHARACTER_POSITION:MASTER), 汎用コルベット, "損傷したコルベット", 汎用コルベット)
-    BOARDING_SHIP_ID:(MASTER) = RESULT
-    SHIP_DAMAGE:RESULT = 740
-    QUEST_PROGRESS:QUEST_ID = 4
+	PRINTFORML 　「\@IS_MALE(MASTER) ? 父上 # 母上 \@……分かっているだろうが負ける度に敵戦力は増えるのだぞ？　ン？」
+	PRINTFORML 　「この段階なら何度負けても構わぬが……その度に\@IS_MALE(MASTER) ? 父上 # 母上 \@は損をするのだぞ？」
+	PRINTFORML 　困惑した顔で%ANAME(アニー)%が%ANAME(MASTER)%に忠告する。
+	PRINTFORML 　どうにかしないと……。
+	PRINTFORMW 　
+	CHARACTER_POSITION:MASTER = (QUEST_61_受注星 * 10000) + 707
+	CALL INIT_PRESET_SHIP(国家ID_プレイヤー, (CHARACTER_POSITION:MASTER), 汎用コルベット, "損傷したコルベット", 汎用コルベット)
+	BOARDING_SHIP_ID:(MASTER) = RESULT
+	SHIP_DAMAGE:RESULT = 740
+	QUEST_PROGRESS:QUEST_ID = 4
 ENDIF
 
 ;--------------------------
@@ -452,59 +450,59 @@ POS_ID = RESULT
 ;あなたの座標に出現
 
 SELECTCASE QUEST_PROGRESS:61
-    CASE 15
+	CASE 15
 		;（弱いパターン）
-        CALL INIT_PRESET_SHIP(10, POS_ID, ケンツバ級生体艦, "主力？生体艦", ケンツバ級生体艦)
-        QUEST_FLAG_SHIP_ID:62 = RESULT
-        CALL INIT_PRESET_SHIP(10, POS_ID, ケンツバ級生体艦, "主力？生体艦", ケンツバ級生体艦)
-        CALL INIT_PRESET_SHIP(10, POS_ID, オクスタン級生体艦, "浮遊砲台？", オクスタン級生体艦)
-        CALL INIT_PRESET_SHIP(10, POS_ID, オクスタン級生体艦, "浮遊砲台？", オクスタン級生体艦)
-        CALL INIT_PRESET_SHIP(10, POS_ID, オクスタン級生体艦, "浮遊砲台？", オクスタン級生体艦)
-        CALL INIT_PRESET_SHIP(10, POS_ID, オクスタン級生体艦, "浮遊砲台？", オクスタン級生体艦)
-    CASEELSE
+		CALL INIT_PRESET_SHIP(10, POS_ID, ケンツバ級生体艦, "主力？生体艦", ケンツバ級生体艦)
+		QUEST_FLAG_SHIP_ID:62 = RESULT
+		CALL INIT_PRESET_SHIP(10, POS_ID, ケンツバ級生体艦, "主力？生体艦", ケンツバ級生体艦)
+		CALL INIT_PRESET_SHIP(10, POS_ID, オクスタン級生体艦, "浮遊砲台？", オクスタン級生体艦)
+		CALL INIT_PRESET_SHIP(10, POS_ID, オクスタン級生体艦, "浮遊砲台？", オクスタン級生体艦)
+		CALL INIT_PRESET_SHIP(10, POS_ID, オクスタン級生体艦, "浮遊砲台？", オクスタン級生体艦)
+		CALL INIT_PRESET_SHIP(10, POS_ID, オクスタン級生体艦, "浮遊砲台？", オクスタン級生体艦)
+	CASEELSE
 		;（強いパターン）
-        CALL INIT_PRESET_SHIP(10, POS_ID, ケンツバ級生体艦, "主力？生体艦", ケンツバ級生体艦)
-        QUEST_FLAG_SHIP_ID:62 = RESULT
-        CALL INIT_PRESET_SHIP(10, POS_ID, オクスタン級生体艦, "浮遊砲台？", オクスタン級生体艦)
-        CALL INIT_PRESET_SHIP(10, POS_ID, オクスタン級生体艦, "浮遊砲台？", オクスタン級生体艦)
+		CALL INIT_PRESET_SHIP(10, POS_ID, ケンツバ級生体艦, "主力？生体艦", ケンツバ級生体艦)
+		QUEST_FLAG_SHIP_ID:62 = RESULT
+		CALL INIT_PRESET_SHIP(10, POS_ID, オクスタン級生体艦, "浮遊砲台？", オクスタン級生体艦)
+		CALL INIT_PRESET_SHIP(10, POS_ID, オクスタン級生体艦, "浮遊砲台？", オクスタン級生体艦)
 ENDSELECT
 CALL COMBAT(CHARACTER_POSITION:MASTER)
 
 CALL QUEST_ANONYM_BATTLE_RESULT()
 
 IF RESULT == 99
-    SELECTCASE QUEST_PROGRESS:61 
-        CASE 15
-            PRINTFORML 　敵を撃破し、一息ついた%ANAME(MASTER)%だったが、%ANAME(アニー)%曰く、
-            PRINTFORML 　「\@IS_MALE(MASTER) ? 父上 # 母上 \@、もう次が来るぞ」
-            PRINTFORML 　とのことだ、一旦港に帰っている暇などないようだ……。
-            PRINTFORMW 　
-            QUEST_PROGRESS:QUEST_ID = 5
-        CASEELSE
-            PRINTFORML 　「よし、この位で良いであろう。どれ、ちょっと制御を乗っ取って来るぞお」
-            PRINTFORML 　そう言うと、%ANAME(アニー)%はテレポートして残骸と化した生体艦へと飛び移った。
-            PRINTFORMW 　
-            PRINTFORML 　%ANAME(アニー)%が制御を乗っ取っている間に軍は研究所を制圧したようだ。
-            PRINTFORML 　ことの顛末を報告しよう。
-            PRINTFORML 　
-            CALL COLOR_PRINT(@"　アノニムが勢力から一旦外れました。", カラー_注意)
-            PRINTFORMW 　
-            CFLAG:NAME_TO_CHARA("アノニム"):所属 = 0
-            QUEST_PROGRESS:QUEST_ID = 6
-    ENDSELECT
+	SELECTCASE QUEST_PROGRESS:61 
+		CASE 15
+			PRINTFORML 　敵を撃破し、一息ついた%ANAME(MASTER)%だったが、%ANAME(アニー)%曰く、
+			PRINTFORML 　「\@IS_MALE(MASTER) ? 父上 # 母上 \@、もう次が来るぞ」
+			PRINTFORML 　とのことだ、一旦港に帰っている暇などないようだ……。
+			PRINTFORMW 　
+			QUEST_PROGRESS:QUEST_ID = 5
+		CASEELSE
+			PRINTFORML 　「よし、この位で良いであろう。どれ、ちょっと制御を乗っ取って来るぞお」
+			PRINTFORML 　そう言うと、%ANAME(アニー)%はテレポートして残骸と化した生体艦へと飛び移った。
+			PRINTFORMW 　
+			PRINTFORML 　%ANAME(アニー)%が制御を乗っ取っている間に軍は研究所を制圧したようだ。
+			PRINTFORML 　ことの顛末を報告しよう。
+			PRINTFORML 　
+			CALL COLOR_PRINT(@"　アノニムが勢力から一旦外れました。", カラー_注意)
+			PRINTFORMW 　
+			CFLAG:NAME_TO_CHARA("アノニム"):所属 = 0
+			QUEST_PROGRESS:QUEST_ID = 6
+	ENDSELECT
 ELSE
-    PRINTFORML 　%ANAME(MASTER)%は%ANAME(アニー)%が何処からもなく持って来たコルベットに乗って命からがら逃げかえった！
-    PRINTFORM 　「……あれほどとはなあ……、まあ
-    CALL COLOR_PRINT(@"次は勝てばよい、次はな", カラー_警告)
-    PRINTFORML 、とは言え……」
-    PRINTFORML 　「今度はアレに加えて追加戦力もあるであろうな……」
-    PRINTFORML 　戦力を整え直そう……。
-    PRINTFORMW 　
-    CHARACTER_POSITION:MASTER = (QUEST_61_受注星 * 10000) + 707
-    CALL INIT_PRESET_SHIP(国家ID_プレイヤー, (CHARACTER_POSITION:MASTER), 汎用コルベット, "損傷したコルベット", 汎用コルベット)
-    BOARDING_SHIP_ID:(MASTER) = RESULT
-    SHIP_DAMAGE:RESULT = 740
-    QUEST_PROGRESS:QUEST_ID = 4
+	PRINTFORML 　%ANAME(MASTER)%は%ANAME(アニー)%が何処からもなく持って来たコルベットに乗って命からがら逃げかえった！
+	PRINTFORM 　「……あれほどとはなあ……、まあ
+	CALL COLOR_PRINT(@"次は勝てばよい、次はな", カラー_警告)
+	PRINTFORML 、とは言え……」
+	PRINTFORML 　「今度はアレに加えて追加戦力もあるであろうな……」
+	PRINTFORML 　戦力を整え直そう……。
+	PRINTFORMW 　
+	CHARACTER_POSITION:MASTER = (QUEST_61_受注星 * 10000) + 707
+	CALL INIT_PRESET_SHIP(国家ID_プレイヤー, (CHARACTER_POSITION:MASTER), 汎用コルベット, "損傷したコルベット", 汎用コルベット)
+	BOARDING_SHIP_ID:(MASTER) = RESULT
+	SHIP_DAMAGE:RESULT = 740
+	QUEST_PROGRESS:QUEST_ID = 4
 ENDIF
 
 ;--------------------------
@@ -532,10 +530,10 @@ PRINTFORML 　「どうする\@IS_MALE(MASTER) ? 父上 # 母上 \@、やるか�
 PRINTFORML 
 CALL ASK_YN
 IF RESULT == 1
-    PRINTFORML 「ふむ。ではさらば、期限はないらしいから、気になったら呼ぶが良いぞお？」
-    PRINTFORML %ANAME(アニー)%はテレポートで立ち去った。
-    QUEST_PROGRESS:QUEST_ID = 1
-    RETURN 0
+	PRINTFORML 「ふむ。ではさらば、期限はないらしいから、気になったら呼ぶが良いぞお？」
+	PRINTFORML %ANAME(アニー)%はテレポートで立ち去った。
+	QUEST_PROGRESS:QUEST_ID = 1
+	RETURN 0
 ENDIF
 QUEST_PROGRESS:QUEST_ID = 2
 
@@ -557,10 +555,10 @@ PRINTFORML 　クツクツと嗤う%ANAME(アニー)%に%ANAME(MASTER)%は……
 CALL ASK_YN("仕事を受けると伝えた","また気が変わったと伝えた")
 CALL ASK_YN
 IF RESULT == 1
-    PRINTFORML 「なんぞ。私（ワレラ）の顔でも見に来たのかなあ？」
-    PRINTFORML にやけ顔の%ANAME(アニー)%に%ANAME(MASTER)%はもてあそばれた……。
-    PRINTFORMW 
-    RETURN 0
+	PRINTFORML 「なんぞ。私（ワレラ）の顔でも見に来たのかなあ？」
+	PRINTFORML にやけ顔の%ANAME(アニー)%に%ANAME(MASTER)%はもてあそばれた……。
+	PRINTFORMW 
+	RETURN 0
 ENDIF
 QUEST_PROGRESS:QUEST_ID = 2
 CALL QUEST_BODY_62_SETUMEI
@@ -584,26 +582,26 @@ PRINTFORML 　「さて、具体的な話をしよう。私（ワレラ）から
 PRINTFORMW 　
 
 SELECTCASE QUEST_PROGRESS:61 
-    CASE 15
-        PRINTFORML 　「どうも連中、切れ端を何とか培養したらしい」
-        PRINTFORML 　「その努力は認めるが、元々暴走していたハイヴだ。どうなるかは御覧の通り」
-        PRINTFORML 　%ANAME(アニー)%が見せた映像には、研究所の護衛が蹂躙される様が映っている……。
-        PRINTFORMW 　
-        PRINTFORML 　「しかも極秘の研究であったから軍を呼ぶわけにもいかぬ、と言う訳だなあ」
-        PRINTFORML 　「時間の経過を考えると敵は強力であろうから、くれぐれも準備は入念にな」
-        PRINTFORMW 
-        PRINTFORM 　「私の予測だが、最低でも
-        CALL COLOR_PRINT(@"殴り合いに耐えうる艦と火力に長ける長射程の艦", カラー_注意)
-        PRINTFORML が複数必要だろうなあ」
-        PRINTFORML 　「何故分かるのか？　私（ワレラ）のハイヴが殖える為にやっと得た拠点であるからな」
-        PRINTFORML 　「ほぼ間違いなく防衛戦に強い戦力を出してくるであろう」
-    CASEELSE
-        PRINTFORML 　「案の定研究所は乗っ取られて工場に作り替えられた様だなあ」
-        PRINTFORML 　「私（ワレラ）にとって肉も機械もさしたる違いは無い。信号で動く以上、な」
-        PRINTFORMW 　
-        PRINTFORML 　「\@IS_MALE(MASTER) ? 父上 # 母上 \@がやることは１つ。研究所からワープアウトしてくる生体艦を撃破すること」
-        PRINTFORML 　「まあ軍も動いているし、そうそう難しいことにはならんよ」
-        PRINTFORMW 
-        PRINTFORML 　「多少戦力は増やした方が良いと思うがなあ」
+	CASE 15
+		PRINTFORML 　「どうも連中、切れ端を何とか培養したらしい」
+		PRINTFORML 　「その努力は認めるが、元々暴走していたハイヴだ。どうなるかは御覧の通り」
+		PRINTFORML 　%ANAME(アニー)%が見せた映像には、研究所の護衛が蹂躙される様が映っている……。
+		PRINTFORMW 　
+		PRINTFORML 　「しかも極秘の研究であったから軍を呼ぶわけにもいかぬ、と言う訳だなあ」
+		PRINTFORML 　「時間の経過を考えると敵は強力であろうから、くれぐれも準備は入念にな」
+		PRINTFORMW 
+		PRINTFORM 　「私の予測だが、最低でも
+		CALL COLOR_PRINT(@"殴り合いに耐えうる艦と火力に長ける長射程の艦", カラー_注意)
+		PRINTFORML が複数必要だろうなあ」
+		PRINTFORML 　「何故分かるのか？　私（ワレラ）のハイヴが殖える為にやっと得た拠点であるからな」
+		PRINTFORML 　「ほぼ間違いなく防衛戦に強い戦力を出してくるであろう」
+	CASEELSE
+		PRINTFORML 　「案の定研究所は乗っ取られて工場に作り替えられた様だなあ」
+		PRINTFORML 　「私（ワレラ）にとって肉も機械もさしたる違いは無い。信号で動く以上、な」
+		PRINTFORMW 　
+		PRINTFORML 　「\@IS_MALE(MASTER) ? 父上 # 母上 \@がやることは１つ。研究所からワープアウトしてくる生体艦を撃破すること」
+		PRINTFORML 　「まあ軍も動いているし、そうそう難しいことにはならんよ」
+		PRINTFORMW 
+		PRINTFORML 　「多少戦力は増やした方が良いと思うがなあ」
 ENDSELECT
 PRINTFORMW 

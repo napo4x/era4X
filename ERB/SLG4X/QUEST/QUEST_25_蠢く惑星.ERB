@@ -577,7 +577,7 @@ IF RESULT == 0
 	PRINTL
 	CALL COLOR_PRINTW(@"銀河人民統一連邦との関係性 + 50", カラー_注意)
 	CALL QUEST_RELEASE_POINT(QUEST_ID, QUEST_25_未開惑星座標)
-	REL_LIKE_COUNTRY:国家ID_社会主義:国家ID_プレイヤー += LIMIT(REL_LIKE_COUNTRY:国家ID_社会主義:国家ID_プレイヤー + 50, -1000, 1000)
+	CALL ADD_REL_LIKE_COUNTRY(国家ID_社会主義, 国家ID_プレイヤー, 50)
 ELSE
 	QUEST_PROGRESS:QUEST_ID = 7
 	PRINTFORMW 惑星は異星生物研究のサンプルとして保全されることが決まった

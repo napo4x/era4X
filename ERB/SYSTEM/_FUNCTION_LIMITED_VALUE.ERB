@@ -1,0 +1,10 @@
+﻿; 上限・下限がある値を増減させるとき用のライブラリ
+; 今は国家間の関係値だけ
+
+;--------------------------
+; 国家間の関係値を加算
+;--------------------------
+@ADD_REL_LIKE_COUNTRY(FROM_COUNTRY, TO_COUNTRY, ARG:0)
+#DIM FROM_COUNTRY
+#DIM TO_COUNTRY
+REL_LIKE_COUNTRY:FROM_COUNTRY:TO_COUNTRY = LIMIT(REL_LIKE_COUNTRY:FROM_COUNTRY:TO_COUNTRY + ARG:0, -1000, 1000)

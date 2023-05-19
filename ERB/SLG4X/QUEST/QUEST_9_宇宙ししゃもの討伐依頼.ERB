@@ -9,7 +9,7 @@
 ;--------------------------
 @QUEST_ACCEPTABLE_9
 SIF QUEST_COMPLETE_DATE:9 == 0 || DAY - QUEST_COMPLETE_DATE:9 > 10
-    RETURN 1
+	RETURN 1
 RETURN 0
 
 ;--------------------------
@@ -28,50 +28,50 @@ RETURN
 #DIM SHIP_ID
 
 IF QUEST_PROGRESS:9 == 0
-    PRINTFORML 「お前、戦闘艦を持ってるか？」
-    PRINTFORML %CALLNAME:MASTER%は商人らしき男に話しかけられた
-    $INPUT_LOOP
-    PRINTBUTTON "[0] はい", 0
-    PRINTBUTTON "[1] いいえ", 1
-    INPUT
-    IF RESULT == 0
-        PRINTFORML 「よし、ちょうどいい。このセクターに最近宇宙ししゃもが沸いて、商船が襲われているんだ
-        PRINTFORML 頼む、このセクターの宇宙ししゃもを討伐してくれ
-        PRINTFORMW 討伐してくれたら、$30,000出す。頼んだぞ！」
-        PRINTFORMW 無理やり宇宙ししゃもの討伐依頼を受けさせられてしまった
-        QUEST_PROGRESS:9 = 1
-        CALL ID2POS(CHARACTER_POSITION)
-        SECTOR_ID = RESULT:0
-        CALL POS2ID(SECTOR_ID, 9, 8)
-        LOCAL = RESULT
-        CALL INIT_PRESET_SHIP(10, LOCAL, 宇宙ししゃも, "宇宙ししゃもA", 宇宙ししゃも)
-        QUEST_FLAG_SHIP_ID:9 = RESULT
-        CALL INIT_PRESET_SHIP(10, LOCAL, 宇宙ししゃも, "宇宙ししゃもB", 宇宙ししゃも)
-        CALL INIT_PRESET_SHIP(10, LOCAL, 宇宙ししゃも, "宇宙ししゃもC", 宇宙ししゃも)
-        CALL INIT_PRESET_SHIP(10, LOCAL, 宇宙ししゃも, "宇宙ししゃもD", 宇宙ししゃも)
-    ELSEIF RESULT == 1
-        PRINTFORMW 「そうか、ならいいんだ……」
-    ELSE
-        GOTO INPUT_LOOP
-    ENDIF
+	PRINTFORML 「お前、戦闘艦を持ってるか？」
+	PRINTFORML %CALLNAME:MASTER%は商人らしき男に話しかけられた
+	$INPUT_LOOP
+	PRINTBUTTON "[0] はい", 0
+	PRINTBUTTON "[1] いいえ", 1
+	INPUT
+	IF RESULT == 0
+		PRINTFORML 「よし、ちょうどいい。このセクターに最近宇宙ししゃもが沸いて、商船が襲われているんだ
+		PRINTFORML 頼む、このセクターの宇宙ししゃもを討伐してくれ
+		PRINTFORMW 討伐してくれたら、$30,000出す。頼んだぞ！」
+		PRINTFORMW 無理やり宇宙ししゃもの討伐依頼を受けさせられてしまった
+		QUEST_PROGRESS:9 = 1
+		CALL ID2POS(CHARACTER_POSITION)
+		SECTOR_ID = RESULT:0
+		CALL POS2ID(SECTOR_ID, 9, 8)
+		LOCAL = RESULT
+		CALL INIT_PRESET_SHIP(10, LOCAL, 宇宙ししゃも, "宇宙ししゃもA", 宇宙ししゃも)
+		QUEST_FLAG_SHIP_ID:9 = RESULT
+		CALL INIT_PRESET_SHIP(10, LOCAL, 宇宙ししゃも, "宇宙ししゃもB", 宇宙ししゃも)
+		CALL INIT_PRESET_SHIP(10, LOCAL, 宇宙ししゃも, "宇宙ししゃもC", 宇宙ししゃも)
+		CALL INIT_PRESET_SHIP(10, LOCAL, 宇宙ししゃも, "宇宙ししゃもD", 宇宙ししゃも)
+	ELSEIF RESULT == 1
+		PRINTFORMW 「そうか、ならいいんだ……」
+	ELSE
+		GOTO INPUT_LOOP
+	ENDIF
 ELSE
-    IS_COMPLETE = 0
-    CALL ID2POS(CHARACTER_POSITION)
-    CALL POS2ID(RESULT:0, 9, 8)
-    SIF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:9) != 国家ID_一般海賊 || SHIP_POSITION:(QUEST_FLAG_SHIP_ID:9) != RESULT
-        IS_COMPLETE = 1
-    IF IS_COMPLETE == 0
-        PRINTFORMW 「このセクションの宇宙ししゃも討伐を頼んだぞ！」
-    ELSE
-        PRINTFORML 「宇宙ししゃもを討伐してくれたんだな！助かったよ
-        PRINTFORML これが報酬だ。俺はみんなに報告してくるよ」
-        PRINTFORMW 男は%CALLNAME:MASTER%に報酬の$30,000を押し付けると、足早に去って行った
-        MONEY += 30000
-        QUEST_PROGRESS:9 = 0
-        QUEST_COMPLETE_DATE = DAY
-        CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
-        SIF RESULT >= 0 
-            REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー += LIMIT(REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー + 2, -1000, 1000)
-    ENDIF
+	IS_COMPLETE = 0
+	CALL ID2POS(CHARACTER_POSITION)
+	CALL POS2ID(RESULT:0, 9, 8)
+	SIF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:9) != 国家ID_一般海賊 || SHIP_POSITION:(QUEST_FLAG_SHIP_ID:9) != RESULT
+		IS_COMPLETE = 1
+	IF IS_COMPLETE == 0
+		PRINTFORMW 「このセクションの宇宙ししゃも討伐を頼んだぞ！」
+	ELSE
+		PRINTFORML 「宇宙ししゃもを討伐してくれたんだな！助かったよ
+		PRINTFORML これが報酬だ。俺はみんなに報告してくるよ」
+		PRINTFORMW 男は%CALLNAME:MASTER%に報酬の$30,000を押し付けると、足早に去って行った
+		MONEY += 30000
+		QUEST_PROGRESS:9 = 0
+		QUEST_COMPLETE_DATE = DAY
+		CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
+		SIF RESULT >= 0 
+			CALL ADD_REL_LIKE_COUNTRY(STAR_OWNER:RESULT, 国家ID_プレイヤー, 2)
+	ENDIF
 ENDIF
 

@@ -14,11 +14,11 @@ RETURN
 ;--------------------------
 @QUEST_ACCEPTABLE_61
 SIF CFLAG:NAME_TO_CHARA("アノニム"):所属 != 国家ID_プレイヤー
-    RETURN 0
+	RETURN 0
 SIF QUEST_PROGRESS:61 >= 10
-    RETURN 0
+	RETURN 0
 SIF QUEST_PROGRESS:61 >= 0
-    RETURN 1
+	RETURN 1
 RETURN 0
 
 ;--------------------------
@@ -35,19 +35,19 @@ RETURN
 ; 引数１： ARG:0 SSXXYY　座標データ　マップ上でクリックされた座標。表示条件分岐に。
 ;--------------------------
 @QUEST_SET_TILE_61 (ARG:0)
-RESULTS '= "▲"
-SETCOLOR 0xB40000
+	RESULTS '= "▲"
+	SETCOLOR 0xB40000
 RETURN 1
 
 ;;;右下小窓に出す。隠したければ関数コメントアウトか RETURN 0
 @QUEST_MAP_INFO_61 (ARG:0 )
 #DIM QUEST_ID = 61
 IF QUEST_PROGRESS:QUEST_ID 　== 2
-    RESULTS:0 '= "生体巡洋艦はこの辺りに出没するらしい"
-    RESULTS:1 '= "戦闘準備を整えなければ……"
-    RESULTS:2 '= ""
-    RESULTS:3 '= ""
-    RESULTS:4 '= ""
+		RESULTS:0 '= "生体巡洋艦はこの辺りに出没するらしい"
+		RESULTS:1 '= "戦闘準備を整えなければ……"
+		RESULTS:2 '= ""
+		RESULTS:3 '= ""
+		RESULTS:4 '= ""
 ENDIF
 RETURN 1
 
@@ -70,19 +70,19 @@ RETURN 1
 #DIM ITER
 
 FOR ITER, 0 ,100
-    CALL QUEST_SET_RANDPOINT(QUEST_ID, SECTOR_ID, DISTANCE_FROM_STAR)
-    IF RESULT >= 0
-        X_POS = (RESULT / 100) %100
-        Y_POS = RESULT %100
-        CALL POS2ID(SECTOR_ID, X_POS, Y_POS)
-        QUEST_61_巡洋艦 = RESULT
-        CLEARMAP:SECTOR_ID:X_POS:Y_POS = 明瞭
-        RETURN
-    ENDIF
-    IF ITER == 99
-        CALL COLOR_PRINTW(@"エラー：マップ上にクエストを生成可能な領域が存在しません", カラー_警告)
-        FORCEWAIT
-    ENDIF
+	CALL QUEST_SET_RANDPOINT(QUEST_ID, SECTOR_ID, DISTANCE_FROM_STAR)
+	IF RESULT >= 0
+		X_POS = (RESULT / 100) %100
+		Y_POS = RESULT %100
+		CALL POS2ID(SECTOR_ID, X_POS, Y_POS)
+		QUEST_61_巡洋艦 = RESULT
+		CLEARMAP:SECTOR_ID:X_POS:Y_POS = 明瞭
+		RETURN
+	ENDIF
+	IF ITER == 99
+		CALL COLOR_PRINTW(@"エラー：マップ上にクエストを生成可能な領域が存在しません", カラー_警告)
+		FORCEWAIT
+	ENDIF
 NEXT
 
 ;--------------------------
@@ -108,105 +108,105 @@ Y_POS = RESULT:2
 
 
 IF (QUESTMAP:(SECTOR_ID):(X_POS):(Y_POS) == QUEST_ID) && QUEST_PROGRESS:QUEST_ID == 2
-    PRINTFORML 　{CHARACTER_POSITION:MASTER}
-    PRINTFORML 　「さて\@IS_MALE(MASTER) ? 父上 # 母上 \@、指定の座標まで来たが、別に戦う必要はない」
-    PRINTFORML 　「逃げる最中に放った牽制の一撃がウッカリ撃沈することくらいは」
-    PRINTFORML 　「あるであろうがまあ\@IS_MALE(MASTER) ? 父上 # 母上 \@しだいだなあ？」
-    PRINTFORML 　「さて、改めて\@IS_MALE(MASTER) ? 父上 # 母上 \@には２つの選択肢がある」
-    PRINTFORMW 　
-    PRINTFORML 　「引き渡すメリットは報酬が良くなること、デメリットは私（ワレラ）の端末が研究されることだ」
-    PRINTFORML 　「最悪、反乱やらに生体艦が使われて星１つが滅ぶことも可能性としてはなくはないだろう」
-    PRINTFORMW 　
-    PRINTFORM 　「次に、撃沈するメリットは、上の
-    CALL COLOR_PRINT(@"『将来的に起こりうるリスク』", カラー_注意)
-    PRINTFORML が無い」
-    PRINTFORML 　或いはあっても最小限にとどめられる。これに尽きる」
-    PRINTFORMW 　
-    PRINTFORML 　「デメリットは確実に沈めるためにも連中とは直接戦う必要があることと」
-    PRINTFORML 　「そして沈める以上任務は失敗に近いから報酬は期待できんと言う事だ」
-    PRINTFORML 　「もっとも、斯様な艦に乗せられるかもしれぬ士官からの評判は期待できるやもしれんがなあ」
-    PRINTFORMW 　
-    PRINTFORML 　さて、どうしようか……。
-    PRINTFORML 　
-    CALL ASK_YN("軍に戦闘は任せる","沈める")
-    IF RESULT == 0
-        QUEST_PROGRESS:QUEST_ID = 4
-        PRINTFORML 
-        PRINTFORML 　戦力が分からない以上、戦うのは危険だ。
-        PRINTFORML 　%ANAME(MASTER)%は軍部に拿捕を任せ、オトリ役に徹することにした……。
-        PRINTFORML 
-        PRINTFORMW 　………………。
-        PRINTFORMW 　…………。
-        PRINTFORMW 　……。
-        PRINTFORML 
-        PRINTFORML 　流石に軍人たちの統率力は優れており、%ANAME(アニー)%曰く、
-        PRINTFORML 　「本能だけでやってるから最低限の統率力しかない」
-        PRINTFORML 　という、ワープアウトして来た生体艦たちをあっという間に追い詰め、拿捕する事に成功した。
-        PRINTFORML 　後は報酬を貰うだけだ……。
-        PRINTFORMW 　
-        CALL QUEST_RELEASE_POINT(QUEST_ID, QUEST_61_巡洋艦)
-    ELSE
-        QUEST_PROGRESS:QUEST_ID = 3
-        PRINTFORML 
-        PRINTFORML 　いや、自分を母と慕う？エイリアンの技術が他に渡るのは不味い。
-        PRINTFORML 　情報を得たが幸いだ、ここで沈めてしまおう。
-        PRINTFORML 　%ANAME(MASTER)%はＡＩに戦闘準備を指示し、生体艦の出現を待ち構えた……。
-        PRINTFORML 
-        PRINTFORMW 　………………。
-        PRINTFORMW 　…………。
-        PRINTFORMW 　……。
-        PRINTFORML 
-        PRINTFORML 　待ち構える事半日、ワープアウトしてきた生体艦が蠢く砲塔をこちらに向けている！
-        PRINTFORML 　軍の艦隊がこちらが逃げ出す（振りをする）のを待っているのをしり目に、
-        PRINTFORML 　%ANAME(MASTER)%は敵と相対した……。
-        PRINTFORML 
-        PRINTFORMW 　
-        CALL QUEST_BODY_61_SCENE_2
-        CALL COMBAT(CHARACTER_POSITION:MASTER)
-        CALL RETIRE_BROKEN_SHIP
-    ENDIF
+	PRINTFORML 　{CHARACTER_POSITION:MASTER}
+	PRINTFORML 　「さて\@IS_MALE(MASTER) ? 父上 # 母上 \@、指定の座標まで来たが、別に戦う必要はない」
+	PRINTFORML 　「逃げる最中に放った牽制の一撃がウッカリ撃沈することくらいは」
+	PRINTFORML 　「あるであろうがまあ\@IS_MALE(MASTER) ? 父上 # 母上 \@しだいだなあ？」
+	PRINTFORML 　「さて、改めて\@IS_MALE(MASTER) ? 父上 # 母上 \@には２つの選択肢がある」
+	PRINTFORMW 　
+	PRINTFORML 　「引き渡すメリットは報酬が良くなること、デメリットは私（ワレラ）の端末が研究されることだ」
+	PRINTFORML 　「最悪、反乱やらに生体艦が使われて星１つが滅ぶことも可能性としてはなくはないだろう」
+	PRINTFORMW 　
+	PRINTFORM 　「次に、撃沈するメリットは、上の
+	CALL COLOR_PRINT(@"『将来的に起こりうるリスク』", カラー_注意)
+	PRINTFORML が無い」
+	PRINTFORML 　或いはあっても最小限にとどめられる。これに尽きる」
+	PRINTFORMW 　
+	PRINTFORML 　「デメリットは確実に沈めるためにも連中とは直接戦う必要があることと」
+	PRINTFORML 　「そして沈める以上任務は失敗に近いから報酬は期待できんと言う事だ」
+	PRINTFORML 　「もっとも、斯様な艦に乗せられるかもしれぬ士官からの評判は期待できるやもしれんがなあ」
+	PRINTFORMW 　
+	PRINTFORML 　さて、どうしようか……。
+	PRINTFORML 　
+	CALL ASK_YN("軍に戦闘は任せる","沈める")
+	IF RESULT == 0
+		QUEST_PROGRESS:QUEST_ID = 4
+		PRINTFORML 
+		PRINTFORML 　戦力が分からない以上、戦うのは危険だ。
+		PRINTFORML 　%ANAME(MASTER)%は軍部に拿捕を任せ、オトリ役に徹することにした……。
+		PRINTFORML 
+		PRINTFORMW 　………………。
+		PRINTFORMW 　…………。
+		PRINTFORMW 　……。
+		PRINTFORML 
+		PRINTFORML 　流石に軍人たちの統率力は優れており、%ANAME(アニー)%曰く、
+		PRINTFORML 　「本能だけでやってるから最低限の統率力しかない」
+		PRINTFORML 　という、ワープアウトして来た生体艦たちをあっという間に追い詰め、拿捕する事に成功した。
+		PRINTFORML 　後は報酬を貰うだけだ……。
+		PRINTFORMW 　
+		CALL QUEST_RELEASE_POINT(QUEST_ID, QUEST_61_巡洋艦)
+	ELSE
+		QUEST_PROGRESS:QUEST_ID = 3
+		PRINTFORML 
+		PRINTFORML 　いや、自分を母と慕う？エイリアンの技術が他に渡るのは不味い。
+		PRINTFORML 　情報を得たが幸いだ、ここで沈めてしまおう。
+		PRINTFORML 　%ANAME(MASTER)%はＡＩに戦闘準備を指示し、生体艦の出現を待ち構えた……。
+		PRINTFORML 
+		PRINTFORMW 　………………。
+		PRINTFORMW 　…………。
+		PRINTFORMW 　……。
+		PRINTFORML 
+		PRINTFORML 　待ち構える事半日、ワープアウトしてきた生体艦が蠢く砲塔をこちらに向けている！
+		PRINTFORML 　軍の艦隊がこちらが逃げ出す（振りをする）のを待っているのをしり目に、
+		PRINTFORML 　%ANAME(MASTER)%は敵と相対した……。
+		PRINTFORML 
+		PRINTFORMW 　
+		CALL QUEST_BODY_61_SCENE_2
+		CALL COMBAT(CHARACTER_POSITION:MASTER)
+		CALL RETIRE_BROKEN_SHIP
+	ENDIF
 ELSEIF QUEST_PROGRESS:QUEST_ID >= 0
-    SELECTCASE QUEST_PROGRESS:QUEST_ID
-        CASE 0
-            CALL QUEST_BODY_61_SCENE_0
-        CASE 2
-            PRINTFORML 　
-            PRINTFORML 　早く行かねば逃げられてしまうだろう……。
-            PRINTFORML 　
-            PRINTFORML 　
-            PRINTFORMW 　
-        CASE 4 TO 6
-            CALL QUEST_BODY_61_SOLVE
-    ENDSELECT
+	SELECTCASE QUEST_PROGRESS:QUEST_ID
+	CASE 0
+		CALL QUEST_BODY_61_SCENE_0
+	CASE 2
+		PRINTFORML 　
+		PRINTFORML 　早く行かねば逃げられてしまうだろう……。
+		PRINTFORML 　
+		PRINTFORML 　
+		PRINTFORMW 　
+	CASE 4 TO 6
+		CALL QUEST_BODY_61_SOLVE
+	ENDSELECT
 ENDIF
 
 IF QUEST_PROGRESS:QUEST_ID == 1
-    CALL QUEST_61_SET_QUEST_POINT_ON_MAP(QUEST_ID, SECTOR_ID, DISTANCE_FROM_STAR)
-    QUEST_PROGRESS:QUEST_ID = 2
+	CALL QUEST_61_SET_QUEST_POINT_ON_MAP(QUEST_ID, SECTOR_ID, DISTANCE_FROM_STAR)
+	QUEST_PROGRESS:QUEST_ID = 2
 ENDIF
 
 IF QUEST_PROGRESS:QUEST_ID == 3
-    IF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:QUEST_ID) == 国家ID_一般海賊
+	IF SHIP_COUNTRY:(QUEST_FLAG_SHIP_ID:QUEST_ID) == 国家ID_一般海賊
 	;負けた場合
-        DRAWLINE
-        PRINTFORML 　
-        PRINTFORML 　生体艦に制御された（元）海賊艦隊は想像以上の強さだ！
-        PRINTFORML 　何とか軍に助けられた%ANAME(MASTER)%達はこっぴどく叱られて港に戻った。
-        PRINTFORML 　ことの顛末を報告しよう。
-        PRINTFORMW 　
-        CHARACTER_POSITION:MASTER = (QUEST_61_受注星 * 10000) + 707
-        QUEST_PROGRESS:QUEST_ID = 6
-    ELSE
+		DRAWLINE
+		PRINTFORML 　
+		PRINTFORML 　生体艦に制御された（元）海賊艦隊は想像以上の強さだ！
+		PRINTFORML 　何とか軍に助けられた%ANAME(MASTER)%達はこっぴどく叱られて港に戻った。
+		PRINTFORML 　ことの顛末を報告しよう。
+		PRINTFORMW 　
+		CHARACTER_POSITION:MASTER = (QUEST_61_受注星 * 10000) + 707
+		QUEST_PROGRESS:QUEST_ID = 6
+	ELSE
 	;勝った場合
-        DRAWLINE
-        PRINTFORML 　
-        PRINTFORML 　交戦の末、%ANAME(MASTER)%は海賊を乗っ取った生体艦を破った。
-        PRINTFORML 　無茶をするなと怒られたものの、生体艦が軍に渡ることは防げた。
-        PRINTFORML 　ことの顛末を報告しよう
-        PRINTFORML 　
-        QUEST_PROGRESS:QUEST_ID = 5
-    ENDIF
-    CALL QUEST_RELEASE_POINT(QUEST_ID, QUEST_61_巡洋艦)
+		DRAWLINE
+		PRINTFORML 　
+		PRINTFORML 　交戦の末、%ANAME(MASTER)%は海賊を乗っ取った生体艦を破った。
+		PRINTFORML 　無茶をするなと怒られたものの、生体艦が軍に渡ることは防げた。
+		PRINTFORML 　ことの顛末を報告しよう
+		PRINTFORML 　
+		QUEST_PROGRESS:QUEST_ID = 5
+	ENDIF
+	CALL QUEST_RELEASE_POINT(QUEST_ID, QUEST_61_巡洋艦)
 ENDIF
 
 RETURN
@@ -219,43 +219,43 @@ RETURN
 PRINTFORML 
 PRINTFORML 　%ANAME(MASTER)%ははことの顛末を士官に報告した
 SELECTCASE QUEST_PROGRESS:QUEST_ID
-    CASE 4
-        PRINTFORML 　「未知のテクノロジーで建造されたらしい艦にお偉いさんは大喜びだ」
-        PRINTFORML 　「こっちとしてはそれを使われる身にも……失礼、これはこっちの事情だったね」
-        PRINTFORML 　「もし何かあったらまた君に頼むかもしれないから、その時は頼むよ」
-        PRINTFORML 　
-        PRINTFORML 　口座　$500,000　が振り込まれた！
-        PRINTFORML 　将官達は「敵国に先んじれる技術が手に入るだろう」と喜んでいるようです
-        PRINTFORMW 　
-        CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
-        REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー += LIMIT(REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー + 10, -1000, 1000)
-        MONEY += 500000
-    CASE 5
-        PRINTFORML 　「まさか本当に沈めるとは……」
-        PRINTFORML 　「軍内でも未知の技術に迂闊に手を出すのは危険だと言う声は多くてね」
-        PRINTFORML 　「結果としてこれはこれで良かったのかも知れないな。あんなのに乗らされる士官が……ゲフンゲフン」
-        PRINTFORMW 　
-        PRINTFORML 　「まあ任務である拿捕には失敗したから報酬は余り出せないけれど」
-        PRINTFORML 　「君の評判は決して悪い物ではないだろう」
-        PRINTFORML 　「報酬は後日君の口座に振り込んでおこう、私からは以上だ」
-        PRINTFORML 　
-        PRINTFORML 　口座に　$100,000　が振り込まれた！
-        PRINTFORML 　士官達から「あんなキモイのに乗らされなくて良かった」と大いに喜ばれているようです
-        PRINTFORMW 　
-        CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
-        REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー += LIMIT(REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー + 50, -1000, 1000)
-        MONEY += 100000
-    CASE 6
-        PRINTFORML 　「無茶をしたものだね、君には悪いが艦を失ったのは君の責任だ」
-        PRINTFORML 　「とは言え任務を達成したのは事実だ」
-        PRINTFORML 　「報酬は口座に振り込んでおこう」
-        PRINTFORML 　
-        PRINTFORML 　口座に　$600,000　が振り込まれた！
-        PRINTFORML 　将官達は「敵国に先んじれる技術が手に入るだろう」と喜んでいるようです
-        PRINTFORMW 　
-        CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
-        REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー += LIMIT(REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー + 10, -1000, 1000)
-        MONEY += 600000
+	CASE 4
+		PRINTFORML 　「未知のテクノロジーで建造されたらしい艦にお偉いさんは大喜びだ」
+		PRINTFORML 　「こっちとしてはそれを使われる身にも……失礼、これはこっちの事情だったね」
+		PRINTFORML 　「もし何かあったらまた君に頼むかもしれないから、その時は頼むよ」
+		PRINTFORML 　
+		PRINTFORML 　口座　$500,000　が振り込まれた！
+		PRINTFORML 　将官達は「敵国に先んじれる技術が手に入るだろう」と喜んでいるようです
+		PRINTFORMW 　
+		CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
+		CALL ADD_REL_LIKE_COUNTRY(STAR_OWNER:RESULT, 国家ID_プレイヤー, 10)
+		MONEY += 500000
+	CASE 5
+		PRINTFORML 　「まさか本当に沈めるとは……」
+		PRINTFORML 　「軍内でも未知の技術に迂闊に手を出すのは危険だと言う声は多くてね」
+		PRINTFORML 　「結果としてこれはこれで良かったのかも知れないな。あんなのに乗らされる士官が……ゲフンゲフン」
+		PRINTFORMW 　
+		PRINTFORML 　「まあ任務である拿捕には失敗したから報酬は余り出せないけれど」
+		PRINTFORML 　「君の評判は決して悪い物ではないだろう」
+		PRINTFORML 　「報酬は後日君の口座に振り込んでおこう、私からは以上だ」
+		PRINTFORML 　
+		PRINTFORML 　口座に　$100,000　が振り込まれた！
+		PRINTFORML 　士官達から「あんなキモイのに乗らされなくて良かった」と大いに喜ばれているようです
+		PRINTFORMW 　
+		CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
+		CALL ADD_REL_LIKE_COUNTRY(STAR_OWNER:RESULT, 国家ID_プレイヤー, 50)
+		MONEY += 100000
+	CASE 6
+		PRINTFORML 　「無茶をしたものだね、君には悪いが艦を失ったのは君の責任だ」
+		PRINTFORML 　「とは言え任務を達成したのは事実だ」
+		PRINTFORML 　「報酬は口座に振り込んでおこう」
+		PRINTFORML 　
+		PRINTFORML 　口座に　$600,000　が振り込まれた！
+		PRINTFORML 　将官達は「敵国に先んじれる技術が手に入るだろう」と喜んでいるようです
+		PRINTFORMW 　
+		CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
+		CALL ADD_REL_LIKE_COUNTRY(STAR_OWNER:RESULT, 国家ID_プレイヤー, 10)
+		MONEY += 600000
 ENDSELECT
 QUEST_PROGRESS:QUEST_ID += 10
 
@@ -310,9 +310,9 @@ PRINTFORML 　「やってくれるか？」
 PRINTFORML 　
 CALL ASK_YN
 IF RESULT == 1
-    PRINTFORML 「そうか、残念だ」
-    PRINTFORML 士官らしき男はそう言うと、さっさとその場を立ち去っていった
-    RETURN 0
+	PRINTFORML 「そうか、残念だ」
+	PRINTFORML 士官らしき男はそう言うと、さっさとその場を立ち去っていった
+	RETURN 0
 ENDIF
 QUEST_PROGRESS:QUEST_ID = 1
 PRINTFORML 　「よし、素晴らしい」

@@ -160,14 +160,14 @@ ELSE
 			PRINTFORMW 海賊小集団の討伐に成功したことで、報酬$250,000を手に入れた。
 			MONEY += 250000
 			MONEY:国家ID_豊秋津皇国 -= 250000
-			REL_LIKE_COUNTRY:国家ID_豊秋津皇国:国家ID_プレイヤー = LIMIT(REL_LIKE_COUNTRY:国家ID_豊秋津皇国:国家ID_プレイヤー + 25, -1000, 1000)
+			CALL ADD_REL_LIKE_COUNTRY(国家ID_豊秋津皇国, 国家ID_プレイヤー, 25)
 		ELSEIF QUEST_PROGRESS:42 == 4
 			PRINTFORMW 「討伐に成功したか。では報酬を送金しておくとしよう」
 			PRINTFORMW 「かくして連中も、父祖たちと同じく時の流れに飲み込まれた。敵ながら哀れなものよ」
 			PRINTFORMW 海賊集団の討伐に成功したことで、報酬$750,000を手に入れた。
 			MONEY += 750000
 			MONEY:国家ID_豊秋津皇国 -= 750000
-			REL_LIKE_COUNTRY:国家ID_豊秋津皇国:国家ID_プレイヤー = LIMIT(REL_LIKE_COUNTRY:国家ID_豊秋津皇国:国家ID_プレイヤー + 50, -1000, 1000)
+			CALL ADD_REL_LIKE_COUNTRY(国家ID_豊秋津皇国, 国家ID_プレイヤー, 50)
 		ENDIF
 		QUEST_PROGRESS:42 = 0
 	ENDIF

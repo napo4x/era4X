@@ -84,6 +84,6 @@ ELSE
 		PRINTFORMW バクシン党の討伐に成功したことで、報酬$100,000を手に入れた。
 		MONEY += 100000
 		QUEST_PROGRESS:30 = 2
-		REL_LIKE_COUNTRY:国家ID_豊秋津皇国:国家ID_プレイヤー = LIMIT(REL_LIKE_COUNTRY:国家ID_豊秋津皇国:国家ID_プレイヤー + 50, -1000, 1000)
+		CALL ADD_REL_LIKE_COUNTRY(国家ID_豊秋津皇国, 国家ID_プレイヤー, 50)
 	ENDIF
 ENDIF
