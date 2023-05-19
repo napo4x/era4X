@@ -10,4 +10,5 @@ debug
 .sav
 .DS_Store
 .vscode/*
+emuera.config
 macro.txt
