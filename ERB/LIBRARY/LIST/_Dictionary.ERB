@@ -198,3 +198,28 @@ FOR _CNT,0,_KEYCOUNT
 	CALLFORM %_FUNCNAME%, SUBSTRINGU(_DIC_PAIRS:_CNT, 0, _DIC_INDEX_OPEN), SUBSTRINGU(_DIC_PAIRS:_CNT, _DIC_INDEX_OPEN + 1, STRLENSU(_DIC_PAIRS:_CNT) - (_DIC_INDEX_OPEN + 1) -1)
 NEXT
 
+;================================================
+;@DIC_SET_NUM (#FUNCTIONS)対象の連想配列の_KEYに_VALUEを格納した連想配列を返す。既にキーが存在するなら上書き。
+;_DICTIONARY 対象の連想配列（文字列）
+;_KEY        追加する対象のキー
+;_VALUE      追加する値。数値
+;RETURNF     追加又は変更された連想配列（文字列）
+;================================================
+@DIC_SET_NUM(_DICTIONARY, _KEY, _VALUE)
+#FUNCTIONS
+#DIMS _DICTIONARY
+#DIMS _KEY
+#DIM _VALUE
+RETURNF DIC_SET(_DICTIONARY, _KEY, TOSTR(_VALUE))
+
+;================================================
+;@DIC_GET_NUM (#FUNCTIONS)) ;対象の連想配列の_KEYの数値を取得する。キーが存在しなければ空文字列。
+;_DICTIONARY 対象の連想配列（文字列）
+;_KEY        キー
+;RETURNF     キーに対応する値又は0
+;================================================
+@DIC_GET_NUM(_DICTIONARY, _KEY)
+#FUNCTION
+#DIMS _DICTIONARY
+#DIMS _KEY
+RETURNF TOINT(DIC_GET(_DICTIONARY, _KEY))
