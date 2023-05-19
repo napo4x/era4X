@@ -531,14 +531,8 @@ SELECTCASE _COMMAND_ID
             CASE 13
                 _CURRENT_SHIP_HP = RESULT * 2
         ENDSELECT
-        IF _MAX_SHIP_HP > _CURRENT_SHIP_HP
-            IF _DISTANCE:_SHIP_ID == COMMON_DISTANCE
-                RETURN 撤退
-            ELSE
-                _MOVE_DESTINATION:_SHIP_ID = COMMON_DISTANCE
-                RETURN 後退
-            ENDIF
-        ENDIF
+        SIF _MAX_SHIP_HP > _CURRENT_SHIP_HP
+            RETURN 撤退
         RETURN 0
     ;味方の駆逐艦が撤退線（距離5）まで下がったら撤退
     ;味方の巡洋艦が撤退線（距離5）まで下がったら撤退
@@ -1028,7 +1022,8 @@ FOR LIST_ITER, 0, BATTLE_SHIP_COUNT
     ATK_SHIP_ID = BATTLE_SHIP_LIST:LIST_ITER
     SELECTCASE SHIP_ACTION:ATK_SHIP_ID
         CASE 撤退
-            ; 何もしない
+            ; 最後方へ後退する
+            CALL MOVE_DISTANCE(DISTANCE, ATK_SHIP_ID, COMMON_DISTANCE)
         CASE 前進
             CALL MOVE_DISTANCE(DISTANCE, ATK_SHIP_ID, MOVE_DESTINATION:ATK_SHIP_ID)
         CASE 攻撃
