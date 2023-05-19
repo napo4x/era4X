@@ -141,7 +141,7 @@ FOR ITER, 0, MAX_PORT
 NEXT
 
 	; 資源回収
-CALL IS_MINING(CHARACTER_POSITION)
+CALL IS_MINING(CHARACTER_POSITION, BOARDING_SHIP_ID:MASTER)
 IF RESULT == 1
     PRINTBUTTON "[r] 採掘", "r"
     PRINT 　
@@ -285,7 +285,7 @@ SELECTCASE strInputResult
         RETURN
 		; 資源回収
     CASE "r"
-        CALL MINING(CHARACTER_POSITION, 国家ID_プレイヤー)
+        CALL MINING(CHARACTER_POSITION, 国家ID_プレイヤー, BOARDING_SHIP_ID:MASTER)
         CALL SLG_TURN_END(1)
         GOTO INPUT_LOOP
 		; アノマリー
@@ -1822,6 +1822,8 @@ IF 入力値 >= 0 && 入力値 < MAX_SHIP
     CALL ASK_YN
     SIF RESULT == 1
         GOTO INPUT_LOOP
+    ; 艦が削除される前に、艦の名前を保持しておく
+    LOCALS '= SHIP_NAME:入力値
     CALL GET_SHIP_TOTAL_HP(入力値)
     SHIP_DAMAGE:入力値 = RESULT
     CALL RETIRE_BROKEN_SHIP
@@ -1841,7 +1843,7 @@ IF 入力値 >= 0 && 入力値 < MAX_SHIP
     NEXT
     MONEY += SALE_PRICE
     MONEY:OWNER -= SALE_PRICE
-    PRINTFORMW %SHIP_NAME:入力値%を$%TOSTR(SALE_PRICE, "###,###")%で売却しました。(現在の所持金: $%TOSTR(MONEY, "###,###")%)
+    PRINTFORMW %LOCALS%を$%TOSTR(SALE_PRICE, "###,###")%で売却しました。(現在の所持金: $%TOSTR(MONEY, "###,###")%)
 ENDIF
 GOTO INPUT_LOOP
 
