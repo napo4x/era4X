@@ -603,7 +603,6 @@ SELECTCASE _COMMAND_ID
                 ;LOCAL:1 = 1000000
                 ;HP1000000越えがひしめく時代に備える
                 LOCAL:1 = -1
-                PRINTFORML LOCAL:1 = {LOCAL:1}
                 VARSET LOCALS
                 FOR LOCAL, 0, LIST_COUNT(_TARGET_LIST)
                     CALL GET_SHIP_HP(LIST_GET_NUM(_TARGET_LIST, LOCAL))
