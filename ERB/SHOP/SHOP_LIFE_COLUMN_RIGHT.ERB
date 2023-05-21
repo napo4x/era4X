@@ -123,13 +123,7 @@ RESETCOLOR
 ;-------------------------------------------------
 @NUM_FORMAT(ARG:0)
 #FUNCTIONS
-;0だと表示されないので退避
-IF ARG:0 == 0
-	LOCALS:0 '= "0"
-ELSE
-	LOCALS:0 '= TOSTR(ARG:0, "#,###")
-ENDIF
-RETURNF LOCALS:0
+RETURNF TOSTR(ARG:0, "#,##0")
 
 ;-------------------------------------------------
 ;数字を文字列化し３桁カンマと$をつける式中関数
@@ -137,10 +131,4 @@ RETURNF LOCALS:0
 ;-------------------------------------------------
 @MONEY_FORMAT(ARG:0)
 #FUNCTIONS
-;0だと表示されないので退避
-IF ARG:0 == 0
-	LOCALS:0 '= "$0"
-ELSE
-	LOCALS:0 '= TOSTR(ARG:0, "$#,###")
-ENDIF
-RETURNF LOCALS:0
+RETURNF TOSTR(ARG:0, "$#,##0")
