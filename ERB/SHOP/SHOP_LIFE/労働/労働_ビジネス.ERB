@@ -1,6 +1,11 @@
 ﻿;------------------------
 ; ビジネス
 ;------------------------
+@CANNOT_WORK_BUSINESS(対象)
+#FUNCTION
+#DIM 対象
+RETURNF ABL:対象:知略 < 60
+
 @WORK_BUSINESS(ID)
 #DIM ID
 #DIM 魅力値

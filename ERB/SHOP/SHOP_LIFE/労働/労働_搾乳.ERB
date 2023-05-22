@@ -1,4 +1,9 @@
-﻿@WORK_MILK_TEXT(対象)
+﻿@CANNOT_WORK_MILK(対象)
+#FUNCTION
+#DIM 対象
+RETURNF (対象 != MASTER && !IS_FALLEN(対象)) || !IS_FEMALE(対象)
+
+@WORK_MILK_TEXT(対象)
 #DIM 対象
 #DIM 噴乳量
 

@@ -1,6 +1,11 @@
 ﻿;------------------------
 ; 操艦通信講座
 ;------------------------
+@CANNOT_WORK_SOUKAN(対象)
+#FUNCTION
+#DIM 対象
+RETURNF ABL:対象:操艦 < 60
+
 @WORK_SOUKAN(ID)
 #DIM ID
 #DIM 魅力値

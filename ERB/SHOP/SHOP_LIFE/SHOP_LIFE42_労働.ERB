@@ -17,8 +17,8 @@ RETURN 1
 ;「労働」の選択可能キャラ存在判定
 ;-------------------------------------------------
 @SHOP_LIFE_CHECKCHARA42(ARG:0)
-;捕虜でない、同一勢力、通常状態または育児中、クールタイムでない、陥落済みまたはあなたである
-RETURN CHECK91(ARG:0, 2, CFLAG:(ARG:0):所属 == CFLAG:MASTER:所属 && !CFLAG:(ARG:0):捕虜先 && !IS_ANIMAL(ARG:0) && !IS_QUADORUPED_MECH(ARG:0) && GROUPMATCH(CFLAG:(ARG:0):行動不能状態, 0, 2) && !COOLTIME:(ARG:0):0 && (ARG:0 == MASTER || IS_FALLEN(ARG:0)))
+;捕虜でない、同一勢力、通常状態または育児中、クールタイムでない
+RETURN CHECK91(ARG:0, 2, CFLAG:(ARG:0):所属 == CFLAG:MASTER:所属 && !CFLAG:(ARG:0):捕虜先 && !IS_ANIMAL(ARG:0) && !IS_QUADORUPED_MECH(ARG:0) && GROUPMATCH(CFLAG:(ARG:0):行動不能状態, 0, 2) && !COOLTIME:(ARG:0):0)
 
 ;-------------------------------------------------
 ;「労働」の左カラムメニューの入力処理
@@ -51,21 +51,21 @@ CALL COLUMN_RIGHT_LINE
 CALL COLUMN_RIGHT_PRINTL
 
 PRINTFORM %SNAME(ARG:0), MAX_CHARANAME_LENGTH / 2, LEFT%
-CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 0,               1,                   0,                                                                         "待機")
-CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_キャバクラ, 1 + 労働_キャバクラ, 0,                                                                         "キャバクラ")
-CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_Vアイドル,  1 + 労働_Vアイドル,  0,                                                                         "Vアイドル")
-;CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_広報,       1 + 労働_広報,       0,                                                                         "広報")
-;CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_街宣,       1 + 労働_街宣,       0,                                                                         "街宣")
-;CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_炊き出し,   1 + 労働_炊き出し,   0,                                                                         "炊き出し")
-;CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_ライブ  ,   1 + 労働_ライブ  ,   0,                                                                         "ライブ")
-CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_艦内雑務,   1 + 労働_艦内雑務,   0,                                                                         "艦内雑務")
-CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_ビジネス,   1 + 労働_ビジネス,   ABL:(ARG:0):知略 < 60,                                                     "ビジネス")
-CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_娼館,       1 + 労働_娼館,       ABL:(ARG:0):性技 < ランク閾値:ランク_その他:ランク_D || !IS_FEMALE(ARG:0), "娼館")
-CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_ＡＶ,       1 + 労働_ＡＶ,       ABL:(ARG:0):性技 < ランク閾値:ランク_その他:ランク_D || !IS_FEMALE(ARG:0), "ＡＶ撮影")
-CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_搾乳,       1 + 労働_搾乳,       !IS_FEMALE(ARG:0),                                                         "搾乳")
+CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 0,               1,                   0,                            "待機")
+CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_キャバクラ, 1 + 労働_キャバクラ, CANNOT_WORK_KYABAKURA(ARG:0), "キャバクラ")
+CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_Vアイドル,  1 + 労働_Vアイドル,  CANNOT_WORK_VIDOL(ARG:0),     "Vアイドル")
+;CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_広報,       1 + 労働_広報,       0,                            "広報")
+;CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_街宣,       1 + 労働_街宣,       0,                            "街宣")
+;CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_炊き出し,   1 + 労働_炊き出し,   0,                            "炊き出し")
+;CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_ライブ  ,   1 + 労働_ライブ  ,   0,                            "ライブ")
+CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_艦内雑務,   1 + 労働_艦内雑務,   0,                            "艦内雑務")
+CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_ビジネス,   1 + 労働_ビジネス,   CANNOT_WORK_BUSINESS(ARG:0),  "ビジネス")
+CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_娼館,       1 + 労働_娼館,       CANNOT_WORK_WHORE(ARG:0),     "娼館")
+CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_ＡＶ,       1 + 労働_ＡＶ,       CANNOT_WORK_AV(ARG:0),        "ＡＶ撮影")
+CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_搾乳,       1 + 労働_搾乳,       CANNOT_WORK_MILK(ARG:0),      "搾乳")
 CALL COLUMN_RIGHT_PRINTL
-CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_操艦講座,   1 + 労働_操艦講座,   ABL:(ARG:0):操艦 < 60,                                                     "操艦講座")
-CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_白兵講座,   1 + 労働_白兵講座,   ABL:(ARG:0):白兵 < 60,                                                     "白兵講座")
+CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_操艦講座,   1 + 労働_操艦講座,   CANNOT_WORK_SOUKAN(ARG:0),    "操艦講座")
+CALL SHOP_LIFE_BUTTON42(ARG:0, CFLAG:(ARG:0):労働内容 == 労働_白兵講座,   1 + 労働_白兵講座,   CANNOT_WORK_HAKUHEI(ARG:0),   "白兵講座")
 
 CALL COLUMN_RIGHT_PRINTL
 
@@ -142,19 +142,28 @@ SIF !INRANGE(項目番号, 0, 労働_搾乳)
 SIF キャラ番号 < 0 || キャラ番号 > CHARANUM
 	RETURN 0
 
-SIF ABL:キャラ番号:性技 < ランク閾値:ランク_その他:ランク_D && GROUPMATCH(項目番号, 労働_娼館, 労働_ＡＶ)
+SIF CANNOT_WORK_KYABAKURA(キャラ番号) && GROUPMATCH(項目番号, 労働_キャバクラ)
 	RETURN 0
 
-SIF !IS_FEMALE(キャラ番号) && 項目番号 == 労働_搾乳
+SIF CANNOT_WORK_VIDOL(キャラ番号) && GROUPMATCH(項目番号, 労働_Vアイドル)
 	RETURN 0
 
-SIF ABL:キャラ番号:知略 < 60 && GROUPMATCH(項目番号, 労働_ビジネス)
+SIF CANNOT_WORK_WHORE(キャラ番号) && GROUPMATCH(項目番号, 労働_娼館)
 	RETURN 0
 
-SIF ABL:キャラ番号:操艦 < 60 && GROUPMATCH(項目番号, 労働_操艦講座)
+SIF CANNOT_WORK_AV(キャラ番号) && GROUPMATCH(項目番号, 労働_ＡＶ)
 	RETURN 0
 
-SIF ABL:キャラ番号:白兵 < 60 && GROUPMATCH(項目番号, 労働_白兵講座)
+SIF CANNOT_WORK_MILK(キャラ番号) && 項目番号 == 労働_搾乳
+	RETURN 0
+
+SIF CANNOT_WORK_BUSINESS(キャラ番号) && GROUPMATCH(項目番号, 労働_ビジネス)
+	RETURN 0
+
+SIF CANNOT_WORK_SOUKAN(キャラ番号) && GROUPMATCH(項目番号, 労働_操艦講座)
+	RETURN 0
+
+SIF CANNOT_WORK_HAKUHEI(キャラ番号) && GROUPMATCH(項目番号, 労働_白兵講座)
 	RETURN 0
 
 RESULT = 0
