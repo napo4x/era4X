@@ -94,21 +94,22 @@ ENDIF
 ;「能力表示」の選択可能キャラ存在判定リスト１
 ;-------------------------------------------------
 @SHOP_LIFE_CHECKCHARA_NOURYOKU(ARG:0)
-;同一勢力or共闘勢力or自国の捕虜
-;最後に&& CFLAG:(ARG:0):捕虜先としてるのは、マスターが未所属捕虜で能力表示を開いた場合、「どこの勢力の捕虜にもなっていない」キャラが引っかかるから
 SIF ARG:0 == MASTER
 	RETURN 1
 SELECTCASE FLAG:能力表示フィルタ
-	;従来
+	;同一勢力or共闘勢力or自国の捕虜
+	;最後に&& CFLAG:(ARG:0):捕虜先としてるのは、マスターが未所属捕虜で能力表示を開いた場合、「どこの勢力の捕虜にもなっていない」キャラが引っかかるから
+	;士官+捕虜+友好
 	CASE 0
-		RETURN TMP_COUNTRY_RELATION:(CFLAG:MASTER:所属):(CFLAG:(ARG:0):所属) >= 2 || (CFLAG:(ARG:0):捕虜先 == CFLAG:MASTER:所属 && CFLAG:(ARG:0):捕虜先)
+		RETURN TMP_COUNTRY_RELATION:(CFLAG:MASTER:所属):(CFLAG:(ARG:0):所属) >= 2 || (CFLAG:MASTER:所属 && (CFLAG:MASTER:所属 == CFLAG:(ARG:0):所属 || CFLAG:MASTER:所属 == CFLAG:(ARG:0):捕虜先))
+	;士官
 	;自国のみ
 	CASE 1
 		RETURN CFLAG:MASTER:所属 && CFLAG:MASTER:所属 == CFLAG:(ARG:0):所属
-	;捕虜も
+	;士官+捕虜
 	CASE 2
 		RETURN CFLAG:MASTER:所属 && (CFLAG:MASTER:所属 == CFLAG:(ARG:0):所属 || CFLAG:MASTER:所属 == CFLAG:(ARG:0):捕虜先)
-	;ぜんぶ
+	;全員表示
 	CASE 3
 		RETURN 1
 ENDSELECT
