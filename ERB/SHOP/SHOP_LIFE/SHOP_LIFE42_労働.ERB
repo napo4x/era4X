@@ -199,6 +199,35 @@ ELSE
 ENDIF
 
 ;-------------------------------------------------
+;キャラが指示された労働を行う確率(1000で100%)
+;-------------------------------------------------
+@CHARA_WORK_PERMILLE(対象)
+#FUNCTION
+#DIM 対象
+#DIM 確率
+
+SIF 対象 == MASTER || IS_FALLEN(対象) || TALENT:対象:親友
+	RETURNF 1000
+確率 = 250 + MAX(CFLAG:対象:好感度, CFLAG:対象:従属度, CFLAG:対象:支配度) / 4
+SIF TALENT:対象:反抗的
+	確率 -= 200
+SIF TALENT:対象:プライド高い
+	確率 -= 100
+SIF TALENT:対象:無関心
+	確率 -= 100
+SIF TALENT:対象:好奇心
+	確率 += 100
+SIF TALENT:対象:素直
+	確率 += 100
+SIF TALENT:対象:献身的
+	確率 += 200
+
+確率 = LIMIT(確率, 0, 900)
+SIF TALENT:対象:サボり魔
+	確率 /= 2
+RETURNF 確率
+
+;-------------------------------------------------
 ;DESC  : 拠点フェイズ終了時の労働処理
 ;ARG   ::
 ;-------------------------------------------------
@@ -236,6 +265,10 @@ CALL SINGLE_DRAWLINE
 			LOCALS = %ANAME(LOCAL)% - 労役設定解除
 			LOCALS:1 = %ANAME(LOCAL)%が労働できない状態のため、労働設定を解除しました
 			CALL MESSAGE_PUSH(LOCALS, LOCALS:1)
+			CONTINUE
+		ENDIF
+		IF CHARA_WORK_PERMILLE(LOCAL) <= RAND:1000
+			PRINTFORML %ANAME(LOCAL)%は仕事を休んだようだ……
 			CONTINUE
 		ENDIF
 		報酬 = 1000
