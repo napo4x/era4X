@@ -1,6 +1,11 @@
 ﻿;------------------------
 ; バーチャルアイドル
 ;------------------------
+@CANNOT_WORK_VIDOL(対象)
+#FUNCTION
+#DIM 対象
+RETURNF 対象 != MASTER && !IS_FALLEN(対象)
+
 @WORK_VIDOL(ID)
 #DIM ID
 #DIM 魅力値
