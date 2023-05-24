@@ -58,8 +58,9 @@ USE_RESOURCE:タイラーセンサー = 20
 @SET_SHIP_PRESET_76(SHIP_ID)
 #DIM SHIP_ID
 
-SHIP_EQUIP:主砲:0:SHIP_ID = 116
+SHIP_EQUIP:主砲:0:SHIP_ID = 1
 SHIP_EQUIP:主砲:1:SHIP_ID = 116
+SHIP_EQUIP:主砲:2:SHIP_ID = 116
 SHIP_EQUIP:副砲:0:SHIP_ID = 1
 SHIP_EQUIP:副砲:1:SHIP_ID = 1
 SHIP_EQUIP:副砲:2:SHIP_ID = 1
@@ -86,7 +87,8 @@ RETURN 0
 RETURN 0
 
 @CAN_SPACECRAFT_CARRYING_76
-RETURN 1
+; スロット1(主砲2)、スロット2(主砲3)
+RETURN 1p1 | 1p2
 
 ; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
 ; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
