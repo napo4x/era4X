@@ -1,0 +1,10 @@
+﻿@CLOTH_NAME_BODYSUIT_42
+RESULTS = グランドコーデＰＡ
+
+@CLOTH_LIVE_EFFECT_BODYSUIT_42(ARG:0)
+IF ABL:(ARG:0):演技力ＰＡ >= 90
+	RESULTS '= DIC_SET("", "補正値変更", "0,0,25,0,")
+	RESULTS '= DIC_SET(RESULTS, "抵抗値変更", "-5")
+ELSE
+	RESULTS '= DIC_SET("", "補正値変更", "0,0,5,0,")
+ENDIF
