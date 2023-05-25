@@ -142,7 +142,7 @@ IF ARG:0 == 1
 	RETURN 0
 ;能力表示フィルタ
 ELSEIF ARG:0 == 2
-	FLAG:能力表示フィルタ = ROUND_INCREMENT(FLAG:能力表示フィルタ, 0, 3)
+	FLAG:能力表示フィルタ = ROUND_INCREMENT(FLAG:能力表示フィルタ, 0, 4)
 	RETURN 0
 ELSEIF ARG:0 == 3
 	CALL SHOP_LIFE_PAYMENT(FLAG:関係一覧表示対象)
