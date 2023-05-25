@@ -1,0 +1,10 @@
+﻿@CLOTH_NAME_BODYSUIT_40
+RESULTS = グランドコーデＣＯ
+
+@CLOTH_LIVE_EFFECT_BODYSUIT_40(ARG:0)
+IF ABL:(ARG:0):演技力ＣＯ >= 90
+	RESULTS '= DIC_SET("", "補正値変更", "25,0,0,0,")
+	RESULTS '= DIC_SET(RESULTS, "手札ドロー", "1")
+ELSE
+	RESULTS '= DIC_SET("", "補正値変更", "5,0,0,0,")
+ENDIF
