@@ -1,0 +1,9 @@
+﻿@CLOTH_NAME_BODYSUIT_39
+RESULTS = ナイトバタフライドレス
+
+@CLOTH_LIVE_EFFECT_BODYSUIT_39(ARG:0)
+IF ABL:(ARG:0):演技力ＬＥ >= 90
+	RESULTS '= DIC_SET("", "補正値変更", "0,0,0,60,")
+ELSE
+	RESULTS '= DIC_SET("", "補正値変更", "0,0,0,5,")
+ENDIF
