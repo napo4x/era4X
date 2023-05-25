@@ -168,9 +168,13 @@ FOR P_経過ターン数, 0, P_ターン数
     ;パフォーマンス前の情景描写
     CALL PERFORMMANCE_DESC_TOP(対象, 演目, 合計エモーション値)
 
-    ;第一ターンは手札3枚からスタート
+    ;第一ターンのみの処理
     IF P_経過ターン数 == 0
+        ;手札3枚からスタート
         CALL PERFORMANCE_DRAW_CARD(3, P_手札, P_デッキ, -1)
+
+        ;衣装効果の適用
+        CALL APPLY_CLOTH_LIVE_EFFECT(対象)
     ENDIF
 
     P_アクション数 = 1

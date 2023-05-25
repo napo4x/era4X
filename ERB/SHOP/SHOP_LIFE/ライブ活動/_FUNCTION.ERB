@@ -310,6 +310,24 @@ ELSEIF P_ステージ衣装:0:衣装部位_上下服 == 0
 ENDIF
 
 ;-------------------------------------------------
+;衣装効果の適用処理 (ライブ開始時用)
+;-------------------------------------------------
+@APPLY_CLOTH_LIVE_EFFECT(対象)
+#DIM 対象
+#DIM INDEX
+#DIM VAR_SIZE
+VARSIZE CLOTH_PART_NAME_ENG
+VAR_SIZE = RESULT
+FOR INDEX, 0, VAR_SIZE
+    RESULTS '= ""
+    TRYCCALLFORM CLOTH_LIVE_EFFECT_%CLOTH_PART_NAME_ENG:INDEX%_{CLOTH:対象:INDEX}(対象)
+        CALL PERFORMANCE_APPLY_CARDEFFECT(RESULTS)
+    CATCH
+        CONTINUE
+    ENDCATCH
+NEXT
+
+;-------------------------------------------------
 ;カード効果の適用処理
 ;-------------------------------------------------
 @PERFORMANCE_APPLY_CARDEFFECT(カード効果)
