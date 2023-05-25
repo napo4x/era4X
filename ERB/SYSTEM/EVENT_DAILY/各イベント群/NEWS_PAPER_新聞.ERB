@@ -76,9 +76,9 @@ SELECTCASE STAR_OWNER:STAR_ID
     SELECTCASE RAND:5
       CASE 0
         CALL PRINT_NEWSPAPER_HEADER("惑星防衛部隊 大型艦配備急がれる")
-        PRINTFORML 昨今の他国の侵攻計画によると、大型艦を主軸にしたドクトリンが多く散見される
-        PRINTFORML 現状の小型艦主体の我国の防衛部隊ではそのようなドクトリンに対し苦戦することが確実であると専門家は見ている
-        PRINTFORML だが我国は現在第三惑星の開発に莫大な投資を行っており、宇宙軍に資金を回せていないのが現状だ
+        PRINTFORML 昨今、他国の侵攻計画には大型艦を主軸にしたドクトリンが散見される
+        PRINTFORML 対して我が国の防衛部隊は小型艦を主軸に構築されており、大型艦に対し苦戦することが確実であると専門家は見ている
+        PRINTFORML この問題は国軍も認識しているが、我国は現在第三惑星の開発に莫大な投資を行っており、宇宙軍に資金を回せていないのが現状だ
         PRINTFORMW この隙を他国に狙われないことを願うばかりである
       CASE 1
         CALL PRINT_NEWSPAPER_HEADER("全宇宙ホバーレース 目指せ万年新居脱却")
@@ -105,7 +105,7 @@ SELECTCASE STAR_OWNER:STAR_ID
         PRINTFORMW 怪しい行動をする人物を見かけた場合はお近くの人民警察まで
     ENDSELECT
   CASE 国家ID_企業連合
-    SELECTCASE RAND:4
+    SELECTCASE RAND:5
       CASE 0
         CALL PRINT_NEWSPAPER_HEADER("夢を掴んだ男")
         PRINTFORML エイツー・ペルシウス氏は企業連合で夢を掴んだ一人だ
@@ -126,7 +126,12 @@ SELECTCASE STAR_OWNER:STAR_ID
         CALL PRINT_NEWSPAPER_HEADER("セクター76の宙族の掃討作戦参加者募集")
         PRINTFORML 宙族が跋扈する危険な宙域であるセクター76の掃討作戦を行う艦隊を募集!
         PRINTFORML 宇宙の安全を守る志のある勇敢な艦隊は、軍部に連絡を
-        PRINTFORML 連絡先:XX-XXXX-XXXX-XXXX   企業連首脳部/企業連軍部
+        PRINTFORMW 連絡先:XX-XXXX-XXXX-XXXX   企業連首脳部/企業連軍部
+      CASE 4
+        CALL PRINT_NEWSPAPER_HEADER("顕著な犯罪シンジケートの増加")
+        PRINTFORML 貧困からの一発逆転を狙い犯罪シンジケートに関わる貧困層が後を絶たない
+        PRINTFORML 税金の殆どが企業連の維持に使われ社会保障に使われていない現状がこの自体を招いていると専門家たちは指摘している
+        PRINTFORMW また、この問題の背後には貧困層と犯罪シンジケートを結びつけるリクルーターの暗躍があるとも言われている
     ENDSELECT
   CASE 国家ID_民主主義
     SELECTCASE RAND:3
@@ -183,7 +188,7 @@ SELECTCASE STAR_OWNER:STAR_ID
         PRINTFORML 現在人口抑制制作が実施中です
         PRINTFORML 性行為を行う場合は必ず避妊をいたしましょう
         PRINTFORML 性欲を満たしたいだけの場合は、セクサロイドの貸し出しも行っております
-        PRINTFORMW 第九都市の整備が完成するまでの辛抱です。国民一段となって協力していきましょう
+        PRINTFORMW 第九都市の整備が完成するまでの辛抱です。国民一丸となって協力していきましょう
       CASE 2
         CALL PRINT_NEWSPAPER_HEADER("超完全食完成-刑務所にて配給予定")
         PRINTFORML 生存に必要な全ての栄養を一口で取れる超完全食が完成した
