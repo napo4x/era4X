@@ -337,6 +337,18 @@ IF CHECK_UPDATE("2.1.07")
     NEXT
 ENDIF
 
+IF CHECK_UPDATE("2.1.08")
+    LOCAL:1 = 0
+    FOR LOCAL, 0, MAX_COLONY
+        COLONY_BELONGING_STAR:LOCAL = -1
+        FOR SHIP_ID, 0, MAX_SHIP
+            IF COLONY_OWNER:国家ID_プレイヤー && SHIP_MODEL:SHIP_ID == エコハビタット && COLONY_SHIP_ID:(LOCAL:1) == 0
+                COLONY_SHIP_ID:(LOCAL:1 ++) = エコハビタット
+            ENDIF
+        NEXT
+    NEXT
+ENDIF
+
 ; 以下今後の参考のために残しているだけ
 ;IF LASTLOAD_VERSION != GAMEBASE_VERSION
 ;    PRINTFORML アップデート処理を行います
