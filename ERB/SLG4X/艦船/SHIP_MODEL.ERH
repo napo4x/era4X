@@ -129,6 +129,7 @@
 #DIM CONST ローレライ級防衛モジュール = 143
 #DIM CONST 四十一式拠点防衛用ユニット = 144
 #DIM CONST 下級汎用独立モジュール = 145
+#DIM CONST エコハビタット = 146
 
 #DIM CONST 小惑星基地 = 150
 

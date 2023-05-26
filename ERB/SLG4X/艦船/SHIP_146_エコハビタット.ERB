@@ -1,0 +1,82 @@
+﻿;------------------------
+; 下級汎用独立モジュール
+;------------------------
+@GET_SHIP_NAME_146
+RESULTS = エコハビタット
+
+@GET_SHIP_STATUS_146(STATUS)
+#DIM REF STATUS
+
+STATUS:CATEGORY = 建造物
+STATUS:SHIP_HP = 20000
+STATUS:SHIP_AVOID = 0
+STATUS:SHIP_MAIN_WEAPON_SIZE = 0
+STATUS:SHIP_SUB_WEAPON_SIZE = 0
+STATUS:SHIP_SIELD_SIZE = 4
+STATUS:SHIP_ARMOR_SIZE = 0
+STATUS:SHIP_ENGIN_SIZE = 0
+STATUS:SHIP_PRICE = 0
+STATUS:SHIP_CREW = 0
+
+STATUS:SHIP_MAIN_WEAPON_SLOT = 0
+STATUS:SHIP_SUB_WEAPON_SLOT = 0
+STATUS:SHIP_SIELD_SLOT = 8
+STATUS:SHIP_ARMOR_SLOT = 0
+STATUS:SHIP_OPTION_SLOT = 0
+STATUS:SHIP_CRITICAL_RISK = 0
+STATUS:SHIP_VARIANT = 特殊分類_建造物
+
+
+;CALL SHIP_PRINTFORML_MESSAGE("(説明文が入ります)", (文字色を変更する場合にはカラーコードを指定してください), 動作モード) 
+;------------------------
+@GET_SHIP_DESCRIPTION_F_146(動作モード = 0)
+#DIM 動作モード
+
+CALL SHIP_PRINTFORML_MESSAGE("小惑星をベースにした人工惑星", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("環境制御と自己充足を管理するエコシステムを保有する", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("コストパフォーマンスに非常に優れている", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+
+
+@GET_SHIP_RESOURCE_146(USE_RESOURCE)
+#DIM REF USE_RESOURCE
+
+USE_RESOURCE:武装合金 = 0
+USE_RESOURCE:装甲合金 = 3000
+USE_RESOURCE:シールド発生装置 = 8000
+USE_RESOURCE:武装制御機器 = 300
+USE_RESOURCE:合金加工剤 = 4000
+USE_RESOURCE:耐熱合金 = 3200
+USE_RESOURCE:超電導回路 = 1000
+USE_RESOURCE:タイラーセンサー = 0
+
+
+@SET_SHIP_PRESET_146(SHIP_ID)
+#DIM SHIP_ID
+SHIP_EQUIP:シールド:0:SHIP_ID = 4
+SHIP_EQUIP:シールド:1:SHIP_ID = 4
+SHIP_EQUIP:シールド:2:SHIP_ID = 4
+SHIP_EQUIP:シールド:3:SHIP_ID = 4
+SHIP_EQUIP:シールド:4:SHIP_ID = 4
+SHIP_EQUIP:シールド:5:SHIP_ID = 4
+SHIP_EQUIP:シールド:6:SHIP_ID = 4
+SHIP_EQUIP:シールド:7:SHIP_ID = 4
+
+
+
+@IS_SALE_SHIP_146(CAN_SALE_SHIP)
+#DIM REF CAN_SALE_SHIP
+
+RETURN 0
+
+
+; 販売条件のテキストをRESULTSに,それを表示してもいい場合は1を、表示不要な場合は0を返却
+@TERM_OF_SALE_146
+RETURN 0
+
+; (非定型的な)コメント文はそのままだと処理するどころか認識すらできないので定型処理できる形式に落とし込む為の関数です。
+; 販売条件等で非定型的な処理をしている場合にはここで明言してあると(出力関数に見逃された場合にも)気が付ける可能性が増加します。
+@GET_SHIP_COMENT_146(動作モード = 0)
+#DIM 動作モード
+
+
