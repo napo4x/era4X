@@ -18,20 +18,21 @@ STATUS:PRICE = 5000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_67
+@GET_MAIN_WEAPON_DESCRIPTION_F_67(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML ヘイロタイ級作業機に搭載されている、最も大型の作業用アーム。
-PRINTFORML 大型重機からの転用品であり、資材の運搬・組み立てや残骸の撤去などに用いられている。
-PRINTFORML 
-PRINTFORML また、軍用の機動歩兵とも組み合えるだけの強度・馬力を有しており、
-PRINTFORML ヘイロタイ級作業機の中では戦闘用の武器として転用可能な性能がある数少ない機材である。
-PRINTFORML 流石に艦船の装甲に穴が開けられるほどの威力はないものの、
-PRINTFORML 小型砲塔を掴んでもぎ取ったり、センサーや通信用アンテナを殴って壊す事ぐらいなら可能。
-PRINTFORML 
+CALL SHIP_PRINTFORML_MESSAGE("ヘイロタイ級作業機に搭載されている、最も大型の作業用アーム。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("大型重機からの転用品であり、資材の運搬・組み立てや残骸の撤去などに用いられている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("また、軍用の機動歩兵とも組み合えるだけの強度・馬力を有しており、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ヘイロタイ級作業機の中では戦闘用の武器として転用可能な性能がある数少ない機材である。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("流石に艦船の装甲に穴が開けられるほどの威力はないものの、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("小型砲塔を掴んでもぎ取ったり、センサーや通信用アンテナを殴って壊す事ぐらいなら可能。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
 
 
 
@@ -44,5 +45,6 @@ PRINTFORML
 @GET_MAIN_WEAPON_RESOURCE_67(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-@IS_SALE_MAIN_WEAPON_67
+@IS_SALE_MAIN_WEAPON_67(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

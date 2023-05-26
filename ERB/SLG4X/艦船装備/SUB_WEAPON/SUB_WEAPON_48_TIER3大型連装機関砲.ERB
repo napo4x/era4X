@@ -19,14 +19,18 @@ STATUS:PRICE = 320000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_F_48
+@GET_SUB_WEAPON_DESCRIPTION_F_48(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 速射砲と同じ砲弾を用いた連装機関砲。
-;PRINTFORML はっきりいってあたまおかしい
+CALL SHIP_PRINTFORML_MESSAGE("速射砲と同じ砲弾を用いた連装機関砲。", , 動作モード)
+
+@GET_SUB_WEAPON_COMENT_48(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("はっきりいってあたまおかしい", , 動作モード)
 
 ;-----------------------------------
 ; サブウェポンの資材

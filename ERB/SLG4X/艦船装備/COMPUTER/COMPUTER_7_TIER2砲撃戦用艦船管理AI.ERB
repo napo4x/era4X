@@ -14,10 +14,11 @@ STATUS:PRICE = 100000
 ;-----------------------------------
 ; コンピューターの説明
 ;-----------------------------------
-@GET_COMPUTER_DESCRIPTION_F_7
-PRINTFORML 原始的な砲撃戦用のAIを改良し近代化した企業連合製AI
-PRINTFORML しかし設計情報が流出し今ではどこの国でも制作可能となっている
-PRINTFORML 性能面は正当な進化を遂げており人気が高い
+@GET_COMPUTER_DESCRIPTION_F_7(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("原始的な砲撃戦用のAIを改良し近代化した企業連合製AI", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("しかし設計情報が流出し今ではどこの国でも制作可能となっている", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("性能面は正当な進化を遂げており人気が高い", , 動作モード)
 
 ;-----------------------------------
 ; AIの資材

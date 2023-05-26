@@ -19,7 +19,8 @@ STATUS:PRICE = 120000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_F_201
+@GET_SUB_WEAPON_DESCRIPTION_F_201(動作モード = 0)
+#DIM 動作モード
 
 
 
@@ -36,5 +37,6 @@ USE_RESOURCE:武装合金 = 12
 USE_RESOURCE:武装制御機器 = 32
 USE_RESOURCE:超電導回路 = 12
 
-@IS_SALE_SUB_WEAPON_201
+@IS_SALE_SUB_WEAPON_201(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

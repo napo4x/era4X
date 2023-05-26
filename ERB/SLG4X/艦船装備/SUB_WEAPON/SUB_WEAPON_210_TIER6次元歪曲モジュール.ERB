@@ -19,18 +19,22 @@ STATUS:PRICE = 60000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_F_210
+@GET_SUB_WEAPON_DESCRIPTION_F_210(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 機体本体から自動展開される特殊力場の渦。
-PRINTFORML 未知の技術による空間歪曲と強力なエネルギー干渉により、周囲の空間を歪ませ、電子機器をショートさせる。
-PRINTFORML 戦闘艦艇クラスのECM防御能力がなければこの力場によって制御系を狂わされるだろう。
-PRINTFORML 空間歪曲は軽度であるが、その運動性能もあり、FCSによる照準に大きな悪影響を与える。
-;渦で八尺瓊勾玉モチーフ。
-;『神と人』ボス、ヤタガラス専用兵装。
+CALL SHIP_PRINTFORML_MESSAGE("機体本体から自動展開される特殊力場の渦。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("未知の技術による空間歪曲と強力なエネルギー干渉により、周囲の空間を歪ませ、電子機器をショートさせる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("戦闘艦艇クラスのECM防御能力がなければこの力場によって制御系を狂わされるだろう。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("空間歪曲は軽度であるが、その運動性能もあり、FCSによる照準に大きな悪影響を与える。", , 動作モード)
+
+@GET_SUB_WEAPON_COMENT_210(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE(";渦で八尺瓊勾玉モチーフ。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE(";『神と人』ボス、ヤタガラス専用兵装。", , 動作モード)
 
 ;-----------------------------------
 ; サブウェポンの資材
@@ -39,5 +43,6 @@ PRINTFORML 空間歪曲は軽度であるが、その運動性能もあり、FCS
 #DIM REF USE_RESOURCE
 
 
-@IS_SALE_SUB_WEAPON_210
+@IS_SALE_SUB_WEAPON_210(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

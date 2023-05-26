@@ -19,13 +19,14 @@ STATUS:PRICE = 120000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_F_93
+@GET_SUB_WEAPON_DESCRIPTION_F_93(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 宇宙いかのeraな器官から放たれる生体ミサイル？。
+CALL SHIP_PRINTFORML_MESSAGE("宇宙いかのeraな器官から放たれる生体ミサイル？。", , 動作モード)
 
 ;-----------------------------------
 ; サブウェポンの資材
@@ -35,5 +36,6 @@ PRINTFORML 宇宙いかのeraな器官から放たれる生体ミサイル？。
 
 
 
-@IS_SALE_SUB_WEAPON_93
+@IS_SALE_SUB_WEAPON_93(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

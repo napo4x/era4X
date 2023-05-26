@@ -18,13 +18,14 @@ STATUS:PRICE = 20000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_22
+@GET_MAIN_WEAPON_DESCRIPTION_F_22(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 追尾性能の非常に高い中型艦用のミサイルユニット。
+CALL SHIP_PRINTFORML_MESSAGE("追尾性能の非常に高い中型艦用のミサイルユニット。", , 動作モード)
 
 
 

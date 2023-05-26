@@ -13,18 +13,17 @@ STATUS:PRICE = 250000000
 ;-----------------------------------
 ; オプションの説明
 ;-----------------------------------
-@GET_OPTION_DESCRIPTION_F_9
-PRINTFORML センサーの出力を2増加させる。
-PRINTL
+@GET_OPTION_DESCRIPTION_F_9(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("センサーの出力を2増加させる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
 ;フレーバーテキスト的な
-PRINTFORML 企業連合が技術の粋を集めて作ったセンサー素子
-PRINTFORML 大富豪の護衛艦に搭載することによってさらなる安全を確保するために開発された
+CALL SHIP_PRINTFORML_MESSAGE("企業連合が技術の粋を集めて作ったセンサー素子", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("大富豪の護衛艦に搭載することによってさらなる安全を確保するために開発された", , 動作モード)
 IF REL_LIKE_COUNTRY:国家ID_企業連合:国家ID_プレイヤー > 999
-  SETCOLOR カラー_選択不可
-  PRINTFORML ……ことになっているが、実際にはアンビシャス級試験艦を売り込むためである
-  PRINTFORML ２つ搭載することによってセクターを見通すことができるとして探検家向けに開発されたが、
-  PRINTFORML その開発コストの高さから値段が高騰、未だ回収には至っていない
-  RESETCOLOR
+  CALL SHIP_PRINTFORML_MESSAGE("……ことになっているが、実際にはアンビシャス級試験艦を売り込むためである", カラー_選択不可, 動作モード)
+  CALL SHIP_PRINTFORML_MESSAGE("２つ搭載することによってセクターを見通すことができるとして探検家向けに開発されたが、", カラー_選択不可, 動作モード)
+  CALL SHIP_PRINTFORML_MESSAGE("その開発コストの高さから値段が高騰、未だ回収には至っていない", カラー_選択不可, 動作モード)
 ENDIF
 
 ;-----------------------------------
@@ -36,13 +35,11 @@ ENDIF
 USE_RESOURCE:タイラーセンサー = 100
 
 
-@IS_SALE_OPTION_9
-CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
+@IS_SALE_OPTION_9(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 
-SIF RESULT == -1
-  RETURN 0
-SIF STAR_OWNER:RESULT != 国家ID_企業連合
-  RETURN 0
-SIF REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー < 100
-  RETURN 0
-RETURN 1
+CAN_SALE_EQUIP:必要好感度 = 100
+
+SETBIT CAN_SALE_EQUIP:建造可能国家, 国家ID_企業連合 + 国家ID_ビット演算ヘッダー調整
+
+RETURN 0

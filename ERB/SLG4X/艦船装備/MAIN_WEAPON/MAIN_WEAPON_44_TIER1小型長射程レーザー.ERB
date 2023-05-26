@@ -18,13 +18,14 @@ STATUS:PRICE = 10000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_44
+@GET_MAIN_WEAPON_DESCRIPTION_F_44(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 精密なレーザー照射により、長距離目標に対する効果を高めている。
+CALL SHIP_PRINTFORML_MESSAGE("精密なレーザー照射により、長距離目標に対する効果を高めている。", , 動作モード)
 
 
 

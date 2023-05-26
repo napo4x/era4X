@@ -18,14 +18,16 @@ STATUS:PRICE = 2000000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_306
-PRINTFORML 使い捨ての大出力粒子加速器を弾頭とした物
-PRINTFORML この武装は使用ユニット自身を破壊する
+@GET_MAIN_WEAPON_DESCRIPTION_F_306(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("使い捨ての大出力粒子加速器を弾頭とした物", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("この武装は使用ユニット自身を破壊する", , 動作モード)
 ;-----------------------------------
 ; メインウェポンの資材
 ;-----------------------------------
 @GET_MAIN_WEAPON_RESOURCE_306(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-@IS_SALE_MAIN_WEAPON_306
+@IS_SALE_MAIN_WEAPON_306(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

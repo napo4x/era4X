@@ -13,11 +13,10 @@ STATUS:PRICE = 10000
 ;-----------------------------------
 ; オプションの説明
 ;-----------------------------------
-@GET_OPTION_DESCRIPTION_0(STATUS)
-#DIM STATUS, STATUS_LENGTH
-CALL GET_OPTION_STATUS_0(STATUS)
+@GET_OPTION_DESCRIPTION_F_0(動作モード = 0)
+#DIM 動作モード
 CALL GET_OPTION_NAME_0
-PRINTFORML %RESULTS%
+CALL SHIP_PRINTFORML_MESSAGE("%RESULTS%", , 動作モード)
 
 
 ;-----------------------------------

@@ -24,13 +24,14 @@ RETURN 132
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_PAYLOAD_DESCRIPTION_F_4
+@GET_PAYLOAD_DESCRIPTION_F_4(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 艦隊防衛を主任務に調整された近接支援用の小型航宙機。
+CALL SHIP_PRINTFORML_MESSAGE("艦隊防衛を主任務に調整された近接支援用の小型航宙機。", , 動作モード)
 
 
 

@@ -12,9 +12,10 @@ STATUS:PRICE = 100000000
 ;-----------------------------------
 ; オプションの説明
 ;-----------------------------------
-@GET_OPTION_DESCRIPTION_F_12
-PRINTFORML 周囲にシールド出力を低下させる原始的な金属製の粉塵を散布する装置
-PRINTFORML この装置が機能している間は敵味方問わずシールドへの損害が格段に増加する
+@GET_OPTION_DESCRIPTION_F_12(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("周囲にシールド出力を低下させる原始的な金属製の粉塵を散布する装置", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("この装置が機能している間は敵味方問わずシールドへの損害が格段に増加する", , 動作モード)
 
 ;-----------------------------------
 ; オプションの資材
@@ -26,7 +27,8 @@ USE_RESOURCE:耐熱合金 = 100
 USE_RESOURCE:超電導回路 = 100
 USE_RESOURCE:タイラーセンサー = 100
 
-@IS_SALE_OPTION_12
+@IS_SALE_OPTION_12(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0
 
 @IS_MODULE_OPTION_12

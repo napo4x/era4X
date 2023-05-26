@@ -19,15 +19,16 @@ STATUS:PRICE = 120000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_F_104
+@GET_SUB_WEAPON_DESCRIPTION_F_104(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 大型の投網を射出する漁具。
-PRINTFORML 宇宙かにでも容易くは切断できない強度を誇り
-PRINTFORML 破壊力はないが、飛翔体を捕らえる能力は十分。
+CALL SHIP_PRINTFORML_MESSAGE("大型の投網を射出する漁具。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("宇宙かにでも容易くは切断できない強度を誇り", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("破壊力はないが、飛翔体を捕らえる能力は十分。", , 動作モード)
 
 ;-----------------------------------
 ; サブウェポンの資材

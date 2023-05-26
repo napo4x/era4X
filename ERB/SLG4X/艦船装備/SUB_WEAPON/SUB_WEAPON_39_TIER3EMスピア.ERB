@@ -19,15 +19,16 @@ STATUS:PRICE = 40000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_F_39
+@GET_SUB_WEAPON_DESCRIPTION_F_39(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 大型機動歩兵用の射出機構付きスピア。
-PRINTFORML 射出機構を電磁投射式とし、貫通力を大幅に高めたモデル。
-PRINTFORML 基部に重機関砲を搭載することで若干の対空迎撃能力が付与されている。
+CALL SHIP_PRINTFORML_MESSAGE("大型機動歩兵用の射出機構付きスピア。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("射出機構を電磁投射式とし、貫通力を大幅に高めたモデル。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("基部に重機関砲を搭載することで若干の対空迎撃能力が付与されている。", , 動作モード)
 
 ;-----------------------------------
 ; サブウェポンの資材

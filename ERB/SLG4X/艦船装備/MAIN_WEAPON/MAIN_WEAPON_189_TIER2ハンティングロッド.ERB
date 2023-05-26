@@ -18,16 +18,17 @@ STATUS:PRICE = 20000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_189
+@GET_MAIN_WEAPON_DESCRIPTION_F_189(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 対象に引っ掛ける拘引具付きワイヤーと巻き取り機構付きの竿からなる漁具。
-PRINTFORML 獲物となる宇宙怪獣とまともに引き合いすると負けてしまうため
-PRINTFORML 電撃でショックを与える機能を内蔵している。
-PRINTFORML 熟練漁師は巻き取り機構を利用し戦闘時の高速移動手段としても用いている。
+CALL SHIP_PRINTFORML_MESSAGE("対象に引っ掛ける拘引具付きワイヤーと巻き取り機構付きの竿からなる漁具。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("獲物となる宇宙怪獣とまともに引き合いすると負けてしまうため", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("電撃でショックを与える機能を内蔵している。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("熟練漁師は巻き取り機構を利用し戦闘時の高速移動手段としても用いている。", , 動作モード)
 
 
 

@@ -18,21 +18,22 @@ STATUS:PRICE = 40000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_65
+@GET_MAIN_WEAPON_DESCRIPTION_F_65(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 有線式リムペットガンの発売後、ごく一部のユーザーから寄せられた
-PRINTFORML 「威力が従来モデルと大差ない」というクレームに対応する形で開発された新型の有線爆弾。
-PRINTFORML 有線式リムペットガンの炸薬を転用し、炸薬部の小型化・投擲に向いた形状への改良を行い、
-PRINTFORML 大幅に破砕力を上げつつ、戦闘用兵器としての実用性を向上させたモデルとして完成した。
-PRINTFORML 
-PRINTFORML なお、新式の炸薬を大量に使用したことから、
-PRINTFORML 解体用の炸薬としてのコストパフォーマンスは大きく見劣りするものとなっており、
-PRINTFORML 戦闘用の兵器としては相変わらず非常に癖が強い事から、開発コストの回収は難航している。
-PRINTFORML 
+CALL SHIP_PRINTFORML_MESSAGE("有線式リムペットガンの発売後、ごく一部のユーザーから寄せられた", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("「威力が従来モデルと大差ない」というクレームに対応する形で開発された新型の有線爆弾。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("有線式リムペットガンの炸薬を転用し、炸薬部の小型化・投擲に向いた形状への改良を行い、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("大幅に破砕力を上げつつ、戦闘用兵器としての実用性を向上させたモデルとして完成した。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("なお、新式の炸薬を大量に使用したことから、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("解体用の炸薬としてのコストパフォーマンスは大きく見劣りするものとなっており、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("戦闘用の兵器としては相変わらず非常に癖が強い事から、開発コストの回収は難航している。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
 
 
 

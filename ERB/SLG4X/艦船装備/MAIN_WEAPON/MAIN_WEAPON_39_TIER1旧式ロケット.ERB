@@ -18,18 +18,19 @@ STATUS:PRICE = 5000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_39
+@GET_MAIN_WEAPON_DESCRIPTION_F_39(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 民間に払い下げられた、旧式の対艦ロケット砲。
-PRINTFORML 保存状態が悪い事から極めて信憑性が低く、
-PRINTFORML 不発が相次ぐうえに、正確に直進する弾頭の方が珍しいレベルで精度が悪い。
-PRINTFORML 
-PRINTFORML とはいえ、小さなデブリや小惑星を粉砕する分には十分な威力があることから、
-PRINTFORML 一部の国家では作業補助用として未だに現役で使われている。
+CALL SHIP_PRINTFORML_MESSAGE("民間に払い下げられた、旧式の対艦ロケット砲。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("保存状態が悪い事から極めて信憑性が低く、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("不発が相次ぐうえに、正確に直進する弾頭の方が珍しいレベルで精度が悪い。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("とはいえ、小さなデブリや小惑星を粉砕する分には十分な威力があることから、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("一部の国家では作業補助用として未だに現役で使われている。", , 動作モード)
 
 
 
@@ -43,5 +44,6 @@ PRINTFORML 一部の国家では作業補助用として未だに現役で使わ
 #DIM REF USE_RESOURCE
 
 
-@IS_SALE_MAIN_WEAPON_39
+@IS_SALE_MAIN_WEAPON_39(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

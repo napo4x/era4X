@@ -18,11 +18,12 @@ STATUS:PRICE = 64000000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_216
+@GET_MAIN_WEAPON_DESCRIPTION_F_216(動作モード = 0)
+#DIM 動作モード
 
 
-PRINTFORML 警告距離を超えて接近してくる艦船を撃沈するための自衛武装
-PRINTFORML 装甲値の高い大型艦には弱い
+CALL SHIP_PRINTFORML_MESSAGE("警告距離を超えて接近してくる艦船を撃沈するための自衛武装", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("装甲値の高い大型艦には弱い", , 動作モード)
 
 
 
@@ -32,11 +33,15 @@ PRINTFORML 装甲値の高い大型艦には弱い
 @GET_MAIN_WEAPON_RESOURCE_216(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 USE_RESOURCE:武装合金 = 10
-;USE_RESOURCE:重武装合金 = 1000
-;USE_RESOURCE:武装制御機器 = 500
+
+@GET_MAIN_WEAPON_COMENT_216(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE(";USE_RESOURCE:重武装合金 = 1000", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE(";USE_RESOURCE:武装制御機器 = 500", , 動作モード)
 
 
-@IS_SALE_MAIN_WEAPON_216
+@IS_SALE_MAIN_WEAPON_216(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0
 
 @IS_MODULE_MAIN_WEAPON_216

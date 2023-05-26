@@ -14,11 +14,12 @@ STATUS:PRICE = 20000
 ;-----------------------------------
 ; オプションの説明
 ;-----------------------------------
-@GET_OPTION_DESCRIPTION_F_6
-PRINTFORML 運動性を向上させる追加スラスター。
-PRINTFORML 機体の姿勢制御を補助、改善し、宇宙空間における運動性能を向上させる。
-PRINTFORML スラスター数、質量増加を抑えつつ、噴射効率を増大させたモデル。
-PRINTFORML 戦闘時の前進速度も上がる
+@GET_OPTION_DESCRIPTION_F_6(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("運動性を向上させる追加スラスター。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("機体の姿勢制御を補助、改善し、宇宙空間における運動性能を向上させる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("スラスター数、質量増加を抑えつつ、噴射効率を増大させたモデル。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("戦闘時の前進速度も上がる", , 動作モード)
 
 ;-----------------------------------
 ; オプションの資材

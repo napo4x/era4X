@@ -18,9 +18,10 @@ STATUS:PRICE = 0
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_237
-PRINTFORML サイズ4の射出対象を発射できる小型艦向けの射出装置
-PRINTFORML 主砲サイズ3でも装備できる代わりに容量が少ない
+@GET_MAIN_WEAPON_DESCRIPTION_F_237(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("サイズ4の射出対象を発射できる小型艦向けの射出装置", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("主砲サイズ3でも装備できる代わりに容量が少ない", , 動作モード)
 
 
 ;-----------------------------------

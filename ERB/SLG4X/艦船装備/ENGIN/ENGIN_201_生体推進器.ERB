@@ -15,7 +15,8 @@ STATUS:PRICE = 160000
 ;-----------------------------------
 ; エンジンの説明
 ;-----------------------------------
-@GET_ENGIN_DESCRIPTION_F_201
+@GET_ENGIN_DESCRIPTION_F_201(動作モード = 0)
+#DIM 動作モード
 
 ;-----------------------------------
 ; エンジンの資材
@@ -26,5 +27,6 @@ STATUS:PRICE = 160000
 USE_RESOURCE:耐熱合金 = 62
 USE_RESOURCE:ジェットガス = 62
 
-@IS_SALE_ENGIN_201
+@IS_SALE_ENGIN_201(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

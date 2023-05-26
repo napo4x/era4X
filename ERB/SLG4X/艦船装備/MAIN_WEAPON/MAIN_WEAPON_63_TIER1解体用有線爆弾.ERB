@@ -18,23 +18,24 @@ STATUS:PRICE = 10000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_63
+@GET_MAIN_WEAPON_DESCRIPTION_F_63(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 企業連合のある中堅メーカーの傘下企業が生産している、大型の有線爆弾。
-PRINTFORML 
-PRINTFORML 主に老朽化した大型艦や宇宙港・大型のデブリ、
-PRINTFORML 犯罪者が立て籠ったシェルター等を爆破処理するために用いられており、
-PRINTFORML 廉価ながら暴発・不発が少なく優秀な品質を誇り、各国に広く流通している。
-PRINTFORML 
-PRINTFORML ただし、本来は静止目標に隣接して設置し、安全域まで離れてから爆破する機材であるため
-PRINTFORML 戦闘用の武器として使用する事を想定しておらず、戦闘においては「機動歩兵で投擲」したり、
-PRINTFORML 「快速の小型艇の外装に取り付け、急接近して切り離してから爆破」
-PRINTFORML …等といった無理矢理な運用を強いられており、動体目標に命中させることは困難を極める。
-PRINTFORML 
+CALL SHIP_PRINTFORML_MESSAGE("企業連合のある中堅メーカーの傘下企業が生産している、大型の有線爆弾。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("主に老朽化した大型艦や宇宙港・大型のデブリ、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("犯罪者が立て籠ったシェルター等を爆破処理するために用いられており、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("廉価ながら暴発・不発が少なく優秀な品質を誇り、各国に広く流通している。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ただし、本来は静止目標に隣接して設置し、安全域まで離れてから爆破する機材であるため", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("戦闘用の武器として使用する事を想定しておらず、戦闘においては「機動歩兵で投擲」したり、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("「快速の小型艇の外装に取り付け、急接近して切り離してから爆破」", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("…等といった無理矢理な運用を強いられており、動体目標に命中させることは困難を極める。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
 
 
 

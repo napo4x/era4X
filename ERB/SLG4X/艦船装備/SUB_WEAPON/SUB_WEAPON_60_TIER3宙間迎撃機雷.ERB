@@ -19,10 +19,11 @@ STATUS:PRICE = 240000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_60
-PRINTFORML %RESULTS%
-PRINTFORML 飛翔体に対する迎撃能力を持つ、宙間機雷投射ユニット。
-PRINTFORML 各国で機動歩兵への採用が検討されている最新型。
+@GET_SUB_WEAPON_DESCRIPTION_60(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("%RESULTS%", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("飛翔体に対する迎撃能力を持つ、宙間機雷投射ユニット。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("各国で機動歩兵への採用が検討されている最新型。", , 動作モード)
 
 
 ;-----------------------------------

@@ -21,14 +21,15 @@ STATUS:PRICE = 200000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_109
+@GET_MAIN_WEAPON_DESCRIPTION_F_109(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 制宙権確保を主任務に調整された高機動型の小型航宙機。
-PRINTFORML 高度なＡＩとフレーム強化により、戦闘機動と連携力を飛躍的に向上させている。
+CALL SHIP_PRINTFORML_MESSAGE("制宙権確保を主任務に調整された高機動型の小型航宙機。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("高度なＡＩとフレーム強化により、戦闘機動と連携力を飛躍的に向上させている。", , 動作モード)
 
 
 

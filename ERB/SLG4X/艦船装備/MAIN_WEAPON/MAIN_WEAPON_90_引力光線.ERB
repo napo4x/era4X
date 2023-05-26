@@ -18,7 +18,8 @@ STATUS:PRICE = 9999999
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_90
+@GET_MAIN_WEAPON_DESCRIPTION_F_90(動作モード = 0)
+#DIM 動作モード
 
 
 
@@ -37,5 +38,6 @@ STATUS:PRICE = 9999999
 #DIM REF USE_RESOURCE
 
 
-@IS_SALE_MAIN_WEAPON_90
+@IS_SALE_MAIN_WEAPON_90(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

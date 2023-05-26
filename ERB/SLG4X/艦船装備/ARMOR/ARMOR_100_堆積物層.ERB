@@ -14,11 +14,12 @@ STATUS:PRICE = 9999
 ;-----------------------------------
 ; アーマーの説明
 ;-----------------------------------
-@GET_ARMOR_DESCRIPTION_F_100
+@GET_ARMOR_DESCRIPTION_F_100(動作モード = 0)
+#DIM 動作モード
 
-PRINTFORML 小惑星などにおける多量の堆積物(レゴリス)
-PRINTFORML 何の加工もされていないので砂地と大差ない強度であるものの
-PRINTFORML その膨大な量によって一種の装甲として機能する
+CALL SHIP_PRINTFORML_MESSAGE("小惑星などにおける多量の堆積物(レゴリス)", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("何の加工もされていないので砂地と大差ない強度であるものの", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("その膨大な量によって一種の装甲として機能する", , 動作モード)
 
 ;-----------------------------------
 ; 装甲の資材
@@ -26,5 +27,6 @@ PRINTFORML その膨大な量によって一種の装甲として機能する
 @GET_ARMOR_RESOURCE_100(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-@IS_SALE_ARMOR_100
+@IS_SALE_ARMOR_100(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

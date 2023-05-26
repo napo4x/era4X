@@ -18,20 +18,21 @@ STATUS:PRICE = 5000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_68
+@GET_MAIN_WEAPON_DESCRIPTION_F_68(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 一般的な作業船に搭載されている、溶断・溶接用レーザートーチ。
-PRINTFORML 
-PRINTFORML 基本的には工作用機材の域を出ない装備ではあるが、
-PRINTFORML レーザー刃の延長・レーザーガンとして転用可能・
-PRINTFORML レーザー発信器を射出して有線による遠隔操作が可能等、
-PRINTFORML 戦闘用途を前提とした内部機構を仕込んでいるモデルも数多く見られる。
-PRINTFORML 
-PRINTFORML このモデルはレーザー刃の延長が可能で、白兵戦に適しているようだ。
+CALL SHIP_PRINTFORML_MESSAGE("一般的な作業船に搭載されている、溶断・溶接用レーザートーチ。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("基本的には工作用機材の域を出ない装備ではあるが、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("レーザー刃の延長・レーザーガンとして転用可能・", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("レーザー発信器を射出して有線による遠隔操作が可能等、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("戦闘用途を前提とした内部機構を仕込んでいるモデルも数多く見られる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("このモデルはレーザー刃の延長が可能で、白兵戦に適しているようだ。", , 動作モード)
 
 
 
@@ -44,5 +45,6 @@ PRINTFORML このモデルはレーザー刃の延長が可能で、白兵戦に
 @GET_MAIN_WEAPON_RESOURCE_68(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-@IS_SALE_MAIN_WEAPON_68
+@IS_SALE_MAIN_WEAPON_68(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

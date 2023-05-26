@@ -15,7 +15,8 @@ STATUS:PRICE = 9999999
 ;-----------------------------------
 ; エンジンの説明
 ;-----------------------------------
-@GET_ENGIN_DESCRIPTION_F_91
+@GET_ENGIN_DESCRIPTION_F_91(動作モード = 0)
+#DIM 動作モード
 ;-----------------------------------
 ; エンジンの資材
 ;-----------------------------------
@@ -23,5 +24,6 @@ STATUS:PRICE = 9999999
 #DIM REF USE_RESOURCE
 
 
-@IS_SALE_ENGIN_91
+@IS_SALE_ENGIN_91(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

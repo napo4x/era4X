@@ -14,7 +14,8 @@ STATUS:PRICE = 60000
 ;-----------------------------------
 ; アーマーの説明
 ;-----------------------------------
-@GET_ARMOR_DESCRIPTION_F_200
+@GET_ARMOR_DESCRIPTION_F_200(動作モード = 0)
+#DIM 動作モード
 
 
 ;-----------------------------------
@@ -25,5 +26,6 @@ STATUS:PRICE = 60000
 
 USE_RESOURCE:装甲合金 = 30
 
-@IS_SALE_ARMOR_200
+@IS_SALE_ARMOR_200(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

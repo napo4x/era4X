@@ -18,19 +18,24 @@ STATUS:PRICE = 12000000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_210
+@GET_MAIN_WEAPON_DESCRIPTION_F_210(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML シールド形成機能を応用した、非常に強力なエネルギーブレードの展開機構。
-PRINTFORML ブレード状に展開する高密度エネルギーフィールドは干渉時の切断能力に優れ、大型艦に対しても致命的な損傷を与える。
-PRINTFORML 旧大国時代に設計されたオーバーテクノロジーのサイオニック兵装であり、未知のエネルギー技術が利用されている。
-PRINTFORML サイオニックジェネレーターの最大出力で展開されるこのブレードは、大型艦クラスでさえ致命的だろう。
-PRINTFORML 建国帝はジャンプドライブによる接近からの一撃離脱戦法によって、多くの敵艦を撃沈している。
-;草薙剣イメージ。
-;『神と人』のボス、ヤタガラス専用兵装。船体に対しわりと即死攻撃。
+CALL SHIP_PRINTFORML_MESSAGE("シールド形成機能を応用した、非常に強力なエネルギーブレードの展開機構。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ブレード状に展開する高密度エネルギーフィールドは干渉時の切断能力に優れ、大型艦に対しても致命的な損傷を与える。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("旧大国時代に設計されたオーバーテクノロジーのサイオニック兵装であり、未知のエネルギー技術が利用されている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("サイオニックジェネレーターの最大出力で展開されるこのブレードは、大型艦クラスでさえ致命的だろう。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("建国帝はジャンプドライブによる接近からの一撃離脱戦法によって、多くの敵艦を撃沈している。", , 動作モード)
+
+
+@GET_MAIN_WEAPON_COMENT_210(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE(";草薙剣イメージ。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE(";『神と人』のボス、ヤタガラス専用兵装。船体に対しわりと即死攻撃。", , 動作モード)
 
 
 
@@ -43,5 +48,6 @@ PRINTFORML 建国帝はジャンプドライブによる接近からの一撃離
 @GET_MAIN_WEAPON_RESOURCE_210(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-@IS_SALE_MAIN_WEAPON_210
+@IS_SALE_MAIN_WEAPON_210(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

@@ -18,13 +18,14 @@ STATUS:PRICE = 20000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_199
+@GET_MAIN_WEAPON_DESCRIPTION_F_199(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 宇宙のしゃこから繰り出される強烈な打撃。
+CALL SHIP_PRINTFORML_MESSAGE("宇宙のしゃこから繰り出される強烈な打撃。", , 動作モード)
 
 
 
@@ -37,5 +38,6 @@ PRINTFORML 宇宙のしゃこから繰り出される強烈な打撃。
 @GET_MAIN_WEAPON_RESOURCE_199(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-@IS_SALE_MAIN_WEAPON_199
+@IS_SALE_MAIN_WEAPON_199(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

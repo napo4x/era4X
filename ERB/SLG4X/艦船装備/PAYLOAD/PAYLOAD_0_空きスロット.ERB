@@ -24,8 +24,9 @@ RETURN 0
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_PAYLOAD_DESCRIPTION_F_0
-PRINTFORML 
+@GET_PAYLOAD_DESCRIPTION_F_0(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
 
 ;-----------------------------------
 ; メインウェポンの資材

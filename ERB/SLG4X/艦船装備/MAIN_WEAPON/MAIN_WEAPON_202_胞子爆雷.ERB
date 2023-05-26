@@ -18,7 +18,8 @@ STATUS:PRICE = 10000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_202
+@GET_MAIN_WEAPON_DESCRIPTION_F_202(動作モード = 0)
+#DIM 動作モード
 
 
 
@@ -40,5 +41,6 @@ USE_RESOURCE:武装合金 = 12
 USE_RESOURCE:耐熱合金 = 12
 USE_RESOURCE:武装制御機器 = 10
 
-@IS_SALE_MAIN_WEAPON_202
+@IS_SALE_MAIN_WEAPON_202(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

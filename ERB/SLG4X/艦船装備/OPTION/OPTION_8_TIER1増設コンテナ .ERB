@@ -32,14 +32,14 @@ STATUS:SHIP_CAPACITY += 200
 ;-----------------------------------
 ; オプションの説明
 ;-----------------------------------
-@GET_OPTION_DESCRIPTION_F_8
-PRINTFORML 装備した艦の積載量を200増加させる。
-PRINTL
+@GET_OPTION_DESCRIPTION_F_8(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("装備した艦の積載量を200増加させる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
 ;フレーバーテキスト的な
-SETCOLOR カラー_選択不可
-PRINTFORML たかがコンテナがなぜこんなに高いのかって？
-PRINTFORML リース代に上乗せされる保険料が青天井に上がるからだよ。文句はロイズの連中に言ってくれ
-RESETCOLOR
+CALL SHIP_PRINTFORML_MESSAGE("たかがコンテナがなぜこんなに高いのかって？", カラー_選択不可, 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("リース代に上乗せされる保険料が青天井に上がるからだよ。文句はロイズの連中に言ってくれ", カラー_選択不可, 動作モード)
+
 
 ;-----------------------------------
 ; オプションの資材

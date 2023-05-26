@@ -18,13 +18,14 @@ STATUS:PRICE = 20000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_196
+@GET_MAIN_WEAPON_DESCRIPTION_F_196(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 高密度な生体レーザー照射。射程は短いが対象を容易く融解させ、貫通する。
+CALL SHIP_PRINTFORML_MESSAGE("高密度な生体レーザー照射。射程は短いが対象を容易く融解させ、貫通する。", , 動作モード)
 
 
 
@@ -37,5 +38,6 @@ PRINTFORML 高密度な生体レーザー照射。射程は短いが対象を容
 @GET_MAIN_WEAPON_RESOURCE_196(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-@IS_SALE_MAIN_WEAPON_196
+@IS_SALE_MAIN_WEAPON_196(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

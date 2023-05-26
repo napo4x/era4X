@@ -18,13 +18,14 @@ STATUS:PRICE = 640000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_70
+@GET_MAIN_WEAPON_DESCRIPTION_F_70(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 大型、安価。量産性に長けたミサイル。
+CALL SHIP_PRINTFORML_MESSAGE("大型、安価。量産性に長けたミサイル。", , 動作モード)
 
 
 

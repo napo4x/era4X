@@ -18,11 +18,12 @@ STATUS:WEAPON_TYPE = 実体弾
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_F_106
+@GET_SUB_WEAPON_DESCRIPTION_F_106(動作モード = 0)
+#DIM 動作モード
 
 
-PRINTFORML 対飛翔物用を撃ち落とすための散弾式対空実体弾
-PRINTFORML 完全に対空性能に振り切っており、ほぼ全ての飛来物を防ぐ
+CALL SHIP_PRINTFORML_MESSAGE("対飛翔物用を撃ち落とすための散弾式対空実体弾", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("完全に対空性能に振り切っており、ほぼ全ての飛来物を防ぐ", , 動作モード)
 
 ;-----------------------------------
 ; サブウェポンの資材

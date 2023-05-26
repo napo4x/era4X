@@ -18,13 +18,14 @@ STATUS:PRICE = 20000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_194
+@GET_MAIN_WEAPON_DESCRIPTION_F_194(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 威力の高い生体粒子加速砲。射程は長く当たると痛いが速度は遅めなため回避しやすい。
+CALL SHIP_PRINTFORML_MESSAGE("威力の高い生体粒子加速砲。射程は長く当たると痛いが速度は遅めなため回避しやすい。", , 動作モード)
 
 
 
@@ -38,5 +39,6 @@ PRINTFORML 威力の高い生体粒子加速砲。射程は長く当たると痛
 #DIM REF USE_RESOURCE
 
 
-@IS_SALE_MAIN_WEAPON_194
+@IS_SALE_MAIN_WEAPON_194(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

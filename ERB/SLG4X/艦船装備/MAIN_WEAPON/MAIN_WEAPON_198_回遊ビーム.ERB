@@ -18,13 +18,14 @@ STATUS:PRICE = 20000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_198
+@GET_MAIN_WEAPON_DESCRIPTION_F_198(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 回遊性の宇宙怪獣が備えている精度の高い生体粒子加速砲。
+CALL SHIP_PRINTFORML_MESSAGE("回遊性の宇宙怪獣が備えている精度の高い生体粒子加速砲。", , 動作モード)
 
 
 
@@ -37,5 +38,6 @@ PRINTFORML 回遊性の宇宙怪獣が備えている精度の高い生体粒子
 @GET_MAIN_WEAPON_RESOURCE_198(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-@IS_SALE_MAIN_WEAPON_198
+@IS_SALE_MAIN_WEAPON_198(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

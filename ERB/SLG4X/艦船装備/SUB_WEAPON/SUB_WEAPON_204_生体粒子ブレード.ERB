@@ -19,14 +19,15 @@ STATUS:PRICE = 60000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_F_204
+@GET_SUB_WEAPON_DESCRIPTION_F_204(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML シールド機能の局所的な高密度化によって形成される、エネルギーブレードの展開機構……を模した器官。
-PRINTFORML バイシザー強襲生体艦はアーム状器官による角度調整でこれを自由に操る。
+CALL SHIP_PRINTFORML_MESSAGE("シールド機能の局所的な高密度化によって形成される、エネルギーブレードの展開機構……を模した器官。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("バイシザー強襲生体艦はアーム状器官による角度調整でこれを自由に操る。", , 動作モード)
 
 ;-----------------------------------
 ; サブウェポンの資材
@@ -39,5 +40,6 @@ USE_RESOURCE:武装制御機器 = 5
 USE_RESOURCE:シールド発生装置 = 5
 USE_RESOURCE:多重シールド発生装置 = 10
 
-@IS_SALE_SUB_WEAPON_204
+@IS_SALE_SUB_WEAPON_204(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

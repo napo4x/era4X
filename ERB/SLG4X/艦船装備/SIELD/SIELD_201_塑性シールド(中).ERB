@@ -15,7 +15,8 @@ STATUS:PRICE = 160000
 ;-----------------------------------
 ; シールドの説明
 ;-----------------------------------
-@GET_SIELD_DESCRIPTION_F_201
+@GET_SIELD_DESCRIPTION_F_201(動作モード = 0)
+#DIM 動作モード
 
 
 
@@ -27,5 +28,6 @@ STATUS:PRICE = 160000
 
 USE_RESOURCE:シールド発生装置 = 60
 
-@IS_SALE_SIELD_201
+@IS_SALE_SIELD_201(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

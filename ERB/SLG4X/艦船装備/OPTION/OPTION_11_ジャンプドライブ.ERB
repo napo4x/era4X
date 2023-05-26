@@ -12,9 +12,10 @@ STATUS:PRICE = 100000000000
 ;-----------------------------------
 ; オプションの説明
 ;-----------------------------------
-@GET_OPTION_DESCRIPTION_F_11
-PRINTFORML %CALLNAME:MASTER%の保有するE√ÂシÓテムを利用し指定座標への艦隊ワープを可能にする装備
-PRINTFORML 既存の技術レベルでは解析不可能
+@GET_OPTION_DESCRIPTION_F_11(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("%CALLNAME:MASTER%の保有するE√ÂシÓテムを利用し指定座標への艦隊ワープを可能にする装備", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("既存の技術レベルでは解析不可能", , 動作モード)
 
 ;-----------------------------------
 ; オプションの資材
@@ -29,11 +30,7 @@ USE_RESOURCE:タイラーセンサー = 2000
 ;-----------------------------------
 ; 販売条件
 ;-----------------------------------
-@IS_SALE_OPTION_11
-CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
-SIF RESULT != -1 && STAR_OWNER:RESULT == 国家ID_プレイヤー && IS_COMPLETE_TECH:44
-  RETURN 1
-CALL GET_PORT_ID_FROM_POS(CHARACTER_POSITION)
-SIF RESULT != -1 && PORT_OWNER:RESULT == 国家ID_プレイヤー && IS_COMPLETE_TECH:44
-  RETURN 1
+@IS_SALE_OPTION_11(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
+CAN_SALE_EQUIP:必要技術ID = 44
 RETURN 0

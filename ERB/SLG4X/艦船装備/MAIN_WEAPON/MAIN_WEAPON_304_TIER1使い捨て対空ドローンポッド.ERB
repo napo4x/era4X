@@ -21,14 +21,16 @@ STATUS:PRICE = 2000000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_304
-PRINTFORML 対空型の使い捨てドローンを射出するポッド。事実上の対空ミサイル
-PRINTFORML この武装は使用ユニット自身を破壊する
+@GET_MAIN_WEAPON_DESCRIPTION_F_304(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("対空型の使い捨てドローンを射出するポッド。事実上の対空ミサイル", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("この武装は使用ユニット自身を破壊する", , 動作モード)
 ;-----------------------------------
 ; メインウェポンの資材
 ;-----------------------------------
 @GET_MAIN_WEAPON_RESOURCE_304(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-@IS_SALE_MAIN_WEAPON_304
+@IS_SALE_MAIN_WEAPON_304(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

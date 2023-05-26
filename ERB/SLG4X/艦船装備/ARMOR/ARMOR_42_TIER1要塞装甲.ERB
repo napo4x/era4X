@@ -12,10 +12,11 @@ STATUS:ARMOR = 10000
 ;-----------------------------------
 ; アーマーの説明
 ;-----------------------------------
-@GET_ARMOR_DESCRIPTION_F_42
+@GET_ARMOR_DESCRIPTION_F_42(動作モード = 0)
+#DIM 動作モード
 
-PRINTFORML 地上要塞や宙空独立モジュールの装甲として一般的に扱われる装甲
-PRINTFORML 艦船用装甲と違い重量にそこまでの制限はないが、自重によるダメージ制御が難しく艦船装甲ほど分野の発展は進んでいない
+CALL SHIP_PRINTFORML_MESSAGE("地上要塞や宙空独立モジュールの装甲として一般的に扱われる装甲", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("艦船用装甲と違い重量にそこまでの制限はないが、自重によるダメージ制御が難しく艦船装甲ほど分野の発展は進んでいない", , 動作モード)
 
 ;-----------------------------------
 ; 装甲の資材
@@ -27,7 +28,8 @@ USE_RESOURCE:重装甲合金 = 2500
 USE_RESOURCE:合金加工剤 = 1750
 USE_RESOURCE:超電導回路 = 550
 
-@IS_SALE_ARMOR_42
+@IS_SALE_ARMOR_42(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0
 
 @IS_MODULE_ARMOR_42

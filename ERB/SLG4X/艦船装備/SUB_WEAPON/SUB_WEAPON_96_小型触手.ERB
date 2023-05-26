@@ -19,14 +19,15 @@ STATUS:PRICE = 150000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_F_96
+@GET_SUB_WEAPON_DESCRIPTION_F_96(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 移動手段や戦闘手段、eraな活躍をする手段と多目的用途で大人気。
-PRINTFORML 自前の器官であったり共生や寄生だったり色々なパターンがある。
+CALL SHIP_PRINTFORML_MESSAGE("移動手段や戦闘手段、eraな活躍をする手段と多目的用途で大人気。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("自前の器官であったり共生や寄生だったり色々なパターンがある。", , 動作モード)
 
 ;-----------------------------------
 ; サブウェポンの資材
@@ -34,5 +35,6 @@ PRINTFORML 自前の器官であったり共生や寄生だったり色々なパ
 @GET_SUB_WEAPON_RESOURCE_96(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-@IS_SALE_SUB_WEAPON_96
+@IS_SALE_SUB_WEAPON_96(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

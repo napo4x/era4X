@@ -14,12 +14,13 @@ STATUS:PRICE = 500000
 ;-----------------------------------
 ; オプションの説明
 ;-----------------------------------
-@GET_OPTION_DESCRIPTION_F_10
-PRINTFORML 宇宙漁船に標準搭載されている総合漁業システム。
-PRINTFORML 獲物の表面に拘引具を外れないようにクルーが直接設置する事で生きたまま無力化出来る装置を搭載している。
-PRINTFORML 拘引装置以外にも各クルー用の漁業用パワードスーツや様々な対象に対応する専用漁具、無人漁業支援機を含む総合漁業システム。
-PRINTFORML ※戦闘勝利時に低確率で敵宇宙怪獣への生け捕り漁の実行が可能となる。
-PRINTFORML ※漁船用総合漁業システムを装備漁船に、クルーが同乗している必要がある。
+@GET_OPTION_DESCRIPTION_F_10(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("宇宙漁船に標準搭載されている総合漁業システム。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("獲物の表面に拘引具を外れないようにクルーが直接設置する事で生きたまま無力化出来る装置を搭載している。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("拘引装置以外にも各クルー用の漁業用パワードスーツや様々な対象に対応する専用漁具、無人漁業支援機を含む総合漁業システム。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("※戦闘勝利時に低確率で敵宇宙怪獣への生け捕り漁の実行が可能となる。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("※漁船用総合漁業システムを装備漁船に、クルーが同乗している必要がある。", , 動作モード)
 
 ;-----------------------------------
 ; オプションの資材
@@ -36,14 +37,6 @@ USE_RESOURCE:耐熱合金 = 10
 USE_RESOURCE:超電導回路 = 10
 USE_RESOURCE:タイラーセンサー = 10
 
-@IS_SALE_OPTION_10
-CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
-
-SIF RESULT == -1
-  RETURN 0
- ;非売品漁船に初期搭載のみ
-SIF STAR_OWNER:RESULT != 国家ID_一般海賊
-  RETURN 0
-SIF REL_LIKE_COUNTRY:(STAR_OWNER:RESULT):国家ID_プレイヤー < 10000
-  RETURN 0
-RETURN 1
+@IS_SALE_OPTION_10(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
+RETURN 0

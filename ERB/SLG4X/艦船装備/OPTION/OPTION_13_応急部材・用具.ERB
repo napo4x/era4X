@@ -12,9 +12,10 @@ STATUS:PRICE = 20000
 ;-----------------------------------
 ; オプションの説明
 ;-----------------------------------
-@GET_OPTION_DESCRIPTION_F_13
-PRINTFORML 応急修理を行う為の資材と用具類。
-PRINTFORML 被弾時に被害が拡大する確率が低下する。
+@GET_OPTION_DESCRIPTION_F_13(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("応急修理を行う為の資材と用具類。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("被弾時に被害が拡大する確率が低下する。", , 動作モード)
 
 
 ;-----------------------------------

@@ -18,11 +18,12 @@ STATUS:WEAPON_TYPE = ミサイル
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_F_105
+@GET_SUB_WEAPON_DESCRIPTION_F_105(動作モード = 0)
+#DIM 動作モード
 
 
-PRINTFORML 対飛翔物用の追尾式多連装ミサイル
-PRINTFORML 対空性能としては過剰だが、対艦性能としても優秀
+CALL SHIP_PRINTFORML_MESSAGE("対飛翔物用の追尾式多連装ミサイル", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("対空性能としては過剰だが、対艦性能としても優秀", , 動作モード)
 
 ;-----------------------------------
 ; サブウェポンの資材

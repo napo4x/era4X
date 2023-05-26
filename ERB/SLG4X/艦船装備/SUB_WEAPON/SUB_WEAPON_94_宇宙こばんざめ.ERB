@@ -16,18 +16,22 @@ STATUS:ANTI_AIR = 70
 STATUS:AIR_SHIP_COUNT = 3
 STATUS:WEAPON_TYPE = 艦載機
 STATUS:PRICE = 500000
-; 艦載機として機能してないかもしれません
+
+@GET_SUB_WEAPON_COMENT_87(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE("; 艦載機として機能してないかもしれません", , 動作モード)
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_F_94
+@GET_SUB_WEAPON_DESCRIPTION_F_94(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 他の宇宙怪獣と共生関係にある艦載機サイズの宇宙怪獣。
-PRINTFORML 危機に対しては共生相手と共に立ち向かう。
+CALL SHIP_PRINTFORML_MESSAGE("他の宇宙怪獣と共生関係にある艦載機サイズの宇宙怪獣。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("危機に対しては共生相手と共に立ち向かう。", , 動作モード)
 
 ;-----------------------------------
 ; サブウェポンの資材
@@ -40,5 +44,6 @@ USE_RESOURCE:耐熱合金 = 10
 USE_RESOURCE:武装制御機器 = 10
 USE_RESOURCE:ジェットガス = 10
 
-@IS_SALE_SUB_WEAPON_94
+@IS_SALE_SUB_WEAPON_94(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

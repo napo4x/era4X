@@ -19,17 +19,18 @@ STATUS:PRICE = 15000
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
-@GET_SUB_WEAPON_DESCRIPTION_F_87
+@GET_SUB_WEAPON_DESCRIPTION_F_87(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML EF・コール級作業機の左腕に搭載された建築・解体用トーチ。
-PRINTFORML 補給の手間を省くために推進ガスを燃料としている。
-PRINTFORML 
-PRINTFORML このモデルは、どういう訳か最大出力が異様に高く設計されており、
-PRINTFORML 火炎放射器として転用することが可能である。
+CALL SHIP_PRINTFORML_MESSAGE("EF・コール級作業機の左腕に搭載された建築・解体用トーチ。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("補給の手間を省くために推進ガスを燃料としている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("このモデルは、どういう訳か最大出力が異様に高く設計されており、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("火炎放射器として転用することが可能である。", , 動作モード)
 
 ;-----------------------------------
 ; サブウェポンの資材
@@ -37,6 +38,9 @@ PRINTFORML 火炎放射器として転用することが可能である。
 @GET_SUB_WEAPON_RESOURCE_87(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-;性能が微妙すぎることもあり、作業機限定にして一般販売はしない
-@IS_SALE_SUB_WEAPON_87
+@GET_SUB_WEAPON_COMENT_87(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE(";性能が微妙すぎることもあり、作業機限定にして一般販売はしない", , 動作モード)
+@IS_SALE_SUB_WEAPON_87(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

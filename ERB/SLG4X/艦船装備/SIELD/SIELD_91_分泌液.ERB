@@ -15,7 +15,8 @@ STATUS:PRICE = 9999
 ;-----------------------------------
 ; シールドの説明
 ;-----------------------------------
-@GET_SIELD_DESCRIPTION_F_91
+@GET_SIELD_DESCRIPTION_F_91(動作モード = 0)
+#DIM 動作モード
 
 
 
@@ -25,6 +26,7 @@ STATUS:PRICE = 9999
 @GET_SIELD_RESOURCE_91(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-@IS_SALE_SIELD_91
+@IS_SALE_SIELD_91(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0
 

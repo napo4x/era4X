@@ -18,15 +18,16 @@ STATUS:PRICE = 40000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_6
+@GET_MAIN_WEAPON_DESCRIPTION_F_6(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML コイルを用いた電気回路により、質量弾を電磁投射する旧式兵器。
-PRINTFORML 近代技術により威力を向上させている
-PRINTFORML 冷却と砲門数を改善し、連射性を飛躍的に増大させている。
+CALL SHIP_PRINTFORML_MESSAGE("コイルを用いた電気回路により、質量弾を電磁投射する旧式兵器。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("近代技術により威力を向上させている", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("冷却と砲門数を改善し、連射性を飛躍的に増大させている。", , 動作モード)
 
 
 

@@ -18,27 +18,28 @@ STATUS:PRICE = 200000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_66
+@GET_MAIN_WEAPON_DESCRIPTION_F_66(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 対艦用有線爆弾の完成後、爆発に魅せられた開発チームの一部人材が、
-PRINTFORML 「タイタン級を支障なく爆破処理できる大型爆薬」という理由をでっち上げて作り出した狂気の産物。
-PRINTFORML 
-PRINTFORML あくまでも試作品なので炸薬は対艦用有線爆弾の流用だが、
-PRINTFORML 炸薬部の大型化・効率化に伴い威力の飛躍的な増大に成功した。
-PRINTFORML 
-PRINTFORML ただし、威力の増大を錦の旗に掲げて炸薬部を考えなしに大型化した結果、
-PRINTFORML 実戦での運用は解体用有線爆弾以上に困難になっている。
-PRINTFORML 
-PRINTFORML なお、試作品の製造によって開発部の暴走を知る事となった上層部に
-PRINTFORML 「こんなモンを用意しなくても、戦略級の大型ミサイルを揃えれば十分だ」と酷評され、
-PRINTFORML 以降の大型有線爆弾の系統の開発は凍結・暴走した当該人材は処分を受け、
-PRINTFORML 試作品も試験を名目として全て消費されたものの、
-PRINTFORML どこからか設計図が流出した事によって少数の完成品が一般市場に流通している。
-PRINTFORML 
+CALL SHIP_PRINTFORML_MESSAGE("対艦用有線爆弾の完成後、爆発に魅せられた開発チームの一部人材が、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("「タイタン級を支障なく爆破処理できる大型爆薬」という理由をでっち上げて作り出した狂気の産物。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("あくまでも試作品なので炸薬は対艦用有線爆弾の流用だが、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("炸薬部の大型化・効率化に伴い威力の飛躍的な増大に成功した。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ただし、威力の増大を錦の旗に掲げて炸薬部を考えなしに大型化した結果、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("実戦での運用は解体用有線爆弾以上に困難になっている。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("なお、試作品の製造によって開発部の暴走を知る事となった上層部に", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("「こんなモンを用意しなくても、戦略級の大型ミサイルを揃えれば十分だ」と酷評され、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("以降の大型有線爆弾の系統の開発は凍結・暴走した当該人材は処分を受け、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("試作品も試験を名目として全て消費されたものの、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("どこからか設計図が流出した事によって少数の完成品が一般市場に流通している。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("", , 動作モード)
 
 
 

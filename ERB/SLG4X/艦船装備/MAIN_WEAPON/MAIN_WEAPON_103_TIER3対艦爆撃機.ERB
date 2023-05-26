@@ -21,14 +21,15 @@ STATUS:PRICE = 200000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_103
+@GET_MAIN_WEAPON_DESCRIPTION_F_103(動作モード = 0)
+#DIM 動作モード
 
 
 
 
 
-PRINTFORML 対艦攻撃を主任務に爆装が施された小型航宙機。
-PRINTFORML 高度なＡＩとフレーム強化により、戦闘機動、爆撃成功率を飛躍的に向上させている。
+CALL SHIP_PRINTFORML_MESSAGE("対艦攻撃を主任務に爆装が施された小型航宙機。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("高度なＡＩとフレーム強化により、戦闘機動、爆撃成功率を飛躍的に向上させている。", , 動作モード)
 
 
 

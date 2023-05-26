@@ -18,11 +18,12 @@ STATUS:PRICE = 64000000
 ;-----------------------------------
 ; メインウェポンの説明
 ;-----------------------------------
-@GET_MAIN_WEAPON_DESCRIPTION_F_217
+@GET_MAIN_WEAPON_DESCRIPTION_F_217(動作モード = 0)
+#DIM 動作モード
 
 
-PRINTFORML 警告距離を超えて接近してくる艦船を撃沈するための自衛武装
-PRINTFORML 実際はシールドを持たない宇宙生物向けの装備であり、強力な装甲相手にも数値以上のスペックを見せる
+CALL SHIP_PRINTFORML_MESSAGE("警告距離を超えて接近してくる艦船を撃沈するための自衛武装", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("実際はシールドを持たない宇宙生物向けの装備であり、強力な装甲相手にも数値以上のスペックを見せる", , 動作モード)
 
 
 ;-----------------------------------
@@ -34,7 +35,8 @@ USE_RESOURCE:重武装合金 = 1000
 USE_RESOURCE:武装制御機器 = 500
 
 
-@IS_SALE_MAIN_WEAPON_217
+@IS_SALE_MAIN_WEAPON_217(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0
 
 @IS_MODULE_MAIN_WEAPON_217

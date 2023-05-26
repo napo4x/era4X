@@ -14,7 +14,8 @@ STATUS:PRICE = 99999999
 ;-----------------------------------
 ; アーマーの説明
 ;-----------------------------------
-@GET_ARMOR_DESCRIPTION_F_90
+@GET_ARMOR_DESCRIPTION_F_90(動作モード = 0)
+#DIM 動作モード
 
 
 ;-----------------------------------
@@ -23,5 +24,6 @@ STATUS:PRICE = 99999999
 @GET_ARMOR_RESOURCE_90(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-@IS_SALE_ARMOR_90
+@IS_SALE_ARMOR_90(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0

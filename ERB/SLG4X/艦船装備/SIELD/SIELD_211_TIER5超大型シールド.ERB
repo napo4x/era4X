@@ -15,12 +15,13 @@ STATUS:PRICE = 32000000
 ;-----------------------------------
 ; シールドの説明
 ;-----------------------------------
-@GET_SIELD_DESCRIPTION_F_211
+@GET_SIELD_DESCRIPTION_F_211(動作モード = 0)
+#DIM 動作モード
 
 
-PRINTFORML 旧文明において使用されていた大型艦船用シールド。
-PRINTFORML その常軌を逸した強固さは現行大型艦艇とは比較にならず、都市の防護シールドにさえ匹敵する。
-PRINTFORML 当時の莫大なコアジェネレーター出力があればこそのシールドだろう。
+CALL SHIP_PRINTFORML_MESSAGE("旧文明において使用されていた大型艦船用シールド。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("その常軌を逸した強固さは現行大型艦艇とは比較にならず、都市の防護シールドにさえ匹敵する。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("当時の莫大なコアジェネレーター出力があればこそのシールドだろう。", , 動作モード)
 
 ;-----------------------------------
 ; シールドの資材
@@ -30,6 +31,7 @@ PRINTFORML 当時の莫大なコアジェネレーター出力があればこそ
 
 USE_RESOURCE:シールド発生装置 = 96
 
-@IS_SALE_SIELD_211
+@IS_SALE_SIELD_211(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0
 

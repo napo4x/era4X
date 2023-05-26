@@ -12,10 +12,11 @@ STATUS:ARMOR = 12000
 ;-----------------------------------
 ; アーマーの説明
 ;-----------------------------------
-@GET_ARMOR_DESCRIPTION_F_43
+@GET_ARMOR_DESCRIPTION_F_43(動作モード = 0)
+#DIM 動作モード
 
-PRINTFORML 発展型要塞装甲
-PRINTFORML ダメージ拡散機能を搭載し瞬間防御力を上げているが、精密なダメージ制御を行っているため戦闘後のメンテナンスコストは格段に悪化した
+CALL SHIP_PRINTFORML_MESSAGE("発展型要塞装甲", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("ダメージ拡散機能を搭載し瞬間防御力を上げているが、精密なダメージ制御を行っているため戦闘後のメンテナンスコストは格段に悪化した", , 動作モード)
 
 ;-----------------------------------
 ; 装甲の資材
@@ -28,7 +29,8 @@ USE_RESOURCE:合金加工剤 = 2000
 USE_RESOURCE:超電導回路 = 1100
 USE_RESOURCE:武装制御機器 = 1000
 
-@IS_SALE_ARMOR_43
+@IS_SALE_ARMOR_43(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0
 
 @IS_MODULE_ARMOR_43

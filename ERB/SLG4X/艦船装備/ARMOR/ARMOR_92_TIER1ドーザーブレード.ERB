@@ -14,11 +14,12 @@ STATUS:PRICE = 10000
 ;-----------------------------------
 ; アーマーの説明
 ;-----------------------------------
-@GET_ARMOR_DESCRIPTION_F_92
+@GET_ARMOR_DESCRIPTION_F_92(動作モード = 0)
+#DIM 動作モード
 
-PRINTFORML ヘイロタイ級作業機の車体前部に装備されているドーザーブレード。
-PRINTFORML 無重力下においてはほぼ無意味なパーツであるが、
-PRINTFORML それなりの強度があるため増加装甲代わりとして取り外されずに運用される事が多い。
+CALL SHIP_PRINTFORML_MESSAGE("ヘイロタイ級作業機の車体前部に装備されているドーザーブレード。", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("無重力下においてはほぼ無意味なパーツであるが、", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("それなりの強度があるため増加装甲代わりとして取り外されずに運用される事が多い。", , 動作モード)
 
 ;-----------------------------------
 ; 装甲の資材
@@ -26,6 +27,10 @@ PRINTFORML それなりの強度があるため増加装甲代わりとして取
 @GET_ARMOR_RESOURCE_92(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-;あくまでも陸上用作業機のパーツなので、当然ながら非売品
-@IS_SALE_ARMOR_92
+@GET_ARMORN_COMENT_92(動作モード = 0)
+#DIM 動作モード
+CALL SHIP_PRINTFORML_MESSAGE(";あくまでも陸上用作業機のパーツなので、当然ながら非売品(注釈:販売条件上方にあったコメント)", , 動作モード)
+
+@IS_SALE_ARMOR_92(CAN_SALE_EQUIP)
+#DIM REF CAN_SALE_EQUIP
 RETURN 0
