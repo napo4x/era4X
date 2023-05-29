@@ -49,67 +49,82 @@ CURRENT_PORTID = -1
 CALL SHOW_MESSAGE_QUE_LINK(MQ_LINK_ID)
 
 	;状態表示とCONTROL表示
-IF BOARDING_SHIP_ID != -1 && SHIP_MISSION:BOARDING_SHIP_ID == 待機
+IF SELECTED != -1 && SELECTED != CHARACTER_POSITION
+    PRINTFORML マップ確認モード
+    PRINTL 
+    PRINTS "　　　　"
+    PRINTBUTTON "[g] 現在位置に戻る", "g"
+    PRINTL 
+    PRINTL 
+ELSEIF BOARDING_SHIP_ID != -1
     PRINTFORML 現在%SHIP_NAME:BOARDING_SHIP_ID%に搭乗しています
-    CALL GET_ENGIN_(BOARDING_SHIP_ID)
-    ENGINE_SPEED = RESULT
-    IF ENGINE_SPEED == 1
-        PRINTBUTTON "   [w]↑", "w"
-        PRINTL 
-        PRINTBUTTON "[a]←", "a"
-        PRINT     
-        PRINTBUTTON "→[d]", "d"
-        PRINTL 
-        PRINTBUTTON "   [s]↓", "s"
-        PRINTL 
-    ELSEIF SPEED > 1
-        PRINTBUTTON "     [W]↑", "W"
-        PRINTBUTTON "[w]↑↑", "w"
-        PRINTL 
-        PRINTBUTTON "[A]←", "A"
-        PRINTBUTTON "[a]←←", "a"
-        PRINT     
-        PRINTBUTTON "→→[d]", "d"
-        PRINTBUTTON "→[D]", "D"
-        PRINTL 
-        PRINTBUTTON "     [S]↓", "S"
-        PRINTBUTTON "[s]↓↓", "s"
-        PRINTL 
-    ENDIF
-ELSEIF BOARDING_SHIP_ID != -1 && SHIP_MISSION:BOARDING_SHIP_ID == 移動
-    PRINTFORML 現在%SHIP_NAME:BOARDING_SHIP_ID%に搭乗しています
-    PRINTFORML 現在自動航行中です
-	;	PRINTBUTTON "[v] 時間を進める", "v"
-	;	PRINT 　
-    PRINTBUTTON "[c] 自動航行中止", "c"
-    PRINTL
-ELSEIF BOARDING_SHIP_ID != -1 && SHIP_MISSION:BOARDING_SHIP_ID == パトロール
-    PRINTFORML 現在%SHIP_NAME:BOARDING_SHIP_ID%に搭乗しています
-    PRINTFORML 現在パトロール中です
-	;	PRINTBUTTON "[v] 時間を進める", "v"
-	;	PRINT 　
-    PRINTBUTTON "[c] パトロール中止", "c"
-    PRINTL
-ELSEIF BOARDING_SHIP_ID != -1 && SHIP_MISSION:BOARDING_SHIP_ID == 交易
-    PRINTFORML 現在%SHIP_NAME:BOARDING_SHIP_ID%に搭乗しています
-    PRINTFORML 現在交易中です
-	;	PRINTBUTTON "[v] 時間を進める", "v"
-	;	PRINT 　
-    PRINTBUTTON "[c] 交易中止", "c"
-    PRINTL
-ELSEIF BOARDING_SHIP_ID != -1 && SHIP_MISSION:BOARDING_SHIP_ID == 採掘
-    PRINTFORML 現在%SHIP_NAME:BOARDING_SHIP_ID%に搭乗しています
-    PRINTFORML 現在採掘中です
-	;	PRINTBUTTON "[v] 時間を進める", "v"
-	;	PRINT 　
-    PRINTBUTTON "[c] 採掘中止", "c"
-    PRINTL
-ELSEIF BOARDING_SHIP_ID != -1 && SHIP_MISSION:BOARDING_SHIP_ID == 追従
-    PRINTFORML 現在%SHIP_NAME:(SHIP_FOLLOW:BOARDING_SHIP_ID)%を追従しています
-	;	PRINTBUTTON "[v] 時間を進める", "v"
-	;	PRINT 　
-    PRINTBUTTON "[c] 追従中止", "c"
-    PRINTL
+    SELECTCASE SHIP_MISSION:BOARDING_SHIP_ID
+        CASE 待機
+            CALL GET_ENGIN_(BOARDING_SHIP_ID)
+            ENGINE_SPEED = RESULT
+            IF ENGINE_SPEED == 1
+                PRINTBUTTON "   [w]↑", "w"
+                PRINTL 
+                PRINTBUTTON "[a]←", "a"
+                PRINT     
+                PRINTBUTTON "→[d]", "d"
+                PRINTL 
+                PRINTBUTTON "   [s]↓", "s"
+                PRINTL 
+            ELSEIF SPEED > 1
+                PRINTBUTTON "     [W]↑", "W"
+                PRINTBUTTON "[w]↑↑", "w"
+                PRINTL 
+                PRINTBUTTON "[A]←", "A"
+                PRINTBUTTON "[a]←←", "a"
+                PRINT     
+                PRINTBUTTON "→→[d]", "d"
+                PRINTBUTTON "→[D]", "D"
+                PRINTL 
+                PRINTBUTTON "     [S]↓", "S"
+                PRINTBUTTON "[s]↓↓", "s"
+                PRINTL 
+            ENDIF
+        CASE 移動
+            PRINTFORML 現在自動航行中です
+            PRINTS "　　　　"
+            PRINTBUTTON "[c] 自動航行中止", "c"
+            PRINTL 
+            PRINTL 
+        CASE パトロール
+            PRINTFORML 現在パトロール中です
+            PRINTS "　　　　"
+            PRINTBUTTON "[c] パトロール中止", "c"
+            PRINTL 
+            PRINTL 
+        CASE 交易
+            PRINTFORML 現在交易中です
+            PRINTS "　　　　"
+            PRINTBUTTON "[c] 交易中止", "c"
+            PRINTL 
+            PRINTL 
+        CASE 採掘
+            PRINTFORML 現在採掘中です
+            PRINTS "　　　　"
+            PRINTBUTTON "[c] 採掘中止", "c"
+            PRINTL 
+            PRINTL 
+        CASE 追従
+            PRINTFORML 現在%SHIP_NAME:(SHIP_FOLLOW:BOARDING_SHIP_ID)%を追従しています
+            PRINTS "　　　　"
+            PRINTBUTTON "[c] 追従中止", "c"
+            PRINTL 
+            PRINTL 
+        CASEELSE
+            PRINTL 
+            PRINTL 
+            PRINTL 
+    ENDSELECT
+ELSE
+    PRINTFORML 現在艦船に搭乗していません
+    PRINTL 
+    PRINTL 
+    PRINTL 
 ENDIF
 
 CALL SLG_INIT_BUTTON()
@@ -118,83 +133,105 @@ CALL SLG_PRINT_BUTTON("時間を進める", "v")
 CALL SLG_PRINT_BUTTON("任務/人員の設定", "z")
 CALL SLG_PRINT_BUTTON("艦船一覧", "l")
 
-FOR ITER, 0, MAX_STAR
-    IF STAR_POSITION_ID:ITER == CHARACTER_POSITION
-        CALL SLG_PRINT_BUTTON("宇宙港", "f")
-        CURRENT_STAR_PORTID = ITER
-    ENDIF
-NEXT
-FOR ITER, 0, MAX_PORT
-    IF PORT_POSITION_ID:ITER == CHARACTER_POSITION
-        CALL SLG_PRINT_BUTTON("宇宙港", "f")
-        CURRENT_PORTID = ITER
-    ENDIF
-NEXT
+IF SELECTED == -1 || SELECTED == CHARACTER_POSITION
+	; 非マップ確認モード時の表示ボタン
+	; 宇宙港へ
+    FOR ITER, 0, MAX_STAR
+        IF STAR_POSITION_ID:ITER == CHARACTER_POSITION
+            CALL SLG_PRINT_BUTTON("宇宙港", "f")
+            CURRENT_STAR_PORTID = ITER
+        ENDIF
+    NEXT
+    FOR ITER, 0, MAX_PORT
+        IF PORT_POSITION_ID:ITER == CHARACTER_POSITION
+            CALL SLG_PRINT_BUTTON("宇宙港", "f")
+            CURRENT_PORTID = ITER
+        ENDIF
+    NEXT
 
 	; 資源回収
-CALL IS_MINING(CHARACTER_POSITION, BOARDING_SHIP_ID:MASTER)
-IF RESULT == 1
-    CALL SLG_PRINT_BUTTON("採掘", "r")
-ENDIF
+    CALL IS_MINING(CHARACTER_POSITION, BOARDING_SHIP_ID:MASTER)
+    IF RESULT == 1
+        CALL SLG_PRINT_BUTTON("採掘", "r")
+    ENDIF
 
 	; アノマリー
-CALL ID2POS(CHARACTER_POSITION)
-STRLENFORM %ANOMALY_MAP:RESULT:(RESULT:1):(RESULT:2)%
-IF RESULT != 0
-    CALL SLG_PRINT_BUTTON("アノマリーを調査", "e")
-ENDIF
+    CALL ID2POS(CHARACTER_POSITION)
+    STRLENFORM %ANOMALY_MAP:RESULT:(RESULT:1):(RESULT:2)%
+    IF RESULT != 0
+        CALL SLG_PRINT_BUTTON("アノマリーを調査", "e")
+    ENDIF
 
 	; クエスト対象座標
-IF IS_QUEST(CHARACTER_POSITION:MASTER ) != -1
-    TRYCALLFORM QUEST_SHOW_COMMAND_{ IS_QUEST( CHARACTER_POSITION:MASTER)}
+    IF IS_QUEST(CHARACTER_POSITION:MASTER ) != -1
+        TRYCALLFORM QUEST_SHOW_COMMAND_{ IS_QUEST( CHARACTER_POSITION:MASTER)}
+        IF RESULT == 1
+            CALL SLG_PRINT_BUTTON(RESULTS, "Q")
+            RESETCOLOR
+        ENDIF
+    ENDIF
+
+	; 建造物建造
+    IF IS_ABLE_BUILD(CHARACTER_POSITION)
+        CALL SLG_PRINT_BUTTON("建造物建造", "y")
+    ENDIF
+
+	; 宇宙港建造
+    CALL IS_BUILDING(CHARACTER_POSITION)
     IF RESULT == 1
-        CALL SLG_PRINT_BUTTON(RESULTS, "Q")
-        RESETCOLOR
+        CALL SLG_PRINT_BUTTON("宇宙港建造", "t")
     ENDIF
-ENDIF
+    CALL IS_BUILDUP(CHARACTER_POSITION)
+    IF RESULT == 1
+        CALL SLG_PRINT_BUTTON("宇宙港建造", "t")
+    ENDIF
 
-	; 現在位置に戻る
-IF SELECTED != -1 && SELECTED != CHARACTER_POSITION
-    CALL SLG_PRINT_BUTTON("現在位置に戻る", "g")
-ENDIF
-
+	; コロニー運営・資源徴収
+    CALL ON_THE_COLONY(CHARACTER_POSITION)
+    IF RESULT
+        CALL SLG_PRINT_BUTTON("コロニー運営", "b")
+        CALL SLG_PRINT_BUTTON("資源徴収", "n")
+    ENDIF
+ELSE
+	; マップ確認モード時の表示ボタン
 	; 指定座標への自動航行
-IF SELECTED != -1 && SELECTED != CHARACTER_POSITION && BOARDING_SHIP_ID:MASTER != -1 && SHIP_COUNTRY:(BOARDING_SHIP_ID:MASTER) == 国家ID_プレイヤー
-    CALL ID2POS(SELECTED)
-    SECTOR_ID = RESULT:0
-    X_POS = RESULT:1
-    Y_POS = RESULT:2
-    IF X_POS <= MAP_WIDTH && Y_POS <= MAP_HEIGHT
-        CALL SLG_PRINT_BUTTON("指定座標まで自動航行", "m")
+    IF BOARDING_SHIP_ID:MASTER != -1 && SHIP_COUNTRY:(BOARDING_SHIP_ID:MASTER) == 国家ID_プレイヤー
+        CALL ID2POS(SELECTED)
+        SECTOR_ID = RESULT:0
+        X_POS = RESULT:1
+        Y_POS = RESULT:2
+        IF X_POS <= MAP_WIDTH && Y_POS <= MAP_HEIGHT
+            CALL SLG_PRINT_BUTTON("指定座標まで自動航行", "m")
+        ENDIF
     ENDIF
-ENDIF
 
 	; 他マス攻撃コマンド
-IF SELECTED != -1 && SELECTED != CHARACTER_POSITION && BOARDING_SHIP_ID:MASTER != -1 && SELECTED / 10000 == CHARACTER_POSITION / 10000
-    CALL ID2POS(SELECTED)
-    SECTOR_ID = RESULT:0
-    X_POS = RESULT:1
-    Y_POS = RESULT:2
-    IF X_POS <= MAP_WIDTH && Y_POS <= MAP_HEIGHT
-        CALL SLG_PRINT_BUTTON("遠隔攻撃", "O")
+    IF BOARDING_SHIP_ID:MASTER != -1 && SELECTED / 10000 == CHARACTER_POSITION / 10000
+        CALL ID2POS(SELECTED)
+        SECTOR_ID = RESULT:0
+        X_POS = RESULT:1
+        Y_POS = RESULT:2
+        IF X_POS <= MAP_WIDTH && Y_POS <= MAP_HEIGHT
+            CALL SLG_PRINT_BUTTON("遠隔攻撃", "O")
+        ENDIF
     ENDIF
-ENDIF
 
 	; ジャンプドライブ開発
-IF SELECTED != -1 && SELECTED != CHARACTER_POSITION && BOARDING_SHIP_ID:MASTER != -1 && SHIP_COUNTRY:(BOARDING_SHIP_ID:MASTER) == 国家ID_プレイヤー
-    CALL ID2POS(SELECTED)
-    SECTOR_ID = RESULT:0
-    X_POS = RESULT:1
-    Y_POS = RESULT:2
-    IF X_POS <= MAP_WIDTH && Y_POS <= MAP_HEIGHT
-        FOR LOCAL, 0, MAX_SLOT
-            SIF SHIP_EQUIP:オプション:LOCAL:(BOARDING_SHIP_ID:MASTER) != 11
-                CONTINUE
-            CALL SLG_PRINT_BUTTON("指定座標までワープ", "j")
-            BREAK
-        NEXT
+    IF BOARDING_SHIP_ID:MASTER != -1 && SHIP_COUNTRY:(BOARDING_SHIP_ID:MASTER) == 国家ID_プレイヤー
+        CALL ID2POS(SELECTED)
+        SECTOR_ID = RESULT:0
+        X_POS = RESULT:1
+        Y_POS = RESULT:2
+        IF X_POS <= MAP_WIDTH && Y_POS <= MAP_HEIGHT
+            FOR LOCAL, 0, MAX_SLOT
+                SIF SHIP_EQUIP:オプション:LOCAL:(BOARDING_SHIP_ID:MASTER) != 11
+                    CONTINUE
+                CALL SLG_PRINT_BUTTON("指定座標までワープ", "j")
+                BREAK
+            NEXT
+        ENDIF
     ENDIF
-ENDIF
+
 	;PRINTL
 	;IF SELECTED != -1
 	;	CALL ID2POS(SELECTED)
@@ -212,28 +249,6 @@ ENDIF
 	;PRINT　
 	;PRINTBUTTON "[ZP] 多勢力指定近傍船確認", "ZP"
 	;PRINT　
-
-	;建造物建造
-IF SELECTED == -1 && IS_ABLE_BUILD(CHARACTER_POSITION)
-    CALL SLG_PRINT_BUTTON("建造物建造", "y")
-ENDIF
-	; 宇宙港建造
-CALL IS_BUILDING(CHARACTER_POSITION)
-IF RESULT == 1 && SELECTED == -1
-    CALL SLG_PRINT_BUTTON("宇宙港建造", "t")
-ENDIF
-
-CALL IS_BUILDUP(CHARACTER_POSITION)
-IF RESULT == 1 && SELECTED == -1
-    CALL SLG_PRINT_BUTTON("宇宙港建造", "t")
-ENDIF
-
-CALL ON_THE_COLONY(CHARACTER_POSITION)
-IF RESULT && SELECTED == -1
-    CALL SLG_PRINT_BUTTON("コロニー運営", "b")
-ENDIF
-IF RESULT && SELECTED == -1
-    CALL SLG_PRINT_BUTTON("資源徴収", "n")
 ENDIF
 
 CALL SLG_FINALIZE_BUTTON()
@@ -279,7 +294,6 @@ IF RESULT:0
 ENDIF
 
 	;;;　以下、INPUTSが数字でない。文字列照合
-
 SELECTCASE strInputResult
 		; 調教画面へ戻る
     CASE "q"
@@ -292,11 +306,15 @@ SELECTCASE strInputResult
         GOTO INPUT_LOOP
 		; 資源回収
     CASE "r"
+        SIF SELECTED != -1 && SELECTED != CHARACTER_POSITION
+            GOTO INPUT_LOOP
         CALL MINING(CHARACTER_POSITION, 国家ID_プレイヤー, BOARDING_SHIP_ID:MASTER)
         CALL SLG_TURN_END(1)
         GOTO INPUT_LOOP
 		; アノマリー
     CASE "e"
+        SIF SELECTED != -1 && SELECTED != CHARACTER_POSITION
+            GOTO INPUT_LOOP
         IF BOARDING_SHIP_ID:MASTER == -1
             PRINTFORMW アノマリーの調査は%CALLNAME:MASTER%が艦長の時のみ可能です
             GOTO INPUT_LOOP
@@ -312,6 +330,8 @@ SELECTCASE strInputResult
         GOTO INPUT_LOOP
 		; クエスト対象座標
     CASE "Q"
+        SIF SELECTED != -1 && SELECTED != CHARACTER_POSITION
+            GOTO INPUT_LOOP
         IF IS_QUEST(CHARACTER_POSITION:MASTER) != -1
             TRYCALLFORM QUEST_BODY_{IS_QUEST( CHARACTER_POSITION:MASTER)}
             SIF RESULT == 1
@@ -319,8 +339,10 @@ SELECTCASE strInputResult
         ENDIF
 		; 宇宙港建造
     CASE "t"
+        SIF SELECTED != -1 && SELECTED != CHARACTER_POSITION
+            GOTO INPUT_LOOP
         CALL IS_BUILDING(CHARACTER_POSITION)
-        IF RESULT == 1 && SELECTED == -1
+        IF RESULT == 1
             CALL CREATE_STAR_PORT(CHARACTER_POSITION, 国家ID_プレイヤー)
             SIF RESULT == 1
                 CALL SLG_TURN_END(1)
@@ -334,7 +356,9 @@ SELECTCASE strInputResult
         GOTO INPUT_LOOP
 		; 建造物建造
     CASE "y"
-        IF IS_ABLE_BUILD(CHARACTER_POSITION) == 0 || SELECTED != -1
+        SIF SELECTED != -1 && SELECTED != CHARACTER_POSITION
+            GOTO INPUT_LOOP
+        IF IS_ABLE_BUILD(CHARACTER_POSITION) == 0
             GOTO INPUT_LOOP
         ELSE
             CALL CREATE_SPACE_MODULE(CHARACTER_POSITION:MASTER)
@@ -344,6 +368,8 @@ SELECTCASE strInputResult
         ENDIF
 		; 宇宙港へ
     CASE "f"
+        SIF SELECTED != -1 && SELECTED != CHARACTER_POSITION
+            GOTO INPUT_LOOP
         IF CURRENT_STAR_PORTID != -1
             CALL STAR_MENU(CURRENT_STAR_PORTID)
             SIF RESULT == 1
@@ -365,10 +391,14 @@ SELECTCASE strInputResult
             SHIP_MISSION:BOARDING_SHIP_ID = 待機
         GOTO INPUT_LOOP
     CASE "b"
+        SIF SELECTED != -1 && SELECTED != CHARACTER_POSITION
+            GOTO INPUT_LOOP
         CALL SELECT_ON_COLONIES(CHARACTER_POSITION)
         CALL COLONY_MANAGEMENT(RESULT)
         GOTO INPUT_LOOP
     CASE "n"
+        SIF SELECTED != -1 && SELECTED != CHARACTER_POSITION
+            GOTO INPUT_LOOP
         CALL SELECT_ON_COLONIES(CHARACTER_POSITION, "資源を徴収するコロニーを選んでください")
         CALL COLONY_COLLECT_RESOURCES(RESULT)
         GOTO INPUT_LOOP
@@ -380,9 +410,11 @@ SELECTCASE strInputResult
         FLAG:502 ++
         SIF FLAG:502 >= 2
             FLAG:502 = 0
+        GOTO INPUT_LOOP
 		;艦船一覧ウィンドウを表示
     CASE "l"
         CALL CREATE_WINDOW_INMAP_SHIPLIST
+        GOTO INPUT_LOOP
 		;window4メッセージ枠の拡張表示
 		;基本4行＋枠２のタテ６マスのwindowとしている
 		;[一覧表示 / 戻す]　の操作で必要行数まで拡張するための処理。それでも最大100行。これ以上は
@@ -401,7 +433,9 @@ SELECTCASE strInputResult
 
         GOTO INPUT_LOOP
     CASE "m"
-        IF SELECTED != CHARACTER_POSITION && SHIP_COUNTRY:(BOARDING_SHIP_ID:MASTER) == 国家ID_プレイヤー
+        SIF SELECTED == -1 || SELECTED == CHARACTER_POSITION
+            GOTO INPUT_LOOP
+        IF BOARDING_SHIP_ID:MASTER != -1 && SHIP_COUNTRY:(BOARDING_SHIP_ID:MASTER) == 国家ID_プレイヤー
             CALL ID2POS(SELECTED)
             SECTOR_ID = RESULT:0
             X_POS = RESULT:1
@@ -429,7 +463,9 @@ SELECTCASE strInputResult
         ENDIF
         GOTO INPUT_LOOP
     CASE "j"
-        IF SELECTED != -1 && SELECTED != CHARACTER_POSITION && BOARDING_SHIP_ID:MASTER != -1 && SHIP_COUNTRY:(BOARDING_SHIP_ID:MASTER) == 国家ID_プレイヤー
+        SIF SELECTED == -1 || SELECTED == CHARACTER_POSITION
+            GOTO INPUT_LOOP
+        IF BOARDING_SHIP_ID:MASTER != -1 && SHIP_COUNTRY:(BOARDING_SHIP_ID:MASTER) == 国家ID_プレイヤー
             FOR LOCAL, 0, MAX_SLOT
                 SIF SHIP_EQUIP:オプション:LOCAL:(BOARDING_SHIP_ID:MASTER) != 11
                     CONTINUE
@@ -470,42 +506,42 @@ SELECTCASE strInputResult
 	;	CASE "ZP"
 	;		CALL NEAREST_MULTIPLE_ANY_COUNTRY_SHIP_SHOW
 	;		GOTO INPUT_LOOP
+		; 船による移動
+		; エンジン性能 ENGINE_SPEED と低速移動フラグFLAG:502により wasdの移動量が決まる。 WASDは常に１．
+    CASE "w", "d", "a", "s", "W", "D", "A", "S"
+        IF BOARDING_SHIP_ID != -1 && SHIP_MISSION:BOARDING_SHIP_ID == 待機
+            CALL GET_ENGIN_(BOARDING_SHIP_ID)
+            ENGINE_SPEED = RESULT
+            SIF ENGINE_SPEED < 2
+                FLAG:502 = 0	;低速移動フラグ 0= 無制限 / 1= 低速モード移動量１
+
+            SELECTCASE RESULTS
+                CASE "w"
+                    CALL SHIP_MOVE_FOR(8, BOARDING_SHIP_ID, FLAG:502)
+                CASE "d"
+                    CALL SHIP_MOVE_FOR(6, BOARDING_SHIP_ID, FLAG:502)
+                CASE "a"
+                    CALL SHIP_MOVE_FOR(4, BOARDING_SHIP_ID, FLAG:502)
+                CASE "s"
+                    CALL SHIP_MOVE_FOR(2, BOARDING_SHIP_ID, FLAG:502)
+                CASE "W"
+                    CALL SHIP_MOVE_FOR(8, BOARDING_SHIP_ID, 1)
+                CASE "D"
+                    CALL SHIP_MOVE_FOR(6, BOARDING_SHIP_ID, 1)
+                CASE "A"
+                    CALL SHIP_MOVE_FOR(4, BOARDING_SHIP_ID, 1)
+                CASE "S"
+                    CALL SHIP_MOVE_FOR(2, BOARDING_SHIP_ID, 1)
+            ENDSELECT
+
+            CALL ID2POS(SHIP_POSITION:BOARDING_SHIP_ID)
+            X_POS = RESULT:1
+            Y_POS = RESULT:2
+            CALL SLG_TURN_END(1)
+            GOTO INPUT_LOOP
+        ENDIF
     CASEELSE
 ENDSELECT
-
-	; 船による移動
-	; エンジン性能 ENGINE_SPEED と低速移動フラグFLAG:502により wasdの移動量が決まる。 WASDは常に１．
-IF BOARDING_SHIP_ID != -1 && (RESULTS == "w" || RESULTS == "d" || RESULTS == "a" || RESULTS == "s" || RESULTS == "W" || RESULTS == "D" || RESULTS == "A" || RESULTS == "S") && SHIP_MISSION:BOARDING_SHIP_ID == 待機
-    CALL GET_ENGIN_(BOARDING_SHIP_ID)
-    ENGINE_SPEED = RESULT
-    SIF ENGINE_SPEED < 2
-        FLAG:502 = 0	;低速移動フラグ 0= 無制限 / 1= 低速モード移動量１
-
-    SELECTCASE RESULTS
-        CASE "w"
-            CALL SHIP_MOVE_FOR(8, BOARDING_SHIP_ID, FLAG:502)
-        CASE "d"
-            CALL SHIP_MOVE_FOR(6, BOARDING_SHIP_ID, FLAG:502)
-        CASE "a"
-            CALL SHIP_MOVE_FOR(4, BOARDING_SHIP_ID, FLAG:502)
-        CASE "s"
-            CALL SHIP_MOVE_FOR(2, BOARDING_SHIP_ID, FLAG:502)
-        CASE "W"
-            CALL SHIP_MOVE_FOR(8, BOARDING_SHIP_ID, 1)
-        CASE "D"
-            CALL SHIP_MOVE_FOR(6, BOARDING_SHIP_ID, 1)
-        CASE "A"
-            CALL SHIP_MOVE_FOR(4, BOARDING_SHIP_ID, 1)
-        CASE "S"
-            CALL SHIP_MOVE_FOR(2, BOARDING_SHIP_ID, 1)
-    ENDSELECT
-
-    CALL ID2POS(SHIP_POSITION:BOARDING_SHIP_ID)
-    X_POS = RESULT:1
-    Y_POS = RESULT:2
-    CALL SLG_TURN_END(1)
-    GOTO INPUT_LOOP
-ENDIF
 
 	;クエストやアノマリーで調教遷移フラグが立っていた場合、SLG4Xの入力受付ループを抜けSHOPに制御を戻す
 IF FLAG:SLG4X調教開始フラグ == 1
@@ -582,24 +618,25 @@ GOTO INPUT_LOOP
 #DIM CURRENT_LINES
 
 SELECTCASE MODE
-	CASE INIT_MODE
-		PRINT 　　　
-		CURRENT_COLUMNS = 0
-		CURRENT_LINES = 0
-	CASE PRINT_MODE
-		PRINTBUTTON @"　[%KEY%] %BUTTON_STR, BUTTON_COLUMN_WIDTH, LEFT%", KEY
-		CURRENT_COLUMNS++
-		IF CURRENT_COLUMNS == BUTTON_MAX_COLUMNS
-			PRINTL 
-			PRINT 　　　
-			CURRENT_COLUMNS = 0
-			CURRENT_LINES++
-		ENDIF
-	CASE FINALIZE_MODE
-		WHILE CURRENT_LINES < BUTTON_MAX_LINES
-			PRINTL 
-			CURRENT_LINES++
-		WEND
+    CASE INIT_MODE
+        PRINTS "　　　"
+        CURRENT_COLUMNS = 0
+        CURRENT_LINES = 0
+    CASE PRINT_MODE
+        PRINTS "　"
+        PRINTBUTTON @"[%KEY%] %BUTTON_STR, BUTTON_COLUMN_WIDTH, LEFT%", KEY
+        CURRENT_COLUMNS++
+        IF CURRENT_COLUMNS == BUTTON_MAX_COLUMNS
+            PRINTL 
+            PRINTS "　　　"
+            CURRENT_COLUMNS = 0
+            CURRENT_LINES++
+        ENDIF
+    CASE FINALIZE_MODE
+        WHILE CURRENT_LINES < BUTTON_MAX_LINES
+            PRINTL 
+            CURRENT_LINES++
+        WEND
 ENDSELECT
 
 	;-------------------------------------------------
