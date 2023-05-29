@@ -177,12 +177,18 @@ ENDIF
 
 	; ジャンプドライブ開発
 IF SELECTED != -1 && SELECTED != CHARACTER_POSITION && BOARDING_SHIP_ID:MASTER != -1 && SHIP_COUNTRY:(BOARDING_SHIP_ID:MASTER) == 国家ID_プレイヤー
-    FOR LOCAL, 0, MAX_SLOT
-        SIF SHIP_EQUIP:オプション:LOCAL:(BOARDING_SHIP_ID:MASTER) != 11
-            CONTINUE
-        CALL SLG_PRINT_BUTTON("指定座標までワープ", "j")
-        BREAK
-    NEXT
+    CALL ID2POS(SELECTED)
+    SECTOR_ID = RESULT:0
+    X_POS = RESULT:1
+    Y_POS = RESULT:2
+    IF X_POS <= MAP_WIDTH && Y_POS <= MAP_HEIGHT
+        FOR LOCAL, 0, MAX_SLOT
+            SIF SHIP_EQUIP:オプション:LOCAL:(BOARDING_SHIP_ID:MASTER) != 11
+                CONTINUE
+            CALL SLG_PRINT_BUTTON("指定座標までワープ", "j")
+            BREAK
+        NEXT
+    ENDIF
 ENDIF
 	;PRINTL
 	;IF SELECTED != -1
