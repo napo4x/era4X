@@ -504,42 +504,42 @@ SELECTCASE strInputResult
 	;	CASE "ZP"
 	;		CALL NEAREST_MULTIPLE_ANY_COUNTRY_SHIP_SHOW
 	;		GOTO INPUT_LOOP
+		; 船による移動
+		; エンジン性能 ENGINE_SPEED と低速移動フラグFLAG:502により wasdの移動量が決まる。 WASDは常に１．
+    CASE "w", "d", "a", "s", "W", "D", "A", "S"
+        IF BOARDING_SHIP_ID != -1 && SHIP_MISSION:BOARDING_SHIP_ID == 待機
+            CALL GET_ENGIN_(BOARDING_SHIP_ID)
+            ENGINE_SPEED = RESULT
+            SIF ENGINE_SPEED < 2
+                FLAG:502 = 0	;低速移動フラグ 0= 無制限 / 1= 低速モード移動量１
+
+            SELECTCASE RESULTS
+                CASE "w"
+                    CALL SHIP_MOVE_FOR(8, BOARDING_SHIP_ID, FLAG:502)
+                CASE "d"
+                    CALL SHIP_MOVE_FOR(6, BOARDING_SHIP_ID, FLAG:502)
+                CASE "a"
+                    CALL SHIP_MOVE_FOR(4, BOARDING_SHIP_ID, FLAG:502)
+                CASE "s"
+                    CALL SHIP_MOVE_FOR(2, BOARDING_SHIP_ID, FLAG:502)
+                CASE "W"
+                    CALL SHIP_MOVE_FOR(8, BOARDING_SHIP_ID, 1)
+                CASE "D"
+                    CALL SHIP_MOVE_FOR(6, BOARDING_SHIP_ID, 1)
+                CASE "A"
+                    CALL SHIP_MOVE_FOR(4, BOARDING_SHIP_ID, 1)
+                CASE "S"
+                    CALL SHIP_MOVE_FOR(2, BOARDING_SHIP_ID, 1)
+            ENDSELECT
+
+            CALL ID2POS(SHIP_POSITION:BOARDING_SHIP_ID)
+            X_POS = RESULT:1
+            Y_POS = RESULT:2
+            CALL SLG_TURN_END(1)
+            GOTO INPUT_LOOP
+        ENDIF
     CASEELSE
 ENDSELECT
-
-	; 船による移動
-	; エンジン性能 ENGINE_SPEED と低速移動フラグFLAG:502により wasdの移動量が決まる。 WASDは常に１．
-IF BOARDING_SHIP_ID != -1 && (RESULTS == "w" || RESULTS == "d" || RESULTS == "a" || RESULTS == "s" || RESULTS == "W" || RESULTS == "D" || RESULTS == "A" || RESULTS == "S") && SHIP_MISSION:BOARDING_SHIP_ID == 待機
-    CALL GET_ENGIN_(BOARDING_SHIP_ID)
-    ENGINE_SPEED = RESULT
-    SIF ENGINE_SPEED < 2
-        FLAG:502 = 0	;低速移動フラグ 0= 無制限 / 1= 低速モード移動量１
-
-    SELECTCASE RESULTS
-        CASE "w"
-            CALL SHIP_MOVE_FOR(8, BOARDING_SHIP_ID, FLAG:502)
-        CASE "d"
-            CALL SHIP_MOVE_FOR(6, BOARDING_SHIP_ID, FLAG:502)
-        CASE "a"
-            CALL SHIP_MOVE_FOR(4, BOARDING_SHIP_ID, FLAG:502)
-        CASE "s"
-            CALL SHIP_MOVE_FOR(2, BOARDING_SHIP_ID, FLAG:502)
-        CASE "W"
-            CALL SHIP_MOVE_FOR(8, BOARDING_SHIP_ID, 1)
-        CASE "D"
-            CALL SHIP_MOVE_FOR(6, BOARDING_SHIP_ID, 1)
-        CASE "A"
-            CALL SHIP_MOVE_FOR(4, BOARDING_SHIP_ID, 1)
-        CASE "S"
-            CALL SHIP_MOVE_FOR(2, BOARDING_SHIP_ID, 1)
-    ENDSELECT
-
-    CALL ID2POS(SHIP_POSITION:BOARDING_SHIP_ID)
-    X_POS = RESULT:1
-    Y_POS = RESULT:2
-    CALL SLG_TURN_END(1)
-    GOTO INPUT_LOOP
-ENDIF
 
 	;クエストやアノマリーで調教遷移フラグが立っていた場合、SLG4Xの入力受付ループを抜けSHOPに制御を戻す
 IF FLAG:SLG4X調教開始フラグ == 1
