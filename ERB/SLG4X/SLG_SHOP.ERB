@@ -112,57 +112,50 @@ ELSEIF BOARDING_SHIP_ID != -1 && SHIP_MISSION:BOARDING_SHIP_ID == 追従
     PRINTL
 ENDIF
 
-PRINT 　　　
-PRINTBUTTON "[q] 調教画面へ", "q"
-PRINT 　
-
-PRINTBUTTON "[v] 時間を進める", "v"
-PRINT 　
-
-PRINTBUTTON "[z] 任務/人員の設定", "z"
-PRINT 　
-
-PRINTBUTTON "[l] 艦船一覧", "l"
-PRINT 　
+CALL SLG_INIT_BUTTON()
+CALL SLG_PRINT_BUTTON("調教画面へ", "q")
+CALL SLG_PRINT_BUTTON("時間を進める", "v")
+CALL SLG_PRINT_BUTTON("任務/人員の設定", "z")
+CALL SLG_PRINT_BUTTON("艦船一覧", "l")
 
 FOR ITER, 0, MAX_STAR
     IF STAR_POSITION_ID:ITER == CHARACTER_POSITION
-        PRINTBUTTON "[f] 宇宙港", "f"
+        CALL SLG_PRINT_BUTTON("宇宙港", "f")
         CURRENT_STAR_PORTID = ITER
-        PRINT 　
     ENDIF
 NEXT
 FOR ITER, 0, MAX_PORT
     IF PORT_POSITION_ID:ITER == CHARACTER_POSITION
-        PRINTBUTTON "[f] 宇宙港", "f"
+        CALL SLG_PRINT_BUTTON("宇宙港", "f")
         CURRENT_PORTID = ITER
-        PRINT 　
     ENDIF
 NEXT
 
 	; 資源回収
 CALL IS_MINING(CHARACTER_POSITION, BOARDING_SHIP_ID:MASTER)
 IF RESULT == 1
-    PRINTBUTTON "[r] 採掘", "r"
-    PRINT 　
+    CALL SLG_PRINT_BUTTON("採掘", "r")
 ENDIF
 
 	; アノマリー
 CALL ID2POS(CHARACTER_POSITION)
 STRLENFORM %ANOMALY_MAP:RESULT:(RESULT:1):(RESULT:2)%
 IF RESULT != 0
-    PRINTBUTTON "[e] アノマリーを調査", "e"
-    PRINT　
+    CALL SLG_PRINT_BUTTON("アノマリーを調査", "e")
 ENDIF
 
 	; クエスト対象座標
 IF IS_QUEST(CHARACTER_POSITION:MASTER ) != -1
     TRYCALLFORM QUEST_SHOW_COMMAND_{ IS_QUEST( CHARACTER_POSITION:MASTER)}
     IF RESULT == 1
-        PRINTBUTTON "[Q] "+ RESULTS, "Q"
+        CALL SLG_PRINT_BUTTON(RESULTS, "Q")
         RESETCOLOR
-        PRINT　
     ENDIF
+ENDIF
+
+	; 現在位置に戻る
+IF SELECTED != -1 && SELECTED != CHARACTER_POSITION
+    CALL SLG_PRINT_BUTTON("現在位置に戻る", "g")
 ENDIF
 
 	; 指定座標への自動航行
@@ -172,8 +165,7 @@ IF SELECTED != -1 && SELECTED != CHARACTER_POSITION && BOARDING_SHIP_ID:MASTER !
     X_POS = RESULT:1
     Y_POS = RESULT:2
     IF X_POS <= MAP_WIDTH && Y_POS <= MAP_HEIGHT
-        PRINTBUTTON "[m] 指定座標まで自動航行", "m"
-        PRINT 　
+        CALL SLG_PRINT_BUTTON("指定座標まで自動航行", "m")
     ENDIF
 ENDIF
 
@@ -184,20 +176,24 @@ IF SELECTED != -1 && SELECTED != CHARACTER_POSITION && BOARDING_SHIP_ID:MASTER !
     X_POS = RESULT:1
     Y_POS = RESULT:2
     IF X_POS <= MAP_WIDTH && Y_POS <= MAP_HEIGHT
-        PRINTBUTTON "[O] 遠隔攻撃", "O"
-        PRINT 　
+        CALL SLG_PRINT_BUTTON("遠隔攻撃", "O")
     ENDIF
 ENDIF
 
 	; ジャンプドライブ開発
 IF SELECTED != -1 && SELECTED != CHARACTER_POSITION && BOARDING_SHIP_ID:MASTER != -1 && SHIP_COUNTRY:(BOARDING_SHIP_ID:MASTER) == 国家ID_プレイヤー
-    FOR LOCAL, 0, MAX_SLOT
-        SIF SHIP_EQUIP:オプション:LOCAL:(BOARDING_SHIP_ID:MASTER) != 11
-            CONTINUE
-        PRINTBUTTON "[j] 指定座標までワープ", "j"
-        PRINT 　
-        BREAK
-    NEXT
+    CALL ID2POS(SELECTED)
+    SECTOR_ID = RESULT:0
+    X_POS = RESULT:1
+    Y_POS = RESULT:2
+    IF X_POS <= MAP_WIDTH && Y_POS <= MAP_HEIGHT
+        FOR LOCAL, 0, MAX_SLOT
+            SIF SHIP_EQUIP:オプション:LOCAL:(BOARDING_SHIP_ID:MASTER) != 11
+                CONTINUE
+            CALL SLG_PRINT_BUTTON("指定座標までワープ", "j")
+            BREAK
+        NEXT
+    ENDIF
 ENDIF
 	;PRINTL
 	;IF SELECTED != -1
@@ -219,31 +215,28 @@ ENDIF
 
 	;建造物建造
 IF SELECTED == -1 && IS_ABLE_BUILD(CHARACTER_POSITION)
-    PRINTBUTTON "[y] 建造物建造", "y"
-    PRINT 　
+    CALL SLG_PRINT_BUTTON("建造物建造", "y")
 ENDIF
 	; 宇宙港建造
 CALL IS_BUILDING(CHARACTER_POSITION)
 IF RESULT == 1 && SELECTED == -1
-    PRINTBUTTON "[t] 宇宙港建造", "t"
-    PRINT 　
+    CALL SLG_PRINT_BUTTON("宇宙港建造", "t")
 ENDIF
 
 CALL IS_BUILDUP(CHARACTER_POSITION)
 IF RESULT == 1 && SELECTED == -1
-    PRINTBUTTON "[t] 宇宙港建造", "t"
-    PRINT 　
+    CALL SLG_PRINT_BUTTON("宇宙港建造", "t")
 ENDIF
 
 CALL ON_THE_COLONY(CHARACTER_POSITION)
 IF RESULT && SELECTED == -1
-    PRINTBUTTON "[b] コロニー運営", "b"
+    CALL SLG_PRINT_BUTTON("コロニー運営", "b")
 ENDIF
 IF RESULT && SELECTED == -1
-    PRINTBUTTON "[n] 資源徴収", "n"
+    CALL SLG_PRINT_BUTTON("資源徴収", "n")
 ENDIF
 
-PRINTL
+CALL SLG_FINALIZE_BUTTON()
 DRAWLINE
 	;入力
 
@@ -291,6 +284,12 @@ SELECTCASE strInputResult
 		; 調教画面へ戻る
     CASE "q"
         RETURN
+		; 現在位置に戻る
+    CASE "g"
+        CALL ID2POS(CHARACTER_POSITION)
+        SECTOR_ID = RESULT:0
+        SELECTED = -1
+        GOTO INPUT_LOOP
 		; 資源回収
     CASE "r"
         CALL MINING(CHARACTER_POSITION, 国家ID_プレイヤー, BOARDING_SHIP_ID:MASTER)
@@ -562,6 +561,70 @@ ENDIF
 	;ENDSELECT
 	;
 GOTO INPUT_LOOP
+
+	;-------------------------------------------------
+	; 宙域画面のボタン管理
+	;-------------------------------------------------
+@SLG_BUTTON_CORE(MODE, BUTTON_STR, KEY)
+#DIM MODE
+#DIMS BUTTON_STR
+#DIMS KEY
+
+#DIM CONST INIT_MODE = 0
+#DIM CONST PRINT_MODE = 1
+#DIM CONST FINALIZE_MODE = 2
+
+#DIM CONST BUTTON_MAX_COLUMNS = 4
+#DIM CONST BUTTON_COLUMN_WIDTH = 20
+#DIM CONST BUTTON_MAX_LINES = 3
+
+#DIM CURRENT_COLUMNS
+#DIM CURRENT_LINES
+
+SELECTCASE MODE
+	CASE INIT_MODE
+		PRINT 　　　
+		CURRENT_COLUMNS = 0
+		CURRENT_LINES = 0
+	CASE PRINT_MODE
+		PRINTBUTTON @"　[%KEY%] %BUTTON_STR, BUTTON_COLUMN_WIDTH, LEFT%", KEY
+		CURRENT_COLUMNS++
+		IF CURRENT_COLUMNS == BUTTON_MAX_COLUMNS
+			PRINTL 
+			PRINT 　　　
+			CURRENT_COLUMNS = 0
+			CURRENT_LINES++
+		ENDIF
+	CASE FINALIZE_MODE
+		WHILE CURRENT_LINES < BUTTON_MAX_LINES
+			PRINTL 
+			CURRENT_LINES++
+		WEND
+ENDSELECT
+
+	;-------------------------------------------------
+	; 宙域画面のボタン画面初期化
+	;-------------------------------------------------
+@SLG_INIT_BUTTON()
+#DIM CONST INIT_MODE = 0
+CALL SLG_BUTTON_CORE(INIT_MODE, "", "")
+
+	;-------------------------------------------------
+	; 宙域画面のボタン表示
+	;-------------------------------------------------
+@SLG_PRINT_BUTTON(BUTTON_STR, KEY)
+#DIMS BUTTON_STR
+#DIMS KEY
+#DIM CONST PRINT_MODE = 1
+
+CALL SLG_BUTTON_CORE(PRINT_MODE, BUTTON_STR, KEY)
+
+	;-------------------------------------------------
+	; 宙域画面のボタン表示部の空白追加処理
+	;-------------------------------------------------
+@SLG_FINALIZE_BUTTON()
+#DIM CONST FINALIZE_MODE = 2
+CALL SLG_BUTTON_CORE(FINALIZE_MODE, "", "")
 
 	;-------------------------------------------------
 	; 宙域詳細表示
