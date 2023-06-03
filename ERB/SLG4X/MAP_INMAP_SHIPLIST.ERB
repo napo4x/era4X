@@ -3,7 +3,7 @@
 ;;; 保有している艦船の一覧をマップ上に表示する
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 @CREATE_WINDOW_INMAP_SHIPLIST
-#DIM DYNAMIC  WINDOW_ID
+#DIM DYNAMIC WINDOW_ID
 #DIM CONST WINDOW_WIDTH = 108
 #DIM CONST WINDOW_HEIGHT = 33
 
@@ -66,10 +66,11 @@ CALL WndMgr_WindowTitle(WINDOW_ID, "保有艦船一覧")
 CALL WndMgr_DisplayAll()
 
 SWAP_SHIP_ID = -1
-
+VARSET 所有船リスト
 FOR SHIP_ID, 0, MAX_SHIP
-    IF SHIP_COUNTRY:SHIP_ID == 国家ID_プレイヤー
-        所有船リスト = %LIST_ADD(所有船リスト, TOSTR(SHIP_ID))%
+    LOCAL = ORDERED_SHIP_LIST:SHIP_ID
+    IF SHIP_COUNTRY:LOCAL == 国家ID_プレイヤー
+        所有船リスト = %LIST_ADD(所有船リスト, TOSTR(LOCAL))%
     ENDIF
 NEXT
 
@@ -206,7 +207,7 @@ WHILE 1
     LOCALS += @"@C:{カラー_注釈}@[@B:{FILTER_BTN + SHIP_CATEGORY_COUNT + 1}@全ON@/B@/@B:{FILTER_BTN + SHIP_CATEGORY_COUNT + 2}@全OFF@/B@]@/C@"
     CALL WndMgr_TextSet(WINDOW_ID, L_CNT++, @"%LOCALS%")
     L_CNT++
-    LOCALS '= @"@C:{カラー_選択不可}@[a][d]項目横スクロール　[w][s]ページ送り@/C@                                       @B:q@[Q]閉じる@/B@"
+    LOCALS '= @"@C:{カラー_選択不可}@[a][d]項目横スクロール　[w][s]ページ送り@/C@                                @B:e@[e]昇順@/B@ @B:r@[r]降順@/B@ @B:q@[Q]閉じる@/B@"
     CALL WndMgr_TextSet(WINDOW_ID, L_CNT++, @"%LOCALS%")
     ;画面描画
     ;-------------------------------------------------
@@ -282,6 +283,12 @@ WHILE 1
             CALL WndMgr_DestroyWindow(WINDOW_ID)
             CLEARLINE WINDOW_HEIGHT + 3
             BREAK
+        CASE "e", "E"
+            CALL SORT_ORDERED_LIST(0)
+            RESTART
+        CASE "r", "R"
+            CALL SORT_ORDERED_LIST(1)
+            RESTART
     ENDSELECT
     LOCAL = TOINT(RESULTS)
     SELECTCASE LOCAL
