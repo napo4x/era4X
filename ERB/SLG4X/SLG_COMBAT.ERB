@@ -1713,33 +1713,33 @@ RETURN ANTI_AIR_DAMAGE
 ;-------------------------------------------------
 ; 対空砲火を計算した上でのダメージ返却
 ;-------------------------------------------------
-@GET_TOTAL_DAMAGE(_WEAPON_STATUS, _DAMAGE, _ANTI_AIR_DAMAGE)
-#DIM REF _WEAPON_STATUS
-#DIM _DAMAGE
-#DIM _ANTI_AIR_DAMAGE
-#DIM _WEAPON_HP
-#DIM _WEAPON_TOTAL_HP
+;@GET_TOTAL_DAMAGE(_WEAPON_STATUS, _DAMAGE, _ANTI_AIR_DAMAGE)
+;#DIM REF _WEAPON_STATUS
+;#DIM _DAMAGE
+;#DIM _ANTI_AIR_DAMAGE
+;#DIM _WEAPON_HP
+;#DIM _WEAPON_TOTAL_HP
 
-IF GROUPMATCH(_WEAPON_STATUS, ミサイル, 艦載機, 魚雷, ミサイル_自爆, 艦載機_自爆, 魚雷_自爆)
-    SELECTCASE _WEAPON_STATUS:WEAPON_TYPE
-        CASE ミサイル, ミサイル_自爆
-            _WEAPON_HP = MISSILE_HP
-            _WEAPON_TOTAL_HP = MISSILE_HP * _WEAPON_STATUS:FIRE_RATE
-        CASE 艦載機, 艦載機_自爆
-            _WEAPON_HP = _WEAPON_STATUS:AIR_SHIP_HP
-            _WEAPON_TOTAL_HP = _WEAPON_STATUS:AIR_SHIP_HP * _WEAPON_STATUS:AIR_SHIP_COUNT
-        CASE 魚雷, 魚雷_自爆
-            _WEAPON_HP = TORPED_HP
-            _WEAPON_TOTAL_HP = TORPED_HP * _WEAPON_STATUS:FIRE_RATE
-    ENDSELECT
-    IF _ANTI_AIR_DAMAGE >= _WEAPON_TOTAL_HP
-        RETURN 0
-    ELSE
-        RETURN _DAMAGE - ((_WEAPON_TOTAL_HP - _ANTI_AIR_DAMAGE) / _WEAPON_HP * _WEAPON_STATUS:DAMAGE)
-    ENDIF
-ELSE
-    RETURN _DAMAGE
-ENDIF
+;IF GROUPMATCH(_WEAPON_STATUS, ミサイル, 艦載機, 魚雷, ミサイル_自爆, 艦載機_自爆, 魚雷_自爆)
+;    SELECTCASE _WEAPON_STATUS:WEAPON_TYPE
+;        CASE ミサイル, ミサイル_自爆
+;            _WEAPON_HP = MISSILE_HP
+;            _WEAPON_TOTAL_HP = MISSILE_HP * _WEAPON_STATUS:FIRE_RATE
+;        CASE 艦載機, 艦載機_自爆
+;            _WEAPON_HP = _WEAPON_STATUS:AIR_SHIP_HP
+;            _WEAPON_TOTAL_HP = _WEAPON_STATUS:AIR_SHIP_HP * _WEAPON_STATUS:AIR_SHIP_COUNT
+;        CASE 魚雷, 魚雷_自爆
+;            _WEAPON_HP = TORPED_HP
+;            _WEAPON_TOTAL_HP = TORPED_HP * _WEAPON_STATUS:FIRE_RATE
+;    ENDSELECT
+;    IF _ANTI_AIR_DAMAGE >= _WEAPON_TOTAL_HP
+;        RETURN 0
+;    ELSE
+;        RETURN _DAMAGE - ((_WEAPON_TOTAL_HP - _ANTI_AIR_DAMAGE) / _WEAPON_HP * _WEAPON_STATUS:DAMAGE)
+;    ENDIF
+;ELSE
+;    RETURN _DAMAGE
+;ENDIF
 
 ;-------------------------------------------------
 ; 対空砲火による撃墜数計算
