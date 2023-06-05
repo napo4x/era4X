@@ -155,7 +155,7 @@ ELSEIF RESULT == 999999
 ELSEIF RESULT == 1000000
   RETURN
 ENDIF
-  
+
 GOTO INPUT_LOOP
 
 ;-----------------------
@@ -259,14 +259,14 @@ _師団テンプレートID = 師団テンプレート:_師団ID
 PRINTFORML %"師団ID", 8, LEFT%: {_師団ID}
 CALL PRINT_DIVISION_STATUS(師団テンプレート_名称:_師団テンプレートID, 師団テンプレート_練度:_師団テンプレートID, 師団テンプレート_兵科:_師団テンプレートID, 師団テンプレート_装備:_師団テンプレートID, 師団テンプレート_大隊:_師団テンプレートID)
 IF _戦時表示
-PRINTL
-PRINTFORML 師団耐久　　　: {(師団人数 - 師団ダメージ:_師団ID) * 100 / 師団人数}\%
-PRINTFORML 師団ステータス: %師団ステータス名:(師団ステータス:_師団ID)%
-SIF 師団ステータス:_師団ID == 師団ステータス_攻撃
-  PRINTFORML 攻撃対象　　　: 師団ID-{師団攻撃対象:_師団ID}を攻撃中
-SIF 師団ステータス:_師団ID == 師団ステータス_移動
-  PRINTFORML 移動先　　　　: %師団配置名:(師団移動先:_師団ID)%
-CUSTOMDRAWLINE =
+  PRINTL
+  PRINTFORML 師団耐久　　　: {(師団人数 - 師団ダメージ:_師団ID) * 100 / 師団人数}\%
+  PRINTFORML 師団ステータス: %師団ステータス名:(師団ステータス:_師団ID)%
+  SIF 師団ステータス:_師団ID == 師団ステータス_攻撃
+    PRINTFORML 攻撃対象　　　: 師団ID-{師団攻撃対象:_師団ID}を攻撃中
+  SIF 師団ステータス:_師団ID == 師団ステータス_移動
+    PRINTFORML 移動先　　　　: %師団配置名:(師団移動先:_師団ID)%
+  CUSTOMDRAWLINE =
 ENDIF
 
 ;-----------------------
@@ -318,8 +318,6 @@ FINDELEMENT 戦線名, 非アクティブ戦線名
 PRINTFORML 戦線数: {RESULT} - 戦線の数です。半分以上の戦線で勝利すると勝ちになります
 PRINTL
 PRINTFORML 保有コスト: {GB_COST:_陣営} - 師団に配備・維持するために必要なコストです。0になると敗北します
-PRINTL
-PRINTFORML 残戦車数: N台 - 0になると戦車師団は戦闘を継続できません
 PRINTL
 PRINTFORML 残航空機数: {GB_AIRCRAFT:_陣営}機 - 配備できる航空機の数です
 PRINTL
