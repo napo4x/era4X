@@ -1359,6 +1359,9 @@ FOR COUNTER, 0, MAX_SLOT + MAX_SLOT
     ELSEIF COUNTER >= MAX_SLOT && (COUNTER - MAX_SLOT) < ATK_SHIP_STATUS:SHIP_SUB_WEAPON_SLOT
         ;副砲による攻撃
         CALL GET_SHIP_SUB_WEAPON_STATUS(ATK_SHIP_ID, COUNTER - MAX_SLOT, WEAPON_STATUS)
+        ;副砲の艦載機は攻撃に参加できない
+        SIF GROUPMATCH(WEAPON_STATUS:WEAPON_TYPE, 艦載機, 艦載機_自爆)
+            CONTINUE
     ELSE
         CONTINUE
     ENDIF
@@ -1371,13 +1374,8 @@ FOR COUNTER, 0, MAX_SLOT + MAX_SLOT
         ;艦載機が全滅していたら何もしない
         IF GROUPMATCH(WEAPON_STATUS:WEAPON_TYPE, 艦載機, 艦載機_自爆)
             ;PRINTW 艦載機残数確認しています
-            IF COUNTER < MAX_SLOT
-                ; 攻撃参加できる主砲の艦載機の数
-                CALL GET_JOIN_AIR_SHIP(ATK_SHIP_ID, COUNTER)
-            ELSE
-                ; 攻撃参加できる副砲の艦載機の数
-                CALL GET_JOIN_AIR_SHIP_SUB(ATK_SHIP_ID, COUNTER - MAX_SLOT)
-            ENDIF
+            ; 攻撃参加できる主砲の艦載機の数
+            CALL GET_JOIN_AIR_SHIP(ATK_SHIP_ID, COUNTER)
             SIF RESULT <= 0
                 CONTINUE
         ENDIF

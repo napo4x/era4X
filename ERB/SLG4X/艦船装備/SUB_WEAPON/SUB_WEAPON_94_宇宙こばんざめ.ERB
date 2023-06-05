@@ -6,20 +6,18 @@ RESULTS = 宇宙こばんざめ
 
 @GET_SUB_WEAPON_STATUS_94(STATUS)
 #DIM REF STATUS
-STATUS:DAMAGE = 70
-STATUS:FIRE_RATE = 3
+STATUS:DAMAGE = 20
+STATUS:FIRE_RATE = 32
+STATUS:ANTI_AIR = 7
 STATUS:HIT_RATE = 100
 STATUS:FIRE_RANGE = 2
 STATUS:SIZE = 1
-STATUS:AIR_SHIP_HP = 700
-STATUS:ANTI_AIR = 70
-STATUS:AIR_SHIP_COUNT = 3
-STATUS:WEAPON_TYPE = 艦載機
+STATUS:WEAPON_TYPE = ミサイル
 STATUS:PRICE = 500000
 
 @GET_SUB_WEAPON_COMENT_87(動作モード = 0)
 #DIM 動作モード
-CALL SHIP_PRINTFORML_MESSAGE("; 艦載機として機能してないかもしれません", , 動作モード)
+CALL SHIP_PRINTFORML_MESSAGE("; 艦載機時代のパラメータがなるべく出るようなステータスにした", , 動作モード)
 ;-----------------------------------
 ; サブウェポンの説明
 ;-----------------------------------
