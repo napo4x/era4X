@@ -197,6 +197,7 @@ WEND
 #DIM DYNAMIC _ITER
 #DIM DYNAMIC _GB_戦線数
 #DIM DYNAMIC _余剰航空戦力
+#DIM DYNAMIC _予備数
 
 FOR LOCAL, 0, 最大戦線数
   SIF 戦線名:LOCAL == 非アクティブ戦線名
@@ -259,6 +260,14 @@ WHILE GET_GB_TURN_COST_BY_SIDE(_陣営) * _戦線継続ターン指数 < GB_COST
   FOR LOCAL, 0, 最大戦線数
     SIF 戦線名:LOCAL == 非アクティブ戦線名
       CONTINUE
+    ; 予備30, 待機60になるまで回す
+    IF _ITER % 2 == 0 && _予備数 >= 30
+      _ITER ++
+    ELSEIF _ITER % 2 == 0
+      _予備数++
+    ENDIF
+    SIF _ITER >= 120
+      BREAK
     CALL DIVISION_PLACEMENT_FROM_TEMPLATE(20, _陣営, LOCAL, _ITER % 2 ? 前線配置_待機 # 前線配置_予備)
     CALL DIVISION_PLACEMENT_FROM_TEMPLATE(20, _陣営, LOCAL, _ITER % 2 ? 前線配置_待機 # 前線配置_予備)
     CALL DIVISION_PLACEMENT_FROM_TEMPLATE(21, _陣営, LOCAL, _ITER % 2 ? 前線配置_待機 # 前線配置_予備)
