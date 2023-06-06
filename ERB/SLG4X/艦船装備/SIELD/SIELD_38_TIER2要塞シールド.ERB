@@ -27,23 +27,17 @@ CALL SHIP_PRINTFORML_MESSAGE("しかし人間が理解できる構造ではな�
 @GET_SIELD_RESOURCE_38(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-USE_RESOURCE:シールド発生装置 = 1500
-USE_RESOURCE:多重シールド発生装置 = 1500
-USE_RESOURCE:超電導回路 = 500
+;USE_RESOURCE:シールド発生装置 = 1500
+;USE_RESOURCE:多重シールド発生装置 = 1500
+;USE_RESOURCE:超電導回路 = 500
 
 
 ;-----------------------------------
 ; 販売判定
 ;-----------------------------------
-@IS_SALE_SIELD_38(CAN_SALE_EQUIP)
-#DIM REF CAN_SALE_EQUIP
-RETURN 0
-
-;-----------------------------------
-; モジュール用か
-;-----------------------------------
-@IS_MODULE_SIELD_38
-RETURN 1
+;@IS_SALE_SIELD_38(CAN_SALE_EQUIP)
+;#DIM REF CAN_SALE_EQUIP
+;RETURN 0
 
 ;-----------------------------------
 ; 装備可能な艦種
