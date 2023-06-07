@@ -27,19 +27,19 @@ CALL SHIP_PRINTFORML_MESSAGE("シールド出力の回復量は艦船用シー�
 @GET_SIELD_RESOURCE_37(USE_RESOURCE)
 #DIM REF USE_RESOURCE
 
-USE_RESOURCE:多重シールド発生装置 = 2500
-USE_RESOURCE:超電導回路 = 500
+;USE_RESOURCE:多重シールド発生装置 = 2500
+;USE_RESOURCE:超電導回路 = 500
 
 
 ;-----------------------------------
 ; 販売判定
 ;-----------------------------------
-@IS_SALE_SIELD_37(CAN_SALE_EQUIP)
-#DIM REF CAN_SALE_EQUIP
-RETURN 0
+;@IS_SALE_SIELD_37(CAN_SALE_EQUIP)
+;#DIM REF CAN_SALE_EQUIP
+;RETURN 0
 
 ;-----------------------------------
-; モジュール用か
+; 装備可能な艦種
 ;-----------------------------------
-@IS_MODULE_SIELD_37
-RETURN 1
+@IS_EQUIPABLE_SIELD_37
+RETURN ビット_建造物
