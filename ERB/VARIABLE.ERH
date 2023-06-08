@@ -705,7 +705,6 @@
 #DIM ソートキー保存 = 0
 #DIM ソート順保存 = 0
 
-#DIM CONST NUM_SORTKEY = 19
 #DIM CONST ソート_NO = 0
 #DIM CONST ソート_所属 = 1
 #DIM CONST ソート_星 = 2
@@ -726,9 +725,10 @@
 #DIM CONST ソート_妖術 = 16
 #DIM CONST ソート_四能力 = 17
 #DIM CONST ソート_七能力 = 18
+#DIM CONST NUM_SORTKEY = 19
 ;これらは最後尾、通常いじれない
-#DIM CONST ソート_夜這い助手 = 19
-#DIM CONST ソート_手引助手 = 20
+#DIM CONST ソート_夜這い助手 = 100
+#DIM CONST ソート_手引助手 = 101
 {
 	#DIMS CONST STR_NOW_SORTKEY =
 		"NO", "所属", "★", "名前", "好感", "従属", "支配", "妊娠", "性別", "面識",
