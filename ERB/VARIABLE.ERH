@@ -705,7 +705,7 @@
 #DIM ソートキー保存 = 0
 #DIM ソート順保存 = 0
 
-#DIM CONST NUM_SORTKEY = 18
+#DIM CONST NUM_SORTKEY = 19
 #DIM CONST ソート_NO = 0
 #DIM CONST ソート_所属 = 1
 #DIM CONST ソート_星 = 2
