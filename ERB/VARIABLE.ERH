@@ -725,16 +725,23 @@
 #DIM CONST ソート_妖術 = 16
 #DIM CONST ソート_四能力 = 17
 #DIM CONST ソート_七能力 = 18
-#DIM CONST NUM_SORTKEY = 19
+#DIM CONST ソート_手動 = 19
+
+#DIM CONST NUM_SORTKEY = 20
 ;これらは最後尾、通常いじれない
 #DIM CONST ソート_夜這い助手 = 100
 #DIM CONST ソート_手引助手 = 101
 {
 	#DIMS CONST STR_NOW_SORTKEY =
 		"NO", "所属", "★", "名前", "好感", "従属", "支配", "妊娠", "性別", "面識",
-		"武闘", "防衛", "知略", "政治", "歌唱", "料理", "妖術", "四能", "七能"
+		"武闘", "防衛", "知略", "政治", "歌唱", "料理", "妖術", "四能", "七能", "手動"
 }
 
+;手動ソート用
+#DIM SAVEDATA MANUAL_SORT_CHARA_LIST, MAX_CHARA_NUM + 1
+#DIM CHARADATA SAVEDATA  MANUAL_SORTED, 1
+#DIM CONST 手動ソート_設定済 = 1
+#DIM CONST 手動ソート_非表示 = 2
 
 #DIM SAVEDATA ARENA_DONE
 #DIM SAVEDATA APPOINT_DONE
