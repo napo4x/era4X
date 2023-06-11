@@ -43,9 +43,13 @@
 #DIM CONST COLONY_OIL_PLANT = 13
 #DIM CONST COLONY_GAS_PLANT = 14
 #DIM CONST COLONY_IMMIGRATION_OFFICE = 15
+#DIM CONST COLONY_BARRACKS = 16
+#DIM CONST COLONY_ZOO = 17
+#DIM CONST COLONY_POWER_DISTRIBUTION_OFFICE = 18
 {
     #DIMS CONST FACILITIES_NAME = "なし", "地上軍駐屯地", "発電所", "食料工場", "住居", "豪邸", "病院", "警察署",
-        "裁判所", "大使館", "商業エリア", "娼館", "鉱山", "合成オイルプラント", "合成ガスプラント", "移民局"
+        "裁判所", "大使館", "商業エリア", "娼館", "鉱山", "合成オイルプラント", "合成ガスプラント", "移民局",
+        "バラック住居", "動物園", "送電集中管理局"
 }
 
 ; COLONY RESOURCES

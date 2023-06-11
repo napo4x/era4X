@@ -126,6 +126,11 @@ FOR LOCAL, 0, COLONY_MAX_RESOURCE
                 CALL FACILITY_COUNT(_ID, _SECTION_ID, COLONY_FOOD_FACTORY)
                 COLONY_RESOURCES:_ID:LOCAL += RESULT * 2
             NEXT
+            ;動物園の動物たちにエサをあげる
+            FOR _SECTION_ID, 0, MAX_COLONY_SECTION
+                CALL FACILITY_COUNT(_ID, _SECTION_ID, COLONY_ZOO)
+                COLONY_DEMAND:_ID:LOCAL += RESULT
+            NEXT
         CASE COLONY_MONEY
             ;税収 = 労働人口 * 税率 * 基本税額
             COLONY_RESOURCES:_ID:LOCAL = _COLONY_WORKING_POP_NUM * COLONY_TAX_RATE:_ID * COLONY_PAYMENT_TAX_RATE
@@ -133,6 +138,17 @@ FOR LOCAL, 0, COLONY_MAX_RESOURCE
                 CALL FACILITY_COUNT(_ID, _SECTION_ID, COLONY_COMMERICAL)
                 COLONY_RESOURCES:_ID:LOCAL += RESULT * COLONY_COMMERICAL_TAX
             NEXT
+            ;送電集中管理局の存在を検出
+            FOR _SECTION_ID, 0, MAX_COLONY_SECTION
+                CALL FACILITY_COUNT(_ID, _SECTION_ID, COLONY_POWER_DISTRIBUTION_OFFICE)
+                IF RESULT > 0
+                    BREAK
+                ENDIF
+            NEXT
+            ;送電集中管理局があった場合、税収から維持費を直接引く
+            IF RESULT > 0
+                COLONY_RESOURCES:_ID:LOCAL -= _COLONY_WORKING_POP_NUM * 15000
+            ENDIF
         CASE COLONY_SECURITY
             COLONY_DEMAND:_ID:LOCAL = _COLONY_TOTAL_POP_NUM / COLONY_NEED_SECURITY_RATE
             FOR _SECTION_ID, 0, MAX_COLONY_SECTION
@@ -172,14 +188,31 @@ FOR LOCAL, 0, COLONY_MAX_RESOURCE
                 CALL FACILITY_COUNT(_ID, _SECTION_ID, COLONY_GAS_PLANT)
                 COLONY_DEMAND:_ID:LOCAL += RESULT * 2
             NEXT
+            ;送電集中管理局があれば電力を10%増やす
+            FOR _SECTION_ID, 0, MAX_COLONY_SECTION
+                CALL FACILITY_COUNT(_ID, _SECTION_ID, COLONY_POWER_DISTRIBUTION_OFFICE)
+                SIF RESULT > 0
+                    BREAK
+            NEXT
+            SIF RESULT > 0
+                COLONY_RESOURCES:_ID:LOCAL += COLONY_RESOURCES:_ID:LOCAL * 10 / 100
         CASE COLONY_POP_SATISFACTION
             COLONY_DEMAND:_ID:LOCAL = _COLONY_TOTAL_POP_NUM / COLONY_SATISFACTION_RATE
+            ;バラック住居は存在するだけで満足度の需要を+3する
+            FOR _SECTION_ID, 0, MAX_COLONY_SECTION
+                CALL FACILITY_COUNT(_ID, _SECTION_ID, COLONY_BARRACKS)
+                COLONY_DEMAND:_ID:LOCAL += RESULT * 3
+            NEXT
             FOR _SECTION_ID, 0, MAX_COLONY_SECTION
                 CALL FACILITY_COUNT(_ID, _SECTION_ID, COLONY_RED_LIGHT_DISTRICT)
                 COLONY_RESOURCES:_ID:LOCAL += RESULT * 3
             NEXT
             FOR _SECTION_ID, 0, MAX_COLONY_SECTION
                 CALL FACILITY_COUNT(_ID, _SECTION_ID, COLONY_COMMERICAL)
+                COLONY_RESOURCES:_ID:LOCAL += RESULT * 2
+            NEXT
+            FOR _SECTION_ID, 0, MAX_COLONY_SECTION
+                CALL FACILITY_COUNT(_ID, _SECTION_ID, COLONY_ZOO)
                 COLONY_RESOURCES:_ID:LOCAL += RESULT * 2
             NEXT
             ;エネルギー需要を満たしていないと不満
@@ -199,6 +232,8 @@ FOR LOCAL, 0, COLONY_MAX_RESOURCE
                 _HOUSE_COUNT += RESULT * 3
                 CALL FACILITY_COUNT(_ID, _SECTION_ID, COLONY_MANSION)
                 _HOUSE_COUNT += RESULT
+                CALL FACILITY_COUNT(_ID, _SECTION_ID, COLONY_BARRACKS)
+                _HOUSE_COUNT += RESULT * 5
                 COLONY_RESOURCES:_ID:LOCAL += RESULT
             NEXT
             SIF _HOUSE_COUNT < _COLONY_TOTAL_POP_NUM / COLONY_NEED_HOUSE_RATE
@@ -258,6 +293,7 @@ NEXT
 #DIM _BLOCK_ID
 #DIM _CURRENT_FACILITY
 #DIM _INPUT_VALUE
+#DIM _SECTION_ID_ALLCHECK
 
 _CURRENT_FACILITY = COLONY_FACILITIES:_COLONY_ID:_SECTION_ID:_BLOCK_ID
 
@@ -284,6 +320,17 @@ IF INRANGE(_INPUT_VALUE, COLONY_STRONGHOLD, VARSIZE("FACILITIES_NAME") - 1)
             CALL FACILITY_COUNT(_COLONY_ID, _SECTION_ID, COLONY_POLICE)
             IF RESULT == 0
                 PRINTW 裁判所の建設には警察署が同セクション内に建設されている必要があります
+                RETURN
+            ENDIF
+        CASE COLONY_POWER_DISTRIBUTION_OFFICE
+            FOR _SECTION_ID_ALLCHECK, 0, MAX_COLONY_SECTION
+                CALL FACILITY_COUNT(_COLONY_ID, _SECTION_ID_ALLCHECK, COLONY_POWER_DISTRIBUTION_OFFICE)
+                IF RESULT > 0
+                    BREAK
+                ENDIF
+            NEXT
+            IF RESULT > 0
+                PRINTW 送電集中管理局はコロニーに一個のみ建設可能です
                 RETURN
             ENDIF
     ENDSELECT
@@ -331,6 +378,12 @@ SELECTCASE _FACILITY
         PRINTL ガスを生成する。余剰電力を必要とする
     CASE COLONY_IMMIGRATION_OFFICE
         PRINTL ターン毎のPOP増加量を増す。移民の購入もできる
+    CASE COLONY_BARRACKS
+        PRINTL POPが住む住居を提供する。通常の住居の倍近いPOPが住めるが存在するだけで満足度を下げる
+    CASE COLONY_ZOO
+        PRINTL POPの満足度を上昇させるが、余剰食料を必要とする
+    CASE COLONY_POWER_DISTRIBUTION_OFFICE
+        PRINTL コロニー全体の電力生産量を10%増やす。コロニーに一つ限定。POP数に応じて維持費がかかる
 ENDSELECT
 
 ;選択可能な建物一覧を表示
