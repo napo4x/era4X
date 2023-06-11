@@ -978,7 +978,7 @@ CATCH
 	; 定義がなければ、原則、空母・建造物以外装備可能
 	IS_EQUIPABLE = 装備可能艦種_主砲デフォルト
 
-	CALL GET_OPTIONAL_EQUIP_STATUS(主砲, SELECTED, WEAPON_TYPE)
+	CALL GET_OPTIONAL_EQUIP_STATUS(射出対象, SELECTED, WEAPON_TYPE)
 	; 艦載機は空母も装備可
 	SIF RESULT == 艦載機
 		IS_EQUIPABLE |= ビット_空母
