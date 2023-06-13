@@ -48,5 +48,10 @@
 #DIM 観客心理抵抗値
 
 ;各種フラグ
-#DIM P_GB開催フラグ
 #DIM P_ライブ後調教フラグ
+
+;ギャラクティック・ブロードウェイ関連
+#DIM SAVEDATA CHARADATA P_GBフラグ, P_演目要素数
+#DIM CONST P_GB参加資格 = 0
+#DIM SAVEDATA CHARADATA P_GBスコア, P_演目要素数
+
