@@ -9,6 +9,7 @@
 #DIM CONST カラー_CU = 0xFFC0C0
 #DIM CONST カラー_PA = 0xEE6600
 #DIM CONST カラー_LE = 0xFA58F4
+#DIM CONST P_演目_TO_演技力調整 = 81
 
 #DIM CONST P_カード種類最大数 = 1000
 #DIM CONST P_手札最大数 = 7
@@ -47,5 +48,10 @@
 #DIM 観客心理抵抗値
 
 ;各種フラグ
-#DIM P_GB開催フラグ
 #DIM P_ライブ後調教フラグ
+
+;ギャラクティック・ブロードウェイ関連
+#DIM SAVEDATA CHARADATA P_GBフラグ, P_演目要素数
+#DIM CONST P_GB参加資格 = 0
+#DIM SAVEDATA CHARADATA P_GBスコア, P_演目要素数
+
