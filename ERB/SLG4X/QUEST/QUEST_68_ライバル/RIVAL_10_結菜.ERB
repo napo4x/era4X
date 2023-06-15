@@ -1,0 +1,162 @@
+﻿;------------------------
+; ライバル10 - 湊 結菜
+; 元メスガキ宇宙海賊
+; メモ：見た目11歳程度。"メスガキの始祖"たる長命種の生き残り
+;------------------------
+
+; 初対面時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_CONTACT_10
+PRINTFORML 目を凝らすと、その人影はカトラスを腰に帯刀した幼女であった
+PRINTFORML 短いピンク髪、黒とピンクの子供服、ジーンズ生地のホットパンツといった出で立ちからは、生意気な印象を受ける
+PRINTFORML その社会を舐めているかのような雰囲気に、%ANAME(QUEST_68_参加者)%は記憶を呼び起こされる
+PRINTW 
+PRINTFORML ――風の噂程度だが、『メスガキ宇宙海賊』なるものが存在していると囁かれている
+PRINTFORML 宇宙海賊は弱い子供がやっていける職業ではなく、常識的に考えて居る訳が無いその存在に、目撃情報があるのだ
+PRINTFORML カトラスは宇宙海賊が一般的に使用している白兵武器だ。彼女はもしかしたら『メスガキ宇宙海賊』なのかもしれない
+PRINTFORML ……いや、「居る訳が無い存在」がさらにアイドル活動をしているというのは思考が飛躍しすぎている
+PRINTFORML おそらくただの考えすぎだろう
+PRINTW 
+IF GROUPMATCH(TALENT:QUEST_68_参加者:体格, 体格_小柄, 体格_子供) && IS_FEMALE(QUEST_68_参加者)
+	PRINTFORML 「キミも国際音楽祭の参加者？」
+	PRINTFORML 「……ちょっと安心した、子供を全然見かけなかったから」
+	PRINTFORML 「ボクは湊(ﾐﾅﾄ) 結菜(ﾕｲﾅ)。よろしくね」
+ELSEIF IS_FEMALE(QUEST_68_参加者)
+	PRINTFORML 「何あんた？　あんたも国際音楽祭の参加者？」
+	PRINTFORML 「言っとくけどボクはよわよわアイドルなんかと話すことなんてないよ」
+	PRINTFORML 「名前～？　なんであんたに教えなくちゃならないんだよ」
+	PRINTFORML 「……はぁ」
+	PRINTFORML 「結菜」
+	PRINTFORML 「……湊(ﾐﾅﾄ) 結菜(ﾕｲﾅ)だって言ってんの！」
+ELSE
+	PRINTFORML 「何あんた？　あんたも国際音楽祭の参加者？」
+	PRINTFORML 「ボクをちょっとでも変な目で見たら、これ、鳴らしちゃうからね♡」
+	PRINTFORML 幼女は背負い鞄に括り付けたブザーを指で弄んでいる……
+	PRINTFORML 「名前～？　なんであんたに教えなくちゃならないんだよ」
+	PRINTFORML 「……はぁ」
+	PRINTFORML 「結菜」
+	PRINTFORML 「……湊(ﾐﾅﾄ) 結菜(ﾕｲﾅ)だって言ってんの！」
+ENDIF
+PRINTW 
+PRINTW ………………
+PRINTW …………
+PRINTW ……
+PRINTL 
+PRINTFORML 「海賊？　あんなもんとっくに辞めちゃったよ」
+PRINTFORML 「全然儲からないし、どうせみんな死んじゃうし」
+PRINTW 
+PRINTFORML 「歌って踊ってちょっとスカートひらひらさせるだけで、み～んなメロメロ♡」
+PRINTFORML 「脳みそすかすか♡ のよわよわおじさんからお金がた～んまり貰えるんだもの♡」
+PRINTFORML 彼女がこの祭典に参加しているのは人気と才能の賜物なのだろうが
+PRINTFORML 過激な発言を繰り返す彼女が、この祭典への参加を許されているということには驚きだ
+PRINTFORML 運営委員会は何を考えているのだろうか……
+PRINTW 
+IF GROUPMATCH(TALENT:QUEST_68_参加者:体格, 体格_小柄, 体格_子供) && IS_FEMALE(QUEST_68_参加者)
+	PRINTFORML 「だからアイドルのほうが全然楽しいよ。元々歌うのは好きだったし」
+	PRINTFORML 「%ANAME(QUEST_68_参加者)%ちゃんも私と一緒にグループ活動してみない？」
+	PRINTFORML 「……だめ？　元々のイメージ？　そんなの気にしなくていいのに～」
+ELSEIF IS_FEMALE(QUEST_68_参加者)
+	PRINTFORML 「だからアイドルのほうが全然楽しいよ。元々歌うのは好きだったし」
+ELSE
+	PRINTFORML 「あんたも私に貢いで♡ ……つれないヤツ。まあいいや、代わりはいくらでもいるし」
+ENDIF
+PRINTW 
+PRINTFORML 「とにかくボクはこのお祭りを使って、銀河中の頭すかすかおじさんをボクのどれーにするつもりだから」
+IF GROUPMATCH(TALENT:QUEST_68_参加者:体格, 体格_小柄, 体格_子供) && IS_FEMALE(QUEST_68_参加者)
+	PRINTFORML 「%ANAME(QUEST_68_参加者)%ちゃんも『最優秀アイドル賞』でもなんでも好きにしなよ」
+ELSE
+	PRINTFORML 「ボクの邪魔しないでよね。まあよわよわ大人アイドルのあんたじゃ無理だと思うけど」
+ENDIF
+PRINTFORML 言いたいことを言いきると、結菜は去っていった……
+PRINTW 
+
+; 2回目以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_CONTACT_10
+PRINTFORML 目を凝らすと、その人影は結菜だった
+IF GROUPMATCH(TALENT:QUEST_68_参加者:体格, 体格_小柄, 体格_子供) && IS_FEMALE(QUEST_68_参加者)
+	PRINTFORML 「あ、%ANAME(QUEST_68_参加者)%ちゃん！」
+	PRINTW 
+	PRINTFORML 「ボクは世界中の大人をどれーにするまで歌うつもりだから」
+	PRINTFORML 「%ANAME(QUEST_68_参加者)%ちゃんもボクの友達なら、ボクから『最優秀アイドル賞』を奪うくらいしてくれないとね」
+ELSE
+	PRINTFORML 「あんた、またわからされに来たの？」
+	PRINTW 
+	PRINTFORML 「ボクは世界中の大人をどれーにするまで歌うつもりだから」
+	PRINTFORML 「邪魔しないでよね。まあよわよわ大人アイドルのあんたじゃ無理だと思うけど」
+ENDIF
+PRINTFORML 結菜は去っていった……
+PRINTW 
+
+; 勝利以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_WON_CONTACT_10
+PRINTFORML 目を凝らすと、その人影は結菜だった
+IF GROUPMATCH(TALENT:QUEST_68_参加者:体格, 体格_小柄, 体格_子供) && IS_FEMALE(QUEST_68_参加者)
+	PRINTFORML 「あ、%ANAME(QUEST_68_参加者)%ちゃん！」
+	PRINTW 
+	PRINTFORML 「この前のキミのパフォーマンス、すごかったよ」
+	PRINTFORML 「キミみたいなすごい子供は、ここ200年でも見たことがない」
+	PRINTW 
+	PRINTFORML 「……え」
+	PRINTFORML 「そりゃ、ボクは"メスガキ"だもの」
+	PRINTFORML 「『正しき者は無垢なる姿で永遠を生きる』そうでしょ？」
+	PRINTW 
+	PRINTFORML 「確かに宇宙海賊あいつらも年月とともに老いたけど」
+	PRINTFORML 「あんなのはあいつらが悪い心を持ってただけさ。現にボクは老いずに300年生きられた」
+	PRINTFORML 「だからボクはあいつらに見切りをつけて抜けてやったんだ」
+	PRINTW 
+ELSE
+	PRINTFORML 「あ、あんたは！」
+	PRINTW 
+	PRINTFORML 「この前のはただのマグレだよ」
+	PRINTFORML 「『悪しき者は老いて死ぬ』そうでしょ？」
+	PRINTFORML 「ボクたち"メスガキ"が、悪しき"大人"から搾取する。それが自然の摂理だよ」
+	PRINTFORML 「老いて脳みそすかすか♡ になる一方の大人が、ボクに勝てるはずないんだ」
+	PRINTW 
+	PRINTFORML 「確かに宇宙海賊のあいつらも年月とともに老いたけど」
+	PRINTFORML 「あんなのはあいつらが悪い心を持ってただけさ。現にボクは老いずに300年生きられた」
+	PRINTFORML 「だからボクはあいつらに見切りをつけて抜けてやったんだ」
+	PRINTW 
+ENDIF
+PRINTFORML 「ボクの言っていることがおかしいって言うなら……ボクと勝負しろ」
+PRINTFORML 「ボクこそがこの世界で最も正しい存在だってこと、見せてやる」
+PRINTFORML 結菜は去っていった……
+PRINTW 
+
+; 初勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_WIN_10
+IF GROUPMATCH(TALENT:QUEST_68_参加者:体格, 体格_小柄, 体格_子供) && IS_FEMALE(QUEST_68_参加者)
+	PRINTFORML 「%ANAME(QUEST_68_参加者)%ちゃん、おめでとう！」
+	PRINTFORML 「ボクもそっちを狙ってれば、もっとどれー増やせたかなあ？」
+	PRINTFORML 結菜は%ANAME(QUEST_68_参加者)%の受賞を拍手で称えた……
+	PRINTW 
+ELSE
+	PRINTFORML 「ふ、ふんっ！　こんなのただのマグレさ」
+	PRINTFORML 「老いて脳みそすかすかになるだけの大人がボクたちに勝てるはずがないんだ……」
+	PRINTFORML 結菜は%ANAME(QUEST_68_参加者)%の受賞が不服そうだ……
+	PRINTW 
+ENDIF
+
+; 2回目以降の勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_WIN_10
+PRINTFORML 「な、なんで……」
+PRINTFORML 「ボクが教えられてたことが間違ってた……？」
+PRINTFORML 「だって、だとしたら、どうしてボクは今も生きているの？」
+PRINTFORML 「どうしてみんなは殺されたの？」
+PRINTFORML 「ボクはいつまで"生きなきゃいけない"の？」
+PRINTW 
+PRINTFORML 「……嫌だ、ボクは納得しないぞ」
+PRINTFORML 「ボクは何度だって挑戦できる」
+PRINTFORML 「だってボクは永遠を生きるんだから」
+PRINTFORML 結菜はふらふらとその場を去っていった……
+PRINTW 
+
+; 敗北時の文章
+@QUEST_68_RIVAL_MESSAGE_LOSE_10
+PRINTFORML 「ざぁこ♡ 脳みそはすかすか♡ 大人は子供の養分♡」
+PRINTFORML 「養分は養分として生きるべき♡ みんなボクのどれーにしてあげる♡」
+PRINTFORML 結菜は会場の大人たちに向けて、罵倒の言葉を並べている……
+PRINTW 
+
+; 出現確認用
+; 出現条件を満たしている場合は1を返す
+@QUEST_68_RIVAL_10
+RETURN 1

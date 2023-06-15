@@ -1,0 +1,44 @@
+﻿#DIM SAVEDATA QUEST_68_参加者 = -1
+#DIM SAVEDATA QUEST_68_演目 = -1
+#DIM SAVEDATA QUEST_68_対戦相手 = -1
+
+#DIM CONST QUEST_68_ライバル得点_N, P_演目要素数 = 2500, 2500, 2300, 2000
+#DIM CONST QUEST_68_ライバル得点_H, P_演目要素数 = 3500, 3500, 3200, 3000
+#DIM CONST QUEST_68_モブ最低点 = 500
+#DIM CONST QUEST_68_モブ最高点 = 1509
+
+#DIM SAVEDATA CHARADATA QUEST_68_ライバルフラグ, 1
+#DIM CONST QUEST_68_ライバルフラグビット幅 = 3
+#DIM CONST QUEST_68_ライバル面識 = 0
+#DIM CONST QUEST_68_ライバル勝利_N = 1
+#DIM CONST QUEST_68_ライバル勝利_H = 2
+
+; ビット演算の問題があるので、最大数は(64 / 3) = 21
+#DIM CONST QUEST_68_MAX_RIVAL = 12
+{
+	#DIMS CONST QUEST_68_RIVAL_NAME, QUEST_68_MAX_RIVAL =
+		"アリョーナ サラプール", "シャーロット ローズウェル",
+		"秋原 友紀", "レイチェル ベイカー",
+		"DIVA-01-2 LYRA", "赤羽 ちえり",
+		"エレノア ハールバルズ", "早乙女 ミーナ",
+		"高月 小春", "中野 ねもね",
+		"湊 結菜", "ゴンベエ"
+}
+{
+	#DIMS CONST QUEST_68_RIVAL_CALLNAME, QUEST_68_MAX_RIVAL =
+		"アリョーナ", "シャル",
+		"友紀", "レイチェル",
+		"LYRA", "ちえり",
+		"エレノア", "ミーナ",
+		"小春", "ねもね",
+		"結菜", "ゴンベエ"
+}
+{
+	#DIM CONST QUEST_68_RIVAL_PROGRAM, QUEST_68_MAX_RIVAL =
+		P_COOL,    P_PASSION,
+		P_PASSION, P_COOL,
+		P_COOL,    P_CUTE,
+		P_PASSION, P_CUTE,
+		P_PASSION, P_CUTE,
+		P_CUTE,    P_COOL
+}

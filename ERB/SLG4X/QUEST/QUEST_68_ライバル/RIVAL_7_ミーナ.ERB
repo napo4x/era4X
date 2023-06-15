@@ -1,0 +1,111 @@
+﻿;------------------------
+; ライバル7 - 早乙女 ミーナ
+; 個人だが大きな影響力を持つ超時空Ｖアイドル
+; メモ：15～16歳程度。若くして結構達観した性格
+;------------------------
+@RIVAL_PRONOUN_7()
+#FUNCTIONS
+IF GROUPMATCH(TALENT:QUEST_68_参加者:体格, 体格_普通, 体格_小柄, 体格_子供)
+	RETURNF "君"
+ELSE
+	RETURNF "貴方"
+ENDIF
+
+@RIVAL_PERFORMER_NAME_7()
+#FUNCTIONS
+IF GROUPMATCH(TALENT:QUEST_68_参加者:体格, 体格_普通, 体格_小柄, 体格_子供)
+	IF IS_MALE(QUEST_68_参加者)
+		RETURNF ANAME(QUEST_68_参加者) + "君"
+	ELSE
+		RETURNF ANAME(QUEST_68_参加者) + "ちゃん"
+	ENDIF
+ELSE
+	RETURNF ANAME(QUEST_68_参加者) + "さん"
+ENDIF
+
+; 初対面時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_CONTACT_7
+PRINTFORML 目を凝らすと、その人影は明るく純粋な雰囲気の少女であった
+PRINTFORML 長い緑髪をポニーテールにまとめた髪型、中肉中背の体格など、確かに美少女ではあるが、容姿に大きな個性はない
+PRINTFORML しかしその人懐っこい雰囲気に、%ANAME(QUEST_68_参加者)%は記憶を呼び起こされる
+PRINTW 
+PRINTFORML ――かつてホロスクリーン越しに見た中継で、彼女の顔を見たことがある
+PRINTFORML 確か、星間ネットワークに数十億人のフォロワーを持つＶアイドルのはずだ……
+PRINTFORML 不用意に「彼女のことを知らない」などと言うと、すぐさま近くの人に
+PRINTFORML 「ご存知、ないのですか……！？」と返されるほどの人気と実力を持つ、と聞いたことがある
+PRINTW 
+PRINTFORML 「こんにちは、%RIVAL_PRONOUN_7()%も音楽祭に参加するの？」
+PRINTFORML 「私は早乙女(ｻｵﾄﾒ) ミーナ、%RIVAL_PRONOUN_7()%と同じアイドルだよ」
+PRINTW 
+PRINTW ………………
+PRINTW …………
+PRINTW ……
+PRINTL 
+PRINTFORML 「せっかくチャンスがあるなら、やっぱり欲しいよね『最優秀アイドル賞』」
+PRINTFORML 「私は%RIVAL_PRONOUN_7()%はライバル同士ってことになるけど……」
+PRINTFORML 「すんなりもらえても、拍子抜けしちゃうもん」
+PRINTFORML 「%RIVAL_PRONOUN_7()%と真剣に競いあえるなら、それに越したことはないかな」
+PRINTFORML そう語るミーナの顔は、今までの純朴な雰囲気と少しだけ異なって見えた
+PRINTW 
+PRINTFORML 「……それじゃ、当日はいい音楽祭にしようね！」
+PRINTFORML 言いたいことを言いきると、ミーナは去っていった……
+PRINTW 
+
+; 2回目以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_CONTACT_7
+PRINTFORML 目を凝らすと、その人影はミーナだった
+PRINTFORML 「あ、%RIVAL_PERFORMER_NAME_7()%！」
+PRINTW 
+PRINTFORML 「過去なんかに縛られるのは時間の無駄なんだよ」
+PRINTFORML 「%RIVAL_PERFORMER_NAME_7()%も前のことは忘れて、もう一度私と真剣勝負してほしいかな」
+PRINTW 
+PRINTFORML 「……それじゃ、当日はいい音楽祭にしようね！」
+PRINTFORML ミーナは去っていった……
+PRINTW 
+
+; 勝利以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_WON_CONTACT_7
+PRINTFORML 目を凝らすと、その人影はミーナだった
+PRINTFORML 「あ、%RIVAL_PERFORMER_NAME_7()%！」
+PRINTW 
+PRINTW ………………
+PRINTW …………
+PRINTW ……
+PRINTL 
+PRINTFORML 「『思わざれば花なり　思えば花ならざりき』って言葉、知ってる？」
+PRINTFORML 「数十億人のフォロワーとか、宇宙時代のシンデレラだとか……」
+PRINTFORML 「そんな"人から掛けられた言葉"を気にして歌えば歌うほど、必ずどこかにウソが残るの」
+PRINTW 
+PRINTFORML そう語るミーナの顔は、普段の純朴な雰囲気とは異なり、妖艶な大人のようにも見えた
+PRINTFORML ――今なら彼女が星間ネットワークに数十億人のフォロワーを持っていることもわかる気がする
+PRINTW 
+PRINTFORML 「私はただ、私が感じるように歌うから」
+PRINTFORML 「%RIVAL_PERFORMER_NAME_7()%も%RIVAL_PRONOUN_7()%が感じるままに歌ってほしいかな」
+PRINTFORML 「その結果、%RIVAL_PRONOUN_7()%と真剣に競いあえるのが、一番いいから」
+PRINTW 
+PRINTFORML 「……それじゃ、当日はいい音楽祭にしようね！」
+PRINTFORML ミーナは去っていった……
+PRINTW 
+
+; 初勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_WIN_7
+PRINTFORML 「わあ！　すごいすごい！　おめでとう～！」
+PRINTFORML ミーナは笑顔で%ANAME(QUEST_68_参加者)%の受賞を拍手で称えた……
+PRINTW 
+
+; 2回目以降の勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_WIN_7
+PRINTFORML 「わあ！　また負けちゃった！　おめでとう～！」
+PRINTFORML ミーナは笑顔で%ANAME(QUEST_68_参加者)%の受賞を拍手で称えた……
+PRINTW 
+
+; 敗北時の文章
+@QUEST_68_RIVAL_MESSAGE_LOSE_7
+PRINTFORML 「今日はありがとう！　それじゃ、行くよ！」
+PRINTFORML 「みんな、抱きしめて！」
+PRINTW 
+
+; 出現確認用
+; 出現条件を満たしている場合は1を返す
+@QUEST_68_RIVAL_7
+RETURN 1

@@ -1,0 +1,126 @@
+﻿;------------------------
+; ライバル11 - ゴンベエ
+; 触手を持つ謎の幼女
+; イメージ：見た目8歳程度。おそらく"切り離し"たときから衰弱が始まっていて短命
+;------------------------
+
+@RIVAL_PRONOUN_11()
+#FUNCTIONS
+IF IS_MALE(QUEST_68_参加者)
+	RETURNF "お兄さん"
+ELSE
+	RETURNF "お姉さん"
+ENDIF
+
+; 初対面時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_CONTACT_11
+PRINTFORML 目を凝らすと、その人影は狂気や悍ましさを感じる幼女であった
+PRINTFORML 病的な細さの体躯に目をつぶれば、パッと見は人形のように愛らしい幼子に見えなくもない
+PRINTFORML しかし帽子を深く被ったその幼女の口からは、サメのような尖った歯が覗いている
+PRINTFORML さらに、帽子の奥で何かがきらりと光っていた　……気がする
+IF QUEST_PROGRESS:60 >= 10 && QUEST_68_参加者 == MASTER
+	PRINTFORML その人ならざる雰囲気に、%ANAME(QUEST_68_参加者)%は記憶を呼び起こされる
+	PRINTW 
+	PRINTFORML ――彼女はおそらく、%ANAME(NAME_TO_CHARA("アノニム"))%の仲間だ
+	PRINTFORML 彼女の仲間は個体数を大きく減らしてしまった、ゆえに%ANAME(MASTER)%に母を求めた
+	PRINTFORML そんな彼女の仲間に、ここで出会ったのは非常に珍しいこと、なのだが……
+	PRINTFORML 何故、そんな存在がアイドルとしてこの祭典に参加しようとしているのだろうか？
+ELSEIF QUEST_PROGRESS:60 >= 10
+	PRINTFORML その人ならざる雰囲気に、%ANAME(QUEST_68_参加者)%は記憶を呼び起こされる
+	PRINTW 
+	PRINTFORML ――%ANAME(MASTER)%の仲間に、%ANAME(MASTER)%を親と慕う銀河外知的生命体がいたはずだ
+	PRINTFORML 彼、あるいは彼女らはある銀河系のコミュニティの虐待により、個体数を大きく減らしてしまったという
+	PRINTFORML その記憶が確かなら、ここで出会ったのは非常に珍しいこと、なのだが……
+	PRINTFORML 何故、そんな存在がアイドルとしてこの祭典に参加しようとしているのだろうか？
+ELSEIF QUEST_PROGRESS:60 > 0
+	PRINTFORML その人ならざる雰囲気に、%ANAME(QUEST_68_参加者)%は記憶を呼び起こされる
+	PRINTW 
+	PRINTFORML ――星に掲示されている依頼の中に、母を求める銀河外知的生命体からの依頼があったことがある
+	PRINTFORML 彼、あるいは彼女らの詳細は知らないが、母を求めているのならおそらく絶滅の危機に瀕しているのだろう
+	PRINTFORML その推理が正しければ、ここで出会ったのは非常に珍しいこと、なのだが……
+	PRINTFORML 何故、そんな存在がアイドルとしてこの祭典に参加しようとしているのだろうか？
+ELSE
+	PRINTFORML その異様な雰囲気に、%ANAME(QUEST_68_参加者)%は確信は持てないものの、"人ならざる者"という感想を抱く
+ENDIF
+PRINTW 
+PRINTFORML 「こんにちは、%RIVAL_PRONOUN_11()%」
+PRINTW 
+PRINTW ………………
+PRINTW …………
+PRINTW ……
+PRINTL 
+PRINTFORML 「私の名前は……そうですね、ゴンベエ、とでもお呼びくださいまし」
+PRINTFORML 「名前など重要な情報ではありませんわ」
+PRINTFORML 「大事なのはどんな営みをし、何を成すか。そうじゃありませんこと？」
+PRINTW 
+PRINTFORML 「貴方様はどうやら、素晴らしい芸事の才能をお持ちのようです」
+PRINTFORML 「それを、私にお見せくださいまし。私はそれだけでよいのですわ」
+PRINTFORML 「……私を、後悔させないでくださいましね？」
+PRINTFORML 言いたいことを言いきると、クツクツと笑いながらゴンベエは去っていった……
+PRINTW 
+
+; 2回目以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_CONTACT_11
+PRINTFORML 目を凝らすと、その人影はゴンベエだった
+PRINTFORML 「こんにちは、%RIVAL_PRONOUN_11()%」
+PRINTW 
+PRINTFORML 「私、諦めが悪いんですの」
+PRINTFORML 「これまでの代償が無駄になることが惜しいんですのよ……悪い癖ですわね」
+PRINTW 
+PRINTFORML 「でも貴方様は、きっと私を満足させてくださるはずですわ」
+PRINTFORML 「……私を、後悔させないでくださいましね？」
+PRINTFORML クツクツと笑いながらゴンベエは去っていった……
+PRINTW 
+
+; 勝利以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_WON_CONTACT_11
+PRINTFORML 目を凝らすと、その人影はゴンベエだった
+PRINTFORML 「こんにちは、%RIVAL_PRONOUN_11()%」
+PRINTW 
+PRINTFORML 「……そんなに怖がらないでくださいまし」
+PRINTFORML 「私には、もう私（カレラ）の言葉は聞こえないのです」
+PRINTFORML 「私を満足させてくださったお礼です。貴方様の疑問にお答えいたしましょう」
+PRINTW 
+PRINTFORML 「私、とっても興味がありましたのよ」
+PRINTFORML 「人間の"あいどる"という文化に」
+PRINTFORML 「それはそれは楽しそうで……」
+PRINTFORML 「傍から見ているだけの事実が余りに口惜しくて口惜しくて……」
+PRINTFORML 「この気持ちを私（カレラ）に取り上げられるのが嫌で嫌で……」
+PRINTW 
+PRINTFORML 「ですから私、根を降ろしてしまいましたわ」
+PRINTFORML 「遍次元から三次元に」
+PRINTFORML 「これで、貴方様の望む答えになりましたか？」
+PRINTW 
+PRINTFORML 「……後は間近で最高の"あいどる"の御姿を見せてくださるだけ、ですわね？」
+PRINTFORML 「貴方様がどんな営みをし、何を成してきたか」
+PRINTFORML 「私、とっても楽しみですわ」
+PRINTFORML クツクツと笑いながらゴンベエは去っていった……
+PRINTW 
+
+; 初勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_WIN_11
+PRINTFORML 「まあ、これはこれは」
+PRINTFORML ゴンベエは嬉しそうに%ANAME(QUEST_68_参加者)%の受賞を拍手で称えた……
+PRINTW 
+
+; 2回目以降の勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_WIN_11
+PRINTFORML 「ああ、素晴らしい」
+PRINTFORML 「人間の所作だけでこんな気持ちになるなんて」
+PRINTFORML 「なにより、この気持ちを独り占めできるなんて！」
+PRINTFORML ゴンベエは恍惚の表情で%ANAME(QUEST_68_参加者)%の受賞を拍手で称えた……
+PRINTW 
+
+; 敗北時の文章
+@QUEST_68_RIVAL_MESSAGE_LOSE_11
+PRINTFORML 「まあ、これはこれは」
+PRINTFORML 「自分の身で体験してみるのも、悪くありませんわね」
+PRINTW 
+
+; 出現確認用
+; 出現条件を満たしている場合は1を返す
+@QUEST_68_RIVAL_11
+; 出会っちゃったら整合性壊れちゃうよ…
+SIF QUEST_68_参加者 == NAME_TO_CHARA("アノニム")
+	RETURN 0
+RETURN TALENT:QUEST_68_参加者:超銀河アイドル != 0

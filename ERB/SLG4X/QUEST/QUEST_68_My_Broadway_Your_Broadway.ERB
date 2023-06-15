@@ -1,0 +1,528 @@
+﻿;--------------------------
+; クエスト名　My Broadway Your Broadway
+;--------------------------
+@QUEST_DESCRIPTION_68
+PRINTFORML [クエスト概要]
+PRINTFORML 『ギャラクティック・ブロードウェイ国際音楽祭』
+PRINTFORML この銀河中のアイドルの憧れの舞台、銀河中の民衆の娯楽にして、最も苛烈な"血の流れない戦場"でもある
+PRINTFORML %ANAME(MASTER)%とその仲間たちは戦いの末、ついにこの戦場に立つ権利を得た
+PRINTFORML 『人類文化の恒久的な発展と存続』を掲げ開かれるこの場で
+PRINTFORML %ANAME(MASTER)%たちは、彼女たちは何を願い歌うのか――
+PRINTL
+RETURN
+
+;--------------------------
+; クエスト受注可能か
+;--------------------------
+@QUEST_ACCEPTABLE_68
+#DIM CHARA_ID
+#DIM SOMEONE_PARTICIPABLE
+SIF QUEST_PROGRESS:35 == 0
+	RETURN 0
+SIF QUEST_PROGRESS:68 > 1 && DAY < QUEST_COMPLETE_DATE:68
+	RETURN 0
+
+SOMEONE_PARTICIPABLE = 0
+FOR CHARA_ID, 0, CHARANUM
+	IF GB_PARTICIPABLE(CHARA_ID)
+		SOMEONE_PARTICIPABLE = 1
+		BREAK
+	ENDIF
+NEXT
+SIF SOMEONE_PARTICIPABLE == 0
+	RETURN 0
+
+CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
+SIF STAR_OWNER:RESULT == 国家ID_民主主義
+	RETURN 1
+RETURN 0
+
+;--------------------------
+; クエストの名前を返却
+;--------------------------
+@QUEST_NAME_68
+RESULTS = My Broadway Your Broadway
+RETURN
+
+;--------------------------
+; (式中関数) ギャラクティック・ブロードウェイに参加する能力があるか
+;--------------------------
+@GB_PARTICIPABLE(CHARA_ID)
+#FUNCTION
+#DIM CHARA_ID
+#DIM PROGRAM
+
+; ライブ活動できないキャラはダメ
+SIF CFLAG:CHARA_ID:所属 != CFLAG:MASTER:所属
+	RETURNF 0
+SIF CHARA_ID != MASTER && !CFLAG:CHARA_ID:所属
+	RETURNF 0
+SIF CFLAG:CHARA_ID:捕虜先
+	RETURNF 0
+SIF IS_ANIMAL(CHARA_ID)
+	RETURNF 0
+SIF IS_MECH(CHARA_ID)
+	RETURNF 0
+SIF CFLAG:CHARA_ID:行動不能状態 == 行動不能_子供
+	RETURNF 0
+; 既に参加資格があるのにさらに参加することはできない
+FOR PROGRAM, 0, P_演目要素数
+	SIF GETBIT(P_GBフラグ:CHARA_ID:PROGRAM, P_GB参加資格)
+		RETURNF 0
+NEXT
+; ファン数100万以上、歌唱80以上、演技力80以上
+SIF P_アイドル人気:CHARA_ID:0 < 1000000
+	RETURNF 0
+SIF ABL:CHARA_ID:歌唱 < 80
+	RETURNF 0
+SIF MAX(ABL:CHARA_ID:演技力ＣＯ, ABL:CHARA_ID:演技力ＣＵ, ABL:CHARA_ID:演技力ＰＡ) < 80
+	RETURNF 0
+
+RETURNF 1
+
+;--------------------------
+; (式中関数) ギャラクティック・ブロードウェイ参加者への地の文の三人称
+;--------------------------
+@GB_PERFORMER_PRONOUN()
+#FUNCTIONS
+
+IF QUEST_68_参加者 == MASTER
+	RETURNF "自分"
+ELSEIF IS_MALE(QUEST_68_参加者)
+	RETURNF "彼"
+ELSE
+	RETURNF "彼女"
+ENDIF
+
+;--------------------------
+; ギャラクティック・ブロードウェイ参加者選択
+; RESULT : 選択したキャラID
+;--------------------------
+@GB_SELECT_PERFORMER
+#DIM CHARA_LIST, MAX_CHARA_NUM
+#DIM CHARA_LENGTH
+#DIM CHARA_ID
+#DIM LINES
+#DIM ITER
+
+CALL CREATE_SORTED_CHARA_LIST(CHARA_LIST, ソートキー, 降順ソート)
+CHARA_LENGTH = RESULT
+
+DRAWLINE
+LINES = 1
+FOR ITER, 0, CHARA_LENGTH
+	CHARA_ID = CHARA_LIST:ITER
+	SIF !GB_PARTICIPABLE(CHARA_ID)
+		CONTINUE
+	PRINTFORML [{ITER, 4, RIGHT}] %ANAME(CHARA_ID)%
+	LINES++
+NEXT
+DRAWLINE
+LINES++
+
+$INPUT_LOOP
+INPUT
+CLEARLINE 1
+
+IF RESULT >= 0 && RESULT < CHARA_LENGTH
+	CHARA_ID = CHARA_LIST:RESULT
+	SIF !GB_PARTICIPABLE(CHARA_ID)
+		GOTO INPUT_LOOP
+	CLEARLINE LINES
+	RETURN CHARA_ID
+ENDIF
+
+GOTO INPUT_LOOP
+
+;--------------------------
+; ギャラクティック・ブロードウェイ演目選択
+; RESULT   : 選択した演目
+; RESULTS  : 選択した演目に対応した魅力を示した文字列
+;--------------------------
+@GB_SELECT_PROGRAM
+#DIM LINES
+#DIMS CONST PROGRAM_CHARMPOINT, P_演目要素数 = "輝かんばかりの美しさ", "蠱惑的な愛らしさ", "見るものを元気づける情熱", ""
+
+DRAWLINE
+LINES = 1
+IF ABL:QUEST_68_参加者:演技力ＣＯ >= 80
+	PRINTFORML [{P_COOL}] %PROGRAM_CHARMPOINT:P_COOL%
+	LINES++
+ENDIF
+IF ABL:QUEST_68_参加者:演技力ＣＵ >= 80
+	PRINTFORML [{P_CUTE}] %PROGRAM_CHARMPOINT:P_CUTE%
+	LINES++
+ENDIF
+IF ABL:QUEST_68_参加者:演技力ＰＡ >= 80
+	PRINTFORML [{P_PASSION}] %PROGRAM_CHARMPOINT:P_PASSION%
+	LINES++
+ENDIF
+IF LINES == 1
+	THROW 選択肢が表示されていません
+ENDIF
+DRAWLINE
+LINES++
+
+$INPUT_LOOP
+INPUT
+CLEARLINE 1
+
+IF RESULT == P_COOL && ABL:QUEST_68_参加者:演技力ＣＯ >= 80
+	CLEARLINE LINES
+	RESULTS '= PROGRAM_CHARMPOINT:P_COOL
+	RETURN P_COOL
+ELSEIF RESULT == P_CUTE && ABL:QUEST_68_参加者:演技力ＣＵ >= 80
+	CLEARLINE LINES
+	RESULTS '= PROGRAM_CHARMPOINT:P_CUTE
+	RETURN P_CUTE
+ELSEIF RESULT == P_PASSION && ABL:QUEST_68_参加者:演技力ＰＡ >= 80
+	CLEARLINE LINES
+	RESULTS '= PROGRAM_CHARMPOINT:P_PASSION
+	RETURN P_PASSION
+ENDIF
+
+GOTO INPUT_LOOP
+
+;--------------------------
+; ギャラクティック・ブロードウェイの参加演目をもとに
+; ライバルをランダムに設定し変数にセット
+;--------------------------
+@QUEST_68_SET_RIVAL
+#DIM ITER
+#DIM RIVAL_COUNT
+#DIM RIVAL_REVENGE
+
+RIVAL_REVENGE = 4
+WHILE RIVAL_REVENGE
+	RIVAL_COUNT = 0
+	FOR ITER, 0, QUEST_68_MAX_RIVAL
+		SIF QUEST_68_RIVAL_PROGRAM:ITER != QUEST_68_演目
+			CONTINUE
+		TRYCCALLFORM QUEST_68_RIVAL_{ITER}
+			SIF !RESULT
+				CONTINUE
+		CATCH
+			CONTINUE
+		ENDCATCH
+		SIF QUEST_68_HAS_WON_RIVAL(QUEST_68_参加者, ITER) && RAND:RIVAL_REVENGE
+			CONTINUE
+		RIVAL_COUNT++
+		SIF RAND:RIVAL_COUNT == 0
+			QUEST_68_対戦相手 = ITER
+	NEXT
+	SIF RIVAL_COUNT
+		RETURN
+	RIVAL_REVENGE /= 4
+WEND
+
+THROW 対戦可能なライバルが存在しません
+
+;--------------------------
+; (式中関数) ライバルと面識があるか
+;--------------------------
+@QUEST_68_IS_CONTACTED_RIVAL(CHARA_ID, RIVAL_ID)
+#FUNCTION
+#DIM CHARA_ID
+#DIM RIVAL_ID
+RETURNF GETBIT(QUEST_68_ライバルフラグ:CHARA_ID:0, RIVAL_ID * QUEST_68_ライバルフラグビット幅 + QUEST_68_ライバル面識)
+
+;--------------------------
+; (式中関数) ライバルに勝利したことがあるか
+;--------------------------
+@QUEST_68_HAS_WON_RIVAL(CHARA_ID, RIVAL_ID)
+#FUNCTION
+#DIM CHARA_ID
+#DIM RIVAL_ID
+SIF GETBIT(QUEST_68_ライバルフラグ:CHARA_ID:0, RIVAL_ID * QUEST_68_ライバルフラグビット幅 + QUEST_68_ライバル勝利_N)
+	RETURNF 1
+SIF GETBIT(QUEST_68_ライバルフラグ:CHARA_ID:0, RIVAL_ID * QUEST_68_ライバルフラグビット幅 + QUEST_68_ライバル勝利_H)
+	RETURNF 1
+RETURNF 0
+
+;--------------------------
+; (式中関数) ギャラクティック・ブロードウェイ初参加か
+; どのライバルにも面識がなければ初参加といえる
+;--------------------------
+@QUEST_68_GB_FIRST_TRY(CHARA_ID)
+#FUNCTION
+#DIM CHARA_ID
+#DIM RIVAL_ID
+
+FOR RIVAL_ID, 0, QUEST_68_MAX_RIVAL
+	SIF QUEST_68_IS_CONTACTED_RIVAL(CHARA_ID, RIVAL_ID)
+		RETURNF 0
+NEXT
+RETURNF 1
+
+;--------------------------
+; ライバル邂逅時の処理
+; メッセージを各種フラグで分岐して表示し、面識フラグを立てる
+;--------------------------
+@QUEST_68_RIVAL_CONTACT
+IF !QUEST_68_IS_CONTACTED_RIVAL(QUEST_68_参加者, QUEST_68_対戦相手)
+	; 初対面
+	CALLFORM QUEST_68_RIVAL_MESSAGE_FIRST_CONTACT_{QUEST_68_対戦相手}
+ELSEIF QUEST_68_HAS_WON_RIVAL(QUEST_68_参加者, QUEST_68_対戦相手)
+	; 面識・勝利経験あり
+	CALLFORM QUEST_68_RIVAL_MESSAGE_WON_CONTACT_{QUEST_68_対戦相手}
+ELSE
+	; 面識のみあり
+	CALLFORM QUEST_68_RIVAL_MESSAGE_CONTACT_{QUEST_68_対戦相手}
+ENDIF
+SETBIT QUEST_68_ライバルフラグ:QUEST_68_参加者:0, QUEST_68_対戦相手 * QUEST_68_ライバルフラグビット幅 + QUEST_68_ライバル面識
+
+;--------------------------
+; ライバルに勝利時の処理
+; メッセージを各種フラグで分岐して表示、勝利フラグを立てる
+;--------------------------
+@QUEST_68_RIVAL_WIN
+IF !QUEST_68_HAS_WON_RIVAL(QUEST_68_参加者, QUEST_68_対戦相手)
+	; 初勝利
+	CALLFORM QUEST_68_RIVAL_MESSAGE_FIRST_WIN_{QUEST_68_対戦相手}
+	SETBIT QUEST_68_ライバルフラグ:QUEST_68_参加者:0, QUEST_68_対戦相手 * QUEST_68_ライバルフラグビット幅 + QUEST_68_ライバル勝利_N
+ELSE
+	; 2回目以降の勝利
+	CALLFORM QUEST_68_RIVAL_MESSAGE_WIN_{QUEST_68_対戦相手}
+	CLEARBIT QUEST_68_ライバルフラグ:QUEST_68_参加者:0, QUEST_68_対戦相手 * QUEST_68_ライバルフラグビット幅 + QUEST_68_ライバル勝利_N
+	SETBIT QUEST_68_ライバルフラグ:QUEST_68_参加者:0, QUEST_68_対戦相手 * QUEST_68_ライバルフラグビット幅 + QUEST_68_ライバル勝利_H
+ENDIF
+
+;--------------------------
+; ライバルに敗北時の処理
+; メッセージを表示するのみ
+;--------------------------
+@QUEST_68_RIVAL_LOSE
+CALLFORM QUEST_68_RIVAL_MESSAGE_LOSE_{QUEST_68_対戦相手}
+
+;--------------------------
+; ギャラクティック・ブロードウェイの結果発表
+;--------------------------
+@QUEST_68_PRINT_RESULT
+#DIMS PERFORMER_NAMES, 5
+#DIM PERFORMER_SCORES, 5
+#DIM WIN
+#DIM ITER
+#DIM RANK
+
+#DIM CONST PROGRAM_COLORS = カラー_CO, カラー_CU, カラー_PA
+
+; 自分の名前とスコアをセット
+PERFORMER_NAMES:0 '= NAME_FORMAL(QUEST_68_参加者)
+PERFORMER_SCORES:0 = P_GBスコア:QUEST_68_参加者:QUEST_68_演目
+
+; ライバルの名前とスコアをセット
+PERFORMER_NAMES:1 '= QUEST_68_RIVAL_NAME:QUEST_68_対戦相手
+IF QUEST_68_HAS_WON_RIVAL(QUEST_68_参加者, QUEST_68_対戦相手)
+	PERFORMER_SCORES:1 = QUEST_68_ライバル得点_H:QUEST_68_演目
+ELSE
+	PERFORMER_SCORES:1 = QUEST_68_ライバル得点_N:QUEST_68_演目
+ENDIF
+PERFORMER_SCORES:1 = PERFORMER_SCORES:1 * RAND(900, 1101) / 1000
+
+; 勝敗判定
+IF PERFORMER_SCORES:0 > PERFORMER_SCORES:1
+	WIN = 1
+ELSEIF PERFORMER_SCORES:0 == PERFORMER_SCORES:1
+	; 引き分けにはしない
+	PERFORMER_SCORES:1 ++
+	WIN = 0
+ELSE
+	WIN = 0
+ENDIF
+
+FOR ITER, 2, 5
+	; モブキャラを生成し、3～5位を担当させる (フレーバー)
+	CALL CREATE_RANDOM_CHARA(0, , 1, RAND:3)
+	IF RESULT == -1
+		PERFORMER_NAMES:ITER = ？？？
+	ELSE
+		PERFORMER_NAMES:ITER '= NAME_FORMAL(CHARANUM - 1)
+		CALL DELETE_CHARA(CHARANUM - 1)
+	ENDIF
+	PERFORMER_SCORES:ITER = RAND(QUEST_68_モブ最低点, QUEST_68_モブ最高点 + 1)
+NEXT
+
+ARRAYMSORT PERFORMER_SCORES, PERFORMER_NAMES
+
+DRAWLINE
+PRINTL 
+FOR ITER, 5, 0, -1
+	SIF ITER == 2
+		CONTINUE
+	FOR RANK, 1, 6
+		IF RANK >= ITER
+			PRINTFORM {RANK, 3, RIGHT}位 
+			SETCOLOR PROGRAM_COLORS:QUEST_68_演目
+			PRINTFORM %PERFORMER_NAMES:(5 - RANK), MAX_CHARANAME_LENGTH, LEFT% 
+			SETCOLOR カラー_注意
+			PRINTFORML {PERFORMER_SCORES:(5 - RANK), 4, RIGHT}pt
+			RESETCOLOR
+		ELSE
+			PRINTL 
+		ENDIF
+	NEXT
+	PRINTL 
+	DRAWLINE
+	FORCEWAIT
+	SIF ITER == 1
+		BREAK
+	CLEARLINE 7
+NEXT
+
+RETURN WIN
+
+;--------------------------
+; クエスト本体
+;--------------------------
+@QUEST_BODY_68
+#DIM STAR_ID
+
+SELECTCASE QUEST_PROGRESS:68
+	CASE 0, 2
+		CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
+		STAR_ID = RESULT
+		PRINTFORML %ANAME(MASTER)%とその仲間たちは、1枚の封書を手に
+		PRINTFORML 『ギャラクティック・ブロードウェイ運営局』を訪れていた
+		PRINTW 
+		PRINTFORML %ANAME(MASTER)%の受け取った封書は、ある人物の人気・実力を評価し
+		PRINTFORML 『ギャラクティック・ブロードウェイ国際音楽祭』に招待したいという内容であった
+		PRINTFORML その人物は――
+		PRINTW 
+		CALL GB_SELECT_PERFORMER
+		CLEARLINE 2
+		QUEST_68_参加者 = RESULT
+		PRINTFORML その人物は%ANAME(QUEST_68_参加者)%だ
+		PRINTW 
+		PRINTFORML %ANAME(MASTER)%は%GB_PERFORMER_PRONOUN()%が招待された理由に思索を巡らす
+		PRINTFORML ……やはりそれは%GB_PERFORMER_PRONOUN()%の――
+		PRINTW 
+		CALL GB_SELECT_PROGRAM
+		CLEARLINE 2
+		QUEST_68_演目 = RESULT
+		SETBIT P_GBフラグ:QUEST_68_参加者:QUEST_68_演目, P_GB参加資格
+		PRINTFORML ……やはりそれは%GB_PERFORMER_PRONOUN()%の%RESULTS%にあるだろう
+		PRINTW 
+		IF QUEST_68_GB_FIRST_TRY(QUEST_68_参加者)
+			PRINTFORML %GB_PERFORMER_PRONOUN()%はその魅力をステージ上で存分に発揮し、多くのファンを得た
+			PRINTFORML そして今、銀河最大のステージに立とうとしているのだ
+			PRINTW 
+
+			PRINTW ………………
+			PRINTW …………
+			PRINTW ……
+			PRINTL 
+			PRINTFORML 運営局の応接室に通された%ANAME(QUEST_68_参加者)%は、開催場所やプログラムについて説明を受けていた
+			PRINTFORML その最中、%ANAME(QUEST_68_参加者)%は興味深い話を聞く
+			PRINTFORML 歴史の長いこの祭典でも、比較的最近になって行われるようになった試みがあるというのだ
+			PRINTW 
+			PRINTFORM それが
+			SETCOLOR カラー_注意
+			PRINTFORML 『最優秀アイドル賞』
+			RESETCOLOR
+			PRINTFORML 『ギャラクティック・ブロードウェイ国際音楽祭』が設立した当初から、運営局は
+			PRINTFORML この祭典を通じて『人類文化の恒久的な発展と存続』に最も貢献したアイドルたちを表彰していたのだが
+			PRINTFORML 諸国家の力関係や贈賄によって結果が歪められる事例が相次ぎ、いつしか有名無実な賞となっていた
+			PRINTW 
+			PRINTFORML 最新式のセンサーとAIによってスタンドの聴衆が"どれほど心を動かされたか"を測定することで
+			PRINTFORML 不正を一切排除した、純然たる"アイドルの頂点"を決定する――
+			PRINTFORML 企業連合の技術者と皇国のアイドルを愛する者たちによって作られたこのシステムを用いて
+			PRINTFORML 従来とは全く異なる価値を持たせたものがこの『最優秀アイドル賞』だ
+			PRINTW 
+			PRINTFORML ……この話を聞いた%ANAME(QUEST_68_参加者)%は、自分がその賞を戴く姿を夢想する
+			PRINTFORML 銀河中のアイドルが憧れる『ギャラクティック・ブロードウェイ国際音楽祭』
+			PRINTFORML アイドルとしてこの祭典に参加するからには、それだけでは終われない
+			PRINTFORML 自らが銀河中のアイドルの頂点であると証明したい、%ANAME(QUEST_68_参加者)%はそう思うのだった
+			PRINTW 
+
+			PRINTW ………………
+			PRINTW …………
+			PRINTW ……
+			PRINTL 
+			PRINTFORML %ANAME(QUEST_68_参加者)%は応接室からの帰り道、廊下の反対側に人影を見た
+			PRINTW 
+		ELSE
+			PRINTFORML %GB_PERFORMER_PRONOUN()%の魅力は色褪せることはなく、銀河中のステージで輝きを放ち続けている
+			PRINTFORML そして今、銀河最大のステージに再び立とうとしているのだ
+			PRINTW 
+
+			PRINTW ………………
+			PRINTW …………
+			PRINTW ……
+			PRINTL 
+			PRINTFORML %ANAME(QUEST_68_参加者)%は応接室で開催場所やプログラムについて説明を受けた帰り道、廊下の反対側に人影を見た
+			PRINTW 
+		ENDIF
+		CALL QUEST_68_SET_RIVAL
+		CALL QUEST_68_RIVAL_CONTACT
+		PRINTFORML ……相手が誰であろうと、『最優秀アイドル賞』を諦める気はない
+		PRINTFORML %ANAME(QUEST_68_参加者)%は気を引き締めなおし、%ANAME(MASTER)%の元へ戻った
+		PRINTW 
+
+		CALL COLOR_PRINTL("――[ライブ活動]コマンドから『ギャラクティック・ブロードウェイ』に参加できる", カラー_注意)
+		CALL COLOR_PRINTL("そこで高い評価を得ることができれば、ライバルに勝利することができるだろう", カラー_注意)
+		CALL COLOR_PRINTW("ただしパフォーマンスは１回限りだ。カード編成や衣装の確認、能力の研鑽は十分か？", カラー_注意)
+		PRINTL
+		QUEST_PROGRESS:68 = 1
+	CASE 1
+		IF GETBIT(P_GBフラグ:QUEST_68_参加者:QUEST_68_演目, P_GB参加資格)
+			CALL COLOR_PRINTL(@"%ANAME(QUEST_68_参加者)%はまだ『ギャラクティック・ブロードウェイ』でのパフォーマンスを行っていない", カラー_注意)
+			CALL COLOR_PRINTL("[ライブ活動]コマンドから『ギャラクティック・ブロードウェイ』に参加できる", カラー_注意)
+			CALL COLOR_PRINTL("そこで高い評価を得ることができれば、ライバルに勝利することができるだろう", カラー_注意)
+			CALL COLOR_PRINTW("ただしパフォーマンスは１回限りだ。カード編成や衣装の確認、能力の研鑽は十分か？", カラー_注意)
+			PRINTL
+			RETURN
+		ENDIF
+		IF QUEST_68_参加者 == MASTER
+			PRINTFORML %ANAME(MASTER)%の仲間たちは、『ギャラクティック・ブロードウェイ国際音楽祭』をスタンドから視聴していた
+			PRINTFORML もちろん、%ANAME(MASTER)%の晴れ姿を見届けるためだ
+			PRINTFORML 普段以上の輝きを放つ%ANAME(MASTER)%の姿に、%ANAME(MASTER)%の仲間たちは声援を送った……
+			PRINTW 
+		ELSE
+			PRINTFORML %ANAME(MASTER)%とその仲間たちは、『ギャラクティック・ブロードウェイ国際音楽祭』をスタンドから視聴していた
+			PRINTFORML もちろん、%ANAME(QUEST_68_参加者)%の晴れ姿を見届けるためだ
+			PRINTFORML 普段以上の輝きを放つ%GB_PERFORMER_PRONOUN()%の姿に、%ANAME(MASTER)%たちは声援を送った……
+			PRINTW 
+		ENDIF
+		PRINTW ………………
+		PRINTW …………
+		PRINTW ……
+		PRINTL 
+		PRINTFORML 今回も大盛況となった『ギャラクティック・ブロードウェイ国際音楽祭』もついに閉会式となる
+		PRINTFORML 運営委員長の長いあいさつの後、『最優秀アイドル賞』の発表が始まった
+		PRINTW 
+		PRINTFORML %ANAME(QUEST_68_参加者)%と%QUEST_68_RIVAL_CALLNAME:QUEST_68_対戦相手%はどちらがより優れたアイドルか証明するため、この賞を求めていた
+		PRINTFORML このブロードウェイは%ANAME(QUEST_68_参加者)%のものか、それとも%QUEST_68_RIVAL_CALLNAME:QUEST_68_対戦相手%のものか
+		PRINTFORML 今、ステージ上のホロスクリーンにその結果が映し出されようとしている……！
+		PRINTL 
+		FORCEWAIT
+		CALL QUEST_68_PRINT_RESULT
+		IF RESULT
+			CALL QUEST_68_RIVAL_WIN
+			PRINTFORML %ANAME(QUEST_68_参加者)%は今、銀河中のアイドルの頂点に立っている
+			PRINTFORML スタンドから――おそらく星系のホロスクリーン越しにも――溢れんばかりの拍手と歓声が自分に送られる
+			PRINTFORML この光景を生涯忘れることはないだろう
+			IF QUEST_68_参加者 == MASTER
+				PRINTFORML %ANAME(QUEST_68_参加者)%は仲間たちのいる方向へと、手を振った……
+			ELSEIF TALENT:QUEST_68_参加者:正妻 || TALENT:QUEST_68_参加者:妾 || IS_LOVER(QUEST_68_参加者)
+				PRINTFORML %ANAME(QUEST_68_参加者)%は溢れんばかりのスタンドにいる%ANAME(MASTER)%をまっすぐ見つけると、目を合わせながら満面の笑みを浮かべた……
+			ELSE
+				PRINTFORML %ANAME(QUEST_68_参加者)%は%ANAME(MASTER)%とその仲間たちのいる方向へと、手を振った……
+			ENDIF
+			IF TALENT:QUEST_68_参加者:超銀河アイドル == 0
+				PRINTL 
+				CALL COLOR_PRINTL(@"%ANAME(QUEST_68_参加者)%は<超銀河アイドル>を得た", カラー_注意)
+				TALENT:QUEST_68_参加者:超銀河アイドル = 1
+			ENDIF
+			PRINTW 
+		ELSE
+			CALL QUEST_68_RIVAL_LOSE
+			PRINTFORML %ANAME(QUEST_68_参加者)%は%QUEST_68_RIVAL_CALLNAME:QUEST_68_対戦相手%を称え、拍手を送る
+			PRINTFORML 次は自分があの場所に立つ――そう決意しながら……
+			PRINTW 
+		ENDIF
+		QUEST_PROGRESS:68 = 2
+		QUEST_COMPLETE_DATE:68 = DAY + 1200 + RAND:100
+		QUEST_68_参加者 = -1
+		QUEST_68_演目 = -1
+		QUEST_68_対戦相手 = -1
+ENDSELECT
