@@ -21,7 +21,7 @@ SIF QUEST_PROGRESS:35 > 0
 	RETURN 0
 
 CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
-SIF STAR_OWNER:RESULT == 国家ID_民主主義
+SIF RESULT >= 0
 	RETURN 1
 RETURN 0
 
@@ -35,7 +35,7 @@ RETURN
 ;--------------------------
 ; クエスト本体
 ;--------------------------
-@QUEST_BODY_35  
+@QUEST_BODY_35
 PRINTFORML 宇宙港のラウンジに備えられたホロスクリーンの前に人だかりができている
 PRINTFORML 映し出された立体映像上には絢爛な衣装に身を包んだ皇国出身のアイドルたちの姿があった
 PRINTFORMW 彼女らがステージ上で華麗なパフォーマンスを披露する度に聴衆から歓声が上がっている
