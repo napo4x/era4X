@@ -365,12 +365,10 @@ LCNT++
 LCNT = 0
 LCNT++
 
-;ライブイベントが未生成の場合生成
-IF P_ライブ情報:対象:0 == ""
-    FOR ITER, 0, ライブ公演最大数
-        CALL PERFORMANCE_GENERATE_LIVE(ITER, 対象)
-    NEXT
-ENDIF
+;ライブイベントを生成
+FOR ITER, 0, ライブ公演最大数
+    CALL PERFORMANCE_GENERATE_LIVE(ITER, 対象)
+NEXT
 
 ;リスト出力
 FOR ITER, 0, ライブ公演最大数
