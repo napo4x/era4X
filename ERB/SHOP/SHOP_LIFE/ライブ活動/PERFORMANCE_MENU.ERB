@@ -388,36 +388,49 @@ NEXT
 #DIM ライブ規模
 #DIM ライブ演目
 
-;ライブ演目の決定
+;ライブ演目・規模の決定
 ;最後の一つは必ずえっちいの
+;GB参加資格がある場合、最初の一つはGBになる
 IF ID == P_ライブ公演最大数 - 1
     ライブ演目 = P_LEWD
+    ライブ規模 = GETBIT(P_GBフラグ:対象:P_LEWD, P_GB参加資格) ? 4 # -1
+ELSEIF ID == 0 && GETBIT(P_GBフラグ:対象:P_COOL, P_GB参加資格)
+    ライブ演目 = P_COOL
+    ライブ規模 = 4
+ELSEIF ID == 0 && GETBIT(P_GBフラグ:対象:P_CUTE, P_GB参加資格)
+    ライブ演目 = P_CUTE
+    ライブ規模 = 4
+ELSEIF ID == 0 && GETBIT(P_GBフラグ:対象:P_PASSION, P_GB参加資格)
+    ライブ演目 = P_PASSION
+    ライブ規模 = 4
 ELSE
     ライブ演目 = RAND:3
+    ライブ規模 = -1
 ENDIF
-;ライブ規模の決定
+
+IF ライブ規模 == -1
 {
     SELECTCASE IFRAND(
         "0TO19", 1,
         "20TO39", P_アイドル人気:対象:0 >= 500,
         "D0TO10,40TO59", P_アイドル人気:対象:0 >= 5000,
         "D11TO29,60TO79", P_アイドル人気:対象:0 >= 75000,
-        "D30TO49", P_アイドル人気:対象:0 >= 1000000,
-        "D0TO79,80TO99", GETBIT(P_GBフラグ:対象:ライブ演目, P_GB参加資格)
+        "D30TO49", P_アイドル人気:対象:0 >= 1000000
         )
 }
-    CASE 0 TO 19
-        ライブ規模 = 0
-    CASE 20 TO 39
-        ライブ規模 = 1
-    CASE 40 TO 59
-        ライブ規模 = 2
-    CASE 60 TO 79
-        ライブ規模 = 3
-    CASE 80 TO 99
-        ライブ規模 = 4
-    CASEELSE
-ENDSELECT
+        CASE 0 TO 19
+            ライブ規模 = 0
+        CASE 20 TO 39
+            ライブ規模 = 1
+        CASE 40 TO 59
+            ライブ規模 = 2
+        CASE 60 TO 79
+            ライブ規模 = 3
+        CASE 80 TO 99
+            ライブ規模 = 4
+        CASEELSE
+    ENDSELECT
+ENDIF
 
 IF ライブ演目 != P_LEWD
     SELECTCASE ライブ規模
@@ -443,7 +456,7 @@ ELSE
         CASE 3
             ライブ名称 = %SPLIT_RAND("黒カルテルのパーティ/巨大資本の闇集会/カルティストのサバト/星間シンジケートの会合",1)%
         CASE 4
-            ライブ名称 = ギャラクティック・ブロードウェイ
+            ライブ名称 = アンダーネビュラ・ブロードウェイ
     ENDSELECT
 ENDIF
 P_ライブ情報:対象:ID '= DIC_SET(P_ライブ情報:対象:ID, "名称", @"%ライブ名称%")
