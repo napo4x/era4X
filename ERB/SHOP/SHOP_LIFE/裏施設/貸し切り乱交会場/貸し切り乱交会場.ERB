@@ -1,0 +1,189 @@
+﻿;---------------------------
+; 説明
+;---------------------------
+@RANKOU_PARTY
+PRINTFORML 
+PRINTFORML [貸し切り乱交会場]
+PRINTFORML
+PRINTFORML その名前の通り乱交を行うための貸切会場
+PRINTFORML
+PRINTFORML 諸問題を考慮して各国が禁止している乱交だが、需要があればどの国にも乱交のための会場が存在する
+PRINTFORML 知り合いの奴隷商から教えてもらった貸し切り会場は各施設が充実しており、いろんな乱交プレイを楽しめるようだ
+PRINTW 
+CUSTOMDRAWLINE ***
+PRINTFORML
+PRINTFORML 「ようこそいらっしゃいました。お客様は会員証をお持ちの方ですね」
+PRINTFORML 「こちらのコースからお好きなものをお選びください」
+PRINTFORML
+PRINTFORML ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRINTFORML ┃
+PRINTFORML ┃　1）自由コース
+PRINTFORML ┃　　お客様同士の自由な交流を目的としたコースです
+PRINTFORML ┃　　会場と軽く口にできるものをご用意させていただきます
+PRINTFORML ┃
+PRINTFORML ┃ * * * * * * * * * * * * * * * * * * * * * * * 
+PRINTFORML ┃
+PRINTFORML ┃　2）パーティーコース
+PRINTFORML ┃　　コンパニオンを呼び、パーティーを開催するコースです
+PRINTFORML ┃　　パーティー内容は実際に開催されるまでのお楽しみです
+PRINTFORML ┃　　※現在こちらのコースは提供させていただいておりません
+PRINTFORML ┃
+PRINTFORML ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRINTFORML
+PRINTBUTTON "[1]自由コース", 1
+PRINTL
+PRINTBUTTON "[2]パーティーコース",2
+PRINTL
+$INPUT_LOOP
+INPUT
+IF RESULT == 1
+    CALL RANKOU_PARTY_EVENT_1
+ELSEIF RESULT == 2
+    CALL RANKOU_PARTY_EVENT_1
+ELSE
+    CLEARLINE 1
+    GOTO INPUT_LOOP
+ENDIF
+
+;-------------------------------------------------
+; 自由コース
+;-------------------------------------------------
+@RANKOU_PARTY_EVENT_1
+#DIMS _MEMBER_LIST
+#DIM DYNAMIC _USE_DRAG
+#DIM _MASTER_ID
+#DIM _TARGET_ID
+#DIM _ITER
+#DIM _ITER2
+CALL SELECT_RANKOU_MEMBER
+_MEMBER_LIST = %LIST_ADD_NUM(RESULTS, MASTER)%
+;攻守入れ替え込みで総当り
+FOR _ITER, 0, LIST_COUNT(_MEMBER_LIST)
+    FOR _ITER2, 0, LIST_COUNT(_MEMBER_LIST)
+        _MASTER_ID = LIST_GET_NUM(_MEMBER_LIST, _ITER)
+        _TARGET_ID = LIST_GET_NUM(_MEMBER_LIST, _ITER2)
+        SIF _MASTER_ID == _TARGET_ID
+            CONTINUE
+        CALL RANKOU_FUCK(_MASTER_ID, _TARGET_ID)
+    NEXT
+NEXT
+
+; メンバー選択
+; RETURN: MEMBER_LIST (STRING)
+@SELECT_RANKOU_MEMBER
+#DIMS DYNAMIC _MEMBER_LIST
+#DIM DYNAMIC _SELECT_LIST, MAX_CHARA_NUM
+#DIMS DYNAMIC _TEXT
+#DIM DYNAMIC _COUNT
+
+$INPUT_LOOP
+_COUNT = 0
+DRAWLINE
+PRINTL メンバーを5人以上選択してください
+PRINTL
+
+FOR LOCAL, 1, CHARANUM
+    SIF _SELECT_LIST:LOCAL
+        _COUNT ++
+NEXT
+PRINTL [0] 全員選択
+
+FOR LOCAL, 1, CHARANUM
+    _TEXT = %CALLNAME:LOCAL, 20, LEFT% 欲望: {ABL:LOCAL:欲望} 性技: {ABL:LOCAL:性技} 性知識: {ABL:LOCAL:性知識}
+    IF IS_FALLEN(LOCAL)
+        IF TALENT:LOCAL:正妻
+            _TEXT = %_TEXT% 正妻
+        ELSEIF TALENT:LOCAL:妾
+            _TEXT = %_TEXT% 妾
+        ELSEIF TALENT:LOCAL:親愛
+            _TEXT = %_TEXT% 親愛
+        ELSEIF TALENT:LOCAL:恋慕
+            _TEXT = %_TEXT% 恋慕
+        ELSEIF TALENT:LOCAL:隷属
+            _TEXT = %_TEXT% 隷属
+        ELSEIF TALENT:LOCAL:服従
+            _TEXT = %_TEXT% 服従
+        ENDIF
+        IF _SELECT_LIST:LOCAL
+            SETCOLOR 0XFF9999
+            PRINTBUTTON @"%_TEXT% 選択中", LOCAL
+            RESETCOLOR
+        ELSE
+            PRINTBUTTON @"%_TEXT% 未選択", LOCAL
+        ENDIF
+        PRINTL
+    ENDIF
+NEXT
+PRINTL
+SIF _COUNT > 4
+    PRINTFORML [{MAX_CHARA_NUM}] このメンバーで決定
+INPUT
+IF RESULT == 0
+    VARSET _SELECT_LIST, 1
+ELSEIF RESULT > 0 && RESULT < CHARANUM && IS_FALLEN(RESULT)
+    _SELECT_LIST:RESULT = _SELECT_LIST:RESULT ? 0 # 1
+ELSEIF RESULT == MAX_CHARA_NUM && _COUNT > 4
+    FOR LOCAL, 1, CHARANUM
+        SIF _SELECT_LIST:LOCAL && IS_FALLEN(LOCAL)
+            _MEMBER_LIST = %LIST_ADD_NUM(_MEMBER_LIST, LOCAL)%
+    NEXT
+    RESULTS = %_MEMBER_LIST%
+    RETURN
+ENDIF
+GOTO INPUT_LOOP
+
+
+; 乱交本文
+@RANKOU_FUCK(_MASTER_ID, _TARGET_ID)
+#DIM _MASTER_ID
+#DIM _TARGET_ID
+
+SELECTCASE RAND:8
+    CASE 0
+        IF IS_MALE(_MASTER_ID)
+            PRINTFORML %ANAME(_MASTER_ID)%は%ANAME(_TARGET_ID)%の腰を掴み、ガンガンと腰を振っている
+        ELSE
+            PRINTFORML %ANAME(_MASTER_ID)%は%ANAME(_TARGET_ID)%の腰を掴み、ヘコヘコと腰を振っている
+        ENDIF
+        PRINTFORML %STR_BODY("膣：欲情", _TARGET_ID)%への刺激に、%ANAME(_TARGET_ID)%は歓喜の喘ぎ声を上げ続けた……
+    CASE 1
+        IF IS_MALE(_MASTER_ID)
+            PRINTFORML %ANAME(_MASTER_ID)%は%ANAME(_TARGET_ID)%の腰を掴み、ガンガンと腰を振っている
+        ELSE
+            PRINTFORML %ANAME(_MASTER_ID)%は%ANAME(_TARGET_ID)%の腰を掴み、ヘコヘコと腰を振っている
+        ENDIF
+        PRINTFORML %STR_BODY("アナル：感度", _TARGET_ID)%を犯され、%ANAME(_TARGET_ID)%はだらしない喘ぎ声を上げ続けた……
+    CASE 2
+        PRINTFORML %ANAME(_TARGET_ID)%は%ANAME(_MASTER_ID)%のペニスにむしゃぶりついている
+        PRINTFORML ねっとりと唾液をまぶして口をすぼめて絞り上げる%ANAME(_TARGET_ID)%のいやらしい姿に、%ANAME(_TARGET_ID)%は興奮を抑えられないでいた
+    CASE 3
+        IF IS_MALE(_TARGET_ID) && IS_FEMALE(_MASTER_ID)
+            PRINTFORML %ANAME(_TARGET_ID)%に跨り腰を振る%ANAME(_MASTER_ID)%
+            PRINTFORML その%STR_BODY("胸：性交：騎乗位", _MASTER_ID)%や%STR_BODY("身体", _MASTER_ID)%には既に搾り取ってきた精液がテラテラと輝いていた
+        ELSE
+            PRINTFORML %ANAME(_MASTER_ID)%に跨り腰を振る%ANAME(_TARGET_ID)%
+            PRINTFORML その%STR_BODY("胸：性交：騎乗位", _TARGET_ID)%や%STR_BODY("身体", _TARGET_ID)%には既に搾り取ってきた精液がテラテラと輝いていた
+        ENDIF
+    CASE 4
+        PRINTFORML %ANAME(_MASTER_ID)%は%ANAME(_TARGET_ID)%を抱きしめ、ねっとりと%STR_BODY("身体", _TARGET_ID)%を愛撫している
+        PRINTFORML %STR_BODY("胸：愛撫", _TARGET_ID)%や%STR_BODY("尻", _TARGET_ID)%は汗ばみ、声を抑えきれないでいた
+    CASE 5
+        PRINTFORML 四つん這いになった%ANAME(_TARGET_ID)%を後ろから%ANAME(_MASTER_ID)%が犯している
+        PRINTFORML 動物の交尾のように激しく混じり合う二人の結合部からは、白く泡立った粘液がドロドロと溢れ出しては床を汚していった……
+    CASE 6
+        PRINTFORML %ANAME(_MASTER_ID)%と%ANAME(_TARGET_ID)%は互いの股に頭を突っ込んでしゃぶり合っている
+        PRINTFORML 甘露かのように互いの体液をすすり合い、キスマークを刻みつけあった……
+    CASE 7
+        PRINTFORML %ANAME(_MASTER_ID)%にジョーク用の青い浣腸ゼリーを浣腸された%ANAME(_TARGET_ID)%
+        PRINTFORML 尻からだらしなくぶっとい青いゼリーを放り出し、そのイヤラシさと滑稽さに辺りから歓声が上がった
+ENDSELECT
+CALL FUCK(_MASTER_ID, "欲望, 性交, 性技, 射精, Ｃ, Ｍ, Ｖ挿入, Ａ挿入, キス", "童貞喪失, キス喪失", -1, @"%ANAME(_TARGET_ID)%の唇", "", @"%ANAME(_TARGET_ID)%の膣", "乱交")
+{
+    CALL FUCK(_TARGET_ID, "欲望, 性技, Ｃ, Ｖ, Ａ, Ｂ, Ｍ, 性交, 自慰, 精愛, 露出, 排泄, 射精, 苦痛快楽, 緊縛, マゾ, キス, 口淫, 輪姦, Ｖ性交, Ａ性交",
+        "キス喪失, 処女喪失, Ａ処女喪失, 膣内射精, 腸内射精, 口内射精",
+        GET_ID(_MASTER_ID),
+        @"%ANAME(_MASTER_ID)%のペニス",
+        @"%ANAME(_MASTER_ID)%",
+        "",
+        "乱交")
+}
