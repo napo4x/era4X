@@ -1,0 +1,109 @@
+﻿;------------------------
+; ライバル1 - シャーロット ローズウェル
+; 企業連合の職業アイドル
+; メモ：18～20歳程度(高卒)。社会人歴が浅いため若干ギャルが残っている
+;------------------------
+@RIVAL_PRONOUN_1()
+#FUNCTIONS
+IF GROUPMATCH(TALENT:QUEST_68_参加者:体格, 体格_小柄, 体格_子供)
+	RETURNF "君"
+ELSE
+	RETURNF "貴方"
+ENDIF
+
+@RIVAL_PERFORMER_NAME_1()
+#FUNCTIONS
+IF GROUPMATCH(TALENT:QUEST_68_参加者:体格, 体格_小柄, 体格_子供)
+	IF IS_MALE(QUEST_68_参加者)
+		RETURNF ANAME(QUEST_68_参加者) + "君"
+	ELSE
+		RETURNF ANAME(QUEST_68_参加者) + "ちゃん"
+	ENDIF
+ELSE
+	RETURNF ANAME(QUEST_68_参加者) + "さん"
+ENDIF
+
+; 初対面時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_CONTACT_1
+PRINTFORML 目を凝らすと、その人影はレディーススーツに身を包んだ若い女性であった
+PRINTFORML 肩下までの金髪とグラマーな体型とは裏腹に、凍り付いたような仏頂面で近寄りがたい印象を受ける
+PRINTFORML その女王のような隙のない立ち振る舞いに、%ANAME(QUEST_68_参加者)%は記憶を呼び起こされる
+PRINTW 
+PRINTFORML ――確か、企業連合のとある重工業企業に属し、自社の広告塔やイメージアップはもちろん
+PRINTFORML さらにはＣＭ出演やスポンサー番組のタイアップ曲まで手がける"職業アイドル"がいたはずだ……
+PRINTFORML 彼女は"絶対零度の女王"として、絶対的な歌唱力と切れのあるダンスでデビュー後ほどなく人気となり
+PRINTFORML 自社の企業連合運営に関する発言権に大きく貢献している、と聞いたことがある
+PRINTW 
+PRINTFORML %ANAME(QUEST_68_参加者)%に気づいた彼女は、人懐っこい表情でこちらに近づき話しかけてきた
+PRINTFORML 「あれ、%RIVAL_PRONOUN_1()%も参加するアイドルかな？」
+PRINTFORML 「あたしはシャーロット。シャルでいいよ、よろ～」
+PRINTW 
+PRINTFORML %ANAME(QUEST_68_参加者)%は予想と反した彼女の性格に面を食らっていると
+PRINTFORML 「ああ、あれは"そういうキャラ"だから」
+PRINTFORML 「ほら、重工業って環境問題とかあるし、歴史が長い会社も多いから」
+PRINTFORML 「社長が"クリーンな企業"のイメージをどうしても押し出したいって言うか～」
+PRINTW 
+PRINTW ………………
+PRINTW …………
+PRINTW ……
+PRINTL 
+PRINTFORML 「へえ、%RIVAL_PRONOUN_1()%も狙ってるんだ、『最優秀アイドル賞』」
+PRINTFORML 「じゃああたしと勝負だね」
+PRINTW 
+PRINTFORML 「知ってる？　あたしがミス企業コンテストで優勝した時のこと」
+PRINTFORML 「会社の株価が一気に上がって、取引先も増えて売上が伸びたんだ」
+PRINTFORML 「あたしの歌はただ聴いた人の気持ちを動かすだけじゃない」
+PRINTFORML 「経済を、社会を動かすんだよ」
+PRINTFORML 「だからあたしは本気で臨まないとならないの、社会人の責任として」
+PRINTW 
+PRINTFORML 「……それじゃあね。みんなで最高の音楽祭にしよね～」
+PRINTFORML 言いたいことを言いきると、シャルは去っていった……
+PRINTW 
+
+; 2回目以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_CONTACT_1
+PRINTFORML 目を凝らすと、その人影はシャルだった
+PRINTFORML 「また会ったね、%RIVAL_PERFORMER_NAME_1()%」
+PRINTW 
+PRINTFORML 「この前のことで、会社からボーナスをもらったんよね」
+PRINTFORML 「だから、今回も負けるつもりは一切ないって言うか…とにかく、いい音楽祭にしよね～」
+PRINTFORML シャルは去っていった……
+PRINTW 
+
+; 勝利以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_WON_CONTACT_1
+PRINTFORML 目を凝らすと、その人影はシャルだった
+PRINTFORML 「また会ったね、%RIVAL_PERFORMER_NAME_1()%」
+PRINTW 
+PRINTFORML 「ステージの上だからあまり言えなかったけど…この前の%RIVAL_PRONOUN_1()%、めっちゃ良かったよ」
+PRINTFORML 「でも、あたしだって社会人の前に、一人のアイドルだし」
+PRINTFORML 「だから、今回はてっぺんとりたいなって言うか…とにかく、いい音楽祭にしよね～」
+PRINTFORML シャルは去っていった……
+PRINTW 
+
+; 初勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_WIN_1
+PRINTFORML 「……完敗、ですね」
+PRINTFORML 「%ANAME(QUEST_68_参加者)%様、おめでとうございます」
+PRINTFORML シャルは"女王モード"で、%ANAME(QUEST_68_参加者)%の受賞を拍手で称えた……
+PRINTW 
+
+; 2回目以降の勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_WIN_1
+PRINTFORML 「完敗、ですね」
+PRINTFORML 「%ANAME(QUEST_68_参加者)%様、おめでとうございます」
+PRINTFORML 「…………悔しいなぁ」
+PRINTFORML シャルは思わず"女王モード"が崩れかけつつも、%ANAME(QUEST_68_参加者)%の受賞を拍手で称えた……
+PRINTW 
+
+; 敗北時の文章
+@QUEST_68_RIVAL_MESSAGE_LOSE_1
+PRINTFORML 「皆様、私を選んでくださりありがとうございます」
+PRINTFORML 「我々はこれからも、持続可能・クリーンな産業化を推し進め」
+PRINTFORML 「『人類文化の恒久的な発展と存続』に貢献してまいります」
+PRINTW 
+
+; 出現確認用
+; 出現条件を満たしている場合は1を返す
+@QUEST_68_RIVAL_1
+RETURN 1

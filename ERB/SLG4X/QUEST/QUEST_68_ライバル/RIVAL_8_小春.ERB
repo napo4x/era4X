@@ -1,0 +1,107 @@
+﻿;------------------------
+; ライバル8 - 高月 小春
+; 学生アイドルグループのリーダー
+; メモ：16歳(高校2年生)。アホでやや強引にリーダーシップをとるタイプ。
+;------------------------
+@RIVAL_PERFORMER_NAME_8()
+#FUNCTIONS
+IF GROUPMATCH(TALENT:QUEST_68_参加者:体格, 体格_小柄, 体格_子供) && IS_FEMALE(QUEST_68_参加者)
+	RETURNF ANAME(QUEST_68_参加者) + "ちゃん"
+ELSE
+	RETURNF ANAME(QUEST_68_参加者) + "さん"
+ENDIF
+
+; 初対面時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_CONTACT_8
+PRINTFORML 目を凝らすと、その人影は抜けている雰囲気のブレザー姿の高校生であった
+PRINTFORML 肩くらいまでの橙色の髪、平均的な身長や少し油断気味の体型からは、どうしても垢抜けない印象を受ける
+PRINTFORML しかし彼女が放つ普通の高校生とはとても言い難いオーラに、%ANAME(QUEST_68_参加者)%は記憶を呼び起こされる
+PRINTW 
+PRINTFORML ――近年、アイドルに憧れて、民主主義国家各地の学園で"学生アイドルグループ"が続々と結成されているらしい
+PRINTFORML トップクラスのグループは10代の若者を中心に絶大な人気を誇っており、
+PRINTFORML そのようなグループが在籍する学園は注目を集め、時には廃校の危機すら救うこともある、と聞いたことがある
+PRINTFORML 彼女もおそらく、そのような学生アイドルの一人なのだろう
+PRINTW 
+PRINTFORML 「こんにちは！　%ANAME(QUEST_68_参加者)%さんですよね？」
+PRINTFORML 「この前『最優秀アイドル賞』に輝いた%ANAME(QUEST_68_参加者)%さんに会えるなんて、光栄です！」
+PRINTFORML 「挨拶が遅れました、私、高月(ﾀｶﾂｷ) 小春(ｺﾊﾙ)って言います！」
+PRINTFORML 彼女、小春は元気よくこちらに挨拶をしてきた
+PRINTW 
+PRINTW ………………
+PRINTW …………
+PRINTW ……
+PRINTL 
+PRINTFORML 「こんなすごいお祭りに呼んでもらえるなんて、私たちもちょっとは有名になれたってことかな？」
+PRINTFORML ……のんきなことを言っているが、この祭典は諸国家を後ろ盾に持つアイドルたちも参加する
+PRINTFORML 彼女が人気だけでなく高い能力を持っているのは、間違いないだろう
+PRINTW 
+PRINTFORML 「私、アイドルのみなさんの"輝き"に憧れてアイドル部を立ち上げたんです」
+PRINTFORML 「最初は部員全然集まらなかったし、曲を作ったり、歌の練習したり、ダンス覚えたり、どれも大変だったけど」
+PRINTFORML 「頑張れば頑張った分だけ、きっと輝きをたくさん届けられると思うんです」
+IF GROUPMATCH(TALENT:QUEST_68_参加者:体格, 体格_小柄, 体格_子供) && IS_FEMALE(QUEST_68_参加者)
+	PRINTFORML 「%ANAME(QUEST_68_参加者)%さん……いえ、%RIVAL_PERFORMER_NAME_8()%、お互い、全力を出し切りましょうね！」
+ELSE
+	PRINTFORML 「%RIVAL_PERFORMER_NAME_8()%、お互い、全力を出し切りましょうね！」
+ENDIF
+PRINTFORML 言いたいことを言いきると、小春は去っていった……
+PRINTW 
+
+; 2回目以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_CONTACT_8
+PRINTFORML 目を凝らすと、その人影は小春だった
+PRINTFORML 「あ、%RIVAL_PERFORMER_NAME_8()%！」
+PRINTW 
+PRINTFORML 「前は私たちの勝ちでしたけど、今回は分からない」
+PRINTFORML 「分からないからこそ、ドキドキするんです！」
+PRINTFORML 「%RIVAL_PERFORMER_NAME_8()%、お互い、全力を出し切りましょうね！」
+PRINTFORML 小春は去っていった……
+PRINTW 
+
+; 勝利以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_WON_CONTACT_8
+PRINTFORML 目を凝らすと、その人影は小春だった
+PRINTFORML 「あ、%RIVAL_PERFORMER_NAME_8()%！」
+PRINTW 
+PRINTW ………………
+PRINTW …………
+PRINTW ……
+PRINTL 
+PRINTFORML 「私、"輝き"ってなんなんだろう、どうすれば輝けるんだろうって思ってました」
+PRINTFORML 「%RIVAL_PERFORMER_NAME_8()%の演技を目の前で見て、気づいたんです」
+PRINTFORML 「アイドルが過ごした時間、そのすべてが"輝き"なんだ、って」
+PRINTW 
+PRINTFORML 「%RIVAL_PERFORMER_NAME_8()%さんは誰よりも自由に、歌い、踊っていました」
+PRINTFORML 「きっと%RIVAL_PERFORMER_NAME_8()%さんの見聞きしたことすべてが」
+PRINTFORML 「"輝き"のタネになって表現を豊かにしてくれるんです」
+PRINTW 
+PRINTFORML 「私たち、まだ若輩者ですけど、たくさんのことがありましたから！」
+PRINTFORML 「部員集めしたり、作詞で悩んだり、みんなで海行ったり、予算を工面したり……」
+PRINTFORML 「私たちの、私たちだけの輝き、全部ぶつけますので」
+PRINTFORML 「%RIVAL_PERFORMER_NAME_8()%、お互い、全力を出し切りましょうね！」
+PRINTFORML 小春は去っていった……
+PRINTW 
+
+; 初勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_WIN_8
+PRINTFORML 「%RIVAL_PERFORMER_NAME_8()%、とっても輝いてる！」
+PRINTFORML 「私たちにも、できることがまだあるってことだよね……よーし！」
+PRINTFORML 小春は笑顔で%ANAME(QUEST_68_参加者)%の受賞を拍手で称えた……
+PRINTW 
+
+; 2回目以降の勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_WIN_8
+PRINTFORML 「%RIVAL_PERFORMER_NAME_8()%の輝き、前より強くなってる！」
+PRINTFORML 「私たちにも、できることがまだあるってことだよね……よーし！」
+PRINTFORML 小春は笑顔で%ANAME(QUEST_68_参加者)%の受賞を拍手で称えた……
+PRINTW 
+
+; 敗北時の文章
+@QUEST_68_RIVAL_MESSAGE_LOSE_8
+PRINTFORML 「私たちの輝きをたくさん受け取っていただけたなら、それより嬉しいことはありません！」
+PRINTFORML 「これからも、応援、よろしくお願いしまーす！」
+PRINTW 
+
+; 出現確認用
+; 出現条件を満たしている場合は1を返す
+@QUEST_68_RIVAL_8
+RETURN TALENT:QUEST_68_参加者:超銀河アイドル != 0

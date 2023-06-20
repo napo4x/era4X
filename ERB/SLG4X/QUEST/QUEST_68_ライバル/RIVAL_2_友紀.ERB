@@ -1,0 +1,91 @@
+﻿;------------------------
+; ライバル2 - 秋原 友紀
+; 民主主義国家の国策アイドル
+; メモ：20代前半。責任感が強いリーダータイプ。リーダーの責がない頃はもうちょっとバラエティに寄っていた
+;------------------------
+
+; 初対面時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_CONTACT_2
+PRINTFORML 目を凝らすと、その人影はモデルのような完璧なスタイルの美女であった
+PRINTFORML 肩より伸ばした黒髪、スマートで自信に満ちた顔付き、流行を取り入れつつも自己主張のあるファッションが印象的だ
+PRINTFORML そのカリスマ性のある立ち振る舞いに、%ANAME(QUEST_68_参加者)%は記憶を呼び起こされる
+PRINTW 
+PRINTFORML ――確か、民主主義国家が国費を投じて推し進めているアイドルは、国政の方針から
+PRINTFORML 多くのメンバーを"候補生"とし、ファンからの人気投票により主要メンバーを決定していたはずだ…
+PRINTFORML 彼女はそのカリスマ性とセンスから民衆の支持を受け、"センター"に抜擢
+PRINTFORML 歌や踊りだけでなくモデルや俳優活動、ファッションブランドまで手掛けている、と聞いたことがある
+PRINTW 
+PRINTFORML 「貴方も国際音楽祭の参加者ですか？」
+PRINTFORML 「私は秋原(ｱｷﾊﾗ) 友紀(ﾕｷ)、民主主義国家でアイドル活動をさせてもらっています」
+PRINTW 
+PRINTW ………………
+PRINTW …………
+PRINTW ……
+PRINTL 
+PRINTFORML 「私は『最優秀アイドル賞』を目指しています」
+PRINTFORML 「私の存在は多くの国民の選択の上に、そして多くの"選ばれなかった人たち"の上に立っています」
+PRINTFORML 「ですから、私は常に全力でパフォーマンスに望んでいます」
+PRINTW 
+PRINTFORML 「もし貴方もあの賞が欲しいのであれば……本気で勝負しましょう」
+PRINTFORML 言いたいことを言いきると、友紀は去っていった……
+PRINTW 
+
+; 2回目以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_CONTACT_2
+PRINTFORML 目を凝らすと、その人影は友紀だった
+PRINTFORML 「また会いましたね、%ANAME(QUEST_68_参加者)%さん」
+PRINTW 
+PRINTFORML 「選んでくださる方々がいる限り、選ばれなかった仲間たちがいる限り、私に休息の時はありません」
+PRINTFORML 「私は何度でも『最優秀アイドル賞』を望みます」
+PRINTFORML 「もし貴方もあの賞が欲しいのであれば……本気で勝負しましょう」
+PRINTFORML 友紀は去っていった……
+PRINTW 
+
+; 勝利以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_WON_CONTACT_2
+PRINTFORML 目を凝らすと、その人影は友紀だった
+PRINTFORML 「また会いましたね、%ANAME(QUEST_68_参加者)%さん」
+PRINTW 
+PRINTW ………………
+PRINTW …………
+PRINTW ……
+PRINTL 
+PRINTFORML 「全部が順風満帆な人は、いつか応援しなくても大丈夫だと思われる」
+PRINTFORML 「私は幸いにも、また皆さんに選ばれることができました」
+PRINTFORML 「それは挫折があったから……つまり貴方に出会ったからです」
+PRINTFORML 「私は貴方と出会えたことに感謝しています」
+PRINTW 
+PRINTFORML 「ですが、挫折があるのは選ばれなかった仲間たちも同じです」
+PRINTFORML 「彼女たちにも確かに応援してくれる人たちがいます、いつか本当の輝きを放つ日を夢見て……」
+PRINTFORML 「私に残された時間も、もしかしたら少ないのかもしれません」
+PRINTW 
+PRINTFORML 「ですが、私はまだここにいる。それが、"今の"国民の選択です」
+PRINTFORML 「……本気で勝負しましょう。ステージで、待っています」
+PRINTFORML 友紀は去っていった……
+PRINTW 
+
+; 初勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_WIN_2
+PRINTFORML 「おめでとうございます、%ANAME(QUEST_68_参加者)%さん」
+PRINTFORML 友紀は笑顔で%ANAME(QUEST_68_参加者)%の受賞を拍手で称えた……
+PRINTW 
+
+; 2回目以降の勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_WIN_2
+PRINTFORML 「おめでとうございます、%ANAME(QUEST_68_参加者)%さん」
+PRINTFORML 「貴方のパフォーマンスを見ていると、いろんなしがらみを忘れて、楽しい気分になりますね」
+PRINTFORML 「きっと貴方が、何にも縛られることなく、純粋に"今"を楽しんでいるからでしょうね」
+PRINTFORML 「……少し羨ましいです」
+PRINTFORML 友紀は笑顔で%ANAME(QUEST_68_参加者)%の受賞を拍手で称えた……
+PRINTW 
+
+; 敗北時の文章
+@QUEST_68_RIVAL_MESSAGE_LOSE_2
+PRINTFORML 「応援してくださった皆さん、本当にありがとうございます」
+PRINTFORML 「まだまだ私たちは一丸となって頑張りますので、皆さんも一緒に歩んでくれますか？」
+PRINTW 
+
+; 出現確認用
+; 出現条件を満たしている場合は1を返す
+@QUEST_68_RIVAL_2
+RETURN 1

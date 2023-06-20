@@ -1,0 +1,96 @@
+﻿;------------------------
+; ライバル5 - 赤羽 ちえり
+; 豊秋津皇国の国策アイドル
+; メモ：16歳程度(高校生)。実年齢にしては発育が良いのは獣尾人の遺伝子か。語尾は素面。根は真面目な部分がちらほら
+;------------------------
+@RIVAL_PERFORMER_NAME_5()
+#FUNCTIONS
+IF IS_MALE(QUEST_68_参加者)
+	RETURNF ANAME(QUEST_68_参加者) + "クン"
+ELSE
+	RETURNF ANAME(QUEST_68_参加者) + "ちゃん"
+ENDIF
+
+; 初対面時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_CONTACT_5
+PRINTFORML 目を凝らすと、その人影はメイド服を着た小柄な少女であった
+PRINTFORML その頭には猫のような耳があり、彼女が皇国の獣尾人であることを示している
+PRINTFORML 幼い顔付きとそれに見合わないグラマーな体型、桜色の髪を横に二本、短くまとめた髪型が印象的だ
+PRINTFORML その子猫のような愛らしい雰囲気に、%ANAME(QUEST_68_参加者)%は記憶を呼び起こされる
+PRINTW 
+PRINTFORML ――かつてホロスクリーン越しに見た中継で、彼女の顔を見たことがある
+PRINTFORML 確か豊秋津皇国で活動する獣尾人で構成されたアイドルグループ、その中央に立っていた人物のはずだ……
+PRINTFORML 彼女たちはメイド服をベースに絢爛な装飾を施した衣装に身を包み
+PRINTFORML 見る者に庇護欲を抱かせる愛らしいパフォーマンスで皇国中に親衛隊を量産
+PRINTFORML 彼女たちのライブの日はグンマーとネオ・サイタマの紛争が収まるほどだ、と聞いたことがある
+PRINTW 
+PRINTFORML 「にゃ、キミも音楽祭に参加するアイドルにゃん？」
+PRINTFORML 「あたしは赤羽(ｱｶﾊﾞﾈ) ちえり、ある時はごく普通の高校生」
+PRINTFORML 「またある時は『喫茶　ア・ラ・モード』で働くメイドさん」
+PRINTFORML 「その正体は…豊秋津皇国のアイドルにゃん♪」
+PRINTW 
+PRINTW ………………
+PRINTW …………
+PRINTW ……
+PRINTL 
+PRINTFORML 「キミも『最優秀アイドル賞』を目指してるにゃん？」
+PRINTFORML 「いいことにゃ～　やっぱりアイドルは常に上を向いてなきゃダメにゃ」
+PRINTW 
+PRINTFORML 「こんな説を知ってるかにゃん？　『アイドル』は豊秋津皇国で始まった文化って」
+PRINTFORML 「実際、あたしの国には王道から変わり種まで、ありとあらゆるスタイルのアイドルがいるにゃ」
+PRINTFORML 「その中であたしたちがこの音楽祭への参加を天皇陛下にお許しいただけたのは、常に上を目指してきたからにゃ」
+PRINTFORML 「現状で満足するようになったら、アイドルとしての命はおしまいにゃ！」
+PRINTW 
+PRINTFORML 「だから『最優秀アイドル賞』はあたしのものにゃ」
+PRINTFORML 「キミと音楽祭のステージで戦える日…とっても楽しみにゃん♪」
+PRINTFORML 言いたいことを言いきると、ちえりは去っていった……
+PRINTW 
+
+; 2回目以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_CONTACT_5
+PRINTFORML 目を凝らすと、その人影はちえりだった
+PRINTFORML 「また会ったにゃん、%RIVAL_PERFORMER_NAME_5()%♪」
+PRINTW 
+PRINTFORML 「キミはあのまま"おしまい"になるアイドルのはずないって思ってたにゃ」
+PRINTFORML 「キミとまたステージで戦える日…とっても楽しみにゃん♪」
+PRINTFORML ちえりは去っていった……
+PRINTW 
+
+; 勝利以降の邂逅時の文章
+@QUEST_68_RIVAL_MESSAGE_WON_CONTACT_5
+PRINTFORML 目を凝らすと、その人影はちえりだった
+PRINTFORML 「また会ったにゃん、%RIVAL_PERFORMER_NAME_5()%♪」
+PRINTW 
+PRINTFORML 「あのまま引き下がるあたしたちじゃないにゃ！」
+PRINTFORML 「キミももちろん、あの日もらった賞だけで満足するアイドルじゃないはずにゃ」
+PRINTFORML 「だから、今ここにいるはずにゃん？」
+PRINTFORML 「キミとまたステージで戦える日…とっても楽しみにゃん♪」
+PRINTFORML ちえりは去っていった……
+PRINTW 
+
+; 初勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_FIRST_WIN_5
+PRINTFORML 「にゃにゃ……　キミの歌も踊りも、とってもイイにゃん♪」
+PRINTFORML 「キミのようなアイドルがいれば、アイドル業界はまだまだ盛り上がれるにゃ」
+PRINTFORML 「あたしたちの戦いも、まだまだ終わらないってことにゃ！」
+PRINTFORML ちえりは"これから"のことを思いを馳せながら、%ANAME(QUEST_68_参加者)%の受賞を拍手で称えた……
+PRINTW 
+
+; 2回目以降の勝利時の文章
+@QUEST_68_RIVAL_MESSAGE_WIN_5
+PRINTFORML 「にゃ……　また負けて、とっても悔しいにゃん……」
+PRINTFORML 「でも、何度負けても諦めないにゃ」
+PRINTFORML 「あたしたちは"アイドルだから"にゃん！」
+PRINTFORML ちえりは満面の笑みで、%ANAME(QUEST_68_参加者)%の受賞を拍手で称えた……
+PRINTW 
+
+; 敗北時の文章
+@QUEST_68_RIVAL_MESSAGE_LOSE_5
+PRINTFORML 「みんな～　今日はありがとにゃん～」
+PRINTFORML 「これからも、みんなに"ご奉仕"するにゃん♪」
+PRINTW 
+
+; 出現確認用
+; 出現条件を満たしている場合は1を返す
+@QUEST_68_RIVAL_5
+RETURN 1
