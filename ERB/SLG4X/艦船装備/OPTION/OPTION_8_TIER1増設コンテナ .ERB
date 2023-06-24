@@ -22,12 +22,12 @@ STATUS:SHIP_CAPACITY += 200
 ;------------------------------------------
 ;対象のSHIP_CATEGORYが装備可能かどうか
 ;------------------------------------------
-@IS_EQUIPABLE_OPTION_8(対象)
-#DIM 対象
-IF SHIP_CATEGORY:対象 == 輸送船
-    RETURN 1
-ENDIF
-RETURN 0
+; @GET_OPTION_CAN_EQUIP_8(対象)
+; #DIM 対象
+; IF 対象 == 輸送船
+;     RETURN 1
+; ENDIF
+; RETURN 0
 
 ;-----------------------------------
 ; オプションの説明
