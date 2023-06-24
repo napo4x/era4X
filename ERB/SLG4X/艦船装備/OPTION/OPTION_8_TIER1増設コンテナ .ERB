@@ -20,13 +20,10 @@ STATUS:PRICE = 300000
 STATUS:SHIP_CAPACITY += 200
 
 ;------------------------------------------
-;対象のSHIP_CATEGORYが装備可能かどうか
+;オプションが装備可能な艦種
 ;------------------------------------------
-@IS_EQUIPABLE_OPTION_8(対象)
-#DIM 対象
-SIF SHIP_CATEGORY:対象 == 輸送船
-    RETURN 1
-RETURN 0
+@IS_EQUIPABLE_OPTION_8
+RETURN ビット_輸送船
 
 ;-----------------------------------
 ; オプションの説明
