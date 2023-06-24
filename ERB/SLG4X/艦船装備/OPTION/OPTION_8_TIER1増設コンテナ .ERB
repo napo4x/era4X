@@ -24,8 +24,9 @@ STATUS:SHIP_CAPACITY += 200
 ;------------------------------------------
 @IS_EQUIPABLE_OPTION_8(対象)
 #DIM 対象
-SIF SHIP_CATEGORY:対象 == 輸送船
+IF SHIP_CATEGORY:対象 == 輸送船
     RETURN 1
+ENDIF
 RETURN 0
 
 ;-----------------------------------
