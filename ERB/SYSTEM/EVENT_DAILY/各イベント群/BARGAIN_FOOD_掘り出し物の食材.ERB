@@ -1,0 +1,111 @@
+﻿;---------------------
+;基本的な発生確率(1000分率 100で10%)
+;これにコンフィグ項目の発生頻度がかけられるので、必ずしもこの通りにはならない
+;---------------------
+@EVENT_DAILY_BARGAIN_FOOD_RATE()
+RETURN 75
+
+
+;---------------------
+;確率以外の発生判定
+;〇期以降になると発生するとか、デイリー側で利用している変数が-1だったら起こさない　みたいなはじき方をするときに使う
+;---------------------
+@EVENT_DAILY_BARGAIN_FOOD_DECISION()
+;星か宇宙港に居れば発生
+CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
+SIF RESULT >= 0
+	RETURN 1
+CALL GET_PORT_ID_FROM_POS(CHARACTER_POSITION)
+SIF RESULT >= 0
+	RETURN 1
+RETURN 0
+
+
+;---------------------
+;ジャンル
+;コンフィグ設定で使用
+;---------------------
+@EVENT_DAILY_BARGAIN_FOOD_GENRE()
+RETURN デイリー_ジャンル_その他
+
+
+;---------------------
+;本体
+;イベントが発生した場合は1、発生しなかった場合は0を返す
+;発生しなかったというのは例えば、特定条件を満たすキャラからランダムに一人選ぶデイリーで、そもそもその条件を満たすキャラが一人もいないみたいなとき
+;旧仕様で作ったことある人向けにいうと「旧仕様のデイリー本体冒頭で-1を返すような状況」
+;---------------------
+@EVENT_DAILY_BARGAIN_FOOD()
+#DIM 選択番号
+#DIM 担当者
+#DIM 料理合計値
+担当者 = 0
+料理合計値 = 0
+
+
+;導入
+SELECTCASE RAND:2
+	CASE 0
+		PRINTFORMW ぶらりと港市場を歩いていると、珍しい食材を見つけた。
+		PRINTFORMW 聞けば今がちょうど旬らしい。せっかくだし、新鮮なうちに仲間達と食べてみようか。
+	CASE 1
+		PRINTFORMW 港市場を物色していると、上物の食材を見つけた。
+		PRINTFORML 気前よく買うと、なんと店員がおすすめのレシピを伝授してくれた。
+		PRINTFORMW せっかくだし、皆と一緒に試してみようか。
+ENDSELECT
+PRINTFORMW 全員分作るとなると、1人では準備が大変かもしれない……多くて3人ほどいれば十分だろう。
+
+;キャラ選択
+CALL SELECT_CHARA_LIST_MULTI_SLG(3)
+IF RESULT < 0
+	PRINTFORML ……と思ったが、なんだか面倒になってきた。
+	PRINTFORMW 食材はとりあえず食料庫に放り込み、いつも通りの食事を済ませた。
+	RETURN 1
+ENDIF
+PRINTFORMW 食事の準備を始めた
+FOR 選択番号, 0, SELECTED_CHARA_NUM
+	担当者 = SELECTED_CHARA:選択番号
+	料理合計値 += ABL:担当者:料理 
+	IF CFLAG:(担当者):所属 == CFLAG:MASTER:所属 && !CFLAG:(担当者):捕虜先 && !IS_ANIMAL(担当者) && !IS_MECH(担当者)
+		CALL PRINT_ADD_EXP(担当者, "料理経験値",50, 1)
+		CALL TRAIN_AUTO_ABLUP(担当者, 1)
+	ENDIF
+NEXT
+PRINTFORMW さて、出来栄えのほどは 
+PRINTFORMW ・
+PRINTFORMW ・・
+PRINTFORMW ・・・
+
+IF 料理合計値 >= 270
+	LOCAL:0 = 100
+	PRINTFORML 思わず唸るほどの絶品だった！
+	PRINTFORMW 夢中になりながら味わった……
+ELSEIF 料理合計値 >= 180
+	LOCAL:0 = 50
+	PRINTFORML 自然と笑みが零れる逸品だった。
+	PRINTFORMW 一口ごとに美味しさを噛みしめた……
+ELSEIF 料理合計値 >= 90
+	LOCAL:0 = 30
+	PRINTFORML 普通に美味しい、安心する味だった。
+	PRINTFORMW 食事を楽しんだ…… 
+ELSEIF 料理合計値 >= 60
+	LOCAL:0 = 10
+	PRINTFORML まぁまぁだった。
+	PRINTFORMW 食事を楽しんだ……
+ELSE
+	PRINTFORML 微妙な味だった。
+	PRINTFORMW とりあえず完食だけはした……
+ENDIF
+
+;体力増加処理
+IF LOCAL:0 > 0
+	FOR LOCAL:1, 0, CHARANUM
+		IF CFLAG:(LOCAL:1):所属 == CFLAG:MASTER:所属 && !CFLAG:(LOCAL:1):捕虜先 && !IS_ANIMAL(LOCAL:1) && !IS_MECH(LOCAL:1)
+			MAXBASE:(LOCAL:1):体力 += LOCAL:0
+		ENDIF
+	NEXT
+	CALL COLOR_PRINTL(@"仲間全員の体力が{LOCAL:0}上がった", カラー_注意)
+ENDIF
+
+
+RETURN 1

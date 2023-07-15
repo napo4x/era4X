@@ -1,0 +1,102 @@
+﻿;---------------------
+;基本的な発生確率(1000分率 100で10%)
+;これにコンフィグ項目の発生頻度がかけられるので、必ずしもこの通りにはならない
+;---------------------
+@EVENT_DAILY_HOMEMADE_MEAL_RATE()
+RETURN 125
+
+
+;---------------------
+;確率以外の発生判定
+;〇期以降になると発生するとか、デイリー側で利用している変数が-1だったら起こさない　みたいなはじき方をするときに使う
+;---------------------
+@EVENT_DAILY_HOMEMADE_MEAL_DECISION()
+;航行中のみ発生、星か宇宙港に居ると発生しない
+CALL GET_STAR_ID_FROM_POS(CHARACTER_POSITION)
+SIF RESULT >= 0
+	RETURN 0
+CALL GET_PORT_ID_FROM_POS(CHARACTER_POSITION)
+SIF RESULT >= 0
+	RETURN 0
+RETURN 1
+
+;---------------------
+;ジャンル
+;コンフィグ設定で使用
+;---------------------
+@EVENT_DAILY_HOMEMADE_MEAL_GENRE()
+RETURN デイリー_ジャンル_その他
+
+
+;---------------------
+;本体
+;イベントが発生した場合は1、発生しなかった場合は0を返す
+;発生しなかったというのは例えば、特定条件を満たすキャラからランダムに一人選ぶデイリーで、そもそもその条件を満たすキャラが一人もいないみたいなとき
+;旧仕様で作ったことある人向けにいうと「旧仕様のデイリー本体冒頭で-1を返すような状況」
+;---------------------
+@EVENT_DAILY_HOMEMADE_MEAL()
+#DIM 対象
+
+;導入部
+SELECTCASE RAND:3
+	CASE 0
+		PRINTFORMW ふと、故郷で食べたあの懐かしい料理が恋しくなった。
+		PRINTFORML 試しに食料庫を確かめてみると、どうも材料は足りていそうだ。
+	CASE 1
+		PRINTFORMW 最近、どうにも食生活が乱れている。
+		PRINTFORML 医食同源と言うし、手料理で栄養バランスを整えよう。
+	CASE 2
+		PRINTFORMW 最近、食事がいまひとつ物足りない。有り体に言って食べ飽きたメニューばかりだ。
+		PRINTFORML ここは思い切って、創作料理でも開拓してみよう。
+ENDSELECT
+PRINTFORMW 自炊しようか……あるいは誰かに作ってもらうのも良いかもしれない。
+
+;キャラ選択
+CALL SELECT_CHARA_LIST_SLG()
+IF RESULT < 0
+	PRINTFORML いや、やはり面倒だ。
+	PRINTFORMW そう思い直し、いつも通りの食事を済ませた。
+	RETURN 1
+ENDIF
+対象 = RESULT
+IF 対象 == MASTER
+	PRINTFORMW 自炊することにした。
+ELSE
+	PRINTFORMW %ANAME(対象)%に頼むことにした。
+ENDIF
+PRINTFORML ・
+PRINTFORML ・・
+PRINTFORMW ・・・
+;料理能力値に応じて体力増加処理
+;低すぎる場合は何も起こらない
+IF ABL:対象:料理 >= 90
+	PRINTFORML 思わず唸るほどの絶品だった！
+	PRINTFORMW 夢中になりながら味わった……
+	LOCAL = 50
+ELSEIF ABL:対象:料理 >= 60
+	PRINTFORML 自然と笑みが零れる逸品だった。
+	PRINTFORMW 一口ごとに美味しさを噛みしめた……
+	LOCAL = 30
+ELSEIF ABL:対象:料理 >= 30
+	PRINTFORML 普通に美味しい、安心する味だった。
+	PRINTFORMW 食事を楽しんだ…… 
+	LOCAL = 10
+ELSE
+	PRINTFORML 微妙な味だった。
+	PRINTFORMW とりあえず完食だけはした……
+	LOCAL = 0
+ENDIF
+
+;体力増加処理
+IF LOCAL > 0
+	MAXBASE:MASTER:体力 += LOCAL
+	CALL COLOR_PRINTL(@"%ANAME(MASTER)%の体力が{LOCAL}上がった", カラー_注意)
+ENDIF
+
+;経験値取得処理
+IF CFLAG:対象:所属 == CFLAG:MASTER:所属 && !CFLAG:対象:捕虜先 && !IS_ANIMAL(対象) && !IS_MECH(対象)
+	CALL PRINT_ADD_EXP(対象, "料理経験値", 20, 1)
+	CALL TRAIN_AUTO_ABLUP(対象, 1)
+ENDIF
+PRINTFORMW やはり、たまには手料理も良いものだ。
+RETURN 1
