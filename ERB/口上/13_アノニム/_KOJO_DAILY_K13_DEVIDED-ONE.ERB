@@ -1,0 +1,193 @@
+﻿;---------------------
+;基本的な発生確率(1000分率 100で10%)
+;これにコンフィグ項目の発生頻度がかけられるので、必ずしもこの通りにはならない
+;---------------------
+@KOJO_DAILY_K13_DIVIDED_ONE_RATE(対象)
+#DIM 対象
+RETURN 10000
+
+
+;---------------------
+;確率以外の発生判定
+;〇期以降になると発生するとか、デイリー側で利用している変数が-1だったら起こさない　みたいなはじき方をするときに使う
+;---------------------
+@KOJO_DAILY_K13_DIVIDED_ONE_DECISION(対象)
+#DIM 対象
+#DIM 面識_チェック
+
+SIF アノニム_生きる == 1
+	RETURN 0
+
+;ゴンベエと遭遇している場合のみ
+;思い出せなかったので直接指定
+FOR LOCAL, 0, CHARANUM
+	SIF QUEST_68_IS_CONTACTED_RIVAL(LOCAL, 11)
+		面識_チェック = 1
+NEXT
+IF 面識_チェック == 1
+	RETURN CHECK_KOJO_DAILY_HAPPEN(対象, 1, 0)
+ELSE
+	RETURN 0
+ENDIF
+;---------------------
+;ジャンル
+;コンフィグ設定で使用
+;---------------------
+@KOJO_DAILY_K13_DIVIDED_ONE_GENRE(対象)
+#DIM 対象
+RETURN デイリー_ジャンル_その他
+
+
+;---------------------
+;本体
+;イベントが発生した場合は1、発生しなかった場合は0を返す
+;発生しなかったというのは例えば、特定条件を満たすキャラからランダムに一人選ぶデイリーで、そもそもその条件を満たすキャラが一人もいないみたいなとき
+;旧仕様で作ったことある人向けにいうと「旧仕様のデイリー本体冒頭で-1を返すような状況」
+;---------------------
+@KOJO_DAILY_K13_DIVIDED_ONE(対象)
+#DIM 対象
+#DIM アノニム_対象
+対象 = NAME_TO_CHARA("アノニム")
+アノニム_対象 = MASTER
+PRINTFORMW 　珍しく%ANAME(対象)%が不愉快そうな顔をしている。
+IF TALENT:MASTER:超能力者
+	PRINTFORML 　なんとも形容しがたいサイオンの波動が渦巻いており、
+	PRINTFORML 　その目に何時もの様なふざけた色は見えない。
+ELSE
+	PRINTFORML 　%ANAME(MASTER)%に超能力の心得はないが、
+	PRINTFORML 　%ANAME(対象)%の髪の様な触手が喧々諤々の議論を行っている様に見える。
+	PRINTFORML 　普段なら%ANAME(MASTER)%が%ANAME(対象)%を捉えると同時に飛んでくるというのにそんなこともないのだ。
+ENDIF
+PRINTFORMW 　
+PRINTFORML 　どうしたものか、と腕を組んで思案しようとしたその瞬間。
+PRINTFORML 　「\@IS_MALE(MASTER) ? 父上 # 母上 \@ではないかあ？　ン？」
+PRINTFORML 　目の前に、逆さまに覗き込む%ANAME(対象)%がいた。
+PRINTFORMW 　
+PRINTFORML 　「……何を悩んでいたのか、だと？」
+PRINTFORML 　「ゴンベエは知っておるな？」
+PRINTFORML 　知らないも何も、今を時めくトップアイドルの１人にして、
+PRINTFORML 　「私（ワレラ）の同族……なのだろうか？」
+PRINTFORMW 　
+PRINTFORML 　なぜそこで疑問形なのだろうか。%ANAME(MASTER)%が突っ込むと、%ANAME(対象)%が納得できない様に返した。
+PRINTFORML 　「分からぬから言っておるのだ。そもそも私には同族という概念がないし、存在を知ったのもさっきだ」
+PRINTFORML 　ワレラ、ではなくワタシと言った時、それは%ANAME(対象)%にとって重要な事柄だ。
+PRINTFORMW 　
+PRINTFORML 　「存在自体がありえぬのだ。１つの肉体に２つの精神とは人の創作ではよくあるが」
+PRINTFORML 　「私（ワレラ）は無数の肉体を１つの精神で制御しておる、故にこの前提が崩れればどうなるか分からぬ」
+PRINTFORML 　「幸いアレにハイヴをどうのこうのする素振りは見えぬ、がな……」
+PRINTFORMW 　
+PRINTFORML 　「さて、このゴンベエに関してだが……」
+PRINTFORML 　いつになく真面目な%ANAME(対象)%が言葉を選び、ああでもない、こうでもないと思案する様を%ANAME(MASTER)%は待ち続けた。
+PRINTFORML 　「アレの――、正確に言えばゴンベエを私（ワレラ）から切り離した存在がいる」
+PRINTFORML 　「いや、これは正確ではない、なんなのであろうか……。転写？　違う、アレの性格は私からはなりえん」
+PRINTFORMW 　
+PRINTFORML 　「ゴンベエの語る意識と実際の時系列には齟齬がある……と思う」
+PRINTFORML 　「――確実に、アレを作った存在がいる」
+PRINTFORML 　それはどういうこと、と%ANAME(MASTER)%が問う前に%ANAME(対象)%は続けた。
+PRINTFORMW 　
+PRINTFORML 　「ところで%ANAME(MASTER)%は私のことをどんな人物だと思っている？」
+PRINTFORML 　
+CALL ASK_MULTI("愉快なエイリアン", "勉強熱心", "努力家", "かわいい娘")
+	SELECTCASE RESULT
+	CASE 4
+		PRINTFORML 　「ま、まあそう言われるのは……いやそうではなくてな……」
+		PRINTFORML 　「まあ良い、\@IS_MALE(MASTER) ? 父上 # 母上 \@にとってはそうで良いのだろう。きっと」
+	CASEELSE
+		PRINTFORML 　「いずれにせよ、私とはかけ離れた様な存在だ」
+		PRINTFORML 　「私（ワレラ）ならばアイドルという概念を全てのハイヴで共有し、利用するであろう」
+		PRINTFORML 　「各国で最適なアイドルを作り上げ、繁殖に利用する」
+		PRINTFORML 　「それは私のためではなく私（ワレラ）のために、だ。ゴンベエの様に私（カノジョ）のためではない」
+		PRINTFORMW 　
+		PRINTFORML 　「セックスはまあ楽しいし、結果として遺伝子プールの異なる個体も増えるから実益も兼ねておるのだが」
+		PRINTFORML 　「明らかにアレは私（ワレラ）の思考ではない」
+		PRINTFORML 　「別に良し悪しを言っている訳ではない、が、な……」
+		PRINTFORML 　「理解不能、なのだ」
+		PRINTFORMW 　
+ENDSELECT
+PRINTFORML 　自分はどうすればいいのか、と%ANAME(MASTER)%が尋ねると%ANAME(対象)%はさらに一回転して答えた。
+PRINTFORML 　「したいように成すが良い」
+PRINTFORML 　意外な言葉にずっこけた%ANAME(MASTER)%だったが、%ANAME(対象)%はため息交じりに答えた。
+PRINTFORMW 　
+PRINTFORML 　「以前の私（ワレラ）であれば問答無用で統合したであろうが」
+PRINTFORML 　「絶滅の危機から抜け出せていない以上、無用なリスクは御免被る」
+PRINTFORML 　「統合するにしろ、しないにしろ、私から接触するには懸念しなければならないことが多すぎる」
+PRINTFORML 　「例えば、ゴンベエの余命もな」
+PRINTFORMW 　
+PRINTFORML 　ちょっと聞き捨てならない言葉を発した%ANAME(対象)%に%ANAME(MASTER)%は理由を尋ねた。
+PRINTFORML 　銀河に素晴らしい歌声を届けた彼女の寿命に問題があるのか、と。
+PRINTFORMW 　「母の胎を経て適応した私と違って、ゴンベエの肉体はかつての私（ワレラ）に近い」
+PRINTFORMW 　「私（ワレラ）はそれなりに折り合いをつけてやっていたが……」
+PRINTFORMW 　
+PRINTFORML 　「アレは……あまりよろしくない」
+PRINTFORML 　「ライブを見に行って理解したが、アレはどうやら自分の所属していたハイヴからも独立している」
+PRINTFORML 　「私（ワレラ）は例外なく超能力で情報のやり取りをするが、ゴンベエにはそのトラフィックがないのだ」
+PRINTFORML 　「私（ワレラ）がアレを捕捉できなかった理由も頷ける、が……」
+PRINTFORML 　「これは良いことではない。理由はともあれ、私（ワレラ）はハイヴが必要なのだ」
+PRINTFORMW 　
+PRINTFORML 　「ハイヴ・マインドとしては彼女を統合し保存するべきだが、それはアイドルとしては、死ぬことになるのであろう？」
+PRINTFORML 　そこまで言った%ANAME(対象)%の視線は揺らいでいる。
+PRINTFORML 　どうにかして、自分の言葉で伝えようとしているのだ。
+PRINTFORML 　「しかしながら、だ」
+PRINTFORMW 　
+PRINTFORML 　%ANAME(対象)%は解決法が幾つかある、と%ANAME(MASTER)%に指を立てた。
+PRINTFORML 　「手段を限らぬのであれば、寿命を帳消しにする手立てはある」
+PRINTFORML 　「１つ目は先ほども言った、私（ワレラ）と統合することだ」
+PRINTFORMW 　
+PRINTFORML 　手段を限らぬ。と言う以上なにがしかのデメリットやリスクがあるのだろう。%ANAME(対象)%は嘘を吐くような娘ではない。
+PRINTFORML 　「この場合、ゴンベエという存在は消滅し、後には完璧に模倣された端末が残る」
+PRINTFORML 　「私はハイヴ・マインドだ。ゴンベエを知る人間すら私がゴンベエであるという確信を持たせることは可能だ」
+PRINTFORML 　「だが、%ANAME(MASTER)%にとってはそうではあるまい。そうだな？」
+PRINTFORML 　%ANAME(MASTER)%は強く頷いた。そういう問題ではない。
+PRINTFORMW 　
+PRINTFORML 　「２つ目は私（ワレラ）がやった様に、産み直すことだ。\@IS_MALE(MASTER) ? 父上 # 母上 \@の血を分けた子としてな」
+PRINTFORML 　「これにも勿論問題はある。産まれてきたゴンベエは\@IS_MALE(MASTER) ? 父上 # 母上 \@の遺伝子を受け継ぐ」
+PRINTFORML 　「つまり変質してしまう、という訳であるなあ。声紋、容姿、あらゆる要素が\@IS_MALE(MASTER) ? 父上 # 母上 \@に似てしまう」
+PRINTFORML 　アイドルとしては論外の解決案だ。次。
+PRINTFORMW 　
+PRINTFORML 　「最後、ゴンベエの元居たハイヴを探し出し、調整する」
+PRINTFORML 　多少見てくれは変わるかも知れぬが、成長程度に捉えられるであろう」
+PRINTFORML 　「肉体を持っているということはどこかに元の肉体となるハイヴがあるのだ。そしてそれはまだ死滅していないはずだ」
+PRINTFORML 　「生体艦の調整の様に、そのあとさきの事を考える程度の余裕は生まれよう」
+PRINTFORMW 　
+PRINTFORML 　「これが一番良いであろうが、一番難しい。今銀河中を検索しているが似通っている波動すら観測できん」
+PRINTFORML 　「時期か、場所か、設備か……どれが悪いのか、それすらも特定できぬ」
+PRINTFORMW 　
+PRINTFORML 　つまり手詰まり、ということだが、希望があるだけマシだろう。
+PRINTFORML 　「私（ワレラ）からの話は以上だ。何か質問はあるか？」
+PRINTFORML 　もちろん、%ANAME(MASTER)%の質問はたった１つだ。
+PRINTFORMW 　
+PRINTFORML 　「ゴンベエのことはどう思っているのか、だと？」
+PRINTFORML 　「分からぬ……なにせ私には他人という概念がないのだ。あるのは自分か他種族（エイリアン）だけ」
+PRINTFORML 　「ゴンベエは他人の概念を理解しているようだが、私（ワレラ）はそうではない」
+PRINTFORML 　「……だから、分からぬのだ」
+PRINTFORMW 　
+PRINTFORML 　じゃあ、会ってみるのはどうか。と%ANAME(MASTER)%が続けて提案すると
+PRINTFORML 　%ANAME(対象)%は首を振って答えた。
+PRINTFORMW 　「先ほど統合する、と言ったが正確には“接触した瞬間に統合されてしまう”が正しいであろう」
+PRINTFORMW 　「見に行った時も小さな端末で細心の注意を払ってコンサートホールに入ったのだ」
+PRINTFORMW 　「本体である私（ワレラ）と衰弱しきった個体であるゴンベエではその力に絶対的な差があるのだ」
+PRINTFORMW 　「それ以上に、衰弱――飢餓を解決するために本能的に統合されてしまう」
+PRINTFORML 　%ANAME(対象)%はそう言うと、俯いて目を閉じ、絞り出すように続けた。
+PRINTFORML 　「それは、余りにも惨い、ので、あろう」
+PRINTFORMW 　
+PRINTFORML 　「以前は理解不能な電気信号の情報でしかなかった」
+PRINTFORMW 　
+PRINTFORML 　「だが、今、私はこの“本能”を拒絶している」
+PRINTFORMW 　
+PRINTFORML 　「%ANAME(MASTER)%よ。ゴンベエのことを思うのであれば、彼女のライバルであって欲しい」
+PRINTFORMW 　
+PRINTFORML 　「その末路が死であろうとも彼女の愛した世界に意志（ミーム）は残る」
+PRINTFORMW 　
+PRINTFORML 　「愛する者ができれば遺志（ジーン）が残るであろう」
+PRINTFORMW 　
+PRINTFORML 　「……話し疲れたな。よもやこれほど、 “話す” ことが大変だとは、な」
+PRINTFORML 　それは%ANAME(対象)%が本気でこの銀河の１人になろうとしている証明だ、と
+PRINTFORML 　%ANAME(MASTER)%は図体の大きなかわいい娘の頭を撫でてやった。
+PRINTFORMW 　「……ああ、そうだ……この取るに足らぬ筈の電気信号が、心地よいのだ……」
+PRINTFORML 　そのまま%ANAME(MASTER)%は気が済むまで頭をなでたりしてやった。
+PRINTFORMW 　
+
+アノニム_生きる = 1
+
+RETURN 1
+
