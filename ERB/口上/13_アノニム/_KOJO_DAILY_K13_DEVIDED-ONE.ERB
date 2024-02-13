@@ -21,7 +21,7 @@ SIF アノニム_生きる == 1
 ;ゴンベエと遭遇している場合のみ
 ;思い出せなかったので直接指定
 FOR LOCAL, 0, CHARANUM
-	SIF QUEST_68_IS_CONTACTED_RIVAL(LOCAL, 11)
+	SIF QUEST_68_IS_CONTACTED_RIVAL(LOCAL, QUEST_68_RIVALID_ゴンベエ)
 		面識_チェック = 1
 NEXT
 IF 面識_チェック == 1
